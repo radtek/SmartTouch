@@ -1,0 +1,137 @@
+﻿@{
+    var menuCategoryValue = (TempData[SmartTouch.CRM.Web.Utilities.Keys.MENU_TYPE] != null) ? TempData[SmartTouch.CRM.Web.Utilities.Keys.MENU_TYPE].ToString() : string.Empty;
+    var menuCategory = default(SmartTouch.CRM.Web.Utilities.MenuCategory);
+    if (TempData[SmartTouch.CRM.Web.Utilities.Keys.MENU_TYPE] != null) { Enum.TryParse<SmartTouch.CRM.Web.Utilities.MenuCategory>(menuCategoryValue, out menuCategory); }
+   
+    var menuItems = SmartTouch.CRM.Web.Utilities.MenuHelper.GetMenuItemsByMenuCategory(menuCategory);
+    <div class="top-nav">
+        <ul>
+            @foreach (var menuItem in menuItems)
+            {
+                <li class="btn-group">
+                    @if (menuItem.Title == "Add Person")
+                    {
+                        <a href="@Url.Action(@menuItem.Action, @menuItem.Controller)" class="contact-add">
+                                <i class="icon st-icon-add mrs"></i> @menuItem.Title</a>
+                        <a href="@Url.Action(@menuItem.Action, @menuItem.Controller)" class="dropdown-toggle top-dp-arrow" data-toggle="dropdown"> 
+                            <i class="icon st-icon-dropdownarrow"></i></a>
+                    }
+                    else
+                    {
+                        if (!menuItem.OpenAsMenuView.HasValue || menuItem.OpenAsMenuView.Value == false) //open in main container
+                        {
+                            if (@menuItem.Controller != null && menuItem.Controller != "")
+                            {
+                                <a href="@Url.Action(@menuItem.Action, @menuItem.Controller)">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.Action != null && menuItem.Action != "")
+                            {
+                                <a href="javascript:void(0)" data-bind="click:@menuItem.Action">@menuItem.Title</a>
+                            }
+                            else { 
+                                <a href="javascript:void(0)" onclick="OpenTopInner(this);" data-openid="@menuItem.MenuId">@menuItem.Title</a>
+                            }
+                        }
+                        else //open view in the menu drop.
+                        {
+                            <a href="javascript:void(0)" class="menuitemclicked" id="@("menuItem" + @menuItem.MenuId)"
+                               data-openid="@menuItem.MenuId"
+                               data-action="@(menuItem.Content!=null?menuItem.Content:"")"
+                               data-controller="@(menuItem.Controller != null ? menuItem.Controller : "")">@menuItem.Title</a>
+                            <div class="hide dp-topnav-inner" id="@("menuItemContent"+ menuItem.MenuId)"></div>
+                        }
+
+                        if (@menuItem.Children.Count > 0)
+                        {
+                            <a href="@Url.Action(@menuItem.Action, @menuItem.Controller)" 
+                               class="dropdown-toggle top-dp-arrow" data-toggle="dropdown"> <i class="icon st-icon-dropdownarrow"></i></a>
+                        }
+                    }
+
+                    @if (@menuItem.Children.Count > 0)
+                    {
+                        <ul class="dropdown-menu mtn add-st">
+                            @foreach (var child in menuItem.Children)
+                            {
+                                if (!child.OpenAsMenuView.HasValue || child.OpenAsMenuView.Value == false) //open in main container
+                                {                                
+                                    if (@child.Controller != null && child.Controller != "" )
+                                    {
+                                        <li>
+                                            <a href="@Url.Action(@child.Action, @child.Controller)">@child.Title</a>
+                                        </li>
+
+                                    }
+                                    else if (@child.Action != null && child.Action != "")
+                                    {
+                                        <li>
+                                            <a href="javascript:void(0)" data-bind="click:@child.Action">@child.Title</a>
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="javascript:void(0)" class="menuitemclicked" id="@("menuItem" + @child.MenuId)"
+                                           data-openid="@child.MenuId"
+                                           data-action="@(child.Content!=null?child.Content:"")"
+                                           data-controller="@(child.Controller != null ? child.Controller : "")">@child.Title</a>
+                                        @*<a href="javascript:void(0)" onclick="OpenTopInner(this);" data-openid="@child.MenuId">@child.Title</a>*@
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        foreach (var child in menuItem.Children)
+                        {
+                            if (!child.OpenAsMenuView.HasValue || child.OpenAsMenuView.Value == false) //open in main container
+                            {
+                                if (@menuItem.Controller != null && menuItem.Controller != "")
+                                {
+                                }
+                                else if (@child.Action != null && child.Action != "")
+                                {
+                                }
+                            }
+                            else
+                            {
+                                <div class="hide" id="@("menuItemContent"+ child.MenuId)"></div>
+                                @*<div class="hide moreinner" id="@child.MenuId">
+                                    @if (@child.Content != null && @child.Content != "")
+                                    {
+                                        @Html.Action(@child.Content, "Contact")
+                                    }
+                                </div>*@
+                            }
+                        }
+                    }
+                    </li>
+            }
+        </ul>
+    </div>
+}
+
+<script type="text/javascript">
+    $('.contact-add').closest('li').addClass('add-newrecord');
+    $(document).ready(function () {
+        $(".menuitemclicked").click(function (event) {
+            var action = this.getAttribute("data-action");
+            var controller = this.getAttribute("data-controller");
+            var menuItemId = this.getAttribute("data-openid");
+
+            var URL = '@Url.Content("~/")';
+            $("#menuItemContent" + menuItemId).html('');
+            OpenTopInner("menuItem" + menuItemId, "menuItemContent" + menuItemId);
+
+            $.ajax({
+                url: URL + controller +"/"+action,
+                type: 'get',                
+                contentType: "application/html; charset=utf-8",                
+                success: function (data) {
+                    $("#menuItemContent" + menuItemId).html(data);
+                },
+                error: function (data) {
+                }
+            });
+        });        
+    });
+</script>

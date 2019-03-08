@@ -1,0 +1,262 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model MyProfileViewModel
+
+@Scripts.Render("~/bundles/myprofilevm")
+
+@*@if(!@Thread.CurrentPrincipal.Identity.IsSTAdmin())
+    {*@
+<div class="sub-container" id="myprofile">
+    <div class="page-title">
+        [|My Profile|]
+    </div>
+
+
+    <div class="tabbable new-tabs ptn">
+        <ul class="nav nav-tabs" id="mytabs">
+            <li class="active"><a href="#personalsettings"><span class="icon st-icon-users mrm"></span>[|Contact Info|]</a></li>
+            <li><a href="#settings"><span class="icon st-icon-settings-2 mrm"></span>[|Settings|]</a></li>
+            @if (!(@Thread.CurrentPrincipal.Identity.IsSTAdmin() && @Thread.CurrentPrincipal.Identity.ToAccountID() != 1))
+            {
+                <li><a href="#notifications"><span class="icon st-icon-speech-bubble-left-3 mrm"></span>[|Notifications|]</a></li>
+            }
+            <li><a href="#integrations"><span class="icon st-icon-wiggle mrm"></span>[|Integrations|]</a></li>
+        </ul>
+        <!-- /tabs -->
+        <div class="tab-content">
+
+            <div class="tab-pane active" id="personalsettings">
+                @using (Html.BeginForm("AddEditUser", "User", FormMethod.Post,
+                                      new { name = "form-data", id = "form" }))
+                {
+                    Html.RenderPartial("~/Views/User/_UserDetails.cshtml", Model.userViewModel);
+                }
+            </div>
+
+            <div class="tab-pane" id="settings">
+                @{
+                    Html.RenderPartial("~/Views/User/_UserSettings.cshtml", Model.userSettingsViewModel);
+                }
+            </div>
+
+            @*@if (!@Thread.CurrentPrincipal.Identity.IsSTAdmin())
+            {*@
+                <div class="tab-pane" id="notifications">
+                    @{
+                Html.RenderPartial("~/Views/User/_UserNotifications.cshtml", Model.userSettingsViewModel);
+                    }
+                </div>
+            @*}*@
+            <div class="tab-pane" id="integrations">
+                    @*<div class="formsubheading">Email & Calendars</div>
+    <div class="st-integration">
+        <span class="st-cal"><span class="st-gmail"></span></span>
+        <span class="mlm display-inline">
+            <label class="bold mbm">G-Mail</label>
+            <a href="javascript:void(0)" class="btn btn-lg">Connect</a>
+        </span>
+    </div>
+    <div class="st-integration">
+        <span class="st-cal"><span class="st-gcalendar"></span></span>
+        <span class="mlm display-inline">
+            <label class="bold mbm">Google Calendar</label>
+            <a href="javascript:void(0)" class="btn btn-lg">Connect</a>
+        </span>
+    </div>
+    <div class="formsubheading">Integrations</div>*@
+                    <div class="st-integration">
+                        <span class="st-cal"><span class="st-facebooklg"></span></span>
+                        <span class="mlm display-inline">
+                            <label class="bold mbm">[|Facebook|]</label>
+                            <a id="facebookDisconnect" class="btn btn-lg @(string.IsNullOrEmpty(Model.userViewModel.FacebookAccessToken)?"hide":"")">[|Disconnect|]</a>
+                            <a id="facebookConnect"  href="@Url.Action("AuthorizeFacebook")" class="btn btn-lg @(string.IsNullOrEmpty(Model.userViewModel.FacebookAccessToken)?"":"hide")">[|Connect|]</a>
+                        </span>
+                    </div>
+                    <div class="st-integration">
+                        <span class="st-cal"><span class="st-twitterlg"></span></span>
+                        <span class="mlm display-inline">
+                            <label class="bold mbm">[|Twitter|]</label>
+                            <a id="twitterDisconnect" class="btn btn-lg @((string.IsNullOrEmpty(Model.userViewModel.TwitterOAuthToken) || string.IsNullOrEmpty(Model.userViewModel.TwitterOAuthTokenSecret))?"hide":"")">[|Disconnect|]</a>
+                            <a id="twitterConnect" href="@Url.Action("AuthorizeTwitter")" class="btn btn-lg @((!(string.IsNullOrEmpty(Model.userViewModel.TwitterOAuthToken) || string.IsNullOrEmpty(Model.userViewModel.TwitterOAuthTokenSecret))) ? "hide" : "")">[|Connect|]</a>
+                        </span>
+                    </div>
+                </div>
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var newAddress = '@Html.Raw(Json.Encode(ViewBag.NewAddress))';
+        var selectedTabName = "#personalsettings";
+        var PageName = '@ViewBag.PageName';
+        var IsAccountStAdmin= '@ViewBag.IsAccountStAdmin';
+        var Account_Base_URL = '@Url.Content("~/Account/")';
+        var Login_Base_URL = '@Url.Content("~/Login/")';
+        var Contact_BASE_URL = '@Url.Content("~/Contact/")';
+        var User_BASE_URL = '@Url.Content("~/User/")';
+
+        var viewModel;
+
+        $('#mytabs a').click(function (e) {
+            selectedTabName = $(this).attr('href');
+            if (selectedTabName == "#integrations") {
+                $("#menuItem144").parent().hide();
+            } else {
+                $("#menuItem144").parent().show();
+            }
+        });
+
+        var account = @(Html.Raw(Json.Encode(Model.userViewModel)));
+
+        var UserSettings = @(Html.Raw(Json.Encode(Model.userSettingsViewModel)));
+        var userSettingsViewModel = new userSettingViewModel(UserSettings,Account_Base_URL,Contact_BASE_URL,User_BASE_URL,Login_Base_URL);
+        ko.cleanNode(document.getElementById("settings"));
+        ko.applyBindings(userSettingsViewModel, document.getElementById("settings"));
+
+        var UserNotifications = @(Html.Raw(Json.Encode(Model.userSettingsViewModel)));
+        var userNotificationsViewModel = new userNotificationViewModel(UserNotifications,User_BASE_URL);
+        ko.cleanNode(document.getElementById("notifications"));
+        ko.applyBindings(userNotificationsViewModel, document.getElementById("notifications"));
+
+        var getCountries = function(){
+            $.ajax({
+                url: Contact_BASE_URL + 'GetCountries',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+            }).then(function (response) {            
+                var filter = $.Deferred();
+                if (response.success) {
+                    filter.resolve(response);
+                } 
+                else {     
+                    filter.reject(response.error);
+                }
+                return filter.promise();
+            }).done(function (countries) {
+                viewModel = new userViewModel(account,countries.response, Contact_BASE_URL, newAddress,User_BASE_URL,PageName,IsAccountStAdmin);
+                //$.each(viewModel.Addresses(), function(index, value){
+
+                //    value.States=ko.observableArray(value.States);
+                //    value.Countries=ko.observableArray(value.Countries);
+                //    value.State.Code= ko.observable(value.State.Code);
+                //    value.Country.Code = ko.observable(value.Country.Code);
+                //    value.Country.Code.subscribe(function(selectedCountry){
+                //        viewModel.countryChanged(value,value.State.Code);
+                //    });
+                //    value.Countries= countries;
+                //    viewModel.countryChanged(value, value.State.Code);
+                //    value.AddressTypeID=ko.observable(value.AddressTypeID);
+                //});
+
+                $.each(viewModel.Phones(), function(index,value){
+                    value.PhoneType = ko.observable(value.PhoneType);
+                    value.PhoneNumber = ko.observable(value.PhoneNumber);
+                });
+
+                $.each(viewModel.SocialMediaUrls(), function(index,value){
+                    value.MediaType = ko.observable(value.MediaType);
+                    value.Url = ko.observable(value.Url);
+                });
+
+                if(PageName == "EditUser"){
+                    ko.applyBindings(viewModel, document.getElementById("personalsettings"));
+                }else{
+                    ko.cleanNode(document.getElementById("personalsettings"));
+                    ko.applyBindings(viewModel, document.getElementById("personalsettings"));
+                }
+            }).fail(function (error) {
+                //notifyError(error);
+            });;
+        };
+        getCountries();
+
+        var MyProfileViewModel = {
+            saveSettings: function () {
+                if(selectedTabName == "#personalsettings"){
+                    viewModel.saveUser();
+                }else if(selectedTabName == "#settings"){
+                    userSettingsViewModel.saveSettings();
+                }else if(selectedTabName == "#notifications"){
+                    userNotificationsViewModel.SaveSettings();
+                }
+            }
+        };
+        $('#twitterDisconnect').click(function(e){
+            $.ajax({
+                url: '@Url.Action("DisconnectTwitter")',
+                success: function(response){
+                    if(response.Data){
+                        notifySuccess('[|Successfully disconnected with Twitter|]');
+                        $('#twitterDisconnect').addClass('hide');
+                        $('#twitterConnect').removeClass('hide');
+                    }
+                }
+            })
+        });
+        $('#facebookDisconnect').click(function(e){
+            $.ajax({
+                url: '@Url.Action("DisconnectFacebook")',
+                success: function(response){
+                    if(response.Data){
+                        notifySuccess('[|Successfully disconnected with Facebook|]');
+                        $('#facebookDisconnect').addClass('hide');
+                        $('#facebookConnect').removeClass('hide');
+                    }
+                }
+            })
+        });
+        $('#facebookConnect').click(function(e){
+            e.preventDefault();
+            if (IsAccountStAdmin == "True"){
+                notifyError("[|ST Admin is not allowed to connect to Facebook.|]");
+            }
+            else if (isEmpty(account.Account.FacebookAPPID) || isEmpty(account.Account.FacebookAPPSecret)){
+                notifyError("[|Facebook is not configured for this account.|]");
+            }
+            else{
+                var href = this.href;
+                alertifyReset();
+                alertify.confirm("[|You are being redirected to Facebook. Click Cancel to go back and save data. Click OK to proceed.|]", function(e){
+                    if (e) {
+                        window.location.href = href;
+                    }
+                })
+            }
+        });
+        $('#twitterConnect').click(function(e){
+            e.preventDefault();
+            if (IsAccountStAdmin == "True"){
+                notifyError("[|ST Admin is not allowed to connect to Twitter.|]");
+            }
+            else if (isEmpty(account.Account.TwitterAPIKey) || isEmpty(account.Account.TwitterAPISecret)){
+                notifyError("[|Twitter is not configured for this account.|]");
+            }else{
+                var href = this.href;
+                alertifyReset();
+                alertify.confirm("[|You are being redirected to Twitter. Click Cancel to go back and save data. Click OK to proceed.|]", function(e){                    
+                    if (e) {
+                        window.location.href = href;
+                    }
+                });
+            }          
+        });
+        function isEmpty(str) {
+            return (!str || 0 === str.length);
+        }
+        ko.applyBindings(MyProfileViewModel, document.getElementById("menuItem144"));
+        appendCheckbox();
+
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+    });
+  
+</script>
+@*}*@
+
+

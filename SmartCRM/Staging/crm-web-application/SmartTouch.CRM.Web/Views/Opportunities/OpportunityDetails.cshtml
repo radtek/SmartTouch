@@ -1,0 +1,168 @@
+﻿@using SmartTouch.CRM.Entities
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+
+@{
+  List<AppModules> appModules = new List<AppModules>();
+  appModules.Add(AppModules.OpportunityActions);
+  var permissions = MenuHelper.CheckPermission(appModules);   
+ }
+
+
+ <div id="View">
+@if (permissions.Where(s => s.Module == AppModules.OpportunityActions).Select(s => s.HasPermission).SingleOrDefault())
+{
+    <div class="panel panel-default" style="display:none" data-bind="visible:true">
+        <div class="panel-heading clearfix">
+            <h4 class="panel-title"><span class="icon st-icon-tick prs"></span>[|Actions|]</h4>
+            <div class="pull-right pan ctd-reminders">
+                <a href="#reminders" data-toggle="modal" data-target="#modal"
+                   data-bind="attr: { 'href': '@Url.Action("_OpportunityAddActionModal", "Opportunities")'}">
+                    <span class="icon st-icon-add mrs"></span><span class="bold">[|Add|]</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="panel-body st-reminder">
+            <div class="actions-list actions-custom-caro">
+                <!-- ko if: Actions() -->
+                <ul  data-bind="foreach :Actions,attr: {'class': Actions().length > 2 ?'jcarousel jcarousel-skin-tango':'','id': Actions().length > 2 ?'actions-carousel':'' } " style="overflow:visible;">
+                    <li>
+                        <div class="action">
+                            <div data-bind="attr: {'class': IsCompleted() ?'st-arrowleft':'st-arrowleft hide' }"><i class="fui-check"></i></div>
+                            <div class="bold display-inline mtm truncate" data-bind="text:ActionMessage,attr: { title: ActionMessage }"></div>
+                            <span class="editdel pull-right">
+                                <a data-toggle="modal" data-target="#modal"
+                                   data-bind="attr: { 'href': '@Url.Action("OpportunityEditAction", "Opportunities")?actionId=' + ActionId() +'&contactId=' + $parent.OpportunityID() }">
+                                    <i class="icon st-icon-edit mrm"></i>
+                                </a>
+                                <a href='javascript:void(0)' data-bind="click:$parent.DeleteAction"><i class="icon st-icon-bin-3"></i></a>
+                                @*<a data-toggle="modal" data-target="#modal"
+                           data-bind="attr: { 'href': '@Url.Action("GetActionContactsCount", "Contact")?actionId=' +ActionId()+'&contactId='+$parent.ContactID()}">
+                            <i class="icon st-icon-bin-3 black mrm"></i>
+                        </a>*@
+                            </span>
+                            <p class="mtm" data-bind="text:ActionMessage"></p>
+                            @*<div class="clearfix">
+                        <div class="list-mod-details">
+                            <i class="icon st-icon-calendar mrs"></i>
+                            <span data-bind="text:SelectedReminderTypes().length > 0 ? ConvertToDate(RemindOn()).toLocaleString():''"></span>
+                        </div>
+                        <div class="display-inline list-status">
+                            <span>
+                                <label class="checkbox pull-left mtn">
+                                    <input type="checkbox" data-toggle="checkbox" data-bind="checked :IsCompleted,click:$parent.Completed" class="setcompleted" />
+                                </label>
+                            </span>
+                            <span class="mls">Completed</span>
+                        </div>
+                    </div>*@
+
+                            <div class="clearfix">
+                                <!-- ko if: SelectedReminderTypes().length > 0-->
+                                <div class="list-mod-details">
+                                    <i class="icon st-icon-calendar mrs"></i>
+                                    <span data-bind="text:SelectedReminderTypes().length > 0 ? $root.DisplaywithDateTimeFormat(RemindOn()):''"></span>
+                                </div>
+                                <!--/ko-->
+                                <div class="display-inline list-status">
+                                    <span>
+                                        <label class="checkbox pull-left mtn">
+                                            <input type="checkbox" data-toggle="checkbox" data-bind="checked :IsCompleted,event: { change:$parent.Completed }" class="setcompleted" />
+                                        </label>
+                                    </span>
+                                    <span class="mls">[|Completed|]</span>
+                                </div>
+                            </div>
+                            <div class="clearfix">
+                                <div class="list-mod-users assign-us">
+                                    <span class="bold list-mod-txt">[|Assigned Users: |]</span>
+                                    &nbsp;<span data-bind="text:UserName"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+                <!--/ko-->
+                <!-- ko if:Actions().length == 0-->
+                <ul>
+                    <li class="no-records">
+                        <div class="icon st-icon-tick prs"></div>
+                        <div>[|No Actions|]</div>
+                    </li>
+                </ul>
+                <!--/ko-->
+            </div>
+        </div>
+    </div>
+
+}
+    
+     <div class="modal fade" id="opportunitydettrigger" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title" id="myModalLabel">Action Delete Alert!</h4>
+                 </div>
+                 <div class="modal-body">
+                     <div>
+                         <span style="font-size:14px; color:#7b7b7b;font-family:arial,sans-serif;">
+                             Access denied. You do not have permission to delete this Action.
+                         </span>
+                     </div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+     <div class="modal fade" id="opportunitycomptrigger" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title" id="myModalLabel">Action Complete Alert!</h4>
+                 </div>
+                 <div class="modal-body">
+                     <div>
+                         <span style="font-size:14px; color:#7b7b7b;font-family:arial,sans-serif;">
+                             Access denied. You do not have permission to Complete this Action.
+                         </span>
+                     </div>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                 </div>
+             </div>
+         </div>
+     </div>
+    
+ </div>
+ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Opportunities/")';
+        var opportunity = @(Html.Raw(Json.Encode(Model)));        
+        var viewModel = new opportunityViewModel(opportunity,BASE_URL);
+        ko.applyBindings(viewModel, document.getElementById("View"));   
+
+        //This is a must to propagate the clicked event for checkboxes.
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+       
+       function veCarousel(vecarouselid){
+                jQuery('#'+ vecarouselid).jcarousel({
+                    vertical: true,
+                    scroll: 2
+                });
+            }
+            veCarousel('relation-carousel');
+            veCarousel('actions-carousel');
+            $("#actions-carousel").css("overflow","visible");
+    });
+
+</script>

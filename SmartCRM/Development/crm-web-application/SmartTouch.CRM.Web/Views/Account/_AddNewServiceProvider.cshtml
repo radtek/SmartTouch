@@ -1,0 +1,131 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ProviderRegistrationViewModel
+
+@{
+
+    int mailproviderId = ViewBag.ProviderId;
+}
+
+
+    <div id="AddNewServiceProvider">
+        <div >
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title"> Add ServiceProvider</h4>
+            </div>
+            <div class="modal-body">
+                <div class="">
+                    <div class="dp-topnav-inner-body">
+                        <div class="form-group">
+                            <label class="control-label">[|Provider Name|] <span class="required">*</span></label>
+                            <input type="text" class="form-control" placeholder="[|Provider Name|]" data-bind="value:ProviderName,valueUpdate: 'afterkeydown'" />
+                        </div>
+                        @{if (mailproviderId == 3)
+                        {
+                            <div class="form-group">
+                                <label class="control-label">[|API|] <span class="required">*</span></label>
+                                <input type="text" class="form-control" placeholder="[|API|]" data-bind="value:ApiKey,valueUpdate: 'afterkeydown'" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">[|MailChimp List ID|]</label>
+                                <input type="text" class="form-control" placeholder="[|MailChimpListID|]" data-bind="value:MailChimpListID" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">[|User Name|] </label>
+                                <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">[|Password|] </label>
+                                <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">[|Sender Email|] <span class="required">*</span></label>
+                                <input type="email" class="form-control" placeholder="[|Sender Email|]" data-bind="value:Email,valueUpdate: 'afterkeydown'" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">[|Sender Friendly Name|]</label>
+                                <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" data-bind="value:SenderFriendlyName,valueUpdate: 'afterkeydown'" />
+                            </div>
+                        }
+                        }
+                        @{if (mailproviderId == 4)
+                        {
+                               
+                                <div class="form-group">
+                                    <label class="control-label">[|Host|] <span class="required">*</span></label>
+                                    <input type="text" class="form-control" placeholder="[|Host|]" data-bind="value:Host, valueUpdate: 'afterkeydown'" />
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label">[|Port|] <span class="required">*</span></label>
+                                    <input type="text" class="form-control" placeholder="[|Port|]" onkeypress="return OnPort(event)" data-bind="value:Port,valueUpdate: 'afterkeydown'" />
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label">[|User Name|] <span class="required">*</span></label>
+                                    <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label">[|Password|] <span class="required">*</span></label>
+                                    <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label">[|Sender Email|] </label>
+                                    <input type="email" class="form-control" placeholder="[|Sender Email|]" data-bind="value:Email,valueUpdate: 'afterkeydown'" />
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label">[|Sender Friendly Name|]</label>
+                                    <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" data-bind="value:SenderFriendlyName,valueUpdate: 'afterkeydown'" />
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label">[|Sender's Domain|] </label>
+                                    <input type="text" class="form-control" placeholder="[|Sender Domain|]" data-bind="value:SenderDomain, valueUpdate: 'afterkeydown'" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Image Domain <span class="required">*</span></label>
+                                    <input data-bind="kendoDropDownList: {dataTextField:'Domain',dataValueField:'ImageDomainId', data: ImageDomains, value: ImageDomainId,optionLabel:'Select...'}" />
+                                    <span class="validationMessage" data-bind="validationMessage:ImageDomainId"></span>
+                                    </div>
+
+                                    <div class="clearfix">
+                                        <div class="form-group" id="VMTA" >
+                                            <label class="control-label">[|SmartTouch|] <span class="required">*</span></label>
+                                            <input type="text" class="form-control" placeholder="[|SmartTouch|]" data-bind="value:VMTA,valueUpdate: 'afterkeydown'" />
+                                        </div>
+                                    </div>
+
+                        }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" id="addBtn" data-bind="click:addServicProvider" aria-hidden="true"><span>[|Save|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="true"
+                       data-dismiss="modal" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<script >
+    //function CloseTopInner(obj) {
+    //    $(".dp-topnav-inner, .moreinner").removeClass('show').addClass('hide loader');
+    //    $(obj).parents('.top-nav').find('li.btngroup.showtopinner, li.btn-group.showmore').removeClass('showtopinner showmore');
+    //    $(obj).closest('li.btn-group').removeClass('showtopinner');
+    //    $(obj).removeClass('active');
+    //}
+
+    function OnPort(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+    $(document).ready(function () {
+      
+        var providerID = '@mailproviderId'
+        var viewModel;
+        viewModel = new serviceProviderViewModel(providerID);
+        ko.applyBindings(viewModel, document.getElementById("AddNewServiceProvider"));
+    });
+</script>

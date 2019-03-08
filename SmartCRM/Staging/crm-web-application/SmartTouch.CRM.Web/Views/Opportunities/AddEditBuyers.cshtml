@@ -1,0 +1,339 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    ViewBag.Title = "Add Buyers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    var OpportunityPage = ViewBag.OpportunityPage;
+    var IsContact = ViewBag.IsContact;
+    var IsPeople = ViewBag.IsPeople;
+    var oppName = ViewBag.OpportunityName;
+  //  var mode = ViewBag.mode;
+}
+@*<script src="~/Scripts/ViewModels/TimeLineViewModel.js"></script>
+<script src="~/Scripts/ViewModels/OpportunityViewModel.js"></script>*@
+
+@Scripts.Render("~/bundles/Opportunityvm")
+
+<div class="sub-container" style="display:none" data-bind="visible:true">
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("[|Opportunities|]", "OpportunitiesList")</li>
+        <li class="active">
+            <a href="javascript:void(0)">
+                [|Add Buyers|]
+            </a>
+        </li>
+    </ul>
+    <div class="main-header">
+        [|Add Buyers|]
+    </div>
+    <div class="form-horizontal-large">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group ">
+                    <label class="control-label">[|Opportunity Name|]<span class="required">*</span></label>
+                    <input type="text" id="txtOpportunity" data-bind="value:OpportunityName, valueUpdate: 'afterkeydown'" class="form-control">
+                    <span class="validationMessage" data-bind="validationMessage:opportunityValidation"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">[|Stage|]<span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField: 'DropdownValueID', data: Statuses, value: StageID },valueUpdate: 'afterkeydown'" />
+                    <span class="validationMessage" data-bind="validationMessage:stageValidation"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group ">
+                    @if (IsPeople == "1")
+                    {
+                        <label>[|Buyer(s)|]<span class="required">*</span></label>
+                    }
+                    @if (IsPeople == "2")
+                    {
+                        <label class="control-label">[|Company|]<span class="required">*</span></label>
+                    }
+
+                    <input id="OpportunityContacts" data-bind="valueUpdate: 'afterkeydown'" placeholder="[|Company|]" class="form-control">
+                    <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group ">
+                    <label class="control-label">[|Potential|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|Potential|]" data-bind="value:Potential,valueUpdate: 'afterkeydown'" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group ">
+                    <label class="control-label">[|Expected Close|]<span class="required">*</span></label>
+                    <input data-bind="kendoDatePicker:{value:ExpectedCloseDate, format: dateFormat,min :minDate}, valueUpdate: 'afterkeydown'" />
+                    <span class="validationMessage" data-bind="validationMessage:DateValidation"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">[|Owner|]<span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: { dataTextField: 'Name', dataValueField: 'UserID', data: Users, value: UserID, optionLabel: 'Select Owner..' }" />
+                    <span class="validationMessage" data-bind="validationMessage:ownerValidation"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">[|Comments|]<span class="required">*</span></label>
+                    <textarea data-bind="value:Description" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="hr-border"></div>
+        <div class="pull-left">
+            <a data-bind="click:saveOpportunity" href="#" class="btn btn-lg btn-primary">[|Save|]</a>
+            <a data-bind="click:cancelopportunity" class="btn btn-lg">[|Cancel|]</a>
+            @*<a data-bind="attr: { 'href': '@Url.Action("OpportunitiesList", "Opportunities")' }" class="btn btn-lg">Cancel</a>*@
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+    jQuery(document).ready(function () {
+        var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+        var Contact_Base_Url = '@Url.Content("~/Contact/")';
+        var opportunity = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var opportunityName = '@(oppName)';
+        var viewModel = new opportunityViewModel(opportunity,Opportunity_BASE_URL,WEBSERVICE_URL,Contact_Base_Url, '@(OpportunityPage)',opportunityName);
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        jQuery.each(viewModel.PeopleInvolved(), function (index, value) {
+
+            value.RelationshipTypeID = ko.observable(value.RelationshipTypeID);
+            console.log("contactid: " + value.ContactID);
+            value.ContactID = ko.observable(value.ContactID);
+            value.IsInEditMode = ko.observable(value.IsInEditMode);
+            value.RelationShipTypeName = ko.observable(value.RelationShipTypeName);
+            value.editRelation = function(relation){
+                relation.IsInEditMode(true);
+            };
+            value.ContactType = ko.observable(value.ContactType);
+            value.ContactFullName = ko.observable(value.ContactFullName);
+            value.CompanyName=ko.observable(value.CompanyName);
+            value.cancelRelation = function(relation){
+                relation.IsInEditMode(false);
+            }
+            value.updateRelation = function(relation){
+                console.log(relation.updaterelationshipErrors());
+
+               // relation.updaterelationshipErrors.showAllMessages();
+
+                if (relation.updaterelationshipErrors().length > 0)
+                    return;
+
+
+                if(relation.selectedContact() != null){
+                    relation.ContactID(relation.selectedContact().ContactID);
+                    relation.IsInEditMode(false);
+                }else{
+                    return;
+                }
+                if(relation.selectedRelation() != null){
+                    relation.RelationShipTypeName(relation.selectedRelation().DropdownValue);
+                }
+
+            }
+            value.updatecontactValidation = value.ContactID.extend({contacttypeCannotEqual: 0 }),
+            value.updaterelationshipErrors = ko.validation.group([value.updatecontactValidation]);
+            value.selectedContact = ko.observable("");
+            value.selectedRelation = ko.observable("");
+            value.ContactFullName.subscribe(function(val){
+                var data =  ko.utils.arrayFirst(viewModel.AllContacts(), function(choice) {
+                    return choice.ContactFullName ===  val;
+                });
+                value.selectedContact(data);
+            });
+            //value.CompanyName.subscribe(function(val){
+            //    var data=ko.utils.arrayFirst(view.AllContacts(),function(choice){
+            //        return choice.CompanyName===val;
+            //    });
+            //    value.selectedContact(data);
+            //});
+            value.RelationshipTypeID.subscribe(function(val){
+                var data =  ko.utils.arrayFirst(viewModel.Relationships(), function(choice) {
+                    return choice.DropdownValueID == val;
+                });
+                console.log("relationships");
+                console.log(viewModel.Relationships());
+                console.log(data);
+                value.selectedRelation(data);
+            });
+
+
+
+            var txtContactId = "#" + index;
+            jQuery(txtContactId).kendoAutoComplete({
+                minLength: 1,
+                placeholder: "Type a contact name",
+                height: 500,
+                dataTextField: "Text",
+                select: autocompleteselect
+            });
+
+            jQuery(document).on('keydown keypress', txtContactId, function (data) {
+                console.log($(txtContactId).val());
+                console.log("key pressed");
+                console.log(IsContact);
+                typewatch(function () {
+                    var authToken = readCookie("accessToken");
+                    $.ajax({
+                        url: WEBSERVICE_URL + "/opportunityName",
+                        type: 'get',
+                        dataType: 'json',
+                        data: { 'query': $(txtContactId).val(), 'accountId': accountId },
+                        contentType: "application/json; charset=utf-8",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                        },
+                        success: function (contactsData) {
+                            console.log("contact data");
+                            console.log(contactsData);
+                            if (contactsData.Results.length > 0) {
+                                console.log("txtContactId:   "  + txtContactId);
+                                var autocomplete = jQuery(txtContactId).data("kendoAutoComplete");
+                                console.log(autocomplete);
+                                autocomplete.dataSource.data(contactsData.Results);
+                            }
+                        },
+                        error: function (response){
+                            notifyError(response.responseText);
+                        }
+                    });
+                }, 500);
+
+
+            });
+
+            function autocompleteselect(e) {
+                var dataItem = this.dataItem(e.item);
+                console.log($(e));
+                console.log("selected value");
+                console.log(dataItem);
+                //viewModel.ContactText(dataItem.Text);
+                //viewModel.ContactTextID(dataItem.DocumentId);
+                //e.preventDefault();
+                value.selectedContact(dataItem);
+            }
+
+
+
+        });
+        ko.applyBindings(viewModel,document.getElementById("opportunities"));
+
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel,accountId,tagCreatedBy);
+        tagify.TagifyContacts("OpportunityContacts");
+
+        var txtTagId = "#contactsautosuggest";
+        jQuery(txtTagId).kendoAutoComplete({
+            minLength: 1,
+            placeholder: "Type a contact name",
+            height: 500,            
+            filter: "contains",
+            serverFiltering: true,
+            dataTextField: "Text",
+            select: autocomplete_select
+        });
+
+        jQuery(document).on('keydown keypress', txtTagId, function (data) {
+            typewatch(function () {
+                var authToken = readCookie("accessToken");
+                $.ajax({
+                    url: WEBSERVICE_URL + "/Contact/FullName",
+                    type: 'get',
+                    dataType: 'json',
+                    data: { 'query': $(txtTagId).val(), 'accountId': accountId },
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    success: function (contactsData) {
+                        console.log("in success");
+                        console.log(contactsData);
+                        if (contactsData.Results.length > 0) {
+                            var autocomplete = jQuery(txtTagId).data("kendoAutoComplete");
+                            autocomplete.dataSource.data(contactsData.Results);
+                            console.log("auto complete data");
+                            console.log(autocomplete.dataSource.data());
+                        }
+                    },
+                    error: function (response){
+                        notifyError(response.responseText);
+                    }
+                });
+            }, 500);
+
+            if($(this).val().length == 0)
+                viewModel.ContactTextID("");
+        });
+
+        function autocomplete_select(e) {
+            var dataItem = this.dataItem(e.item);
+            viewModel.ContactText(dataItem.Text);
+            viewModel.ContactTextID(dataItem.DocumentId);
+            e.preventDefault();
+        }
+
+        var typewatch = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+
+        
+        $("#txtOpportunity").kendoAutoComplete({
+            minLength: 1,
+            placeholder: "Type a opportunity name",
+            dataTextField: "OpportunityName",
+            select: autocomplete_opportunity_select
+        });
+
+        $(document).on('keydown keypress', "#txtOpportunity", function () {
+            typewatch(function () {
+                var authToken = readCookie("accessToken");
+                $.ajax({
+                    url:  WEBSERVICE_URL + "/getopportunities",
+                    type: 'get',
+                    dataType: 'json',
+                    data:{ 'query': $("#txtOpportunity").val(), 'accountId': accountId},
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    success: function (opportunitiesData) {
+                        viewModel.opportunityData(opportunitiesData);
+                        var autocomplete = $("#txtOpportunity").data("kendoAutoComplete");
+                        console.log(opportunitiesData);
+                        autocomplete.dataSource.data(opportunitiesData);
+                    },
+                    error: function (response) {
+                        notifyError(response.responseText);            
+                    }
+                });
+            }, 500);
+        });
+
+        function autocomplete_opportunity_select(e) {
+            var item = e.item;
+            var dataItem = this.dataItem(e.item);
+        }
+    });
+</script>

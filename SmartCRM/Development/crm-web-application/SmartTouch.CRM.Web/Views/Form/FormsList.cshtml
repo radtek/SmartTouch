@@ -1,0 +1,301 @@
+﻿@{
+    ViewBag.Title = "Forms";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var userIdS = ViewBag.UserIds != null ? (IEnumerable<int>)ViewBag.UserIds : null;
+    var startDate = ViewBag.StartDate;
+    var endDate = ViewBag.EndDate;
+    var formsCountReportId = ViewBag.FormsCountReportId;
+}
+
+@Scripts.Render("~/bundles/formsvm")
+
+
+@using (Ajax.BeginForm("FormList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="FormList" style="display:none" data-bind="visible:true">
+        <ul class="breadcrumb border-bottom-none">
+            @if (startDate != null && startDate != "")
+            {
+                <li><a href="/Reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)">[|Forms List|]</a></li>
+            }
+        </ul>
+        <div class="page-title">[|Forms|]</div>
+        <div class="forms-grid">
+                        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.FormViewModel>()
+        .Name("gridForm")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(true)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+           .PageSizes(true)
+        .ButtonCount(10).Messages(m => m
+            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Form(s)|]")
+            .Empty("[|No forms to display|]")
+            .ItemsPerPage("[|Forms per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Bound(e => e.Name).Title("[|Form Name|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-40" });
+        columns.Bound(e => e.Status).Title("[|Status|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(e => e.UniqueSubmissions).Title("[|Unique Contacts|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+        columns.Bound(e => e.AllSubmissions).Title("[|Submissions|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:120px;" });
+    })
+    .Sortable(sortabe => sortabe.AllowUnsort(true))
+.Reorderable(reorder => reorder.Columns(false))
+.Resizable(resize => resize.Columns(true))
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="left-part">
+                    <label class="checkbox toggle-all" for="masterCheckBox">
+                        <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                        [|Select All|]
+                    </label>
+                </div>
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtFormSearch" onkeydown="GetFormBasedonsearch(event);" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                </div>
+            </div>
+        </text>);
+    }).
+ClientRowTemplate(
+@"<tr class='even'>
+    <td class='grid-checkbox'>
+        <label class='checkbox'>
+            <input type='checkbox' class='chkform' data-name='#:Name#' data-status='#:Status#' data-status='#:Status#' data-isapiform='#:IsAPIForm#' id='#:FormId#' data-toggle='checkbox' />
+        </label>
+    </td>
+    <td> #if(!IsAPIForm){#"
++ Html.ActionLink("#:Name#", "EditForm", new { formId = "fid" }, new { @title = "#:Name#" }).ToHtmlString().Replace("fid", "#:FormId#") + "#}else{# #:Name# #}#</td>" + @"<td>"
+    + @"#if (Status == 201){#<span class='at-active bold' >[|Active|]</span>#}"
++ @"else if(Status == 202){#<span class='at-paused bold'>[|Inactive|]</span>#}#"
+    + @"
+    </td>
+<td class='text-center'>
+#if(UniqueSubmissions == 0){#
+#:UniqueSubmissions#
+#}else{#
+<a href='javascript:void(0)' id='#:FormId#' class='unique-submissions'>#:UniqueSubmissions#</a>
+#}#
+</td>
+<td class='text-center'>
+#if(AllSubmissions == 0 || IsAPIForm){#
+#:AllSubmissions#
+#}else{#
+<a href='javascript:void(0)' id='#:FormId#' class='all-submissions'>#:AllSubmissions#</a>
+#}#
+</td>
+    <td class='grid-row-controls'>
+        <span> #if(!IsAPIForm){#" + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditForm", new { formId = "fid" }, new { @title = "Edit Form" }).ToHtmlString().Replace("fid", "#:FormId#")
++ Html.ActionLink("<i class=' icon st-icon-windows'></i>", "SaveFormAs", new { formId = "fid" }, new { @title = "Save Form As" }).ToHtmlString().Replace("fid", "#:FormId#")
+          + "#}else{##}# <a href='javascript:void(0)' onclick='DeleteForm(#:FormId#)' title='Delete Form'><i class='icon st-icon-bin-3'></i></a></span></td></tr>")
+        .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(ItemsPerPage)
+.Read(read => read.Action("FormsListView", "Form").Data("additionalInfo"))//, new { name = "#=''#" }
+        )
+            )
+        </div>
+    </div>
+}
+
+@section Scripts{
+<script>
+    var userIDs =  '@Html.Raw(Json.Encode(ViewBag.UserIds))';
+    var Startdate='@startDate';
+    var Enddate='@endDate';
+
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+    function additionalInfo() {
+        localStorage.removeItem("formsearchtext");
+        localStorage.setItem("formsearchtext", $("#txtFormSearch").val());
+        return {
+            name: localStorage.getItem("formsearchtext"),
+            status: localStorage.getItem("formsearchcontent"),
+            userIds: userIDs,
+            StartDate: Startdate,
+            EndDate: Enddate
+        }
+    }
+</script>
+
+<script>
+    var searchText;
+    var FormCountReportId = '@formsCountReportId';
+    function GetFormBasedonsearch(e) {
+        setTimeout(function () {
+
+            var enterKeyPressCode = 13;
+            if (searchText !== $("#txtFormSearch").val() || (searchText === $("#txtFormSearch").val() && e.keyCode == enterKeyPressCode))
+                searchText = $("#txtFormSearch").val();
+            else
+                return;
+
+            $filter = new Array();
+            var grid = $("#gridForm").data("kendoGrid"), searchBox = $("#txtFormSearch").val();
+
+            if ($.trim(searchBox).length > 2) {
+                localStorage.removeItem("formsearchtext");
+                localStorage.setItem("formsearchtext", searchBox);
+
+                var psize = readCookie("formpagesize");
+                grid.dataSource.query({ page: 1, pageSize: psize });
+                $('[data-toggle="checkbox"]').each(function () {
+                    var $checkbox = $(this);
+                    $checkbox.checkbox();
+                });
+            }
+            else if ($.trim(searchBox).length === 0) {
+                $("#gridForm").data("kendoGrid").dataSource.read();
+                appendCheckbox();
+            }
+        }, 800);
+    }
+
+    $('#txtFormSearch').keypress(function(event){
+        if(event.keyCode==13){
+            event.preventDefault();
+            return false;
+            window.location="/forms";
+        }
+    });
+
+
+    function onDataBinding(arg) {
+        setTimeout(function () {
+            appendCheckbox();
+            bindCheckboxchnage('chkform');
+        }, 200)
+    }
+    var BASE_URL = '@Url.Content("~/Reports/")';
+
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+        $('.all-submissions').each(function(index,value){
+            var form = this;
+            var formId = $(value).attr('id');
+            $(this).click(function(){
+                window.location.href = '../Form/FormSubmissions?formId='+formId+'&periodId=0';
+            });
+        })
+        $('.unique-submissions').each(function(index,value){
+            var form = this;
+            var formId = $(value).attr('id');
+            $(this).click(function(){
+                $.ajax({
+                    url: BASE_URL + '/GetOnlineRegistertedContacts',
+                    type: 'post',
+                    data: ko.toJSON({'FormIds':[formId],'LeadAdapterIds':[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}),
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8"
+                }).then(function (response) {
+                    var filter = $.Deferred();
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (response) {
+                    removepageloader();
+                    if (response != null) {
+                        if (response.success == true) {
+                            localStorage.setItem("ContactsGuid", response.response);
+                            reportId = 195 ;//
+                            console.log('../formcontacts?guid=' + response.response + '&reportType=' + 10 + '&reportId=' + FormCountReportId + '&formId=' + formId);
+                            window.location.href = '../formcontacts?guid=' + response.response + '&reportType=10&reportId=' + FormCountReportId+ '&formId=' + formId;
+                        }
+                    }
+                }).fail(function (error) {
+                    notifyError(error);
+                });
+            })
+        })
+    }
+
+    function DeleteForm(id)
+    {
+        alertifyReset("Delete Form","Cancel");
+        alertify.confirm("[|Are you sure you want to delete this Form|]?", function (e) {
+            if (e)
+            {
+                pageLoader();
+                var fid = [id];
+                var BASE_URL = '@Url.Content("~/Form/")';
+                jsondata = JSON.stringify({ 'FormIDs': fid });
+                varDeleteURL = BASE_URL+"DeleteForm";
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: varDeleteURL,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'formIDs': jsondata }),
+                }).then(function (response) {
+
+                    var filter = $.Deferred();
+                    if (response.success) {
+                        filter.resolve(response);
+                    }
+                    else {
+                        filter.reject(response.error);
+                    }
+                    return filter.promise();
+                }).done(function (data) {
+                    notifySuccess("[|Successfully deleted the Form|]");
+                    removepageloader();
+                    setTimeout(function () { window.location.href = document.URL }, setTimeOutTimer);
+                }).fail(function (error) {
+                    removepageLoader();
+                    notifyError(error);
+                });
+            }
+            else
+            {
+                notifyError("[|You've clicked Cancel|]");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        removepageloader();
+        var BASE_URL = '@Url.Content("~/Form/")';
+        var formview = @(Html.Raw(Json.Encode(Model)));
+        viewModel = new formListViewModel(formview, BASE_URL);
+
+        ko.applyBindings(viewModel);
+
+        var pno = readCookie("formpagenumber");
+        var psize = '@(ItemsPerPage)';
+
+        tableMasterCheckBox('forms-grid');
+    });
+</script>
+
+}
+
+
+

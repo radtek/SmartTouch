@@ -1,0 +1,29 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model UserViewModel
+
+@Scripts.Render("~/bundles/uservm")
+
+<div id="resendinvite">
+    <div class="drop-heading">
+        <span class="icon st-icon-envelope display-inline"></span> <h4 class="panel-title display-inline plm">[|Resend Invite|]</h4>
+    </div>
+    <div class="panel-footer">
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click:resendInvite"><span>[|Resend Invite|]</span></a>
+            @*<a href="javascript:void(0)" class="btn btn-lg btn-primary" onclick="CloseTopInner(this)">Update Role</a>*@
+            <a href="javascript:void(0)" class="btn btn-lg" onclick="CloseTopInner(this)">[|Cancel|]</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var BASE_URL = '@Url.Content("~/User/")';
+        var user = @(Html.Raw(Json.Encode(Model)));
+        var role = [{Id:0,RoleName:"Sales"}];   //Actually roles here is of no use but to not pass an nul object we are passing dummy object.
+        var viewModel2 = new userViewModel(user,role,BASE_URL);
+        ko.applyBindings(viewModel2,document.getElementById("resendinvite"));
+    });
+
+    checkedvalues = fnGetChkvalGrid('chkuser');
+</script>

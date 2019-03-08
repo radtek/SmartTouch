@@ -1,0 +1,583 @@
+﻿@using SmartTouch.CRM.Entities
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.ContactRelationships);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    appModules.Add(AppModules.WebAnalytics);
+    appModules.Add(AppModules.Opportunity);
+    appModules.Add(AppModules.LeadScore);
+    appModules.Add(AppModules.ContactTours);
+    appModules.Add(AppModules.Automation);
+    appModules.Add(AppModules.SendMail);
+    var permissions = MenuHelper.CheckPermission(appModules);
+    var DateFormat = ViewBag.DateFormat;
+    var IsPeople = ViewBag.IsPeople;
+}
+@*<script src="~/Scripts/kendoui/cultures/kendo.culture.fr-FR.min.js"></script>*@
+<div id="View">
+    <div class="panel panel-default">
+        @if ((permissions.Where(s => s.Module == AppModules.LeadScore).Select(s => s.HasPermission).SingleOrDefault())
+              || (permissions.Where(s => s.Module == AppModules.Automation).Select(s => s.HasPermission).SingleOrDefault())
+              || (permissions.Where(s => s.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault())
+              || (permissions.Where(s => s.Module == AppModules.SendMail).Select(s => s.HasPermission).SingleOrDefault() && IsPeople == "1")
+              )
+        {   
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title"><span class="icon st-icon-podcast prs"></span>[|Engagement Summary|]</h4>
+            </div>
+        }
+        
+        <div class="panel-body st-reminder">
+            <ul class="engagement-st-smry">
+                @if (permissions.Where(s => s.Module == AppModules.Automation).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                    <li class="eng-st-smry1">
+                        <!-- ko if:WorkflowsCount() == 0 -->
+                        <div class="st-leadnum negative-lead" data-bind="text:WorkflowsCount"></div>
+                        <!--/ko-->
+                        <!-- ko if:WorkflowsCount() > 0 -->
+                        <a class="st-leadnum positive-lead" data-bind="text:WorkflowsCount,attr:{ href: '/contactworkflowsummary?contactId=' + ContactID() }"></a>
+                        <!--/ko-->
+                        <div class="st-leadtext">[|Workflows|]</div>
+                    </li>
+                }
+                
+                @if (permissions.Where(s => s.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                    <li class="eng-st-smry2">
+                        <!-- ko if:CampaignsCount() == 0 -->
+                        <div class="st-leadnum negative-lead" data-bind="text:CampaignsCount"></div>
+                        <!--/ko-->
+                        <!-- ko if:CampaignsCount() > 0 -->
+                        <a class="st-leadnum positive-lead" data-bind="text:CampaignsCount,attr:{ href: '/contactcampaigsummary?contactId=' + ContactID() }"></a>
+                        <!--/ko-->
+                        <div class="st-leadtext">[|Campaigns|]</div>
+                    </li>
+                }
+                
+                @if (permissions.Where(s => s.Module == AppModules.SendMail).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                    <li class="eng-st-smry3">
+                        <!-- ko if:EmailsCount() == 0 -->
+                        <div class="st-leadnum negative-lead" data-bind="text:EmailsCount"></div>
+                        <!--/ko-->
+                        <!-- ko if:EmailsCount() > 0 -->
+                        <a class="st-leadnum positive-lead" data-bind="text:EmailsCount,attr:{ href: '/contactemailsummary?contactId=' + ContactID() }"></a>
+                        <!--/ko-->
+                        <div class="st-leadtext">[|Emails|]</div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="panel panel-default" id="appTourEngagement">
+        @if( (permissions.Where(s => s.Module == AppModules.LeadScore).Select(s => s.HasPermission).SingleOrDefault())
+            || (permissions.Where(s => s.Module == AppModules.WebAnalytics).Select(s => s.HasPermission).SingleOrDefault())
+            || (permissions.Where(s => s.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault())
+            || (permissions.Where(s => s.Module == AppModules.Opportunity).Select(s => s.HasPermission).SingleOrDefault() && IsPeople == "1")
+            )
+         {
+        <div class="panel-heading clearfix">
+            <h4 class="panel-title"><span class="icon st-icon-podcast prs"></span>[|Engagement|]</h4>
+            <div class="eng-dropdown pull-right pan">
+                <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Period',dataValueField:'PeriodId', data: Periods ,value:PeriodId ,change:periodChange}" />
+            </div>
+        </div>
+        }
+        <div class="panel-body st-reminder">
+            <ul class="engagement-st">
+                @if (permissions.Where(s => s.Module == AppModules.LeadScore).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                    <li class="eng-st1">
+                        <!-- ko if:LeadScore() < 0 -->
+                        <div class="st-leadnum negative-lead" data-bind="text:LeadScore"></div>
+                        <!--/ko-->
+                        <!-- ko if:LeadScore() >= 0 -->
+                        <div class="st-leadnum positive-lead" data-bind="text:LeadScore"></div>
+                        <!--/ko-->
+                        <div class="st-leadtext">[|Lead Score|]</div>
+                    </li>
+                }
+                @if (permissions.Where(s => s.Module == AppModules.WebAnalytics).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                <li class="eng-st2">
+                    <!-- ko if:WebVisits() <= 0 -->
+                    <div class="st-leadnum" data-bind="text:WebVisits"></div>
+                    <!--/ko-->
+                    <!-- ko if:WebVisits() > 0 -->
+                    <a class="st-leadnum" data-bind="text:WebVisits, event:{click: showWebVisitsTab}" href="javascript.void(0)"></a>
+                    <!--/ko-->
+                    <div class="st-leadtext">[|Web Visits|]</div>
+                </li>
+                }
+                @if (permissions.Where(s => s.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                <li class="eng-st5 eng-opt actions">
+
+                    <div class="camp-eng">
+                        Campaigns
+                        @*<span class="tag-loader" id="campaignsummary-loader" />*@
+                    </div>
+                    <div class="eng-detail">
+                        <div class="st-leadnum" data-bind="text:CampaignsSummary().Sent">
+                            @*<span data-bind="text:CampaignsSummary().Sent"></span>
+            <span data-bind="text:CampaignsSummary().Sent() >= 0 ? ' - ' : '' "></span>*@
+
+                        </div>
+                        <div class="st-leadtext">[|Sent|]</div>
+                        </div>
+                    <div class="eng-detail">
+                        <!-- ko if:CampaignsSummary().Delivered() == 0 -->
+                        <div class="st-leadnum" data-bind="text:CampaignsSummary().Delivered"></div>
+                        <!--/ko-->
+                        <!-- ko if:CampaignsSummary().Delivered() > 0 -->
+                        <a class="st-leadnum" data-bind="text:CampaignsSummary().Delivered,attr:{ href: '/cs?contactId=' + ContactID() +'&t=0' }"></a>
+                        <!--/ko-->
+                       
+                        @*<div class="st-leadnum" data-bind="text:CampaignsSummary().Delivered"></div>*@
+                        <div class="st-leadtext">[|Delivered|]</div>
+                    </div>
+                    <div class="eng-detail">
+                        <!-- ko if:CampaignsSummary().Opened() == 0 -->
+                        <div class="st-leadnum" data-bind="text:CampaignsSummary().Opened"></div>
+                        <!--/ko-->
+                        <!-- ko if:CampaignsSummary().Opened() > 0 -->
+                        <a class="st-leadnum" data-bind="text:CampaignsSummary().Opened,attr:{ href: '/cs?contactId=' + ContactID() +'&t=1' }"></a>
+                        <!--/ko-->
+                        @*<div class="st-leadnum" data-bind="text:CampaignsSummary().Opened"></div>*@
+                        <div class="st-leadtext">[|Opened|]</div>
+                    </div>
+                    <div class="eng-detail">
+                        <!-- ko if:CampaignsSummary().Clicked() == 0 -->
+                        <div class="st-leadnum" data-bind="text:CampaignsSummary().Clicked"></div>
+                        <!--/ko-->
+                        <!-- ko if:CampaignsSummary().Clicked() > 0 -->
+                        <a class="st-leadnum" data-bind="text:CampaignsSummary().Clicked,attr:{ href: '/cs?contactId=' + ContactID() +'&t=2' }"></a>
+                        <!--/ko-->
+                        @*<div class="st-leadnum" data-bind="text:CampaignsSummary().Clicked"></div>*@
+                        <div class="st-leadtext">[|Clicks|]</div>
+                    </div>
+                </li>
+                }
+                @if (permissions.Where(s => s.Module == AppModules.SendMail).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                    <li class="eng-st5 eng-opt actions">
+
+                        <div class="camp-eng">
+                            Emails
+                        </div>
+                        <div class="em-eng-detail">
+                            <!-- ko if:EmailsSummary().Delivered() == 0 -->
+                            <div class="st-leadnum" data-bind="text:EmailsSummary().Delivered"></div>
+                            <!--/ko-->
+                            <!-- ko if:EmailsSummary().Delivered() > 0 -->
+                            <a class="st-leadnum" data-bind="text:EmailsSummary().Delivered,attr:{ href: '/es?c=' + ContactID() +'&t=0' }"></a>
+                            <!--/ko-->
+                            <div class="st-leadtext">[|Delivered|]</div>
+                        </div>
+                        <div class="em-eng-detail">
+                            <!-- ko if:EmailsSummary().Opened() == 0 -->
+                            <div class="st-leadnum" data-bind="text:EmailsSummary().Opened"></div>
+                            <!--/ko-->
+                            <!-- ko if:EmailsSummary().Opened() > 0 -->
+                            <a class="st-leadnum" data-bind="text:EmailsSummary().Opened,attr:{ href: '/es?c=' + ContactID() +'&t=1' }"></a>
+                            <!--/ko-->
+                            <div class="st-leadtext">[|Opened|]</div>
+                        </div>
+                        <div class="em-eng-detail">
+                            <!-- ko if:EmailsSummary().Clicked() == 0 -->
+                            <div class="st-leadnum" data-bind="text:EmailsSummary().Clicked"></div>
+                            <!--/ko-->
+                            <!-- ko if:EmailsSummary().Clicked() > 0 -->
+                            <a class="st-leadnum" data-bind="text:EmailsSummary().Clicked,attr:{ href: '/es?c=' + ContactID() +'&t=2' }"></a>
+                            <!--/ko-->
+                            <div class="st-leadtext">[|Clicks|]</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+
+
+    @if (permissions.Where(s => s.Module == AppModules.Opportunity).Select(s => s.HasPermission).SingleOrDefault() && IsPeople == "1")
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title"><span class="icon st-icon-opputunities prs"></span>[|Opportunities|]</h4>
+                <div class="pull-right pan ctd-reminders">
+                    <a href="#reminders" data-toggle="modal" data-target="#modal"
+                       data-bind="attr: { 'href': '@Url.Action("_AddBuyerModal", "Opportunities")?contactId='+ContactID()}">
+                        <span class="icon st-icon-add mrs"></span><span class="bold">[|Add|]</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel-body st-reminder">
+                <div class="opportunity-list opportunities-custom-caro">
+                    <!-- ko if: Opportunities() -->
+                    <ul data-bind="foreach :Opportunities,attr: {'class': Opportunities().length > 2 ?'jcarousel jcarousel-skin-tango':'','id': Opportunities().length > 2 ?'opportunities-carousel':'' } ">
+                        <li>
+                            <div class="opportunity">
+                                <div class="bold display-inline truncate" data-bind="text:Name"></div>
+                                <span class="editdel pull-right">
+                                    <a href="#reminders" data-toggle="modal" data-target="#modal" data-bind="attr: { 'href': '@Url.Action("EditBuyer", "Opportunities")?buyerId='+ OpportunityContactMapID}">
+                                        <i class="icon st-icon-edit"></i>
+                                    </a>
+                                    <a href='javascript:void(0)' data-bind="click:$parent.DeleteOpportunityContactMap"><i class="icon st-icon-bin-3"></i></a>
+                                </span>
+                                <div class="mtm clearfix">
+                                    <div class="opportunity-content">
+                                        <div class="opportunity-des"><p data-bind="text:Comments"></p></div>
+                                        <p class="bold">[|In|] <span data-bind="text:Stage"></span> [|Stage|]</p>
+                                    </div>
+                                    @*<span class="opportunity-potential" data-bind="numericText:Potential"></span>*@
+                                    <span class="opportunity-potential" data-bind="text:$root.DisplayWithCurrency(Potential)"></span>
+                                </div>
+                                <div class="clearfix" data-bind="visible:ExpectedToClose != null">
+                                    <div class="list-mod-details">[|Expected to close|] <span data-bind="text:$root.DisplaywithDateFormat(ExpectedToClose)"></span></div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <!--/ko-->
+                    <!-- ko if:Opportunities().length == 0-->
+                    <ul>
+                        <li class="no-records">
+                            <div class="icon st-icon-opputunities"></div>
+                            <div>[|No Opportunities|]</div>
+                        </li>
+                    </ul>                   <!--/ko-->
+                </div>
+            </div>
+
+
+        </div>
+    }
+
+
+
+    @if (permissions.Where(s => s.Module == AppModules.ContactActions).Select(s => s.HasPermission).SingleOrDefault())
+    {
+        <div class="panel panel-default" id="appTourContactActions">
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title"><span class="icon st-icon-tick prs"></span>[|Actions|]</h4>
+                <div class="pull-right pan ctd-reminders">
+                    <a href="#reminders" data-toggle="modal" data-target="#modal"
+                       data-bind="attr: { 'href': '@Url.Action("_AddActionModal", "Contact")'}">
+                        <span class="icon st-icon-add mrs"></span><span class="bold">[|Add|]</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel-body st-reminder">
+                <div class="actions-list actions-custom-caro">
+                    <ul data-bind="visible:Actions().length > 0, foreach :Actions,attr: {'class': Actions().length > 2 ?'jcarousel jcarousel-skin-tango':'','id': Actions().length > 2 ?'actions-carousel':'' } ">
+                        <li>
+                            <div class="action">
+                                <div data-bind="attr: {'class': IsCompleted ?'st-arrowleft':'st-arrowleft hide' }"><i class="fui-check"></i></div>
+                                <div class="bold display-inline truncate" data-bind="text:ActionMessage,attr: { title: ActionMessage }"></div>
+                                <span class="editdel pull-right">
+                                    <a data-toggle="modal" data-target="#modal"
+                                       data-bind="attr: { 'href': '@Url.Action("EditAction", "Contact")?actionId=' + ActionId +'' }">
+                                        <i class="icon st-icon-edit"></i>
+                                    </a>
+                                    @*<a href='javascript:void(0)' data-bind="click:$parent.DeleteAction"><i class="icon st-icon-bin-3 black mrm"></i></a>*@
+                                    <a data-toggle="modal" data-target="#modal"
+                                       data-bind="attr: { 'href': '@Url.Action("GetActionContactsCount", "Contact")?actionId=' +ActionId+'&contactId='+$parent.ContactID()}">
+                                        <i class="icon st-icon-bin-3"></i>
+                                    </a>
+                                </span>
+                                <p class="mtm minimize" data-bind="text:ActionMessage,attr: { title: ActionMessage }"></p>
+                                <div class="clearfix">
+                                    <div class="list-mod-details" data-bind="visible:SelectedReminderTypes.length > 0">
+                                        <i class="icon st-icon-calendar mrs"></i>
+                                        <span data-bind="text:SelectedReminderTypes.length > 0 ? $root.DisplaywithDateTimeFormat(RemindOn):''"></span>
+                                    </div>
+                                    <div class="display-inline list-status">
+                                        <label data-bind="attr: {'class': IsCompleted ?'checkbox  checked':'checkbox ','id':ActionId } ">
+                                            @*class="checkbox pull-left mtn"   class="setcompleted"  style="opacity:1;"   *@
+                                            <input type="checkbox" data-toggle="checkbox" data-bind="checked :IsCompleted,event: { change:$parent.CompletedOperation }" /> [|Completed|]
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="clearfix">
+                                    <div class="list-mod-users assign-us">
+                                        <span class="bold list-mod-txt">[|Assigned Users: |]</span>
+                                        &nbsp;<span data-bind="text:UserName"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                    <ul data-bind="visible:Actions().length == 0">
+                        <li class="no-records">
+                            <div class="icon st-icon-tick"></div>
+                            <div>[|No Actions|]</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+    }
+    
+
+    @if (permissions.Where(s => s.Module == AppModules.ContactTours).Select(s => s.HasPermission).SingleOrDefault())
+    {
+        <div class="panel panel-default" id="appTourContactTours">
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title"><span class="icon st-icon-pin-2"></span>  [|Tours|]</h4>
+                <div class="tour-count" data-bind="text:GetCountOfTours()"></div>
+                <div class="pull-right pan ctd-reminders">
+                    <a href="#reminders" data-toggle="modal" data-target="#modal"
+                       data-bind="attr: { 'href': '@Url.Action("_AddTourModal", "Contact")'}">
+                        <span class="icon st-icon-add mrs"></span><span class="bold">[|Add|]</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="panel-body st-reminder">
+                <div class="touts-list tours-custom-caro">
+                    <!-- ko if: Tours() -->
+                    <ul data-bind="foreach :Tours,attr: {'class': Tours().length > 2 ?'jcarousel jcarousel-skin-tango':'','id': Tours().length > 2 ?'tours-carousel':'' } ">
+                        <li data-bind="attr: {'class': IsCompleted ?'completed':$parent.IsExpired(TourDate),'id':'tourindex-'+$index() }">
+                            <div class="tour">
+                                @*<div data-bind="attr: {'class': IsCompleted ?'st-arrowleft':'st-arrowleft hide' }"><i class="fui-check"></i></div>*@
+                                <div class="tour-date-blcok">
+                                    <div class="tour-date" data-bind="text:$parent.GetDate(TourDate,true)"></div>
+                                    <div class="tour-month" data-bind="text:$parent.GetDate(TourDate,false)"></div>
+                                </div>
+                                <div class="tour-content-block">
+                                    <div class="bold display-inline truncate" data-bind="text:TourDetails"></div>
+                                    <span class="editdel pull-right">
+                                        <a data-toggle="modal" data-target="#modal"
+                                           data-bind="attr: { 'href': '@Url.Action("EditTour", "Contact")?tourId=' + TourID +'' }">
+                                            <i class="icon st-icon-edit"></i>
+                                        </a>
+
+                                        <a href='javascript:void(0)' data-bind="click:function(){ $parent.DeleteTour(TourID)}"><i class="icon st-icon-bin-3"></i></a>
+
+                                        @*<a href='javascript:void(0)' data-bind="click:$parent.DeleteAction"><i class="icon st-icon-bin-3 black mrm"></i></a>*@
+                                        @*<a data-toggle="modal" data-target="#modal"
+                           data-bind="attr: { 'href': '@Url.Action("GetActionContactsCount", "Contact")?actionId=' +ActionId+'&contactId='+$parent.ContactID()}">
+                            <i class="icon st-icon-bin-3 black mrm"></i>
+                        </a>*@
+                                    </span>
+                                    <p class="mtm minimize" data-bind="text:TourDetails"></p>
+                                    <div class="clearfix">
+                                        <div class="list-mod-details">
+                                            <span data-bind="text:Community"></span> <span>Community</span>
+                                        </div>
+                                        <div class="list-status">
+                                            <label data-bind="attr: {'class': IsCompleted ?'checkbox  checked':'checkbox ','id':TourID }">
+                                                @*class="checkbox pull-left mtn"   class="setcompleted"  style="opacity:1;"   *@
+                                                <input type="checkbox" data-toggle="checkbox" data-bind="checked :IsCompleted,event:{ change:$parent.TourCompletedOperation }" /> [|Completed|]
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div class="list-mod-users assign-us">
+                                            <span class="bold list-mod-txt">[|Assigned Users: |]</span>
+                                            &nbsp;<span data-bind="text:UserName"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+
+                    </ul>
+                    <!--/ko-->
+                    <!-- ko if:Tours().length == 0-->
+                    <ul>
+                        <li class="no-records">
+                            <div class="icon st-icon-pin-2"></div>
+                            <div>[|No Tours|]</div>
+                        </li>
+                    </ul>
+                    <!--/ko-->
+                </div>
+            </div>
+
+
+        </div>
+    }
+
+
+    @if (permissions.Where(s => s.Module == AppModules.ContactRelationships).Select(s => s.HasPermission).SingleOrDefault())
+    {
+        <div class="panel panel-default" id="appTourContactRelationships">
+            <div class="panel-heading clearfix">
+                <h4 class="panel-title"><span class="icon st-icon-support-3 prs"></span>[|Relationships|]</h4>
+                <div class="pull-right pan ctd-reminders">
+                    <a href="#addrelationship" data-toggle="modal" data-target="#modal"
+                       data-bind="attr: { 'href': '@Url.Action("AddEditRelationModal", "Contact")'}">
+                        <span class="icon st-icon-add mrs"></span><span class="bold">[|Add|]</span>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body st-reminder">
+                <div class="list-relationship relationship-custom-caro">
+                    <!-- ko if: RelationshipViewModel() && RelationshipViewModel().Relationshipentry -->
+                    <ul data-bind="foreach :RelationshipViewModel().Relationshipentry, attr: {'class': RelationshipViewModel().Relationshipentry.length > 2 ?'jcarousel jcarousel-skin-tango':'list-relationship pln','id': RelationshipViewModel().length > 2 ?'relationships-carousel':'' }">
+
+                        <li>
+                            <div class="row relations">
+                                <span class="relation-contact">
+                                    <!-- ko if: RelationshipTypeName==="AccountExecutive" -->
+                                    <a data-bind="attr:{ 'href': '@Url.Action("AddEditUser", "User")?userId=' + RelatedContactID}"> <span data-bind="text:DisplayRelatedUser"></span></a>,
+                                    <!--/ko-->
+                                    <!-- ko if: RelationshipTypeName!=="AccountExecutive" -->
+                                    <a data-bind="attr:{ 'href': RelatedContactType == 1? '/person/' + RelatedContactID:'/company/' + RelatedContactID }">
+                                        <span data-bind="text:RelatedContact"></span>
+                                    </a>,
+                                    <!--/ko-->
+                                    <span data-bind="text:RelationshipTypeName"></span>
+                                </span>
+                                <span class="editdel pull-right">
+                                    <a data-toggle="modal" data-target="#modal"
+                                       data-bind="attr: { 'href': '@Url.Action("EditRelation", "Contact")?contactRelationshipMapID=' + ContactRelationshipMapID + '&relatedcontactId=' + RelatedContactID + '&relateduserId=' + RelatedUserID + '&relationshipType=' + RelationshipType + '&contactname=' +  encodeURI(RelatedContact)+ '&username=' +  encodeURI(DisplayRelatedUser) }">
+
+                                        <i class="icon st-icon-edit"></i>
+                                    </a>
+                                    <a href='javascript:void(0)' data-bind="click:$parent.DeleteRelation"><i class="icon st-icon-bin-3"></i></a>
+                                </span>
+                            </div>
+                        </li>
+                    </ul>
+                    <!--/ko-->
+                    <!-- ko if: RelationshipViewModel() && RelationshipViewModel().Relationshipentry-->
+                    <ul class="list-relationship" data-bind="if:RelationshipViewModel().Relationshipentry.length==0">
+                        <li class="no-records">
+                            <div class="icon st-icon-support-3"></div>
+                            <div>[|No Relationships|]</div>
+                        </li>
+                    </ul>
+                    <!--/ko-->
+                </div>
+            </div>
+        </div>
+    }
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:1050;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <span data-bind="text:ActionCompletedMessage"></span>
+                    <div class="row">
+                        <span style="margin-top:10px;margin-left: 17px;" data-bind="visible: ActionCompleted() == false || IsTourCompleted() == false ">
+                            <label class="checkbox">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked :AddNoteSummary" /> [|Add to Contact Summary|]
+                            </label>
+                        </span>
+                        @*<span  style="margin-top:10px;margin-left: 10px;" data-bind="visible: (ActionCompleted() == false && ActionTypeValue() == 'Email' && ActionDateOn().getTime() > utc_now().getTime()) ">
+                            <label class="checkbox">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked :ToSend" /> [|Send Email|]
+                            </label>
+                        </span>
+                        <span style="margin-top:10px;margin-left: 15px;" data-bind="visible: (ActionCompleted() == true && ActionTypeValue() == 'Email' && ActionDateOn().getTime() > utc_now().getTime()) ">
+                            <label class="checkbox">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked :ToSend" /> [|Schedule Email|]
+                            </label>
+                        </span>*@
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left">
+                        <!-- ko if : ActionContactsCount() > 1-->
+                        <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){Completed('one')} "><span>[|Only for this contact|]</span></a>
+                        <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){Completed('multiple')}"><span>[|All Contacts|]</span></a>
+                        <a class="btn btn-lg" aria-hidden="true"
+                           data-dismiss="modal" data-bind="click:function(event,data){CloseWindowFunction('A')}" href="javascript:void(0)">[|Cancel|]</a>
+                        <!-- /ko -->
+                        <!-- ko if : ActionContactsCount() == 1-->
+                        <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){Completed('one')}"><span data-bind="text:CompletedActionOption"></span></a>
+                        <a class="btn btn-lg" aria-hidden="true"
+                           data-dismiss="modal" data-bind="click:function(event,data){CloseWindowFunction('A')}" href="javascript:void(0)">[|Cancel|]</a>
+                        <!-- /ko -->
+                        <!-- ko if : TourContactsCount() > 1-->
+                        <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){TourCompleted('one')} "><span>[|Only for this contact|]</span></a>
+                        <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){TourCompleted('multiple')}"><span>[|All Contacts|]</span></a>
+                        <a class="btn btn-lg" aria-hidden="true"
+                           data-dismiss="modal" data-bind="click:function(event,data){CloseWindowFunction('T')}" href="javascript:void(0)">[|Cancel|]</a>
+                        <!-- /ko -->
+                        <!-- ko if : TourContactsCount() == 1-->
+                        <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){TourCompleted('one')}"><span data-bind="text:CompletedActionOption"></span></a>
+                        <a class="btn btn-lg" aria-hidden="true"
+                           data-dismiss="modal" data-bind="click:function(event,data){CloseWindowFunction('T')}" href="javascript:void(0)">[|Cancel|]</a>
+                        <!-- /ko -->
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var contactid = "";
+    $(document).ready(function () {
+        localStorage.setItem("ContactOpportunity","person");
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var person = @(Html.Raw(Json.Encode(Model)));
+        contactid = person.ContactID;
+
+        //This is a must to propagate the clicked event for checkboxes.
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+
+        //function veCarousel(vecarouselid) {
+        //    jQuery('#' + vecarouselid).jcarousel({
+        //        vertical: true,
+        //        scroll: 2
+        //    });
+        //}
+
+        //setTimeout(function(){
+        //    veCarousel('relationships-carousel');
+        //    veCarousel('actions-carousel');
+        //    veCarousel('opportunities-carousel');
+        //    //alert(1);
+        //},1000);
+               
+    });
+
+    function AddOpportunity() {
+        var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+        var array = [];
+        array.push(contactid);
+        $.ajax({
+            url: Opportunity_BASE_URL + 'StoreContacts',
+            type: 'post',
+            data: { 'ContactIDs': array.join() },
+            dataType: 'json'
+        }).then(function (response) {            
+            var filter = $.Deferred()            
+            if (response.success) {                
+            filter.resolve(response)            
+            } else {                
+            filter.reject(response.error)            
+            }            
+            return filter.promise()        
+        }).done(function (data) {
+            removepageloader();
+            window.location.href = Opportunity_BASE_URL + "AddOpportunityWithBuyers?referencekey=" + data.response.stringKey; 
+        }).fail(function (error) {
+            removepageloader();            
+            notifyError(error);        
+        })                    
+        //window.location.href = Opportunity_BASE_URL + "AddOpportunityWithBuyers?ContactIDs=" + array.join();
+    }
+
+</script>

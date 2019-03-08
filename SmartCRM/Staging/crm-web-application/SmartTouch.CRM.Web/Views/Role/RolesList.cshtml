@@ -1,0 +1,181 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model RoleViewModel
+
+@*<script src="~/Scripts/ViewModels/RolePermissionsViewModel.js"></script>*@
+@Scripts.Render("~/bundles/rolevm")
+
+@{
+    var Details = ViewBag.roleID;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+
+
+
+@using (Ajax.BeginForm("RolesList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="roleList">
+        <div class="page-title">[|Roles|]</div>
+        <div class="role-grid">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.RoleViewModel>()
+    .Name("gridRoles")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(false)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+        .PageSizes(true)
+        .ButtonCount(10).Messages(m => m
+            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Role(s)|]")
+        .Empty("[|No roles to display|]").ItemsPerPage("[|Roles per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Template(e => "").Title("[|Roles|]").HeaderHtmlAttributes(new { });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:80px;" });
+    })
+    .ToolBar(toolbar =>
+    {
+    toolbar.Template(@<text>
+                <div class="toolbar grid-ct-header">
+                    <div class="right-part">
+                        <div class="grid-search">
+                            <input type="search" id="txtrolesearch" onkeydown="GetRolebasedSearch(this);" class=" form-control" placeholder="[|Search|]" />
+                            <i class="icon st-icon-search-2"></i>
+                        </div>
+                    </div>
+                </div>
+    </text>);
+    })
+.ClientRowTemplate(
+@"<tr class='odd'><td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkrole' data-name='#:RoleName#' id='#: RoleId #' data-toggle='checkbox'></label></td>
+          <td>" + Html.ActionLink("#:RoleName#", "AddRolePermissions", new { roleId = "rid" }, null).ToHtmlString().Replace("rid", "#:RoleId#") + "</td>" +
+
+       @"<td class='grid-row-controls'><span>" + Html.ActionLink("<i class='icon st-icon-edit'></i>", "AddRolePermissions", new { roleId = "rid" }, new { @title = "Edit Role" }).ToHtmlString().Replace("rid", "#:RoleId#") + "</span></td></tr>")
+.ClientAltRowTemplate(
+@"<tr class='odd'><td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkrole' data-name='#:RoleName#' id='#: RoleId #' data-toggle='checkbox'></label></td>
+           <td><span class=''>" + Html.ActionLink("#:RoleName#", "AddRolePermissions", new { roleId = "rid" }, null).ToHtmlString().Replace("rid", "#:RoleId#") + "</span></td>" +
+      @"<td class='grid-row-controls'><span>" + Html.ActionLink("<i class='icon st-icon-edit'></i>", "AddRolePermissions", new { roleId = "rid" }, new { @title = "Edit Role" }).ToHtmlString().Replace("rid", "#:RoleId#") + "</span></td></tr>")
+.Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(ItemsPerPage)
+.Read(read => read.Action("RolesViewRead", "Role").Data("additionalInfo"))
+)
+            )
+        </div>
+
+    </div>
+}
+
+@section Scripts{
+    <script>
+        var searchText;
+        var ItemsPerPage = '@(ItemsPerPage)'
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+        var contactDtls = '@(Details)';
+        if (contactDtls == 0) {
+            localStorage.removeItem("rolesearchtext");
+            localStorage.removeItem("rolesearchcontent");
+            createCookie("rolepagesize", '@(ItemsPerPage)', 1);
+            createCookie("rolepagenumber", 1, 1);
+        }
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("rolesearchtext")
+            }
+        }
+    </script>
+
+    <script>
+
+
+        function GetRolebasedSearch(e) {
+            setTimeout(function () {
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtrolesearch").val() || (searchText === $("#txtrolesearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtrolesearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#gridRoles").data("kendoGrid"), searchBox = $("#txtrolesearch").val()
+                localStorage.removeItem("rolesearchtext");
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.removeItem("rolesearchtext");
+                    localStorage.setItem("rolesearchtext", searchBox);
+                    var psize = readCookie("rolepagesize");
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    //   $("#gridLeadScore").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("rolesearchtext");
+                    $("#gridRoles").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+        //$('#txtrolesearch').keypress(function(event){
+        //    if(event.keyCode==13){
+        //        event.preventDefault();
+        //        return false;
+        //        window.location="/roles";
+        //    }
+        //});
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chkrole');
+                $(".st-icon-edit").parent('a').attr('data-target', '#modal');
+            }, 200)
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+        $(document).ready(function () {
+
+            //$(':checkbox').on('change', function() {
+            //    $(this).triggerHandler('click');
+            //});
+
+            //removepageloader();
+            var BASE_URL = '@Url.Content("~/Role/")';
+            var roleview = @(Html.Raw(Json.Encode(Model)));
+
+            console.log("rolesview");
+            console.log(roleview);
+
+            var vm = new RolePermissionsViewModel(roleview,BASE_URL);
+            ko.applyBindings(vm);
+
+            $("#txtrolesearch").val(localStorage.getItem("rolesearchtext"));
+
+            var grid = $('#gridRoles').data('kendoGrid');
+            var pno = readCookie("rolepagenumber");
+            var psize = readCookie("rolepagesize");
+
+            grid.dataSource.query({ page: pno, pageSize: psize });
+            tableMasterCheckBox('role-grid');
+        });
+    </script>
+}

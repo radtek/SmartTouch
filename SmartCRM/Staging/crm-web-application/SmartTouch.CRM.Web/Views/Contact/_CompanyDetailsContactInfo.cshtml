@@ -1,0 +1,133 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.CompanyViewModel
+
+@using System.Threading
+@using System.Linq;
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+
+@{
+
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.SendMail);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+
+}
+
+
+<div class="clearfix">
+    <div class="form-horizontal contact-information">
+        <div class="clearfix cont-one">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Company Name|] </label>
+                <div class="col-sm-7">
+                    <p class="form-control-static" data-bind="text:CompanyName"></p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix cont-two">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Phone Number|]</label>
+                <div class="col-sm-7" data-bind="foreach: PhoneList">
+                    <p class="form-control-static">
+                        <span data-bind="text: (CountryCode() != null ? '+' + CountryCode() + ' ' : ' ') + $parent.FormatPhone(Number()) +  (Extension() != null ? ' Ext. ' + Extension() + ' ': ' ') +  ' (' + PhoneTypeName() + ')'"></span>
+                        <span class="primary-star" data-bind="visible:IsPrimary() === true"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix cont-one">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Email Address|]</label>
+                <div id="EmailAddress1" class="col-sm-7" data-bind="foreach: EmailList,visible:DoNotEmail() == false">
+                    <p class="form-control-static">
+                        <!--ko if: EmailStatusValue() == 53 || EmailStatusValue() == 54 || EmailStatusValue() == 57 -->
+                        <span data-bind="text:EmailId"></span>
+                        <!--/ko-->
+                        <!--ko if: EmailStatusValue() != 53 && EmailStatusValue() != 54 && EmailStatusValue() != 57 -->
+                        @if (Permissions.Where(s => s.Module == AppModules.SendMail).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                            <a data-toggle="modal" data-target="#modal" data-bind="attr: { href: $parent.getEmail(EmailId(),ContactID())}, text:EmailId"></a>
+                        }
+                        else
+                        {
+                            <span data-bind="text:EmailId"></span>
+                        }
+                        <!--/ko-->
+                        <span data-bind="attr: {'class':IsPrimary() === true ? 'primary-star' : null }"></span>
+                    </p>
+
+                </div>
+                <div class="col-sm-7" data-bind="foreach: EmailList,visible:DoNotEmail() == true" id="EmailAddress">
+                    <p class="form-control-static">
+                        <span data-bind="text:EmailId"></span>
+                        <span data-bind="attr: {'class':IsPrimary() === true ? 'primary-star' : null }"></span>
+                    </p>
+                </div>
+
+
+            </div>
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Do Not Email|]</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static"><span data-bind="text: DoNotEmail() == true ? '[|Yes|]' : '[|No|]'"></span></p>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="clearfix cont-two">
+            @*<div class="form-group col-lg-6">
+                <!-- ko if: SocialMediaUrls().length > 0 -->
+                <label class="control-label col-sm-5 phn pvn bold pull-left">Social:</label>
+                <div data-bind="foreach: SocialMediaUrls">
+                    <label class="control-label col-sm-5 phn pvn bold pull-left"><span data-bind="text:MediaType"></span> :</label>
+                    <label class="control-label col-sm-7 phn pvn contact-info"> <a data-bind="attr: { href: Url }"><span data-bind="text:Url"></span></a> </label>
+                </div>
+                <!--/ko-->
+            </div>*@
+
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Social|]</label>
+                <div class="col-sm-7" data-bind="foreach: SocialMediaUrls">
+                    <p class="form-control-static">
+                        <a data-bind="attr: { href: URL, target:'_blank' }"><span data-bind="text:URL "></span></a>
+                        <span data-bind="text:' ('+MediaType()+')'"></span>
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+        @*<div class="row cont-one">
+                <div data-bind="foreach: Addresses">
+                    <!-- ko if: IsDefault==false -->
+                    <div class="form-group col-lg-6">
+                        <label class="control-label col-sm-5 phn pvn bold pull-left"><span data-bind="text:AddressType"></span> <span>Address :</span></label>
+                        <div class="control-label col-sm-7 phn pvn contact-info">
+                            <span data-bind="text:ToString"></span>
+                        </div>
+                    </div>
+                    <!--/ko-->
+                </div>
+            </div>*@
+        <!--ko if: Addresses().length > 0 -->
+        <div class="clearfix cont-one">
+            <!--ko foreach: Addresses -->
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5"><span data-bind="text: AddressType"></span> <span>[|Address|]</span></label>
+                <div class="col-sm-7">
+                    <p class="form-control-static">
+                        <span data-bind="text:ToString"></span>
+                        <!--ko if: IsDefault == true -->
+                        <span class="primary-star"></span>
+                        <!--/ko-->
+                    </p>
+                </div>
+
+            </div>
+            <!--/ko-->
+        </div>
+        <!--/ko-->
+    </div>
+</div>

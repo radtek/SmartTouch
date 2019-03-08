@@ -1,0 +1,145 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model DropdownViewModel
+
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+}
+<div>
+    <div id="@(isModal ? "editdropdownModel" : "editDropdown")" class="@(isModal ? "" : "")">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title"><span class="icon st-icon-menu-pull-down prm"></span><span data-bind="text:Dropdownname"></span></h4>
+        </div>
+        <div class="modal-body">
+            <div class="k-grid k-widget k-secondary" style="">
+                <div class="k-toolbar k-grid-toolbar">
+                    <div class="right-part">
+                        <div class="grid-controls op-sortoptions">
+                            <span class="sort-label">[|Sort|]</span>
+                            <span class="display-inline showing-items">
+
+                                <input name="mediumnm" data-bind="kendoDropDownList: {dataValueField :'SortorderID', optionLabel: 'Select...' , dataTextField:'SortorderName', data:$root.Sortorderlist,value: SortorderID}" class="select-block" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="k-grid-content">
+                    <table id="grid" data-role="grid" role="grid">
+                        <colgroup data-bind="visible : DropdownID() == 6"><col /><col /><col /><col /><col /><col /></colgroup>
+                        <colgroup data-bind="visible: DropdownID() != 6"><col /><col /><col /><col /><col /></colgroup>
+                        <thead class="k-grid-header">
+                            <tr>
+                                <th class="k-header op-order">[|Order|]</th>
+                                <th class="k-header">[|Dropdown Value|]</th>
+                                <th class="k-header text-center">[|Default Value|]</th>
+                                <th class="k-header text-center">[|Active|]</th>
+                                <th class="k-header text-center">[|Display As|]</th>
+                                <th class="k-header text-center op-group" data-bind="visible: DropdownID() == 6">[|Group|]</th>
+                                <th class="k-header op-empty-op">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="sortable:{data: $root.DropdownValuesList}">
+                            <tr>
+                                <td class="op-order-first">
+                                    <label data-bind="text: SortID=$index()+1"></label>
+                                </td>
+                                <td>
+                                    @*<input disabled type="text" maxlength="50" class="form-control display-inline" data-bind="value: DropdownValue, visible : DropdownValueTypeID() == 46 ||DropdownValueTypeID() == 47 ||DropdownValueTypeID() == 48" />*@
+                                    <input type="text" maxlength="50" class="form-control display-inline"
+                                           data-bind="value: DropdownValue, attr:{'disabled' : DropdownValueTypeID() != 3 && DropdownID() != 7 && $parent.IsSTAdmin() == 'False' ? true : false}" />
+                                </td>
+                                <td class="text-center">
+                                    <input type="radio" name="dropdowndefaultvalue" data-bind="checked: $parent.DefaultDropdownValueID,value: DropdownValueID().toString()" />
+                                </td>
+                                <td class="text-center">
+                                    @*<label data-bind="attr: {'class': 'checkbox checked'}, visible : DropdownValueTypeID() == 46 ||DropdownValueTypeID() == 47 ||DropdownValueTypeID() == 48" onclick="return false">
+                                        <input disabled type="checkbox" data-toggle="checkbox" checked onclick="return false" data-bind="checked:IsActive ,value:$parent.StateChanged" />
+                                    </label>*@
+                                    <label data-bind="attr: {'class': IsActive() ?'checkbox checked':'checkbox' }">
+                                        <input type="checkbox" data-toggle="checkbox"
+                                               data-bind="checked:IsActive, event: { change:function(){ return $parent.StateChanged(IsActive(),DropdownValueID())} }, attr:{'disabled' : DropdownValueTypeID() != 3 && DropdownID() != 7 && $parent.IsSTAdmin() == 'False' ? true : false}" />
+                                    </label>
+                                </td>
+                                <td class="text-center" style="white-space:initial;text-overflow:ellipsis">
+                                    <label data-bind="text: DropdownValue"></label>
+                                </td>
+                                <td class="text-center" data-bind="visible:DropdownID() == 6">
+                                    <input data-bind="kendoDropDownList: { dataTextField: 'OpportunityGroupName', dataValueField: 'OpportunityGroupID', data: $root.StageGroups, value:OpportunityGroupID }" />
+                                </td>
+                                <td class="grid-row-controls">
+                                    @*<label><span data-bind="text:Isvisible"></span><span data-bind="text:DropdownValueTypeID()"></span><span data-bind="text:$parent.IsSTAdmin()"></span></label>*@
+                                    <a href="javascript:void(0)" class="record-deleted" data-bind="click: $parent.removeDropdownValue,visible:((Isvisible && DropdownValueTypeID() == 3) || DropdownID() == 7 || $parent.IsSTAdmin() == 'True')"><i class="icon st-icon-bin-3"></i></a>
+                                    <a href="javascript:void(0)"><i class="icon st-icon-move"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <span class="pull-right op-adddropval">
+                <a href="javascript:void(0)" id="addnewdropdownvalue" data-bind="click: addDropdown"><span class="icon st-icon-add prs"></span>[|Add Dropdown Value|]</a>
+            </span>
+            <span class="pull-left">
+                <button type="button" class="btn btn-primary btn-lg" data-bind="click: $root.saveDropdownValue">[|Save|]</button>
+                <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">[|Cancel|]</button>
+            </span>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        appendCheckbox();
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+        var BASE_URL = '@Url.Content("~/DropdownValues/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var dropdownview = @(Html.Raw(Json.Encode(Model)));
+        var isSTAdmin = '@Thread.CurrentPrincipal.Identity.IsSTAdmin()';
+        var dropdownviewModel = null;
+        var id = "editdropdownModel";
+        dropdownviewModel = new DropdownValuesViewModel(dropdownview, BASE_URL, WEBSERVICE_URL, isSTAdmin);
+        //ko.cleanNode(document.getElementById(id));
+        ko.applyBindings(dropdownviewModel,document.getElementById(id));
+        
+        //var isBound = function(id) {
+        //    return !!ko.dataFor(document.getElementById(id));
+        //}();
+        //console.log("Is Bound : " + isBound);
+        //if (!isBound)
+        //    ko.applyBindings(dropdownviewModel,document.getElementById(id));
+        //else{
+        //    ko.cleanNode(document.getElementById(id));
+        //    ko.applyBindings(dropdownviewModel,document.getElementById(id));
+        //}
+
+       
+    });
+    $(':checkbox').on('change', function() {
+        $(this).triggerHandler('click');
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

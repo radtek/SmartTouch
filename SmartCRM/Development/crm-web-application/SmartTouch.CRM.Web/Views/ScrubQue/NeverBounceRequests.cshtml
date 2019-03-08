@@ -1,0 +1,236 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model IEnumerable<SmartTouch.CRM.Domain.ValueObjects.NeverBounceQueue>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+@Scripts.Render("~/bundles/scrubqueuelist")
+
+<div class="page-title">[|Scrub Queue|]</div>
+<div class="imagedomains-grid" id="neverbouncelist">
+    @(Html.Kendo().Grid<SmartTouch.CRM.Domain.ValueObjects.NeverBounceQueue>()
+        .Name("neverBounce")
+     .HtmlAttributes(new { @class = "k-grid-content" })
+     .Pageable(pageable => pageable
+            .Refresh(false)
+           .PageSizes(true)
+                .ButtonCount(10).Messages(m => m
+                    .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Scrub Queue(s)|]")
+                    .Empty("[|No scrubqueues to display|]")
+                    .ItemsPerPage("[|Scrub Queue(s) per page|]"))).Excel(e => e.AllPages(true).FileName("Scrub_Queue_List.xlsx"))
+    .Columns(columns =>
+    {
+        columns.Bound(b => b.AccountName).Title("[|Account Name|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(b => b.EntityName).Title("[|Type|]").HeaderHtmlAttributes(new { @class = "col-10" });        
+        columns.Bound(b => b.FileName).Title("[|Name|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(b => b.TotalImportedContacts).Title("[|Total Contacts|]").HeaderHtmlAttributes(new { @class = "col-10" });
+        columns.Bound(b => b.GoodEmailsPercentage).Title("[|Good Emails|]").HeaderHtmlAttributes(new { @class = "col-10" });                
+        columns.Bound(b => b.BadEmailsPercentage).Title("[|Bad Emails|]").HeaderHtmlAttributes(new { @class = "col-10" });        
+        columns.Bound(b => b.CreatedDate).Title("Requested Date").HeaderHtmlAttributes(new { @style = "width:200px;" });
+        columns.Bound(b => b.StatusName).Title("Status").HeaderHtmlAttributes(new { @style = "width:120px;" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:90px;" });
+
+    }).ClientRowTemplate(@"<tr class='odd'><td title='#:AccountName#'>#:AccountName#</td>
+                                           <td>#:EntityName# </td>
+                                           <td title='#:FileName#'>#:FileName#</td>
+                                           <td title='#:TotalImportedContacts#'>#:TotalImportedContacts#</td>
+                                           <td>
+                                                #if(GoodEmailsPercentage == '' || GoodEmailsPercentage == null){#
+                                                    <span></span>
+                                                #}
+                                                else if(GoodEmailsPercentage == '0% | 0' || AccountID == 1)
+                                                {#
+                                                    <span>#:GoodEmailsPercentage#</span>
+                                                #}
+                                                else if(AccountID != 1){#
+                                                    <a href='nvbbemcts?nbrid=#:NeverBounceRequestID#&emailStatus=51'>#:GoodEmailsPercentage#</a>
+                                                #}#
+                                            </td>
+                                           <td>
+                                                #if(BadEmailsPercentage == '' || BadEmailsPercentage == null){#
+                                                    <span></span>
+                                                #}
+                                                else if(BadEmailsPercentage == '0% | 0' || AccountID == 1)
+                                                {#
+                                                    <span>#:BadEmailsPercentage#</span>
+                                                #}
+                                                else if(AccountID != 1){#
+                                                    <a href='nvbbemcts?nbrid=#:NeverBounceRequestID#&emailStatus=53'>#:BadEmailsPercentage#</a>
+                                                #}#
+                                            </td>
+                                           </td><td title='#:CreatedDate#'>#=formatDate(CreatedDate)#</td>
+                                           <td>
+                                                 <span>#:StatusName#</span>
+                                           </td>
+                                           <td id='options' class='grid-row-controls'>
+                                                #if(Status == 901 && IsAdmin == true && AccountID == 1)
+                                                {#
+                                                  <a href='javascript:void(0)' onclick='acceptRequest(#: NeverBounceRequestID #)' title='Accept Request'><i class='icon st-icon-checkmark'></i></a>
+                                                  <a href='javascript:void(0)' onclick='rejectRequest(#: NeverBounceRequestID #)' title='Reject Request'><i class='icon st-icon-remove'></i></a>
+                                                #}
+                                                else if(Status == 901)
+                                                {#
+                                                   <span><a href='javascript:void(0)' onclick='rejectRequest(#: NeverBounceRequestID #)' title='Reject Request'><i class='icon st-icon-remove'></i></a></span>
+                                                #}
+                                                 else
+                                                {#
+                                                   <span></span>
+                                                #}#
+
+                                        </td>
+                                        </tr>")
+                            .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                     .DataSource(dataSource => dataSource
+                                     .Ajax()
+                                      .PageSize(ItemsPerPage)
+                                      .Read(read => read.Action("ScrubQueList", "ScrubQue", true))
+                                    )
+    )
+</div>
+
+@section Scripts{
+    <script>
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        createCookie("scrubquepagenumber", 1, 1); createCookie("scrubquepagesize", '@(ItemsPerPage)', 1);
+</script>
+<script>
+    var isSTAdmin = '@Thread.CurrentPrincipal.Identity.IsSTAdmin()';
+    function formatDate(date) {
+        if (isNaN(Date.parse(date))) {
+            return "";
+        }
+        else {
+            var dateFormat = readCookie("dateformat");
+            if (dateFormat == null || dateFormat == 'undefined')
+                return new Date(Date.parse(date)).toDateString();
+            else {
+                var utzDate = new Date(moment(date).toDate());
+                return kendo.toString(utzDate, dateFormat + " hh:mm tt");
+            }
+        }
+    }
+
+    var url = '@Url.Content("~/ImportData/")';
+
+    function acceptRequest(id) {
+        alertifyReset("Accept Request", "Cancel");
+        alertify.confirm("[|Are you sure you want to accept this request|]?", function (e) {
+            if (e) {
+                pageLoader();
+
+                $.ajax({
+                    url: 'ur/' + id + '/' + 902,
+                    type: 'post',
+                    dataType: 'json',
+                }).then(function (response) {
+                    var filter = $.Deferred()
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    } return filter.promise()
+                }).done(function (data) {
+                    removepageloader();
+                    notifySuccess("[|Successfully updated the request|]");
+                    setTimeout(function () {
+                        window.location.href = document.URL;
+                    }, setTimeOutTimer);
+                }).fail(function (error) {
+                    removepageloader();
+                    notifyError(error);
+                });
+            }
+            else {
+                notifyError("[|You've clicked Cancel|]");
+            }
+        });
+    };
+
+    function rejectRequest(id) {
+        alertifyReset("Reject Request", "Cancel");
+        alertify.confirm("[|Are you sure you want to reject this request|]?", function (e) {
+            if (e) {
+                pageLoader();
+                $.ajax({
+                    url: 'ur/' + id + '/' + 903,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                }).then(function (response) {
+                    var filter = $.Deferred()
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    removepageloader();
+                    notifySuccess("[|Successfully updated the request|]");
+                    setTimeout(function () {
+                        window.location.href = document.URL;
+                    }, setTimeOutTimer);
+                }).fail(function (error) {
+                    notifyError(error);
+                    removepageloader();
+                })
+            }
+            else {
+                notifyError("[|You've clicked Cancel|]");
+            }
+        });
+    };
+
+    function onDataBinding(arg) {
+
+    }
+
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+        //if (isSTAdmin != "True"){
+        //    var grid = $("#neverBounce").data("kendoGrid");
+        //    grid.hideColumn(4);
+        //    $.each($("#neverBounce tr td.options"), function (i, v) {
+        //        $("#neverBounce tr td.options")[i].style.display = "none";
+        //    });
+            
+        //}
+    }
+
+
+    $(document).ready(function () {
+
+        var BASE_URL = '@Url.Content("~/ImportData/")';
+        var neverBounceModel = @(Html.Raw(Json.Encode(Model)));
+
+        var grid = $("#neverBounce").data("kendoGrid");
+        var pno = readCookie("scrubquepagenumber");
+        var psize = readCookie("scrubquepagesize");
+
+        grid.dataSource.query({ page: pno, pageSize: psize });
+
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+        var viewModel = new neverBounceReport(BASE_URL, neverBounceModel);
+        ko.applyBindings(viewModel);
+    });
+</script>
+}

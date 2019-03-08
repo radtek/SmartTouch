@@ -1,0 +1,79 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model TagViewModel
+
+@*<script src="~/Scripts/ViewModels/TagViewModel.js"></script>*@
+
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;   
+}
+
+@Scripts.Render("~/bundles/tagviewmodel")
+
+<div id="@(isModal ? "mergeTagModel" : "mergeTag")" class="@(isModal ? "" : "")">
+    <div class="@(Model.TagID > 0 ? "" : "")">
+        @if (isModal)
+        {
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title"><span class="icon st-icon-merge prm"></span>[|Merge Tag|]</h4>
+            </div>
+        }
+        else
+        {
+            <div class="drop-heading">
+                <span class="icon st-icon-merge display-inline"></span> <h4 class="panel-title display-inline plm">[|Merge Tag|]</h4>
+            </div>
+        }
+        <div class="@(isModal ? "modal-body" : "")">
+            <div class="dp-topnav-inner-body">
+                <div class="mvl">
+                    <div class="form-group merge-tag">
+                        <span class="mrm">[|Merge|]</span>
+                        <span class="bold icon st-icon-tag" data-bind="text: sourceTagName"></span>
+                        <span class="mhm">[|with|]</span>
+                        <span class="display-inline form-group mbn">
+                            <input id="@(isModal ? "newTags" : "newTagsPopup")" class="form-control" data-bind="value:TagName,valueUpdate:'afterkeydown'" maxlength="75" />
+                        </span>
+
+                    </div>
+                </div>
+                <div class="alert alert-info hide" id="mergeconfirmationdata3"></div>
+                <div class="alert alert-success hide" id="mergeconfirmationdata4">55 [|items have changed|]</div>
+
+            </div>
+        </div>
+        <div class="@(isModal ? "modal-footer" : "panel-footer")">
+            <div class="pull-left">
+                <a class="btn btn-lg btn-primary" id="mergeBtn" data-bind="click:mergingTag"><span>[|Merge|]</span></a>
+                <a class="btn btn-lg btn-primary hide" id="saveBtn" data-bind="click: function(data, event) { savemergedTag('@Model.Count', data, event) }"
+                   data-dismiss="modal"><span>[|Continue Merging|]</span></a>
+                <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                   data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var tags = [];
+        var BASE_URL = '@Url.Content("~/Tag/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagview = @(Html.Raw(Json.Encode(Model)));
+        var tagviewModel = new TagsViewModel(tagview, BASE_URL, WEBSERVICE_URL);
+        var popup = '@(isModal)';
+        var tagify = new Tagify(WEBSERVICE_URL, tagviewModel,accountId);
+
+        if(popup== "True")
+        {
+            ko.applyBindings(tagviewModel,document.getElementById("mergeTagModel"));
+            tagify.TagifyTag("newTags",checkedvalues[0]);
+        }
+        else{
+            //ko.applyBindings(tagviewModel,document.getElementById("mergeTagModel"));
+            tagify.TagifyTag("newTagsPopup",checkedvalues[0]);
+        }
+    });
+</script>

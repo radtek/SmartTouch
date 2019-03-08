@@ -1,0 +1,369 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ReportListViewModel
+
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var Details = ViewBag.reportId;
+    var dateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var hasCustomReports = ViewBag.hasCustomReports;
+    var isSTAdminReports = ViewBag.IsSTAdminReports; 
+}
+@*<script src="~/Scripts/ViewModels/ReportListViewModel.js"></script>*@
+
+@Scripts.Render("~/bundles/reportslistvm")
+
+
+@*@using (Ajax.BeginForm("ReportList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{*@
+<div class="clearfix mtl">
+    <div class="page-title saved-search">[|Reports|]</div>
+    <div id="UserList">
+     
+        <div class="users-grid">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ReportListEntry>()
+    .Name("grid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(true)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+        .PageSizes(true)
+        .ButtonCount(10).Messages(m => m
+.Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Report(s)|]")
+.Empty("[|No Reports to display|]").ItemsPerPage("[|Reports per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Bound(e => e.ReportName).Title("[|Report Name|]").Sortable(true).HeaderHtmlAttributes(new { });
+        columns.Bound(e => e.LastRunOn).Title("[|Last Run|]").Sortable(true).HeaderHtmlAttributes(new { });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:80px;" });
+    })
+    .Sortable(sortabe => sortabe.AllowUnsort(true))
+    .Resizable(resize => resize.Columns(true))
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+
+
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtSearch" onkeydown="GetReportsBasedonsearch(this);" class=" form-control" placeholder="Search" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                    @if (hasCustomReports){
+                    <div class="grid-controls">
+                        <span class="sort-label">[|Showing|]</span>
+                        <span class="sort-select">
+                            @(Html.Kendo().DropDownList()
+                                    .Name("filterType")
+                                            .DataTextField("Text")
+                                            .DataValueField("Value")
+                                     .Events(e => e.Change("filtertypeChange"))
+                                    .BindTo(new List<SelectListItem>() {
+                                        new SelectListItem() {
+                                            Text = "[|Standard Reports|]",
+                                            Value = "0"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Custom Reports|]",
+                                            Value = "1"
+                                        }
+                                })
+                            )
+                        </span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </text>);
+    })
+                                .ClientRowTemplate(
+                                  @"<tr class='odd'>
+                            <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkreport'  id='#: ReportID #'   data-toggle='checkbox'></label></td>" +
+                            @"<td>
+                                  #if(ReportType == 14)
+                                     {#                                        
+                                        <a href='/editcustomreport/?reportName=#:ReportName#&reportId=#:ReportID#' class='tooltiptoggle' title='#:ReportName#'>#:ReportName#</a>
+                                     #}
+                                     else if(ReportType == 21 || ReportType == 22 || ReportType == 23 || ReportType == 24)
+                                     {#                                        
+                                        <a href='/editstatusreport/?reportName=#:ReportName#&reportType=#:ReportType#&reportId=#:ReportID#' class='tooltiptoggle' title='#:ReportName#'>#:ReportName#</a>
+                                     #}
+                                  else
+                                     {#
+                                        <a href='/editreport/?reportName=#:ReportName#&reportType=#:ReportType#&reportId=#:ReportID#&runReportResults=True' class='tooltiptoggle' title='#:ReportName#'>#:ReportName#</a>
+                                    #}#
+
+                            </td>
+                            <td>#=displayDate_n(LastRunOn)#</td>
+                             <td class='grid-row-controls'>
+                            <span>
+                                  #if(ReportType == 14)
+                                     {#                                        
+                                        <a href='/editcustomreport/?reportName=#:ReportName#&reportId=#:ReportID#' class='tooltiptoggle' title='#:ReportName#'><i class='icon st-icon-run'></i></a>
+                                     #}
+                                     else if(ReportType == 21 || ReportType == 22 || ReportType == 23 || ReportType == 24)
+                                     {#                                        
+                                        <a href='/editstatusreport/?reportName=#:ReportName#&reportType=#:ReportType#&reportId=#:ReportID#' class='tooltiptoggle' title='#:ReportName#'><i class='icon st-icon-run'></i></a>
+                                     #}
+                                  else
+                                     {#
+                                        <a href='/editreport/?reportName=#:ReportName#&reportType=#:ReportType#&reportId=#:ReportID#&runReportResults=True' class='tooltiptoggle' title='#:ReportName#'><i class='icon st-icon-run'></i></a>
+                                    #}#</span></td></tr>") 
+ //+ Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditReport", new { reportType = "reporttype", reportId = "reportid", runReportResults = "False" }, new { @title = "Edit Report" }).ToHtmlString().Replace("reporttype", "#:ReportType#").Replace("reportid", "#:ReportID#") + "<a href='javascript:void(0)' onclick='DeleteUser(#:ReportID#)' style='display:none;' title='Delete Report'><i class='icon st-icon-bin-3'></i></a></span></td></tr>")
+                                .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(ItemsPerPage)
+                                .Read(read => read.Action("ReportsViewRead", "Reports").Data("additionalInfo")).Sort(sort => sort.Add(t => t.ReportName))
+                                ))
+        </div>
+    </div>
+ </div>
+
+
+@*<div class="clearfix mtl">
+    <div class="page-title saved-search">[|Custom Reports:|]</div>
+    <div id="UserList">
+    
+        <div class="users-grid">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ReportListEntry>()
+    .Name("customgrid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(true)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+        .PageSizes(true)
+        .ButtonCount(10).Messages(m => m
+.Display("[|Showing|] {0}-{1} [|from|] {2:#,#} [|Report(s)|]")
+.Empty("[|No Reports to display|]").ItemsPerPage("[|Reports per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Bound(e => e.ReportName).Title("[|Report Name|]").Sortable(true).HeaderHtmlAttributes(new { });
+        columns.Bound(e => e.LastRunOn).Title("[|Last Run|]").Sortable(true).HeaderHtmlAttributes(new { });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:80px;" });
+    })
+    .Sortable(sortabe => sortabe.AllowUnsort(true))
+    .Resizable(resize => resize.Columns(true))
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+
+
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtCustomSearch" onkeydown="GetCustomReportsBasedonsearch(this);" class=" form-control" placeholder="Search" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+
+                </div>
+            </div>
+        </text>);
+    })
+                                        .ClientRowTemplate(
+                                          @"<tr class='odd'>
+                            <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkreport'  id='#: ReportID #'   data-toggle='checkbox'></label></td>" +
+                                    @"<td><a href='/editcustomreport/?reportName=#:ReportName#&reportId=#:ReportID#' class='tooltiptoggle' title='#:ReportName#'>#:ReportName#</a></td>
+<td>#=displayDate(LastRunOn)#</td>
+ <td class='grid-row-controls'><span>" + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditCustomReport", new { reportName = "reportname", reportId = "reportid" }, new { @title = "Edit Report" }).ToHtmlString().Replace("reportname", "#:ReportName#").Replace("reportid", "#:ReportID#") + "<a href='javascript:void(0)' onclick='DeleteUser(#:ReportID#)' style='display:none;' title='Delete Report'><i class='icon st-icon-bin-3'></i></a></span></td></tr>")
+                                        .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                        .DataSource(dataSource => dataSource
+                                        .Ajax()
+                                        .PageSize(ItemsPerPage)
+                                                .Read(read => read.Action("CustomReportsViewRead", "Reports").Data("additionalInfo")).Sort(sort => sort.Add(t => t.ReportName))
+                                        ))
+        </div>
+    </div>
+</div>*@
+
+
+    @*}*@
+
+@section Scripts{
+    <script>
+        localStorage.removeItem("filtercontent");
+        localStorage.removeItem("usersearchtext");
+        var searchText;
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("usersearchtext"),
+                filterdata: localStorage.getItem("filtercontent")
+
+            }
+        }
+    </script>
+
+    <script>
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+    createCookie("reportsnumber", 1, 1);
+    createCookie("reportssize", '@(ItemsPerPage)', 1);
+
+    function reportTypeChange() {
+        //$("#txtSearch").val('');
+        var value = this.value();
+        localStorage.removeItem("usersearchcontent");
+        localStorage.removeItem("filtercontent");
+        localStorage.setItem("usersearchcontent", value);
+        //$("#grid").data("kendoGrid").dataSource.read();
+        var grid = $("#grid").data("kendoGrid");
+        var psize = readCookie("reportssize");
+
+        grid.dataSource.query({ page: 1, pageSize: psize });
+        appendCheckbox();
+    }
+    function onDataBinding(arg) {
+        setTimeout(function () {
+            appendCheckbox();
+            bindCheckboxchnage('chkreport');
+            $(".st-icon-edit").parent('a').attr('data-target', '#modal');
+        }, 200)
+    }
+
+    function onDataBound(e) {
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+    function GetReportsBasedonsearch(e) {
+        setTimeout(function () {
+            var enterKeyPressCode = 13;
+            if (searchText !== $("#txtSearch").val() || (searchText === $("#txtSearch").val() && e.keyCode == enterKeyPressCode))
+                searchText = $("#txtSearch").val();
+            else
+                return;
+
+
+            $filter = new Array();
+            var grid = $("#grid").data("kendoGrid"), searchBox = $("#txtSearch").val(), userType = $("#reportTypes").val();
+            localStorage.removeItem("usersearchtext");
+            if ($.trim(searchBox).length > 2) {
+                localStorage.removeItem("usersearchtext");
+                createCookie("reportsnumber", 1, 1);
+                localStorage.setItem("usersearchtext", searchBox);
+                // $("#grid").data("kendoGrid").dataSource.read();
+                var psize = readCookie("reportssize");
+                grid.dataSource.query({ page: 1, pageSize: psize });
+                appendCheckbox();
+            }
+            else if ($.trim(searchBox).length === 0) {
+                localStorage.removeItem("usersearchtext");
+                $("#grid").data("kendoGrid").dataSource.read();
+                appendCheckbox();
+            }
+        }, 1000);
+    }
+
+    function filtertypeChange() {
+        var value = this.value();
+        localStorage.setItem("filtercontent", value);
+        $("#grid").data("kendoGrid").dataSource.read();
+    };
+
+
+
+    function GetCustomReportsBasedonsearch(e) {
+        setTimeout(function () {
+            var enterKeyPressCode = 13;
+            if (searchText !== $("#txtCustomSearch").val() || (searchText === $("#txtCustomSearch").val() && e.keyCode == enterKeyPressCode))
+                searchText = $("#txtCustomSearch").val();
+            else
+                return;
+
+
+            $filter = new Array();
+            var grid = $("#customgrid").data("kendoGrid"), searchBox = $("#txtCustomSearch").val(), userType = $("#reportTypes").val();
+            localStorage.removeItem("usersearchtext");
+            if ($.trim(searchBox).length > 2) {
+                localStorage.removeItem("usersearchtext");
+                createCookie("reportsnumber", 1, 1);
+                localStorage.setItem("usersearchtext", searchBox);
+                // $("#grid").data("kendoGrid").dataSource.read();
+                var psize = readCookie("reportssize");
+                grid.dataSource.query({ page: 1, pageSize: psize });
+                appendCheckbox();
+            }
+            else if ($.trim(searchBox).length === 0) {
+                localStorage.removeItem("usersearchtext");
+                $("#customgrid").data("kendoGrid").dataSource.read();
+                appendCheckbox();
+            }
+        }, 1000);
+    }
+    function displayDate_n(date) {
+        if (date == null) {
+            return "";
+        }
+        var utzDate = new Date(moment(date).toDate()).ToUtcUtzDate();
+        return  kendo.toString(kendo.parseDate(utzDate, 'yyyy/MM/dd'), '@(dateFormat)');
+        // return kendo.toString(kendo.parseDate(utzDate, 'yyyy/MM/dd'), '@(dateFormat)');
+    }
+
+
+    function EditReport(){
+        checkedvalues = fnGetChkvalGrid('chkreport');
+
+        if (checkedvalues != "") {
+            if (checkedvalues.length == 1) {
+                window.location.href = "/editreport?ReportID=" + parseInt(checkedvalues[0]);
+            }
+            else{
+                notifyError("Please select only one report");
+            }
+        }
+        else{
+            notifyError("Please select at least one report");
+        }
+    }
+
+    function DeleteReport(){
+        notifyError("Please select atlease one custom reports");
+    }
+
+
+
+    $(document).ready(function () {
+
+        removepageloader();
+
+        var isSTAdminReports = '@(isSTAdminReports)';
+        if (isSTAdminReports == 'True')
+            $('#menuItem264').css({ 'display': 'none' });
+
+        var reportView = @(Html.Raw(Json.Encode(Model)));
+        var reportViewModel = new reportListViewModel(reportView, BASE_URL);
+        ko.applyBindings(reportViewModel,document.getElementById("UserList"));
+
+        var grid = $('#grid').data('kendoGrid');
+        var pno = readCookie("reportsnumber");
+        var psize = readCookie("reportssize");
+
+
+
+        //   grid.dataSource.query({ page: pno, pageSize: psize });
+
+        tableMasterCheckBox('users-grid');
+    });
+
+    </script>
+
+}
+    

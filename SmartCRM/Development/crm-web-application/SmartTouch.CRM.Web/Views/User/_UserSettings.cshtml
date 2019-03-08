@@ -1,0 +1,116 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model UserSettingsViewModel
+
+<div id="settingstab">
+    <div class="form-horizontal-large">
+        <div class="alert alert-warning">
+            <i class="icon st-icon-spam"></i>
+            [|Any changes made to this section will log you out to re-login to update changes|].
+        </div>
+        <div class="formsubheading">[|Change Password|]</div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Current Password|]</label>
+                <input type="password" data-bind="value:currentPassword" placeholder="" class="form-control">
+            </div>
+
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|New Password|]</label>
+                <input type="password" placeholder="" data-bind="value:newPassword" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Confirm Password|]</label>
+                <input type="password" placeholder="" data-bind="value:confirmPassword" class="form-control">
+            </div>
+
+        </div>
+
+        <div class="formsubheading">[|Pagination|]</div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Items per Page|]</label>
+                <input data-bind="kendoDropDownList:{dataTextField:'text', dataValueField:'value',value:ItemsPerPage,data: Items}" />
+            </div>
+        </div>
+
+        <div class="formsubheading">
+            [|Localization|]
+            <div class="pull-right">
+                <a href="#localization" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+        <div id="localization" class="in">
+            <div class="clearfix">
+
+                <div class="form-group">
+                    <label class="control-label">[|Country|]</label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'Code', data: Countries, value: CountryId}" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Date Format|]</label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'FormatName',dataValueField:'DateFormatId', data: DateFormats, value: DateFormat }" />
+                </div>
+
+
+            </div>
+
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Currency|] </label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Symbol',dataValueField:'CurrencyId', data: Currencies, value: CurrencyID }" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Time Zone|] </label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'DisplayName',dataValueField:'Id', data: TimeZones, value: TimeZone }" />
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Currency Format|]</label>
+                    <span data-bind="text:CurrencyFormat"></span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="formsubheading">
+            [|Email Signature|]
+            <div class="pull-right">
+                <a href="#email-sig" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+
+        <div class="in" id="email-sig">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Email Addresses|]<span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'EmailId',dataValueField:'EmailId',  data: Emails, value: EmailId, select: emailSelect,optionLabel:'[|Select...|]' }" />
+                    <span class="validationMessage" data-bind="validationMessage:emailTypeValidation"></span>
+
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group EmailSignature">
+                    <textarea rows="10" cols="5" data-bind="kendoEditor: EmailSignature"></textarea>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label  data-bind="attr: {'class': IsIncludeSignature() ?'checkbox  checked':'checkbox ' } ">
+                        <input type="checkbox" id="ssid" data-toggle="checkbox" data-bind="checked: IsIncludeSignature" />
+                        <span>[|Insert Signature|]</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hr-border"></div>
+        <div class="pull-left">
+            <a href="#" class="save-message btn btn-lg btn-primary" data-bind="click:saveSettings">[|Save|]</a>
+            @* <a href="javascript:void(0)" class="btn btn-lg">Cancel</a>*@
+        </div>
+    </div>
+</div>
+<!--<div class="tab-pane active" id="subscription">
+</div>-->

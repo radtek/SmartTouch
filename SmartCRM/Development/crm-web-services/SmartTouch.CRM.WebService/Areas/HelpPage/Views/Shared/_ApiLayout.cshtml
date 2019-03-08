@@ -1,0 +1,78 @@
+﻿@using System.Web.Optimization;
+
+@{
+    ViewBag.Title = "SmartTouch Interactive Web API Documentation";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>   
+    @Styles.Render("~/Content/docs_css")
+    @*@Styles.Render("~/Content/api_doc_css")*@
+    @Scripts.Render("~/bundles/docs_jquery")
+    @Scripts.Render("~/bundles/docs_knockout")
+    @Scripts.Render("~/bundles/docs_apidocvm")
+    @*@Scripts.Render("~/bundles/api_docs_vm")*@
+    @Scripts.Render("~/bundles/api_docs_copy_vm");
+</head>
+<body>
+    <header class="help-page">
+        <div class="smrt-header-cont">
+            <div class="smrt-header">
+                <div class="smrt-navlinks">
+                    <ul>
+                        <li id="menu-item-0" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1365">
+                            <a href="http://www.smarttouchinteractive.com/">
+                                <img src="~/img/st-logo.png" style="width:100px" />
+                            </a>
+                        </li>
+                        <li id="menu-item-1" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1388">
+                            <a href="javascript:void(0)" style="color: #7ac142;">Docs</a>
+
+                        </li>
+                        <li id="menu-item-2" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1365">
+                            <a href="http://www.smarttouchinteractive.com/about-us/">About Us</a>
+                        </li>
+                        <li id="menu-item-3" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1382">
+                            <a href="http://www.smarttouchinteractive.com/contact-us/">Contact Us</a>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div id="api-body" class="help-page smrt-content">
+        <div>
+            <div class="content-wrapper main-content clear-fix documentation-body">
+                <div class="featured">
+                    <div class="float-left test" style="display:inline-block">
+                        <h1>@ViewBag.Title</h1>
+                    </div>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+
+<script type="text/html" id="fixed-menu-items">
+    <li class="nav-header" id="overview">
+        <i class="icon-tag"></i> Overview
+    </li>
+    @*<li class="active">
+        <a href="javascript:void(0)" id='QuickReference' name='QuickReference'>Quick Reference</a>
+    </li>*@
+</script>
+
+<script>
+    $(document).ready(function () {
+        jQuery('#menu-item-1 a').first().attr('href', location.origin + '/help/docs');
+        $('.documentation-body').removeAttr('style');
+    });
+</script>

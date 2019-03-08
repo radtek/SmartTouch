@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<NHGLeads>
+<Lead Source="NewHomeGuide" LeadType="Community Prospect">
+<Contact FirstName="NHGF1" LastName="Last" Email="NHGtestflipkart@gmail.com" Phone="6266790731" StreetAddress="Address1" City="Austin" State="Texas" PostalCode="91010"/>
+<Qualifications ReasonsForBuying="Moving to new location" MoveInDate="03/01/2013" Comments="Please send a message" DateCreated="2012-04-02 18:56:43"/>
+<PropertyInterest StateName="TX" MarketName="San Antonio" BuilderName="Brohn" BuilderNumber="BROHN" CommunityName="Cantera Village-Brohn Homes" CommunityNumber="157133" PlanName="3 BHK" PlanNumber="00123" Unkown = "newunknown"/>
+<Telemetry CountElements="21" LeadDetails="Lead Fron sanantonio"/>
+</Lead>
+</NHGLeads>

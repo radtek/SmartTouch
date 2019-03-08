@@ -1,0 +1,201 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.FormViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/formvm")
+
+<script src="~/Scripts/Prettify/prettify.js"></script>
+<link href="~/Content/Prettify/Themes/tomorrow.css" rel="stylesheet" />
+<div style="display:none" data-bind="visible:true">
+    <div class="sub-container" data-bind="visible:CurrentView()=='testform'">
+        @Html.Partial("_TestForm")
+    </div>
+    <div class="sub-container" data-bind="visible:CurrentView()=='formdesigner'">
+        <ul class="breadcrumb">
+            <li>@Html.ActionLink("[|Forms|]", "Forms", "Form", null, null)</li>
+            <li class="active"><a href="javascript:void(0)"><span data-bind="text:FormId()==0?'[|Add Form|]': '[|Edit Form|]'"></span></a></li>
+        </ul>
+        <div class="main-header mbl">
+            <div class="display-inline form-inline">
+                <div class="form-group">
+                    <label>[|Form Name|]</label><span class="required">*</span>
+                </div>
+                <div class="form-group validation-form-control">
+                    <input type="text" class="form-control" data-bind="value:Name,valueUpdate: 'afterkeydown',attr:{placeholder:'[|Form Name|]'}" />
+                </div>
+            </div>
+            <span data-bind="visible:FormId()>0" class="heading-sub-date">
+                <span class="heading-sub"> [|Created date:|] </span>
+                <span class="heading-sub" data-bind="text:DisplayCreatedDate"></span>
+            </span>
+        </div>
+        <div class="clearfix mvl">
+            <span class="st-custag"><span class="icon st-icon-tag prs"></span>[|Tags :|]</span>
+            <input id="formtags" class="tagsinput tags-input -info-round" data-bind="valueUpdate: 'afterkeydown'" />
+            <div>
+                @{
+                    Html.RenderPartial("~/Views/Contact/_RecentPopularTagModel.cshtml");
+                }
+            </div>
+
+        </div>
+        @Html.Partial("_FormControlTemplates")
+        <div class="form-designarea mtl">
+            <div class="campaigns-droparea">
+                <div class="form-template">
+                    <div class="legend">
+                        <span class="icon st-icon-paragraph-justify-2"><span class="mlm">[|Form|]</span></span>
+                        <span class="mlm">
+                            <!--ko ifnot:FormId() == 0-->
+                            <!--ko if:AllSubmissions() == 0 -->
+                            <span data-bind="text: AllSubmissions() + ' Form Submissions'"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:AllSubmissions() == 0 -->
+                            <a data-bind="attr:{href:'viewsubmissions?FormId=' + FormId()},text: AllSubmissions() + ' Form Submissions'"></a>
+                            <!--/ko-->
+                            <!--/ko-->
+                        </span>
+                    </div>
+                    <div class="form-template-body">
+                        <div class="form-body">
+                            <div class="form-inner form-design show" id="fform">
+                                <div class="panel panel-default mbn">
+                                    <div class="custom-fields">
+                                        @* <ul class="panel-body st-form-droparea form-fields" data-bind="template:{name:'control-template', foreach:Designer().Controls}"></ul>*@
+                                        <ul class="panel-body st-form-droparea form-fields" data-bind="sortable:{template:'control-template', data:Designer().Controls, options: {  handle: '.st-icon-move', axis: 'y' }}"></ul>
+                                    </div>
+                                    <div class="hr-border"></div>
+                                    <div class="mll mbl">
+                                        <button type="button" class="btn btn-primary">[|Submit|]</button>
+                                    </div>
+                                </div>
+                                <span class="validationMessage" data-bind="validationMessage:controlsValidation"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="campaigns-theme-controls form-controls">
+                <div class="legend mbn"><span class="icon st-icon-menu pll"><span class="mlm">[|Available Fields|]</span></span></div>
+
+                @Html.Partial("_FormControlsToolbar")
+            </div>
+        </div>
+        <div class="clearfix mtl">
+            <div class="legend">
+                <i class="icon st-icon-settings-2 mrm"></i>[|Submission Settings|]
+                <div class="pull-right">
+                    <a href="#submissinsettings" data-toggle="collapse" data-parent="#accordion" class="address-accordion"><i class="icon st-icon-dropdownarrow"></i></a>
+                </div>
+            </div>
+            <div id="submissinsettings" class="in row">
+                <div class="form-group mbn col-md-8">
+                    <label class="bold">[|Thank You Page|]</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="ThankYouPage" data-bind="checked:AcknowledgementType" value="1"> [|URL|]
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="ThankYouPage" data-bind="checked:AcknowledgementType" value="0"> [|Message|]
+                    </label>
+                    <input type="text" class="form-control mts" data-bind="value:Acknowledgement" />
+                </div>
+            </div>
+        </div>
+        <div class="clearfix mtl">
+            <div class="legend ">
+                <i class="icon st-icon-code mrm"></i>[|Form Code|]
+                <div class="pull-right">
+                    <a href="#formcode" data-toggle="collapse" data-parent="#accordion" class="address-accordion"><i class="icon st-icon-dropdownarrow"></i></a>
+                </div>
+            </div>
+            <div id="formcode" class="in">
+                <div class="form-horizontal-large">
+                    <div class="form-group xlarge">
+                        <div class="pull-left">
+                            <label class="control-label">[|Copy & Paste code to your website|] </label>
+                        </div>
+                        <div class="pull-right" id="copy-button" data-clipboard-target="htmlPrettifier" onclick="checkShocwaveStatus()">
+                            <label class="control-label mll">
+                                <a href="javascript:void(0)">
+                                    <i class="icon st-icon-windows mrs"></i>
+                                    [|Copy to clipboard|]
+                                </a>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <pre id="htmlPrettifier" class='prettyprint form-code-prettyprint' data-bind="text:HTMLContent"></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="legend">
+                [|Form Status|]
+            </div>
+            <div class="clearfix">
+                <label class="radio-inline"><input type="radio" name="formstatus" data-bind="checked:Status,value:ACTIVE" /> [|Active|]</label>
+                <label class="radio-inline"><input type="radio" name="formstatus" data-bind="checked:Status,value:INACTIVE" /> [|Inactive|]</label>
+            </div>
+            <div class="hr-border"></div>
+            <div class="">
+                <span data-bind="click:saveForm">
+                    <a class="btn btn-lg btn-primary" href="#">[|Save|]</a>
+                </span>
+                <span data-bind="click:cancelForm">
+                    <a class="btn btn-lg" href="#">[|Cancel|]</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var accessToken = '';
+    $(document).ready(function () {
+        
+        var BASE_URL = '@Url.Content("~/Form/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var userId = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var viewModel = new formViewModel(data,BASE_URL, WEBSERVICE_URL, accountId, userId);      
+        accessToken = readCookie('accessToken');
+        ko.applyBindings(viewModel);
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId);
+        tagify.Tagify("formtags");
+        
+        var recentJs = new RecentPopular(viewModel,"formtags",'F');
+        var typewatch = function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        };
+        $(document).on('mouseover','.formitem', function (event) {
+            St_Draggable('formitem');
+        });
+        HideSelectedFields();
+        setTimeout(selfDesigner.CaptureAllEdits(), 1000);
+    });
+
+    zclipPath = location.protocol + "//" + location.host+ "/Scripts/ZeroClipboard.swf";    
+    var client = new ZeroClipboard( document.getElementById("copy-button"), {
+        moviePath: zclipPath 
+    } );
+    client.on( "load", function(client) {
+         client.on( "complete", function(client, args) {
+            notifySuccess("Copied HTML to clipboard"  );
+        } );
+    } );
+
+    var checkShocwaveStatus = function () {
+        if (navigator.mimeTypes ["application/x-shockwave-flash"] == undefined)
+        {
+            notifyError('[|Please enable Shockwave-Flash plugin in your browser to use this feature.|]');
+        }
+    };
+
+</script>
+

@@ -1,0 +1,52 @@
+﻿
+<div class="clearfix pvl smart-report" id="nightlyStatus">
+    <div class="clearfix no-grid-resize" data-bind="visible:ReportType() == 23">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.LoginFrequencyReportViewModel>()
+            .Name("loginReportGrid")
+                    .HtmlAttributes(new { @class = "k-grid-content" })
+                    .TableHtmlAttributes(new { @class = "nightlyreport" })
+           .AutoBind(false)
+                   .ToolBar(toolbar =>
+                         {
+                             toolbar.Template(@<text>
+                                <div class="toolbar grid-ct-header">
+                                    @*<a class="k-button k-button-icontext cu-grid-excel" id="excelexport">[|Export to Excel|]</a>*@
+                                </div>
+                            </text>);
+                         })
+                         .Excel(e => e.AllPages(true).FileName("Login_Frequency_Report.xlsx"))
+                         .Pageable(pageable => pageable
+                                                .PageSizes(new List<int>() { 10, 25, 50, 100, 250 })
+                                        .ButtonCount(10)
+                                        .Messages(m => m
+                                        .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|User(s)|]")
+                                                .Empty("[|No User(s) to display|]")
+                                                .ItemsPerPage("[|User(s) Per Page|]")
+                                        )
+                                    )
+                                 .Reorderable(reorder => reorder.Columns(true))
+                                 .Sortable()
+                                 .Resizable(r => r.Columns(true))
+
+                                 .Columns(columns =>
+                                 {
+                                     columns.Bound(p => p.AccountName).Title("[|Account|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                     columns.Bound(p => p.FirstName).Title("[|First Name|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                     columns.Bound(p => p.LastName).Title("[|Last Name|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                     columns.Bound(p => p.Email).Title("[|Email|]").HeaderHtmlAttributes(new { @style = "width:150px;" });
+                                     columns.Bound(p => p.RecentLoginDate).Title("[|Recent Login Date|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                     columns.Bound(p => p.LoggedInCount).Title("[|Logged in Count|]").HeaderHtmlAttributes(new { @style = "width:50px;", @class = "loggedincount" });
+                                 })
+                                .ClientRowTemplate(@"<tr class='odd'><td title='#:AccountName#'>#:AccountName#</td><td title='#:FirstName#'>#:FirstName#</td><td title='#:LastName#'>#:LastName#</td><td title='#:Email#'>#:Email#</td>
+                          <td>#=formatDate(RecentLoginDate)#</td><td class='loggedincount'>#:LoggedInCount#</td></tr>")
+                                 .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                 .DataSource(dataSource => dataSource
+                                 .Ajax()
+                                 .Read(read => read.Action("GetLoginFrequncyReport", "Reports")))
+        )
+    </div>
+    <div id="noRecordsFound" style="display:none;">
+        <span>[|No records found|]</span>
+    </div>
+
+</div>

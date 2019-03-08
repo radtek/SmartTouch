@@ -1,0 +1,70 @@
+﻿@using SmartTouch.CRM.Entities;
+@Html.Partial("~/Views/CustomField/_CustomFieldTemplates.cshtml")
+
+<div data-bind="if : CustomFieldTabs().length > 0">
+    <div class="tabbable">
+        <div id="custom-fields-tab-headers">
+            <div class="flslarrow flslleft" style="display: block;" data-bind="click:function(){$root.CustomFieldsManager.PreviousTab()}">
+                <i class="fui-arrow-left" style="vertical-align:middle"></i>
+            </div>
+            <div id="customfields-nav-bar-wrapper">
+                <ul class="nav nav-tabs nav-stacked" id="customfields-nav-bar" data-bind="foreach:CustomFieldTabs()">
+                    <li style="float:left" class="hvr-bounce-in" data-bind="attr:{class:$root.CurrentTabView()==$index()?'active':'', id:'customfieldtab-'+$index()}">
+                        <a href="" data-bind="text:Name,attr:{id:'customtabid-'+CustomFieldTabId()},click:$root.showCurrentTab.bind($data,$index())"></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="flslarrow flslright" data-bind="click:function(){$root.CustomFieldsManager.NextTab()}" style="display: block;">
+                <i class="fui-arrow-right" style="vertical-align:middle"></i>
+            </div>
+        </div>
+        <div class="tab-content customfield-section" data-bind="">
+            <div class="tab-pane active" data-bind="foreach:CustomFieldTabs()[$root.CurrentTabView()].Sections()">
+                <div class="formsubheading" data-bind="text:Name,attr:{id:'customtabid-'+CustomFieldSectionId()}"></div>
+                <div class="form-horizontal " data-bind="foreach:CustomFields">
+                    <div class="form-group static-field-group customfield-edit-wrapper">
+                        <div class="customfield-edit">
+                            <label class="control-label col-sm-5 col-md-4 bold ptm" data-bind="text:Title"></label>
+                            <!--ko if:EditMode()==false-->
+                                <!-- ko if: (FieldInputTypeId()==@((byte)FieldType.dropdown) || FieldInputTypeId() == @((byte)FieldType.radio) || FieldInputTypeId() == @((byte)FieldType.checkbox) || FieldInputTypeId() == @((byte)FieldType.multiselectdropdown)) && Value()!==null-->
+
+                                <div class="col-md-8">
+                                    <p data-bind="html: $parents[1].customValueOptions(ValueOptions(),Value())" class="form-control-static col-md-7"></p>
+                                    <span class="edit-contact-custom-fields" data-bind="if:$root.CustomFieldsManager.isAnyFieldInEditMode()==false">
+                                        <i class="icon st-icon-edit" data-bind="click:function(){$root.CustomFieldsManager.EditCustomField(TabIndex,SectionIndex,FieldIndex);}"></i>
+                                    </span>
+                                </div>
+                                <!-- /ko -->
+
+                                <!-- ko ifnot: (FieldInputTypeId()==@((byte)FieldType.dropdown) || FieldInputTypeId() == @((byte)FieldType.radio) || FieldInputTypeId() == @((byte)FieldType.checkbox) || FieldInputTypeId() == @((byte)FieldType.multiselectdropdown)) -->
+                                <div class="col-md-8">
+                                    <div data-bind="html: Value()" class="form-control-static col-md-7"></div>
+                                    <span class="edit-contact-custom-fields" data-bind="if:$root.CustomFieldsManager.isAnyFieldInEditMode()==false">
+                                        <i class="icon st-icon-edit" data-bind="click:function(){$root.CustomFieldsManager.EditCustomField(TabIndex,SectionIndex,FieldIndex);}"></i>
+                                    </span>
+                                </div>
+                                <!-- /ko -->
+                            <!--/ko-->
+                            <!--ko if:EditMode()==true-->
+                            <div class="col-md-5" data-bind="template:'control-'+FieldInputTypeId()">
+                            </div>
+                            <div class="co-de-buttons col-md-2">
+                                <button class="btn btn-default" data-bind="click:function(){ $root.CustomFieldsManager.SaveCustomField(FieldId())}" type="button"><i class="fui-check"></i></button>
+                                <button class="btn btn-default" data-bind="click:function(){ EditMode(false);$root.CustomFieldsManager.CancelEditing();}" type="button"><i class="fui-cross"></i></button>
+                            </div>
+                            <!--/ko-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div data-bind="if : CustomFieldTabs().length == 0">
+    <div class="notecordsfound">
+        <div>
+            <i class="icon st-icon-browser-windows-2"></i>
+        </div>
+        <span class="bolder smaller-90">No custom fields found</span>
+    </div>
+</div>

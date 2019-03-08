@@ -1,0 +1,181 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ViewLeadAdapterViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var LeadAdapterID = ViewBag.leadAdapterID;
+    var LeadAdapterName = ViewBag.Name;
+    short PageSize = ViewBag.ItemsPerPage;
+    var DateFormat = ViewBag.DateFormat; 
+}
+<div class="sub-container">
+    <ul class="breadcrumb">
+        <li>
+            @if (LeadAdapterName == "Import")
+            {
+                @Html.ActionLink("[|Imports|]", "ImportDataList", "ImportData")
+            }
+            else
+            {
+                @Html.ActionLink("[|Lead Adapter|]", "LeadAdapterList", "LeadAdapter")
+            }
+
+        </li>
+        @if (LeadAdapterName == "Import")
+        {
+        <li class="active"><a href="javascript:void(0)" data-original-title="" title="">[|Import History|]</a></li>
+        }
+        else { 
+        <li class="active"><a href="javascript:void(0)" data-original-title="" title="">[|View Adapter|]</a></li>
+        }
+        
+    </ul>
+    <div class="main-header">@LeadAdapterName</div>
+    <div class="form-horizontal-large">
+        <div class="leadadapter-grid mtl">
+                        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ViewLeadAdapterViewModel>()
+                  .Name("gridViewLead")
+                  .Pageable(pageable => pageable
+                  .Refresh(false)
+                 .PageSizes(true)
+                  .ButtonCount(10))
+                  .Columns(columns =>
+                  {
+                      columns.Template(e => "").Title("[|History|]");
+                  })
+                  .ClientRowTemplate(
+                                        @"<tr class='odd'>
+                            <td>
+                                <div class='clearfix'>
+                                    <div class='form-group'>
+                                        <label class='control-label'><span class='bold'>[|Date|] : </span>  #=displayDate_n(ImportDate)# </label>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label class='control-label'><span class='bold'>[|Filename|] : </span> #:FileName#</label>
+                                    </div>
+                                </div>
+                                <div class='clearfix'>
+                                    <div class='form-group'>
+                                        <label class='control-label'> <span class='bold'>[|Imported|] : </span>
+                                        #if(SuccessRecords === true)
+                                            {#
+                                                #if(leadAdapterName == 'Import'){#
+                                                    <a href='/importedcontacts?ImportedJobID=#:LeadAdapterJobID#&recordStatus=All'>[|Imported Contacts|]</a>
+                                                #}else{#
+                                                    <a href='leadadaptercontacts?LeadAdapterJobID=#:LeadAdapterJobID#'>[|Imported Contacts|]</a>
+                                                #}#
+                                            #}
+                                            else
+                                            {#
+                                                <span>[|No records imported|]</span>
+                                            #}#
+                                    </label>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='control-label'>
+                                        <span class='bold'>
+                                            [|Failed|] :
+                                        </span>#if (FailureRecords === true)
+                                        {#
+                                                 #if(leadAdapterName == 'Import'){#
+                                               <a href='/importerrorlist?JobID=#:LeadAdapterJobID#&ImportID=#=leadAdapterID#'>[|Errors|]</a>
+                                                #}else{#
+                                                    <a href='leadadaptererrorlist?leadAdapterJobLogID=#:LeadAdapterJobID#&leadAdapterID=#=leadAdapterID#&LeadAdapterName=#=leadAdapterName#'>[|Errors|]</a>
+                                                #}#
+
+                                        #}else
+                                        {#
+                                            [|No Errors|]
+                                        #}#
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>")
+                  .ClientAltRowTemplate(
+                                                         @"<tr class='odd'>
+                            <td>
+                                <div class='clearfix'>
+                                    <div class='form-group'>
+                                        <label class='control-label'><span class='bold'>[|Date|] : </span>  #=displayDate_n(ImportDate)# </label>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label class='control-label'><span class='bold'>[|Filename|] : </span> #:FileName#</label>
+                                    </div>
+                                </div>
+                                <div class='clearfix'>
+                                    <div class='form-group'>
+                                        <label class='control-label'> <span class='bold'>[|Imported|] : </span>
+                                        #if(SuccessRecords === true)
+                                            {#
+                                                #if(leadAdapterName == 'Import'){#
+                                                    <a href='/importedcontacts?ImportedJobID=#:LeadAdapterJobID#&recordStatus=All'>[|Imported Contacts|]</a>
+                                                #}else{#
+                                                    <a href='leadadaptercontacts?LeadAdapterJobID=#:LeadAdapterJobID#'>[|Imported Contacts|]</a>
+                                                #}#
+                                            #}
+                                            else
+                                            {#
+                                                <span>[|No records imported|]</span>
+                                            #}#
+                                    </label>
+                                </div>
+                                <div class='form-group'>
+                                    <label class='control-label'>
+                                        <span class='bold'>
+                                            [|Failed|] :
+                                        </span>#if(FailureRecords === true)
+                                        {#
+                                                  #if(leadAdapterName == 'Import'){#
+                                                <a href='importerrorlist?JobID=#:LeadAdapterJobID#&ImportID=#=leadAdapterID#'>[|Errors|]</a>
+
+                                                #}else{#
+                                                    <a href='leadadaptererrorlist?leadAdapterJobLogID=#:LeadAdapterJobID#&leadAdapterID=#=leadAdapterID#&LeadAdapterName=#=leadAdapterName#'>[|Errors|]</a>
+                                                #}#
+                                        #}else
+                                        {#
+                                            [|No Errors|]
+                                        #}#
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>")
+                  .Events(events => events.DataBound("onDataBound"))
+                  .DataSource(dataSource => dataSource
+                  .Ajax()
+                  .PageSize(PageSize)
+                  .Read(read => read.Action("ViewLeadAdaptersViewRead", "LeadAdapter").Data("additionalInfo"))
+               ))
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var leadAdapterID = '@(LeadAdapterID)';
+    var leadAdapterName = '@(LeadAdapterName)';
+
+    function additionalInfo() {
+        return {
+            leadAdapterID: leadAdapterID
+        }
+    }
+
+    /*This function is for displaying the date in the format that user requested*/
+    function displayDate_n(date) {
+        if (date == null) {
+            return "";
+        }
+        var value = date.ToUtcUtzDate();
+        return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd'), '@(DateFormat)' + " hh:mm:ss");
+    }
+
+
+    function onDataBound(e) {
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+</script>
+
+

@@ -1,0 +1,78 @@
+﻿<div class="alert alert-warning">
+    <i class="icon st-icon-spam"></i>
+    [|Switching the 'contacts' module from Shared to Private will have an impact on other modules associated to it.|]
+</div>
+<div class="form-horizontal-large">
+    <div class="form-group xxlarge grid">
+        <div class="k-grid k-widget k-secondary" style="">
+            <div class="k-toolbar k-grid-toolbar">
+                <span class="bold">[|Data Sharing|]</span>
+            </div>
+            <div class="k-grid-content">
+
+                <table id="grid" data-role="grid" role="grid">
+                    <colgroup><col><col/></colgroup>
+                    <tbody data-bind="foreach:SubscribedModules">
+                        <!-- ko if : (ModuleId() == 3 || ModuleId() == 4 || ModuleId() == 10 || ModuleId() == 16)-->
+                        <tr>
+
+                            <td>
+                                <!--ko if :ModuleId()==3-->
+                                <i class="icon st-icon-users mrm "></i>
+                                <!--/ko-->
+                                <!--ko if : ModuleId()==4-->
+                                <i class=" icon st-icon-bullhorn-2 mrm tooltiptoggle"></i>
+                                <!--/ko-->
+                                <!--ko if : ModuleId()==10-->
+                                <i class="icon st-icon-paragraph-justify-2 mrm tooltiptoggle"></i>
+                                <!--/ko-->
+                                <!--ko if:ModuleId()==16-->
+                                <i class="icon st-icon-opputunities mrm tooltiptoggle"></i>
+                                <!--/ko-->
+                                <span data-bind="text:ModuleName" class=" bold"></span></td>
+
+                            
+                            <td>
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn">
+                                        <input type="radio" data-bind="attr:{name:ModuleName(),id:'mainshared'+ ModuleId(),value:'false'},checked:IsPrivate,click:$parent.sharingParentClick" /> [|Shared|]
+                                    </label>
+                                    <label class="btn active">
+                                        <input type="radio" data-bind="attr:{name:ModuleName(),id:'mainprivate'+ModuleId(),value:'true'},checked:IsPrivate,click:$parent.sharingParentClick" /> [|Private|]
+                                    </label>
+                                </div>
+                            </td>
+                        </tr>
+                        <!-- /ko -->
+                        @*<!-- ko if:SubModules().length > 0 -->
+                            <!--ko foreach:SubModules-->
+                            <tr>
+                                <td class="sub-child" data-bind="text:ModuleName()"></td>
+                                <td>
+                                    <fieldset id="sharingfieldset">
+                                        <div class="btn-group" data-toggle="buttons">
+
+                                            <label class="btn">
+                                                <input type="radio" data-bind="attr:{name:ModuleName(),id:'subshared'+ModuleId(),value:'false'},checked:IsPrivate,click:$root.sharingChildClick.bind($data,$parent)" /> Shared
+                                            </label>
+                                            <label class="btn active">
+                                                <input type="radio" data-bind="attr:{name:ModuleName(),id:'subprivate'+ModuleId(),value:'true'},checked:IsPrivate,click:$root.sharingChildClick.bind($data,$parent)" /> Private
+                                            </label>
+                                        </div>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                            <!--/ko-->
+                            <!--/ko-->*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="hr-border"></div>
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click: function(data,event){saveAccount('AccountSettings')}"><span data-bind="text:saveText"></span></a>
+            @Html.ActionLink("[|Cancel|]", "UserList", "User", null, new { @class = "btn btn-lg" })
+        </div>
+    </div>
+</div>
+

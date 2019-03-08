@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="urn:clientWSDL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="urn:clientWSDL" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="urn:clientWSDL">
+      <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="listLeadsRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="listLeadsResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="findLeadRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadName" type="xsd:string" />
+    <wsdl:part name="leadEmail" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="findLeadResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="addEditLeadRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadName" type="xsd:string" />
+    <wsdl:part name="leadEmail" type="xsd:string" />
+    <wsdl:part name="leadPassword" type="xsd:string" />
+    <wsdl:part name="leadAddress" type="xsd:string" />
+    <wsdl:part name="leadCity" type="xsd:string" />
+    <wsdl:part name="leadState" type="xsd:string" />
+    <wsdl:part name="leadZip" type="xsd:string" />
+    <wsdl:part name="leadPhoneAreaCode" type="xsd:string" />
+    <wsdl:part name="leadPhonePrefix" type="xsd:string" />
+    <wsdl:part name="leadPhoneLastFour" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+    <wsdl:part name="leadAgentOwner" type="xsd:int" />
+    <wsdl:part name="leadFlag" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="addEditLeadResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="optOutRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="optOutResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="optInRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="optInResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="disableLeadRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="disableLeadResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="enableLeadRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="enableLeadResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="searchListRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="searchListResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="addEditSearchRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+    <wsdl:part name="cityID" type="xsd:string" />
+    <wsdl:part name="countyID" type="xsd:string" />
+    <wsdl:part name="zipcode" type="xsd:string" />
+    <wsdl:part name="pt" type="xsd:string" />
+    <wsdl:part name="lp" type="xsd:int" />
+    <wsdl:part name="hp" type="xsd:int" />
+    <wsdl:part name="bd" type="xsd:int" />
+    <wsdl:part name="ba" type="xsd:float" />
+    <wsdl:part name="acres" type="xsd:float" />
+    <wsdl:part name="area" type="xsd:string" />
+    <wsdl:part name="remarks" type="xsd:string" />
+    <wsdl:part name="add" type="xsd:int" />
+    <wsdl:part name="sqFt" type="xsd:int" />
+    <wsdl:part name="searchName" type="xsd:string" />
+    <wsdl:part name="searchID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="addEditSearchResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="disableSearchRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+    <wsdl:part name="searchID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="disableSearchResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="enableSearchRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+    <wsdl:part name="searchID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="enableSearchResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="deleteSearchRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="leadID" type="xsd:int" />
+    <wsdl:part name="searchID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="deleteSearchResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="listAgentsRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="listAgentsResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="findAgentRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="agentFirstName" type="xsd:string" />
+    <wsdl:part name="agentLastName" type="xsd:string" />
+    <wsdl:part name="agentEmail" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="findAgentResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="cityListRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+    <wsdl:part name="idxID" type="xsd:int" />
+  </wsdl:message>
+  <wsdl:message name="cityListResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="countyListRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="countyListResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="listSavedSearchesRequest">
+    <wsdl:part name="cid" type="xsd:int" />
+    <wsdl:part name="password" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:message name="listSavedSearchesResponse">
+    <wsdl:part name="return" type="xsd:string" />
+  </wsdl:message>
+  <wsdl:portType name="clientWSDLPortType">
+    <wsdl:operation name="listLeads">
+      <documentation>@Required: cid (client ID), password (client password)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: a pipe delinated list contining:&lt;br /&gt; The lead's ID | The lead's name | The lead's primary email address | Agent Owner (by IDX assigned Agent ID) | The date the lead subscribed | The opt-in status of the lead (y = opted in) | The disabled status of the lead (y = disabled) | If the lead account is disabled | If the lead can login | If the lead unsubscribed from email updates | If the lead wants plain text of HTML emails | The area code of the lead | The first 3 digits of the lead phone number | The final 4 digits of the lead phone number | The lead street address | The lead city | The lead state | The lead zipcode | The last lead login date | The last lead update date | The lead category | If the lead has been flagged (starred)&lt;br /&gt;</documentation>
+      <wsdl:input message="tns:listLeadsRequest" />
+      <wsdl:output message="tns:listLeadsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="findLead">
+      <documentation>@Required: cid (client ID), password (client password), leadName or leadEmail or both&lt;br /&gt;@Optional: leadName or LeadEmail (must have one, the other or both)&lt;br /&gt;@Returns: a pipe delinated list contining:&lt;br /&gt; The lead's ID | The lead's name | The lead's primary email address | Agent Owner (by IDX assigned Agent ID) | The date the lead subscribed | The opt-in status of the lead (y = opted in) | The disabled status of the lead (y = disabled) | If the lead account is disabled | If the lead can login | If the lead unsubscribed from email updates | If the lead wants plain text of HTML emails | The area code of the lead | The first 3 digits of the lead phone number | The final 4 digits of the lead phone number | The lead street address | The lead city | The lead state | The lead zipcode | The last lead login date | The last lead update date | The lead category | If the lead has been flagged (starred)&lt;br /&gt;@Note: partial lead names and email address are allowed.</documentation>
+      <wsdl:input message="tns:findLeadRequest" />
+      <wsdl:output message="tns:findLeadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="addEditLead">
+      <documentation>@Required: cid (client ID), password (client password), leadName, leadEmail, leadPassword&lt;br /&gt;@Optional: leadAddress, leadCity, leadState, leadZip, leadPhoneAreaCode, leadPhonePrefix, leadPhoneLastFour, leadAgentOwner, leadID, leadFlag&lt;br /&gt;@Returns: a pipe delinated list contining:&lt;br /&gt; The lead's Status (new or edit) | The lead's ID number&lt;br /&gt;@Note: To edit a lead, an existing lead email address must by supplied along with an existing lead name and/or lead ID.&lt;br /&gt;@Note: Phone number components are accepted as strings, but only digits will be processed.&lt;br /&gt;@Note: leadAgentOwner accepts integer values corrisponding the agent ID assigned by the IDX system, this is not for the MLS assigned agent ID.&lt;br /&gt;@Note: To set a lead as flagged pass "y" - any other value will result in the lead not being flagged.</documentation>
+      <wsdl:input message="tns:addEditLeadRequest" />
+      <wsdl:output message="tns:addEditLeadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="optOut">
+      <documentation>@Required: cid (client ID), password (client password), leadID (lead ID)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "Success" when lead is opted-out&lt;br /&gt;@Note: Leads are opted-in by default when they are created.</documentation>
+      <wsdl:input message="tns:optOutRequest" />
+      <wsdl:output message="tns:optOutResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="optIn">
+      <documentation>@Required: cid (client ID), password (client password), leadID (lead ID)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "Success" when lead is opted-in&lt;br /&gt;@Note: Leads are opted-in by default when they are created.</documentation>
+      <wsdl:input message="tns:optInRequest" />
+      <wsdl:output message="tns:optInResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="disableLead">
+      <documentation>@Required: cid (client ID), password (client password), leadID (lead ID)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "Success" when lead is disabled&lt;br /&gt;@Note: Leads are enabled by default when they are created.</documentation>
+      <wsdl:input message="tns:disableLeadRequest" />
+      <wsdl:output message="tns:disableLeadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="enableLead">
+      <documentation>@Required: cid (client ID), password (client password), leadID (lead ID)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "Success" when lead is enabled&lt;br /&gt;@Note: Leads are enabled by default when they are created.</documentation>
+      <wsdl:input message="tns:enableLeadRequest" />
+      <wsdl:output message="tns:enableLeadResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="searchList">
+      <documentation>@Required: cid (client ID), password (client password), leadID (lead ID)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: a pipe delineated list containing:&lt;br /&gt; The ID number of the search | The name or the search | The search itself as a query string | If the search is enabled (y = enabled)</documentation>
+      <wsdl:input message="tns:searchListRequest" />
+      <wsdl:output message="tns:searchListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="addEditSearch">
+      <documentation>@Required: cid (client ID), password (client password), leadID (lead ID), pt (property type)&lt;br /&gt;@Optional: cityID (city ID numbers), countyID (county ID numbers), zipcode (5 digit US zip codes), lp (low price), hp (high price), bd (min bedrooms), ba (min bathrooms), acres (min acres), remarks (keywords to match in the remarks field), add (number of days since the property was added to our system), sqFt (the minimum square feet), searchName (the name of the search for user reference only), searchID&lt;br /&gt;@Returns: a pipe delineated list containing:&lt;br /&gt;The search status (new or edit) | The ID number of the search&lt;br /&gt;@Note: The cityID, countyID, zipcode, and area parameters can be passed as pipe (|) seperated arrays.&lt;br /&gt;@Note: For best results only use, at most, one of the following fields: cityID, countyID, zipcode.&lt;br /&gt;@Note: Passing a valid search ID will edit that existing search as opposed to added it as new.&lt;br /&gt;@Note: Valid property types are defined on an MLS by MLS basis. These may or may not include:&lt;br /&gt; sfr = single family residential, mfr = multifamily residential, rnt = rentals, ld = lots and land, com = commerial, bo = business opportunity, ri = rental income, frm = farms, mh = mobile homes, or lse = leases</documentation>
+      <wsdl:input message="tns:addEditSearchRequest" />
+      <wsdl:output message="tns:addEditSearchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="disableSearch">
+      <documentation>@Required: cid (client ID), password (client password), leadID, searchID&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "Success" when the search is disabled&lt;br /&gt;@Note: Searches are enabled by default when they are created.</documentation>
+      <wsdl:input message="tns:disableSearchRequest" />
+      <wsdl:output message="tns:disableSearchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="enableSearch">
+      <documentation>@Required: cid (client ID), password (client password), leadID, searchID&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "Success" when the search is enabled&lt;br /&gt;@Note: Searches are enabled by default when they are created.</documentation>
+      <wsdl:input message="tns:enableSearchRequest" />
+      <wsdl:output message="tns:enableSearchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="deleteSearch">
+      <documentation>@Required: cid (client ID), password (client password), leadID, searchID&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "Success" when the search is deleted</documentation>
+      <wsdl:input message="tns:deleteSearchRequest" />
+      <wsdl:output message="tns:deleteSearchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="listAgents">
+      <documentation>@Required: cid (client ID), password (client password)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "A pipe seperated list containing:&lt;br /&gt;IDX agent ID | Agent First Name | Agent Last Name | Agent Email | Agent IDs by MLS&lt;br /&gt;@Note: Since agents can belong to multiple MLS they are presented as MLSID:AGENTID,MLSID2:AGENTID2,etc</documentation>
+      <wsdl:input message="tns:listAgentsRequest" />
+      <wsdl:output message="tns:listAgentsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="findAgent">
+      <documentation>@Required: cid (client ID), password (client password), at least 1 of: agentFirstName, agentLastName or agentEmail&lt;br /&gt;@Optional: agentFirstName, agentLastName or agentEmail, not all 3 can be empty&lt;br /&gt;@Returns: a pipe delinated list contining:&lt;br /&gt;IDX agent ID | Agent First Name | Agent Last Name | Agent Email | Agent IDs by MLS&lt;br /&gt;@Note: partial agent names and email address are allowed.</documentation>
+      <wsdl:input message="tns:findAgentRequest" />
+      <wsdl:output message="tns:findAgentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="cityList">
+      <documentation>@Required: cid (client ID), password (client password)&lt;br /&gt;@Optional: idxID (the ID of one MLS in the client account)&lt;br /&gt;@Returns: "A pipe seperated list containing:&lt;br /&gt;city ID | city Name | State&lt;br /&gt;@Note: This is a list of the cities the are availble to the client based on the most current data set from the MLS.</documentation>
+      <wsdl:input message="tns:cityListRequest" />
+      <wsdl:output message="tns:cityListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="countyList">
+      <documentation>@Required: cid (client ID), password (client password)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: "A pipe seperated list containing:&lt;br /&gt;county ID | county Name | State&lt;br /&gt;@Note: This is a list of the counties the are availble to the client based on the most current data set from the MLS.</documentation>
+      <wsdl:input message="tns:countyListRequest" />
+      <wsdl:output message="tns:countyListResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="listSavedSearches">
+      <documentation>@Required: cid (client ID), password (client password)&lt;br /&gt;@Optional: none&lt;br /&gt;@Returns: a pipe delinated list contining: The search name | search URL</documentation>
+      <wsdl:input message="tns:listSavedSearchesRequest" />
+      <wsdl:output message="tns:listSavedSearchesResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="clientWSDLBinding" type="tns:clientWSDLPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="listLeads">
+      <soap:operation soapAction="urn:clientWSDL#listLeads" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findLead">
+      <soap:operation soapAction="urn:clientWSDL#findLead" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addEditLead">
+      <soap:operation soapAction="urn:clientWSDL#addEditLead" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="optOut">
+      <soap:operation soapAction="urn:clientWSDL#optOut" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="optIn">
+      <soap:operation soapAction="urn:clientWSDL#optIn" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="disableLead">
+      <soap:operation soapAction="urn:clientWSDL#disableLead" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="enableLead">
+      <soap:operation soapAction="urn:clientWSDL#enableLead" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="searchList">
+      <soap:operation soapAction="urn:clientWSDL#searchList" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addEditSearch">
+      <soap:operation soapAction="urn:clientWSDL#addEditSearch" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="disableSearch">
+      <soap:operation soapAction="urn:clientWSDL#disableSearch" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="enableSearch">
+      <soap:operation soapAction="urn:clientWSDL#enableSearch" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteSearch">
+      <soap:operation soapAction="urn:clientWSDL#deleteSearch" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listAgents">
+      <soap:operation soapAction="urn:clientWSDL#listAgents" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findAgent">
+      <soap:operation soapAction="urn:clientWSDL#findAgent" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cityList">
+      <soap:operation soapAction="urn:clientWSDL#cityList" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="countyList">
+      <soap:operation soapAction="urn:clientWSDL#countyList" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="listSavedSearches">
+      <soap:operation soapAction="urn:clientWSDL#listSavedSearches" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="urn:clientWSDL" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="clientWSDL">
+    <wsdl:port name="clientWSDLPort" binding="tns:clientWSDLBinding">
+      <soap:address location="https://idxco.com:443/services/clientWSDL_1-4.php" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

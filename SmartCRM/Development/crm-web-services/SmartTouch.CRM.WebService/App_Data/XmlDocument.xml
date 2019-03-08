@@ -1,0 +1,3280 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SmartTouch.CRM.WebService</name>
+    </assembly>
+    <members>
+        <member name="T:SmartTouch.CRM.WebService.BundleConfig">
+            <summary>
+            Creating BundleConFig
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
+            <summary>
+            For Bundling Files
+            </summary>
+            <param name="bundles">bundles</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Startup">
+            <summary>
+            Creating partial class Startup
+            </summary>
+            <summary>
+            partial class for startup application 
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Startup.OAuthBearerOptions">
+            <summary>
+            OAuthBearerOptions
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Startup.ConfigureAuth(Owin.IAppBuilder)">
+            <summary>
+            For Configuration
+            </summary>
+            <param name="app">app</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Startup.Configuration(Owin.IAppBuilder)">
+            <summary>
+            for Configuration
+            </summary>
+            <param name="app">app</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.WebApiConfig">
+            <summary>
+            Creating WebApiConfig class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            For Configaration Register
+            </summary>
+            <param name="config">config</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ApiDescriptionExtensions">
+            <summary>
+            For Api Description Extensions
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
+            </summary>
+            <param name="description">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The ID as a string.</returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfig">
+            <summary>
+            Use this class to customize the Help Page.
+            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> to supply the documentation
+            or you can provide the samples for the requests/responses.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            For register configuration
+            </summary>
+            <param name="config">config</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController">
+            <summary>
+            The controller that will handle requests for the help page.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.#ctor">
+            <summary>
+            Help controller
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Help controller constructor
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.Configuration">
+            <summary>
+            Configuration
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.Index">
+            <summary>
+            Geting apiDescriptions
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.Api(System.String)">
+            <summary>
+            Geting api details
+            </summary>
+            <param name="apiId">apiId</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.ResourceModel(System.String)">
+            <summary>
+            Getting resource model
+            </summary>
+            <param name="modelName">modelName</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.GetMethodDescription(System.String,System.String,System.String)">
+            <summary>
+            Gets the API Method Description
+            </summary>
+            <param name="methodName"></param>
+            <param name="methodId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Controllers.HelpController.Docs">
+            <summary>
+            Redirects to SmartTouch Web API Documentation
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageAreaRegistration">
+            <summary>
+            for Help Page Area Registration
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageAreaRegistration.AreaName">
+            <summary>
+            AreaName is a property for HelpPageAreaRegistration
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageAreaRegistration.RegisterArea(System.Web.Mvc.AreaRegistrationContext)">
+            <summary>
+            for register route
+            </summary>
+            <param name="context">context</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions">
+            <summary>
+            for Help Page Configuration Extensions
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetDocumentationProvider(System.Web.Http.HttpConfiguration,System.Web.Http.Description.IDocumentationProvider)">
+            <summary>
+            Sets the documentation provider for help page.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="documentationProvider">The documentation provider.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleObjects(System.Web.Http.HttpConfiguration,System.Collections.Generic.IDictionary{System.Type,System.Object})">
+            <summary>
+            Sets the objects that will be used by the formatters to produce sample requests/responses.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleObjects">The sample objects.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type and action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample request directly for the specified media type and action with parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type of the action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample response directly for the specified media type of the action with specific parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForMediaType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Sets the sample directly for all actions with the specified media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Sets the sample directly for all actions with the specified type and media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The parameter type or return type of an action.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <returns>The help page sample generator.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.SetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration,SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator)">
+            <summary>
+            Sets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleGenerator">The help page sample generator.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.GetModelDescriptionGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the model description generator.
+            </summary>
+            <param name="config">The configuration.</param>
+            <returns>The <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator"/></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageApiModel(System.Web.Http.HttpConfiguration,System.String)">
+            <summary>
+            Gets the model that represents an API displayed on the help page. The model is initialized on the first call and cached for subsequent calls.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="apiDescriptionId">The <see cref="T:System.Web.Http.Description.ApiDescription"/> ID.</param>
+            <returns>
+            An <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel"/>
+            </returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.CollectionModelDescription">
+            <summary>
+            Creating CollectionModelDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.CollectionModelDescription.ElementDescription">
+            <summary>
+            ElementDescription property
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription">
+            <summary>
+            Creating ComplexTypeModelDescription class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription.#ctor">
+            <summary>
+            ComplexTypeModelDescription
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription.Properties">
+            <summary>
+             collection of ParameterDescription properties
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.DictionaryModelDescription">
+            <summary>
+            DictionaryModelDescription
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.EnumTypeModelDescription">
+            <summary>
+            EnumTypeModelDescription class implementing ModelDescription class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.EnumTypeModelDescription.#ctor">
+            <summary>
+            Creating constructor for EnumTypeModelDescription
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.EnumTypeModelDescription.Values">
+            <summary>
+            collection of EnumValueDescription values
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.EnumValueDescription">
+            <summary>
+            Creating EnumValueDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.EnumValueDescription.Documentation">
+            <summary>
+            Documentation property for EnumValueDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.EnumValueDescription.Name">
+            <summary>
+            Name property for EnumValueDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.EnumValueDescription.Value">
+            <summary>
+            Value property for EnumValueDescription class
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.IModelDocumentationProvider">
+            <summary>
+            Creating interface for IModelDocumentationProvider
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.IModelDocumentationProvider.GetDocumentation(System.Reflection.MemberInfo)">
+            <summary>
+            Getting Documentation details for member
+            </summary>
+            <param name="member">member</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.IModelDocumentationProvider.GetDocumentation(System.Type)">
+            <summary>
+            Getting Documentation details for type
+            </summary>
+            <param name="type">type</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.KeyValuePairModelDescription">
+            <summary>
+            KeyValuePairModelDescription class implementing ModelDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.KeyValuePairModelDescription.KeyModelDescription">
+            <summary>
+            KeyModelDescription
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.KeyValuePairModelDescription.ValueModelDescription">
+            <summary>
+            ValueModelDescription
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription">
+            <summary>
+            Describes a type model.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription.Documentation">
+            <summary>
+            Documentation is a property for ModelDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription.ModelType">
+            <summary>
+            ModelType is a property for ModelDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription.Name">
+            <summary>
+            Name is a property for ModelDescription class
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator">
+            <summary>
+            Generates model descriptions for given types.
+            </summary>
+        </member>
+        <member name="F:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.AnnotationTextGenerator">
+            <summary>
+            Modify this to support more data annotation attributes.
+            </summary>
+        </member>
+        <member name="F:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.DefaultTypeDocumentation">
+            <summary>
+             Modify this to add more default documentations.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Model Description Generator
+            </summary>
+            <param name="config">config</param>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GeneratedModels">
+            <summary>
+            Dictionary 
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GetOrCreateModelDescription(System.Type)">
+            <summary>
+            Get Or Create ModelDescription
+            </summary>
+            <param name="modelType">modelType</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GetMemberName(System.Reflection.MemberInfo,System.Boolean)">
+            <summary>
+            Change this to provide different name for the member.
+            </summary>
+            <param name="member">member</param>
+            <param name="hasDataContractAttribute">hasDataContractAttribute</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.ShouldDisplayMember(System.Reflection.MemberInfo,System.Boolean)">
+            <summary>
+            Displaying member
+            </summary>
+            <param name="member">member</param>
+            <param name="hasDataContractAttribute">hasDataContractAttribute</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.CreateDefaultDocumentation(System.Type)">
+            <summary>
+            Create Default Documentation
+            </summary>
+            <param name="type">type</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GenerateAnnotations(System.Reflection.MemberInfo,SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription)">
+            <summary>
+            Generate Annotations
+            </summary>
+            <param name="property">property</param>
+            <param name="propertyModel">propertyModel</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GenerateCollectionModelDescription(System.Type,System.Type)">
+            <summary>
+            Generate Collection of Model Descriptions
+            </summary>
+            <param name="modelType">modelType</param>
+            <param name="elementType">elementType</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GenerateComplexTypeModelDescription(System.Type)">
+            <summary>
+            Generate ComplexType ModelDescription
+            </summary>
+            <param name="modelType">modelType</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GenerateDictionaryModelDescription(System.Type,System.Type,System.Type)">
+            <summary>
+            Generate Dictionary of ModelDescription
+            </summary>
+            <param name="modelType">modelType</param>
+            <param name="keyType">keyType</param>
+            <param name="valueType">valueType</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GenerateEnumTypeModelDescription(System.Type)">
+            <summary>
+            Generate EnumType ModelDescription
+            </summary>
+            <param name="modelType">modelType</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GenerateKeyValuePairModelDescription(System.Type,System.Type,System.Type)">
+            <summary>
+            Generate KeyValuePair ModelDescription
+            </summary>
+            <param name="modelType">modelType</param>
+            <param name="keyType">keyType</param>
+            <param name="valueType">valueType</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GenerateSimpleTypeModelDescription(System.Type)">
+            <summary>
+            Generate SimpleType ModelDescription
+            </summary>
+            <param name="modelType">modelType</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelNameAttribute">
+            <summary>
+            Use this attribute to change the name of the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription"/> generated for a type.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelNameAttribute.#ctor(System.String)">
+            <summary>
+            ModelNameAttribute is a constructor ModelNameAttribute class
+            </summary>
+            <param name="name">name</param>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelNameAttribute.Name">
+            <summary>
+            Name  is a property for ModelNameAttribute class
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelNameHelper">
+            <summary>
+            ModelNameHelper interface
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelNameHelper.GetModelName(System.Type)">
+            <summary>
+            Modify this to provide custom model name mapping.
+            </summary>
+            <param name="type">type</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterAnnotation">
+            <summary>
+            Creating ParameterAnnotation class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterAnnotation.AnnotationAttribute">
+            <summary>
+            AnnotationAttribute is a property for AnnotationAttribute class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterAnnotation.Documentation">
+            <summary>
+            Documentationis a property for AnnotationAttribute class
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription">
+            <summary>
+            Creating ParameterDescription class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription.#ctor">
+            <summary>
+            Creating constructor for ParameterDescription
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription.Annotations">
+            <summary>
+            collection of ParameterAnnotations
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription.Documentation">
+            <summary>
+            Documentation is a property for ParameterDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription.Name">
+            <summary>
+            Name is a property for ParameterDescription class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription.TypeDescription">
+            <summary>
+            Creatinng reference variable to ModelDescription class
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.SimpleTypeModelDescription">
+            <summary>
+            Creating SimpleTypeModelDescription
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel">
+            <summary>
+            The model that represents an API displayed on the help page.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel"/> class.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription">
+            <summary>
+            Gets or sets the <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription"/> that describes the API.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.UriParameters">
+            <summary>
+            Gets or sets the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ParameterDescription"/> collection that describes the URI parameters for the API.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.RequestDocumentation">
+            <summary>
+            Gets or sets the documentation for the request.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.RequestModelDescription">
+            <summary>
+            Gets or sets the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the request body.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.RequestBodyParameters">
+            <summary>
+            Gets the request body parameter descriptions.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.ResourceDescription">
+            <summary>
+            Gets or sets the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the resource.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.ResourceProperties">
+            <summary>
+            Gets the resource property descriptions.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.SampleRequests">
+            <summary>
+            Gets the sample requests associated with the API.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.SampleResponses">
+            <summary>
+            Gets the sample responses associated with the API.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.ErrorMessages">
+            <summary>
+            Gets the error messages associated with this model.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.Models.HelpPageApiModel.GetParameterDescriptions(SmartTouch.CRM.WebService.Areas.HelpPage.ModelDescriptions.ModelDescription)">
+            <summary>
+            Get Parameter Descriptions 
+            </summary>
+            <param name="modelDescription">model Description</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.#ctor(System.String[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider" /> class.
+            </summary>
+            <param name="documentPaths">The physical paths to XML documents.</param>
+            <exception cref="T:System.ArgumentNullException">documentPaths</exception>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpControllerDescriptor)">
+            <summary>
+            Gets the documentation based on <see cref="T:System.Web.Http.Controllers.HttpControllerDescriptor" />.
+            </summary>
+            <param name="controllerDescriptor">The controller descriptor.</param>
+            <returns>The documentation for the controller.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the documentation based on <see cref="T:System.Web.Http.Controllers.HttpActionDescriptor" />.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns>The documentation for the action.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpParameterDescriptor)">
+            <summary>
+            Gets the documentation based on <see cref="T:System.Web.Http.Controllers.HttpParameterDescriptor" />.
+            </summary>
+            <param name="parameterDescriptor">The parameter descriptor.</param>
+            <returns>The documentation for the parameter.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetDocumentation(System.Reflection.MemberInfo)">
+            <summary>
+            Gets the documentation based on <see cref="T:MemberInfo"/>.
+            </summary>
+            <param name="member">The member.</param>
+            <returns>The documentation for the member.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetDocumentation(System.Type)">
+            <summary>
+            Gets the documentation for the specified type.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The documentation for the type.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetResponseDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the response documentation.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns>A html-formatted string for the action response.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetMethodNode(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the method node.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns>A xpath navigator.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetTypeNode(System.Type)">
+            <summary>
+            Gets the type node.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>A xpath navigator.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetMemberName(System.Reflection.MethodInfo)">
+            <summary>
+            Gets the member name.
+            </summary>
+            <param name="method">The method.</param>
+            <returns>The member name.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetTypeName(System.Type)">
+            <summary>
+            Gets the type name.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The type name.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetTagValueForController(System.Xml.XPath.XPathNavigator,System.String)">
+            <summary>
+            Gets the tag value for a controller.
+            </summary>
+            <param name="parentNode">The parent node.</param>
+            <param name="tagName">The tag name.</param>
+            <returns>A html-formatted representation of the tag value.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetTagValueForAction(System.Xml.XPath.XPathNavigator,System.String)">
+            <summary>
+            Gets the tag value for a controller.
+            </summary>
+            <param name="parentNode">The parent node.</param>
+            <param name="tagName">The tag name.</param>
+            <returns>A html-formatted representation of the tag value.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.GetTagValue(System.Xml.XPath.XPathNavigator,System.String)">
+            <summary>
+            Gets the tag value.
+            </summary>
+            <param name="parentNode">The parent node.</param>
+            <param name="tagName">The tag name.</param>
+            <returns>A html-formatted representation of the tag value.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.MultipleXmlDocumentationProvider.ConvertDocTagsToHtml(System.String)">
+            <summary>
+            Converts the document tags to HTML.
+            </summary>
+            <param name="i">The input xml.</param>
+            <returns>A HTML-formatted string.</returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator">
+            <summary>
+            This class will generate the samples for the help page.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator"/> class.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.ActualHttpMessageTypes">
+            <summary>
+            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples">
+            <summary>
+            Gets the objects that are used directly as samples for certain actions.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects">
+            <summary>
+            Gets the objects that are serialized as samples by the supported formatters.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories">
+            <summary>
+            Gets factories for the objects that the supported formatters will serialize as samples. Processed in order,
+            stopping when the factory successfully returns a non-<see langref="null"/> object.
+            </summary>
+            <remarks>
+            Collection includes just <see cref="M:SmartTouch.CRM.WebService.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)"/> initially. Use
+            <code>SampleObjectFactories.Insert(0, func)</code> to provide an override and
+            <code>SampleObjectFactories.Add(func)</code> to provide a fallback.</remarks>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Gets the request or response body samples.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Search for samples that are provided directly through <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples"/>.
+            </summary>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="type">The CLR type.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The sample that matches the parameters.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
+            <summary>
+            Gets the sample object that will be serialized by the formatters. 
+            First, it will look at the <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create
+            one using <see cref="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.DefaultSampleObjectFactory(SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator,System.Type)"/> (which wraps an <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.ObjectGenerator"/>) and other
+            factories in <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The sample object.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.ResolveHttpRequestMessageType(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Resolves the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The type.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
+            <summary>
+            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
+            <param name="formatters">The formatters.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Writes the sample object using formatter.
+            </summary>
+            <param name="formatter">The formatter.</param>
+            <param name="value">The value.</param>
+            <param name="type">The type.</param>
+            <param name="mediaType">Type of the media.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey">
+            <summary>
+            This is used to identify the place where the sample should be applied.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Creates a new <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey"/> based on media type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Creates a new <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey"/> based on media type and CLR type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The CLR type.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.#ctor(SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey"/> based on <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="sampleDirection">The <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey"/> based on media type, <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.ControllerName">
+            <summary>
+            Gets the name of the controller.
+            </summary>
+            <value>
+            The name of the controller.
+            </value>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.ActionName">
+            <summary>
+            Gets the name of the action.
+            </summary>
+            <value>
+            The name of the action.
+            </value>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.MediaType">
+            <summary>
+            Gets the media type.
+            </summary>
+            <value>
+            The media type.
+            </value>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.ParameterNames">
+            <summary>
+            Gets the parameter names.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.ParameterType">
+            <summary>
+            creating reference variable to Type class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.SampleDirection">
+            <summary>
+            Gets the <see cref="P:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.Equals(System.Object)">
+            <summary>
+            Main object reference
+            </summary>
+            <param name="obj">obj</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.HelpPageSampleKey.GetHashCode">
+            <summary>
+            Get HashCode
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ImageSample">
+            <summary>
+            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ImageSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.ImageSample"/> class.
+            </summary>
+            <param name="src">The URL of an image.</param>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.ImageSample.Src">
+            <summary>
+            Src is a property for ImageSample class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ImageSample.Equals(System.Object)">
+            <summary>
+            Object reference
+            </summary>
+            <param name="obj">obj</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ImageSample.GetHashCode">
+            <summary>
+            Get HashCode
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ImageSample.ToString">
+            <summary>
+            To string format
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.InvalidSample">
+            <summary>
+            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.InvalidSample.#ctor(System.String)">
+            <summary>
+            Invalid Sample messages
+            </summary>
+            <param name="errorMessage">errorMessage</param>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.InvalidSample.ErrorMessage">
+            <summary>
+            ErrorMessage is a property for InvalidSample class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.InvalidSample.Equals(System.Object)">
+            <summary>
+            object reference
+            </summary>
+            <param name="obj">obj</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.InvalidSample.GetHashCode">
+            <summary>
+            Get HashCode
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.InvalidSample.ToString">
+            <summary>
+            To string format
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.ObjectGenerator">
+            <summary>
+            This class will create an object of a given type and populate it with sample data.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
+            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
+            Complex types: POCO types.
+            Nullables: <see cref="T:System.Nullable`1"/>.
+            Arrays: arrays of simple types or complex types.
+            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>An object of the given type.</returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection">
+            <summary>
+            Indicates whether the sample is used for request or response
+            </summary>
+        </member>
+        <member name="F:SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection.Request">
+            <summary>
+            Request 
+            </summary>
+        </member>
+        <member name="F:SmartTouch.CRM.WebService.Areas.HelpPage.SampleDirection.Response">
+            <summary>
+            Response 
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.TextSample">
+            <summary>
+            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.TextSample.#ctor(System.String)">
+            <summary>
+            Text Sample
+            </summary>
+            <param name="text">text</param>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Areas.HelpPage.TextSample.Text">
+            <summary>
+            Text is a property for TextSample class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.TextSample.Equals(System.Object)">
+            <summary>
+            object referenc
+            </summary>
+            <param name="obj">obj</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.TextSample.GetHashCode">
+            <summary>
+            Get HashCode
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.TextSample.ToString">
+            <summary>
+            To String format
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider"/> class.
+            </summary>
+            <param name="documentPath">The physical path to XML document.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpControllerDescriptor)">
+            <summary>
+            Get controller Documentation
+            </summary>
+            <param name="controllerDescriptor">controllerDescriptor</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Get action Documentation
+            </summary>
+            <param name="actionDescriptor">actionDescriptor</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpParameterDescriptor)">
+            <summary>
+            Get parameter Documentation
+            </summary>
+            <param name="parameterDescriptor">parameterDescriptor</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetResponseDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Get action Documentation
+            </summary>
+            <param name="actionDescriptor">actionDescriptor</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Reflection.MemberInfo)">
+            <summary>
+            Get member Documentation
+            </summary>
+            <param name="member">member</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Type)">
+            <summary>
+            Get type Documentation
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetMethodNode(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Get Method Node
+            </summary>
+            <param name="actionDescriptor">actionDescriptor</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetMemberName(System.Reflection.MethodInfo)">
+            <summary>
+            Get Member Name
+            </summary>
+            <param name="method">method</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetTagValue(System.Xml.XPath.XPathNavigator,System.String)">
+            <summary>
+            Get Tag Value
+            </summary>
+            <param name="parentNode">parentNode</param>
+            <param name="tagName">tagName</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetTypeNode(System.Type)">
+            <summary>
+            Get Type Node
+            </summary>
+            <param name="type">type</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Areas.HelpPage.XmlDocumentationProvider.GetTypeName(System.Type)">
+            <summary>
+            Get Type Name
+            </summary>
+            <param name="type">type</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.AccountsController">
+            <summary>
+            Creating accounts controller for accounts module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAccountService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IWebAnalyticsProviderService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IPushNotificationService)">
+            <summary>
+            Creating constructor for account controller for accessing
+            </summary>
+            <param name="accountService">accountService</param>
+            <param name="webAnalyticsProviderService">webAnalyticsProviderService</param>
+            <param name="pushNotificationService">pushNotificationService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.GetAccountByName(System.String)">
+            <summary>
+            Gets Account by AcccountName in the system.
+            </summary>
+            <param name="accountName">Name of the account. It works as a search string, name for account.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.GetAccountById(System.Int32)">
+            <summary>
+            Get Account by id.
+            </summary>
+            <param name="id">The Id value that uniquely identifies a account.</param>
+            <returns>Account Details by Id</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.PostTag(SmartTouch.CRM.ApplicationServices.ViewModels.AccountViewModel)">
+            <summary>
+            Inserts a new account.
+            </summary>
+            <param name="viewModel">Properties of a new account</param>
+            <returns>Tag insert details response </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.PutTag(SmartTouch.CRM.ApplicationServices.ViewModels.AccountViewModel)">
+            <summary>
+            Updates an account.
+            </summary>
+            <param name="viewModel"></param>
+            <returns>Tag updated details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.Delete(System.Int32)">
+            <summary>
+            Deletes an account.
+            </summary>
+            <param name="id"></param>
+            <returns>Tag deletion deatails</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.DeleteAccount(System.Int32[],System.Byte)">
+            <summary>
+            Delete a account by Id.
+            </summary>
+            <param name="accountId">The Id value that uniquely identifies a account.</param>
+            <param name="StatusID">Status id of a account.</param>
+            <returns>Account deletion details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.CheckDomainURL(System.String)">
+            <summary>
+            Check domail url exist or not.
+            </summary>
+            <param name="domainURL">Domain url of a account.</param>        
+            <returns>Domain Url details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.GetAccountWebAnalyticsProviders(System.Int32)">
+            <summary>
+            Get account web analytics providers.
+            </summary>
+            <param name="accountId">Id of a account.</param>        
+            <returns>Account web analytics providers</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.GetBdxAccounts(System.String)">
+            <summary>
+            Getting Bdx Accounts
+            </summary>
+            <param name="accountName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.ValidateVisiStatKey(System.String)">
+            <summary>
+            Validate VisiStat Key
+            </summary>
+            <param name="visiStatData">VisiStat Key</param>
+            <returns>VisiStat Data</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.GetAllAccounts">
+            <summary>
+            Gets all accounts.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.GetTimeZones">
+            <summary>
+            For Getting Time Zones
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.AccountsController.PushNotificationDetails(SmartTouch.CRM.Domain.Notifications.PushNotification)">
+            <summary>
+            For Push Notifications
+            </summary>
+            <param name="ViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ActionController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IActionService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAccountService)">
+            <summary>
+            Creating constructor for Actions controller for accessing
+            </summary>
+            <param name="ActionService">ActionService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ActionController.PostAction(SmartTouch.CRM.ApplicationServices.ViewModels.ActionViewModel)">
+            <summary>
+            Inserts a new Action.
+            </summary>
+            <param name="viewModel">Properties of a new Action</param>
+            <returns>Action Insertion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ActionController.PutAction(SmartTouch.CRM.ApplicationServices.ViewModels.ActionViewModel)">
+            <summary>
+            Updates a Action.
+            </summary>
+            <param name="viewModel">Properties of a Action</param>
+            <returns>Action Updation Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ActionController.DeleteAction(System.Int32)">
+            <summary>
+            Deletes a Action By ActionId.
+            </summary>
+            <param name="ActionId">Id of a Action</param>
+            <returns>Action Deletion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ActionController.GetAction(System.Int32)">
+            <summary>
+            Gets a Action by ActionId.
+            </summary>
+            <param name="ActionId">Id of a Action</param>
+            <returns>Action Details</returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.CampaignsController">
+            <summary>
+            Creating campaigns controller for campaigns module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICampaignService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAdvancedSearchService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ITagService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAccountService)">
+            <summary>
+            Creating constructor for campaigns controller for accessing
+            </summary>
+            <param name="campaignService">campaignService </param>
+            <param name="advancedSearchService">advancedSearchService</param>
+            <param name="tagService">tagService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.ReplicateCampaign(SmartTouch.CRM.ApplicationServices.ViewModels.CampaignViewModel)">
+            <summary>
+            Replicate a campaign
+            </summary>
+            <param name="viewModel">Properties of a campaign</param>
+            <returns>Replicate campaign details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.PostCampaign(SmartTouch.CRM.ApplicationServices.ViewModels.CampaignViewModel)">
+            <summary>
+            Inserts a new campaign.
+            </summary>
+            <param name="viewModel">Properties of a new campaign</param>
+            <returns>Insertion details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.PutCampaign(SmartTouch.CRM.ApplicationServices.ViewModels.CampaignViewModel)">
+            <summary>
+            Update a campaign.
+            </summary>
+            <param name="viewModel">Properties of a camapign.</param>
+            <returns>updation details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.CancelCampaign(System.Int32)">
+            <summary>
+            Cancel a campaign.
+            </summary>
+            <param name="campaignId">Id of a campaign</param>
+            <returns>cancel campaign</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.DeleteCampaign(System.Int32[])">
+            <summary>
+            Delete a campaign.
+            </summary>
+            <param name="campaignId">Id of a campaign</param>
+            <returns>Delete campaign details </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetCampaign(System.Int32)">
+            <summary>
+            Get a campaign by Id.
+            </summary>
+            <param name="campaignId">Id of the campaign.</param>
+            <returns>campaign details by Id</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetCampaignTemplates">
+            <summary>
+            Get campaign templates.
+            </summary>       
+            <returns>All Campaign templates</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetCampaignTemplate(System.Int32)">
+            <summary>
+            Get a campaign template by Id.
+            </summary>
+            <param name="campaignTemplateID">Id of the Campaign template.</param>
+            <returns>Single Campaign Template </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetCampaignPublicImages">
+            <summary>
+            Get campaign public images.
+            </summary>       
+            <returns>Campaign Public Images</returns>
+            
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetCampaignImages(System.Int32)">
+            <summary>
+            Get campaign images.
+            </summary>       
+            <returns>Campaign Image by accountID</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.DeleteCampaignImage(System.Int32)">
+            <summary>
+            Delete campaign image by Id.
+            </summary>
+            <param name="imageID">Id of the Campaign image.</param>
+            <returns>Deleted Campaign Details By imageID</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetAllCampaignImages(System.Int32,System.Byte,System.Byte,System.String)">
+            <summary>
+            All camapign images.
+            </summary>
+            <param name="accountID">Account Id. (Not using this, will be retired in future release)</param>
+            <param name="Limit">Limit of the grid page</param>
+            <param name="PageNumber">Page number.</param>
+            <param name="name">name</param>
+            <returns>All Campaign Images</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.ReIndexCampaigns">
+            <summary>
+            ReIndex all campaigns
+            </summary>
+            <returns>Indexed Campaigns</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetCampaignUniqueRecipientsCount(SmartTouch.CRM.ApplicationServices.Messaging.Search.CampaignRecipientsSummaryRequest)">
+            <summary>
+            Get campaign unique recipients count.
+            </summary>
+            <param name="summaryViewModel">Property of the Campaign Recipient Summary.</param>
+            <returns>Campaign Unique recipients Count</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.CampaignOpenTracker(System.Int32,System.String,System.Int32)">
+            <summary>
+            Campaign open tracker.
+            </summary>
+            <param name="accountId">Account Id. (not using this, will be removed in furture release)</param>
+            <param name="cid">Contact Id.</param>
+            <param name="cmpid">Campaign Id.</param>
+            <returns>Campaign Open Track Details</returns>
+            
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetCampaignRecipientsByID(System.Int32,System.Int32,System.Int32,System.Int16)">
+            <summary>
+            GetCampaignRecipientsByID.
+            </summary>
+            <param name="campaignId">campaign Id.</param>   
+            <param name="accountId">accountId.</param>  
+            <param name="userId">userId.</param>  
+            <param name="roleId">roleId.</param>  
+            <returns></returns>           
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.CampaignStatistics(System.Int32,System.Int32)">
+            <summary>
+            Get campaign stats
+            </summary>
+            <param name="accountId">Account Id. (Not using this, will be removed in future release)</param>       
+            <param name="campaignId">Campaign Id.</param>
+            <returns>Campaign Statistics Details</returns>        
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.MailChimpWebhook(System.Net.Http.Formatting.FormDataCollection)">
+            <summary>
+            Mailchimp Webhook configuration.
+            </summary>
+            <param name="data">Form data collection.</param>             
+            <returns>bool value</returns>
+            
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.GetIPAddress(System.String)">
+            <summary>
+            Get IP Address by hostname.
+            </summary>
+            <param name="hostName">Host Name.</param>             
+            <returns>Ip Address</returns>
+            
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CampaignsController.InsertCampaignRecipients(System.Int32)">
+            <summary>
+            Insert campaign recipients
+            </summary>
+            <param name="campaignId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.CommunicationController">
+            <summary>
+            Communication Controller
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICommunicationService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAttachmentService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICommunicationProviderService)">
+            <summary>
+            Creating constructor for communication controller for accessing
+            </summary>
+            <param name="communicationService">communicationService </param>
+            <param name="docrepositoryService">docrepositoryService</param>
+            <param name="serviceProviderService">serviceProviderService </param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.GetDocRepository(System.Int32)">
+            <summary>
+            Get all attachments by contact.
+            </summary>
+            <param name="ContactID">Id of a contact.</param>
+            <returns>Docmentaion data</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.GetGuid(SmartTouch.CRM.ApplicationServices.ViewModels.CommunicationTrackerViewModel)">
+            <summary>
+            Get guid.
+            </summary>
+            <param name="request">Properties of Communication Tracker.</param>
+            <returns>Guid</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.GetCommunicationLogInDetails(SmartTouch.CRM.ApplicationServices.ViewModels.ServiceProviderViewModel)">
+            <summary>
+            Get communication login details.
+            </summary>
+            <param name="request">Properties of service provider.</param>
+            <returns>Communication Log Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.SaveCommunicationLogInDetails(SmartTouch.CRM.ApplicationServices.ViewModels.ServiceProviderViewModel)">
+            <summary>
+            Save communication login details.
+            </summary>
+            <param name="request">Properties of service provider.</param>
+            <returns>Communication LogIn Details</returns> 
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.SendText(SmartTouch.CRM.ApplicationServices.ViewModels.SendTextViewModel)">
+            <summary>
+            Send Text.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.SendMail(SmartTouch.CRM.ApplicationServices.ViewModels.SendMailViewModel)">
+            <summary>
+            Send Email
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.GetAllAttachments(SmartTouch.CRM.ApplicationServices.ViewModels.AttachmentDataViewModel)">
+            <summary>
+            Get Contact Attachments
+            </summary>
+            <param name="attachmentviewmodel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CommunicationController.DeleteAttachment(System.Int64)">
+            <summary>
+            For Delete Attachemnt.
+            </summary>
+            <param name="docId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.ContactsController">
+            <summary>
+            Creating contacts controller for contacts module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IContactService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IActionService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICommunicationService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IContactRelationshipService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IDropdownValuesService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IUserService)">
+            <summary>
+            Creating constructor for contacts controller for accessing
+            </summary>
+            <param name="contactService"></param>
+            <param name="actionService"></param>
+            <param name="communicationservice"></param>
+            <param name="contactRelationshipService"></param>
+            <param name="dropdownValuesService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.Search(System.String,System.Int32,System.Int32)">
+            <summary>
+            Gets All types of contacts in the system.
+            </summary>
+            <param name="query">Name of the contact. It works as a search string, First Name, Last Name for persons and Company Name for companies.</param> 
+            <param name="limit">Limit of the contacts for page in grid.</param>
+            <param name="pageNumber">Page number in contacts grid.</param>
+            <returns>contacts based on parametrs</returns>   
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.ContactIndexing(System.Int32[])">
+            <summary>
+            ContactIndexing.
+            </summary>
+            <param name="contactIds">contact ids.</param>    
+            <returns></returns>           
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.ImportDataUpdate(System.Int32[],System.Int32[])">
+            <summary>
+            ImportDataUpdate.
+            </summary>
+            <param name="contactIds">contact ids.</param>    
+            <param name="tagIds">tagids.</param>    
+            <returns></returns>             
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.SearchPersons(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get Persons in the system.
+            </summary>
+            <param name="name">Name of the contact. It works as a search string, First Name, Last Name of persons.</param>
+            <param name="limit">Limit of the contacts for page in grid.</param>
+            <param name="pageNumber">Page number in contacts grid.</param>
+            <returns>persons based on parametrs</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.SearchCompanies(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get Companies in the system.
+            </summary>
+            <param name="name">Name of the contact. It works as a search string, Company Name of companies.</param>
+            <param name="limit">Limit of the contacts for page in grid.</param>
+            <param name="pageNumber">Page number in contacts grid.</param>
+            <returns>Companies based on parameters</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.SearchCompanyNames(System.String,System.Int32)">
+            <summary>
+            Search Company names.
+            </summary>
+            <param name="query">String query.</param>
+            <param name="accountId">Id of the Account.</param>
+            <returns>Company Names by accountId</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.SearchContactEmailId(System.String)">
+            <summary>
+            Search contact emails.
+            </summary>
+            <param name="query">String query.</param>
+            <returns>Contact EmailId </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.SearchContactPhone(System.String)">
+            <summary>
+            Search contact emails.
+            </summary>
+            <param name="query">String query.</param>
+            <returns>Contact Phone Number details </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.SearchContactTitles(System.String)">
+            <summary>
+            Search Titles.
+            </summary>
+            <param name="query">String query.</param>
+            <returns>Contact tiles</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.SearchContactFullNames(System.String,System.Int32)">
+            <summary>
+            Search Titles.
+            </summary>
+            <param name="query">String query.</param>
+            <param name="accountId">Account Id.</param>
+            <returns>Contact Full Names</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetPerson(System.Int32)">
+            <summary>
+            Get Person by id.
+            </summary>
+            <param name="id">The Id value that uniquely identifies a person.</param>
+            <returns>Person Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetCompany(System.Int32)">
+            <summary>
+            Get Company by id.
+            </summary>
+            <param name="id">The Id value that uniquely identifies a company.</param>
+            <returns>Company Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.PostPerson(SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel)">
+            <summary>
+            Inserts a new person.
+            </summary>
+            <param name="PersonViewModel">Properties of a new person</param>
+            <returns>Person Insertion Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.PostCompany(SmartTouch.CRM.ApplicationServices.ViewModels.CompanyViewModel)">
+            <summary>
+            Inserts a new company.
+            </summary>
+            <param name="viewModel">Properties of a new company</param>
+            <returns>Company Insertion Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.PutPerson(SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel)">
+            <summary>
+            Updates a Person.
+            </summary>
+            <param name="viewModel">Properties of a new person</param>
+            <returns>Person Updated Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.PutCompany(SmartTouch.CRM.ApplicationServices.ViewModels.CompanyViewModel)">
+            <summary>
+            Updates a Company.
+            </summary>
+            <param name="viewModel">Properties  of a company</param>
+            <returns>Company Updated Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.Delete(System.Int32)">
+            <summary>
+            Deletes a contact.
+            </summary>
+            <param name="id">Id of the Contact.</param>
+            <returns> Conatct Deletion Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.PostAction(SmartTouch.CRM.ApplicationServices.ViewModels.ActionViewModel)">
+            <summary>
+            Insert a action.
+            </summary>
+            <param name="viewModel">View Model of the Action</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.PutAction(SmartTouch.CRM.ApplicationServices.ViewModels.ActionViewModel)">
+            <summary>
+            Update a action.
+            </summary>
+            <param name="viewModel">View Model of the Action</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetAction(System.Int32)">
+            <summary>
+            Get a action.
+            </summary>
+            <param name="actionId">Id of the Action</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetContactActions(System.Int32)">
+            <summary>
+            Get a actions of Contact.
+            </summary>
+            <param name="contactId">Id of the contact</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.DeleteAction(System.Int32,System.Int32)">
+            <summary>
+            Delete the action
+            </summary>
+            <param name="actionid">Action Id.</param> 
+            <param name="contactId">Id of the contact related to action</param>       
+            <returns>HttpResponseMessage</returns>   
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.DeleteIndex(System.String)">
+            <summary>
+            Delete the index of the contact
+            </summary>
+            <param name="index">Index of the contact</param>
+            <returns>Deleting Contact Index Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.Timelines(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get the timeline of the contact
+            </summary>
+            <param name="Id">Id of the contact</param>
+            <param name="limit">Limit of the contacts</param>
+            <param name="pageNumber">PageNumber of the contact</param>
+            <returns>Contact Timeline Data</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetContactWebVisits(System.Int32)">
+            <summary>
+            Get contact web visits 
+            </summary>
+            <param name="contactId">Id of the contact</param>
+            <returns>Contact Web Visits</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.AddRelation(SmartTouch.CRM.ApplicationServices.ViewModels.RelationshipViewModel)">
+            <summary>
+            Saving Relationship to Contact.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.ChangeOwerForContact(SmartTouch.CRM.ApplicationServices.ViewModels.ChangeOwnerViewModel)">
+            <summary>
+            Change Owner to Contact.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetCreatedActions(SmartTouch.CRM.ApplicationServices.ViewModels.GridEntryViewModel)">
+            <summary>
+            For User Created and Assigned Actions.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetUsersList">
+            <summary>
+             Gets the users list.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.TimeLineData(SmartTouch.CRM.ApplicationServices.ViewModels.TimeLineViewModel)">
+            <summary>
+            For Contact Time Line Data
+            </summary>
+            <param name="timelineViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetCustomFieldsByAccountId">
+            <summary>
+            Get Custom Fields 
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetContactWebVisists(SmartTouch.CRM.ApplicationServices.Messaging.WebAnalytics.GetContactWebVisitsSummaryRequest)">
+            <summary>
+            
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.ContactsViewRead(SmartTouch.CRM.ApplicationServices.ViewModels.GridEntryViewModel)">
+            <summary>
+            For Getting Conacts of logged in Account.
+            </summary>
+            <param name="viewmodel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetUserCreatedContacts(System.Int32[])">
+            <summary>
+             Gets the user created contacts.
+            </summary>
+            <param name="contactIDsList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetRecentViewedContacts(System.Int32[],System.String)">
+            <summary>
+            Gets the recent viewed contacts.
+            </summary>
+            <param name="contactIDsList"></param>
+            <param name="sortValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.GetMyCommunicationContacts(System.String,System.String,System.String)">
+            <summary>
+            For Getting My Communications Drilldown ContactIds.
+            </summary>
+            <param name="activity"></param>
+            <param name="period"></param>
+            <param name="activityType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ContactsController.UpdateCustomFieldValue(System.Int32,System.Int32,System.String,System.Int16)">
+            <summary>
+            For Updating Contact Customfield value.
+            </summary>
+            <param name="contactId"></param>
+            <param name="fieldId"></param>
+            <param name="newValue"></param>
+            <param name="inputType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IUserService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ITourService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IContactService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICachingService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IReportService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IActionService)">
+            <summary>
+            Creating constructor for Dashboards controller for accessing
+            </summary>
+            <param name="userService"></param>
+            <param name="tourService"></param>
+            <param name="contactService"></param>
+            <param name="cachingService"></param>
+            <param name="reportService"></param>
+            <param name="actionService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetUserDashBoardSettings">
+            <summary>
+            Get User Dashboard Settings.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.SaveUserDashboardSettings(SmartTouch.CRM.ApplicationServices.ViewModels.DashboardViewModel)">
+            <summary>
+            Saving User Dashboard Settings
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetNewLeadsChartData">
+            <summary>
+            Get New Leads and Top 5 Lead Sources Chart Details
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetUnTouchedLeadsChartData">
+            <summary>
+            Getting UnTouched Leads Chart Details
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetTrafficBySourceAreaChartData">
+            <summary>
+            Get Tour Chat Details
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetTrafficBySourcePieChartData">
+            <summary>
+            Get Top 5 Tour Sources Chat Details.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetHotListLeads">
+            <summary>
+            Get Hot List Data
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetCreatedActionsList">
+            <summary>
+            Getting User Created Actions
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetUserCalenderData(System.String,System.String)">
+            <summary>
+            Get User Caleder Details
+            </summary>
+            <param name="startDate"></param>
+            <param name="endDate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetWebVisits(System.Byte,System.Int32,System.Boolean)">
+            <summary>
+            Get Recent Web Visists
+            </summary>
+            <param name="pageNumber"></param>
+            <param name="lmit"></param>
+            <param name="includeViewWebVisits"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DashboardsController.GetMyCommunications(System.Byte)">
+            <summary>
+            Get My Communications Data
+            </summary>
+            <param name="period"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.DropdownValuesController">
+            <summary>
+            Creating dropdownvalues controller for dropdownvalues module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DropdownValuesController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IDropdownValuesService)">
+            <summary>
+            Creating constructor for dropdownvalues controller for accessing
+            </summary>
+            <param name="dropdownValuesService">dropdownValuesService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DropdownValuesController.GetDropdownValues(System.Int32)">
+            <summary>
+            Gets Dropdown Values by AccountId.
+            </summary>
+            <param name="accountId">Id of an Account.</param>
+            <returns>All Dropdown values</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DropdownValuesController.GetDropdownValue(System.Byte)">
+            <summary>
+            Gets a Dropdown Value by DropdownId.
+            </summary>
+            <param name="dropdownId">Id of a Dropdown.</param>
+            <returns>Dropdown Value</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.DropdownValuesController.GetTemplateDataByFileName(System.String)">
+            <summary>
+            Get Template Data
+            </summary>
+            <param name="filename">Code </param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.CustomFieldsController">
+            <summary>
+            Creating customfields controller for customfields module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICustomFieldService)">
+            <summary>
+            Creating constructor for customfields controller for accessing
+            </summary>
+            <param name="customFieldService">customFieldService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.PostCustomFieldTab(SmartTouch.CRM.ApplicationServices.ViewModels.CustomFieldTabViewModel)">
+            <summary>
+            Add a new custom field tab
+            </summary>
+            <param name="viewModel"></param>
+            <returns>CustomFieldTab insertion details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.PutCustomFieldTab(SmartTouch.CRM.ApplicationServices.ViewModels.CustomFieldTabViewModel)">
+            <summary>
+            Edit an existing custom field tab
+            </summary>
+            <param name="viewModel"></param>
+            <returns>CustomFieldTab Updation details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.PostCustomField(SmartTouch.CRM.ApplicationServices.ViewModels.FieldViewModel)">
+            <summary>
+            Add a custom field
+            </summary>
+            <param name="viewModel"></param>
+            <returns>CustomField insertion details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.PutCustomField(SmartTouch.CRM.ApplicationServices.ViewModels.FieldViewModel)">
+            <summary>
+            Edit a custom field
+            </summary>
+            <param name="viewModel"></param>
+            <returns>CustomField updation details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.GetCustomFieldTabs(System.Int32)">
+            <summary>
+            Get all custom field tabs of an account
+            </summary>
+            <param name="accountId"></param>
+            <returns>All CustomFieldTabs Details(</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.SaveAllCustomFieldTabs(SmartTouch.CRM.ApplicationServices.ViewModels.CustomFieldTabsViewModel)">
+            <summary>
+            Saves all custom field tabs
+            </summary>
+            <param name="viewModel"></param>
+            <returns>All CustomFieldTabs Saving Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.GetCustomFieldsValueOptions(System.Int32)">
+            <summary>
+            Get accounts custom field value options as a list
+            </summary>
+            <param name="accountId"></param>
+            <returns>All CustomFieldsValueOptions </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.CustomFieldsController.GetSavedSearchsCountForCustomField(System.Int32,System.Nullable{System.Int32})">
+            <summary>
+            Gets the saved searchs count for custom field.
+            </summary>
+            <param name="fieldId">The field identifier.</param>
+            <param name="valueOptionId">The value option identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.EnterpriseServicesController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.EnterpriseServicesController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IEnterpriseService)">
+            <summary>
+            Creating Constructor For EnterpriseServices
+            </summary>
+            <param name="enterpriseService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.EnterpriseServicesController.ReportedCouponsData(System.Int32,System.Int32)">
+            <summary>
+            Fetching all reported coupons
+            </summary>
+            <param name="pagenumber"></param>
+            <param name="pagesize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.EnterpriseServicesController.SendEmail(SmartTouch.CRM.ApplicationServices.ViewModels.ContactDataViewModel)">
+            <summary>
+            
+            </summary>
+            <param name="contactData"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.FormController">
+            <summary>
+            Creating forms controller for forms module
+            </summary>    
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IFormService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IDropdownValuesService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IContactService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAccountService)">
+            <summary>
+             Creating constructor for forms controller for accessing
+            </summary>
+            <param name="formService">formService</param>
+            <param name="dropDownService">dropDownService</param>
+            <param name="contactService">contactService</param>
+            <param name="accountService">accountService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.PostForm(SmartTouch.CRM.ApplicationServices.ViewModels.FormViewModel)">
+            <summary>
+            Insert a new form
+            </summary>
+            <param name="viewModel">Properties of a form.</param>
+            <returns>Form Insertion Deatails response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.PutForm(SmartTouch.CRM.ApplicationServices.ViewModels.FormViewModel)">
+            <summary>
+            Update and existing form
+            </summary>
+            <param name="viewModel">Properties of a form.</param>
+            <returns>Form Updation Deatails response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.DeleteForm(SmartTouch.CRM.ApplicationServices.Messaging.Forms.DeleteFormRequest)">
+            <summary>
+            Delete form(s)
+            </summary>
+            <param name="formIds">Ids of a form.</param>
+            <returns>Form Deletion Deatails response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.SubmitFormAPI2(SmartTouch.CRM.ApplicationServices.ViewModels.SubmittedFormAPIViewModel)">
+            <summary>
+            Submit a form
+            </summary>
+            <param name="viewModel">Properties of a submitted form form.</param>
+            <returns>Form Submitted Deatails response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.SubmitForm(System.Net.Http.Formatting.FormDataCollection)">
+            <summary>
+            Submit a form - AJAX
+            </summary>
+            <param name="formData">Form data.</param>
+            <returns>Form Submitted Deatails response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.SubmitFormPost(System.Net.Http.Formatting.FormDataCollection)">
+            <summary>
+            Submit a form - Plain post
+            </summary>
+            <param name="formData"></param>
+            <returns>Form Submitted Deatails response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.HandleFormAcknowledgementMessage(SmartTouch.CRM.ApplicationServices.Messaging.Forms.SubmitFormResponse)">
+            <summary>
+            Handling Form Acknowledgement Massage
+            </summary>
+            <param name="response">Giving Form Acknowledgement message data </param>
+            <returns>Getting Form Acknowledgement message data from DB  </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.ReIndexForms">
+            <summary>
+            Reindex all forms
+            </summary>
+            <returns>reIndexed Forms</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.GetFiledDataById(System.Int32)">
+            <summary>
+            Gets the filed data by identifier.
+            </summary>
+            <param name="fieldid">The fieldid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.CreateForm(SmartTouch.CRM.ApplicationServices.ViewModels.FormEntryViewModel)">
+            <summary>
+            Create a API Form.
+            </summary>
+            <param name="fieldid">The form Name.</param>
+            <param name="fieldid">The accountId.</param>
+            <param name="fieldid">The userId.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.FormController.UpdateFormName(SmartTouch.CRM.ApplicationServices.ViewModels.FormEntryViewModel)">
+            <summary>
+            Update a API Form name.
+            </summary>
+            <param name="fieldid">The form Name.</param>
+            <param name="fieldid">The accountId.</param>
+            <param name="fieldid">The userId.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.FormResponse">
+            <summary>
+            For form response 
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.FormResponse.Success">
+            <summary>
+            Success is a property for FormResponse class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.FormResponse.Acknowledgement">
+            <summary>
+            Acknowledgement is a property for FormResponse class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.FormResponse.AcknowledgementType">
+            <summary>
+            Creating reference variable to AcknowledgementType
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.ImageController">
+            <summary>
+            Creating image controller for Image module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ImageController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICampaignService)">
+            <summary>
+             Creating constructor for image controller for accessing
+            </summary>
+            <param name="campaignService">campaignService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ImageController.UploadCampaignImages(SmartTouch.CRM.ApplicationServices.ViewModels.ImageViewModel)">
+            <summary>
+            Upload campaign images.
+            </summary>
+            <param name="request">Data of uploaded image.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ImageController.CreateFolder(System.String,SmartTouch.CRM.Entities.ImageCategory)">
+            <summary>
+            Geting Image Physical Path
+            </summary>
+            <param name="Account">Account Name</param>
+            <param name="ImageCategory"> Image Category</param>
+            <returns>Image Pysical Path </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ImageController.DeleteImage(System.Int32)">
+            <summary>
+            Get image by Id.
+            </summary>
+            <param name="id">Id of a image.</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.LeadAdapterController">
+            <summary>
+            Creating leadadapter controller for leadadapter module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LeadAdapterController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ILeadAdapterService)">
+            <summary>
+            Creating constructor for leadadapter controller for accessing
+            </summary>
+            <param name="leadAdapterService">leadAdapterService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LeadAdapterController.InsertLeadadapter(SmartTouch.CRM.ApplicationServices.ViewModels.LeadAdapterViewModel)">
+            <summary>
+            To insert a new leadadapter
+            </summary>
+            <param name="viewModel">All the properties related to the leadadapter</param>
+            <returns>Leadadapter Insertion Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LeadAdapterController.UpdateLeadadapter(SmartTouch.CRM.ApplicationServices.ViewModels.LeadAdapterViewModel)">
+            <summary>
+            Update the leadadapter
+            </summary>
+            <param name="viewModel">All the properties related to leadadapter</param>
+            <returns>Leadadapter Updation Details </returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LeadAdapterController.GetLeadadapter(SmartTouch.CRM.ApplicationServices.Messaging.LeadAdapters.GetLeadAdapterRequest)">
+            <summary>
+            To fetch the leadapter with id
+            </summary>
+            <param name="request">Id of the leadadapter</param>
+            <returns>Leadadapter Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LeadAdapterController.DeleteLeadadapter(System.Int32)">
+            <summary>
+            To delete the leadadapter with the leadadapterid
+            </summary>
+            <param name="leadAdapterID"></param>
+            <returns>Deleted Leadadapter Details</returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.MailGunController">
+            <summary>
+            Creating MailGun controller 
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.MailGunController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IMailGunService)">
+            <summary>
+            Creating constructor for maigun controller for accessing
+            </summary>
+            <param name="mailGunService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.MailGunController.GetEmailStatus(System.String)">
+            <summary>
+            Get Email Status
+            </summary>
+            <param name="email">Email</param>
+            <returns>Email Status </returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.LoginApiController">
+            <summary>
+            Creating LoginApi controller for LoginApi module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LoginApiController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IThirdPartyClientService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IUserService)">
+            <summary>
+            Creating Constructor for Login API Controller for accessing.
+            </summary>
+            <param name="thirdPartyClientService"></param>
+            <param name="userService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LoginApiController.Login(SmartTouch.CRM.WebService.Models.LoginInfo)">
+            <summary>
+            Use this method to login by passing user name, password and client id
+            Store the refreshtoken for future purpose.
+            </summary>
+            <param name="loginInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LoginApiController.MobileLogin(SmartTouch.CRM.ApplicationServices.ViewModels.LoginAPIViewModel)">
+            <summary>
+            Use this method for Mobile APP to login by passing Account Name, user name and password
+            Store the refreshtoken for future purpose.
+            </summary>
+            <param name="loginInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LoginApiController.RefreshToken(SmartTouch.CRM.WebService.Models.RefreshTokenInfo)">
+            <summary>
+            Use this method to get refreshed accesstoken.
+            </summary>
+            <param name="refreshTokenInfo"></param>
+            <returns>refreshtoken</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LoginApiController.GetAccessTokenRespnse(System.String,System.String,System.String)">
+            <summary>
+            Get Access Token 
+            </summary>
+            <param name="username">User Name </param>
+            <param name="password">Password</param>
+            <param name="clientId">Client Id </param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LoginApiController.GetRefreshTokenResponse(System.String,System.String)">
+            <summary>
+            Get Refresh Token
+            </summary>
+            <param name="refreshToken">Refresh Token</param>
+            <param name="clientId">Client Id</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.LoginApiController.Validate(System.String,System.String)">
+            <summary>
+            Validation for Key
+            </summary>
+            <param name="key">key </param>
+            <param name="value">value</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.NoteController">
+             <summary>
+            Creating note controller for notes module 
+             </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.NoteController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.INoteService)">
+            <summary>
+            Creating constructor for note controller for accessing
+            </summary>
+            <param name="noteService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.NoteController.PostNote(SmartTouch.CRM.ApplicationServices.ViewModels.NoteViewModel)">
+            <summary>
+            Insert a new note.
+            </summary>
+            <param name="viewModel">Properties of a new note</param>
+            <returns>Note Insertion Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.NoteController.PutNote(SmartTouch.CRM.ApplicationServices.ViewModels.NoteViewModel)">
+            <summary>
+            update a note.
+            </summary>
+            <param name="viewModel">update a existing note</param>
+            <returns>Note Updation Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.NoteController.GetNote(System.Int32)">
+            <summary>
+            Get Note by id.
+            </summary>
+            <param name="id">The Id value that uniquely identifies a note.</param>
+            <returns>Note Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.NoteController.DeleteNote(System.Int32,System.Int32)">
+            <summary>
+            Delete Note by id.
+            </summary>
+            <param name="id">The Id value that uniquely identifies a note.</param>
+            <param name="contactId">The Id value that uniquely identifies a note.</param>
+            <returns>Deleted Note Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.NoteController.GetContactNotes(System.Int32)">
+            <summary>
+            Get Note for contacts.
+            </summary>
+            <param name="contactId">The Id value that uniquely identifies a note.</param>
+            <returns>Contact Created Note Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ReportController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICachingService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IReportService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IContactService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ITagService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICampaignService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAccountService)">
+            <summary>
+            Creating constructor for Report controller for accessing
+            </summary>
+            <param name="cachingService"></param>
+            <param name="reportService"></param>
+            <param name="contactService"></param>
+            <param name="tagService"></param>
+            <param name="campaignService"></param>
+            <param name="accountService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ReportController.NewLeadsList(SmartTouch.CRM.ApplicationServices.ViewModels.ReportViewModel)">
+            <summary>
+            For New Leads Data.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ReportController.GetReportData(SmartTouch.CRM.ApplicationServices.ViewModels.ReportViewModel)">
+            <summary>
+            For Getting A Perticular Report Data Based On Report Type
+            </summary>
+            <param name="viewmodel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ReportController.RunHotList(SmartTouch.CRM.ApplicationServices.ViewModels.ReportViewModel)">
+            <summary>
+            For Hot List Report Data
+            </summary>
+            <param name="viewmodel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ReportController.GetReportByType(System.Byte)">
+            <summary>
+            Get Report Data By Type
+            </summary>
+            <param name="reportType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.SearchController">
+            <summary>
+            Creating search controller
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAdvancedSearchService)">
+            <summary>
+            Creating constructor for search controller for accessing
+            </summary>
+            <param name="advancedSearchService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.InsertSearch(SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel)">
+            <summary>
+            Inserts a new Search.
+            </summary>
+            <param name="viewModel">Properties of a Advanced Search.</param>
+            <returns>Saved Search Insertion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.UpdateSearch(SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel)">
+            <summary>
+            Updates an Advanced Search.
+            </summary>
+            <param name="viewModel">Properties of a Advanced Search.</param>
+            <returns>Saved Search Updation Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.RunSearch(SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel)">
+            <summary>
+            Runs an Advanced Search.
+            </summary>
+            <param name="viewModel">Properties of a Advanced Search.</param>
+            <returns>Saved Search Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.ExportToCSVFile(SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel)">
+            <summary>
+            Exports AdvancedSearch Result to CSV File.
+            </summary>
+            <param name="viewModel">Properties of Advanced Search.</param>
+            <returns>Exported File Response Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.GetSavedSearches(System.String)">
+            <summary>
+            Gets Saved Searches.
+            </summary>
+            <param name="query">String query.</param>
+            <returns>All Saved Searches</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.ReadCookie(System.String)">
+            <summary>
+            Get search data.
+            </summary>
+            <param name="strValue">Search string.</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SearchController.GetContactsFromSearchDefinition(System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get contacts by saved search
+            </summary>
+            <param name="id"></param>
+            <param name="accountId"></param>
+            <param name="userId"></param>
+            <param name="roleId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.SmartTouchApiActionFilterAttribute">
+            <summary>
+            Creating ction filter class
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SmartTouchApiActionFilterAttribute.OnActionExecuting(System.Web.Mvc.ActionExecutingContext)">
+            <summary>
+            Autherization
+            </summary>
+            <param name="filterContext">Filter Content</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController">
+            <summary>
+            Creating smartTouchApi Controller
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.AccountId">
+            <summary>
+            For Account ID
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.UserId">
+            <summary>
+            For User ID
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.RoleId">
+            <summary>
+            For Role ID
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.RoleName">
+            <summary>
+            For Role Name
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.UserName">
+            <summary>
+            For User Name
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.TimeZone">
+            <summary>
+            For Time Zone
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.IanaTimeZone">
+            <summary>
+            Indian Time Zone
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.IsSTAdmin">
+            <summary>
+            For Super Admin
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.GetPropertyName``2(System.Linq.Expressions.Expression{Antlr.Runtime.Misc.Func{``0,``1}})">
+            <summary>
+            For Property Name
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TR"></typeparam>
+            <param name="property"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Controllers.SmartTouchApiController.DateFormat">
+            <summary>
+            For Date Formart
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.OpportunitiesController">
+            <summary>
+            Creating opportunities controller for opportunities module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.OpportunitiesController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IContactService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IOpportunitiesService)">
+            <summary>
+            Creating constructor for opportunities controller for accessing
+            </summary>
+            <param name="contactService">contactService</param>
+            <param name="opportunityService">opportunityService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.OpportunitiesController.ReIndexOpportunities">
+            <summary>
+            re index the opportunities.
+            </summary>        
+            <returns>ReIndexed Opportunities Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.OpportunitiesController.InsertOpportunity(SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel)">
+            <summary>
+            Insert a new opportunity.
+            </summary>
+            <param name="viewModel">Properties of a new opportunity</param>
+            <returns>Opportunity Insertion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.OpportunitiesController.UpdateOpportunity(SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel)">
+            <summary>
+            update a opportunity.
+            </summary>
+            <param name="viewModel">update a existing opportunity</param>
+            <returns>Opportunity Updation Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.OpportunitiesController.InsertBuyer(SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel)">
+            <summary>
+            Insert a new buyer.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.OpportunitiesController.UpdateBuyer(SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel)">
+            <summary>
+            update a buyer.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.OpportunitiesController.SearchOpportunityNames(System.String,System.Int32)">
+            <summary>
+            Getting Opportunities Search by names
+            </summary>
+            <param name="query"></param>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.TagsController">
+            <summary>
+            Creating tags controller for tags module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ITagService)">
+            <summary>
+            Creating constructor for tags controller for accessing
+            </summary>
+            <param name="tagService">tagService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.SearchTagNames(System.String)">
+            <summary>
+            Search a tag by name.
+            </summary>
+            <param name="query">pass the name of the tag name</param>
+            <returns>All tags names</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.PostTag(SmartTouch.CRM.ApplicationServices.ViewModels.TagViewModel)">
+            <summary>
+            Insert a new tag.
+            </summary>
+            <param name="viewModel">Properties of a new tag</param>
+            <returns>Tag Insertion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.PutTag(SmartTouch.CRM.ApplicationServices.ViewModels.TagViewModel)">
+            <summary>
+            Update a tag.
+            </summary>
+            <param name="viewModel">Properties of a new tag</param>
+            <returns>Tag Updation Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.ContinuePutTag(SmartTouch.CRM.ApplicationServices.ViewModels.TagViewModel)">
+            <summary>
+            Update a tag.
+            </summary>
+            <param name="viewModel">Properties of a new tag</param>
+            <returns>Tag Updation Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.Delete(System.String,System.Int32)">
+            <summary>
+            Deletes a tag for the contact.
+            </summary>
+            <param name="tagName"></param>
+            <param name="contactId"></param>
+            <returns>Tag Deletion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.Delete(System.Int32[])">
+            <summary>
+            Deletes a tag.
+            </summary>
+            <param name="tagIds"></param>
+            <returns>Deleted Tags Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.ReIndexTags">
+            <summary>
+            Reindex all the tags.
+            </summary>        
+            <returns>ReIndexed Tags Response Details</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.TagSummary(SmartTouch.CRM.ApplicationServices.ViewModels.TagSummaryRequestViewModel)">
+            <summary>
+            Reindex all the tags.
+            </summary>     
+            <param name="summaryViewModel">Properties of a tag summaryviewmodel</param>
+            <returns>Tags Summary</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.TagsController.SaveContactTags(SmartTouch.CRM.ApplicationServices.ViewModels.AddTagViewModel)">
+            <summary>
+            For Saving Contact Tags.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.ToursController">
+            <summary>
+            Creating tours controller for tours module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ToursController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ITourService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAccountService)">
+            <summary>
+            Creating constructor for tours controller for accessing
+            </summary>
+            <param name="tourService">tourService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ToursController.PostTour(SmartTouch.CRM.ApplicationServices.ViewModels.TourViewModel)">
+            <summary>
+            Inserts a new Tour.
+            </summary>
+            <param name="viewModel">Properties of a new Tour</param>
+            <returns>Tour Insertion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ToursController.PutTour(SmartTouch.CRM.ApplicationServices.ViewModels.TourViewModel)">
+            <summary>
+            Updates a Tour.
+            </summary>
+            <param name="viewModel">Properties of a Tour</param>
+            <returns>Tour Updation Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ToursController.DeleteTour(System.Int32)">
+            <summary>
+            Deletes a Tour By tourId.
+            </summary>
+            <param name="tourId">Id of a tour</param>
+            <returns>Tour Deletion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.ToursController.GetTour(System.Int32)">
+            <summary>
+            Gets a Tour by tourId.
+            </summary>
+            <param name="tourId">Id of a tour</param>
+            <returns>Tour Details</returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.UserController">
+            <summary>
+            Creating users controller for users module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IUserService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ITourService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IActionService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICachingService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICampaignService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IGeoService)">
+            <summary>
+            Creating constructor for users controller for accessing
+            </summary>
+            <param name="userService">userService</param>
+            <param name="tourService">tourService</param>
+            <param name="actionService">actionService</param>
+            <param name="cachingService">cachingService</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.PostUser(SmartTouch.CRM.ApplicationServices.ViewModels.UserViewModel)">
+            <summary>
+            Inser a new user.
+            </summary>
+            <param name="viewModel">Properties of a new form.</param>
+            <returns>User Insertion Details response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetReminders(System.Int32,System.String,System.Boolean)">
+            <summary>
+            Get remainders of a user.
+            </summary>
+            <param name="userId">user Id</param>
+            <param name="moduleIds">module Ids</param>
+            <param name="todayNotifications">today Notifications</param>
+            <returns>All Reminders</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetNotifications(System.Int32,System.String,System.Boolean)">
+            <summary>
+            Get notifications of a user.
+            </summary>
+            <param name="userId">user Id</param>
+            <param name="moduleIds">module Ids</param>
+            <param name="todayNotifications">today Notifications</param>
+            <returns>User Notifications</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.MarkNotificationAsRead(SmartTouch.CRM.Domain.ValueObjects.Notification)">
+            <summary>
+            Mark notification as read.
+            </summary>
+            <param name="notification">Properties of notification.</param>
+            <returns>Notifications which are read</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.DeleteNotification(System.String)">
+            <summary>
+            Delete a notification
+            </summary>
+            <param name="deleteViewModel">notifications delete viewmodel</param>
+            <returns>Notification deletion details response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.NotificationDelete(SmartTouch.CRM.ApplicationServices.ViewModels.DeleteNotificationViewModel)">
+            <summary>
+            For Deleting Notification.
+            </summary>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetCampaignLitmusResults(System.Int32)">
+            <summary>
+            Get Campaign Litmus Results
+            </summary>
+            <param name="campaignId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetNotificationsCount">
+            <summary>
+            Get Notifications Count
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetUsers">
+            <summary>
+            Get All Users of Logged in Account.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetUserBasicInfo">
+            <summary>
+            For Logged In User Basic Information.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.MyProfile">
+            <summary>
+            For My Profile
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.UpdateUser(SmartTouch.CRM.ApplicationServices.ViewModels.UserViewModel)">
+            <summary>
+            User Profile Saving.
+            </summary>
+            <param name="userViewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.DeleteUsers(System.String)">
+            <summary>
+            For Deleting Users.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetCurrencies">
+            <summary>
+            For Getting Currencies.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetDateFormats">
+            <summary>
+            For Getting Date Formarts.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetCountries">
+            <summary>
+            For Getting Countries.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.UserController.GetStates(System.String)">
+            <summary>
+            For Getting States.
+            </summary>
+            <param name="countryCode"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Controllers.WorkflowController">
+            <summary>
+            Creating workflow controller for workflow module
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.#ctor(SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IWorkflowService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICachingService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAdvancedSearchService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICommunicationService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ITagService)">
+            <summary>
+            Creating constructor for users controller for accessing
+            </summary>
+            <param name="workflowService">workflowService</param>
+            <param name="cachingService">cachingService</param>
+            <param name="advancedSearchService">advancedSearchService</param>
+            <param name="communitcationService">communitcationService</param>
+            <param name="tagService"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.PostWorkflow(SmartTouch.CRM.ApplicationServices.ViewModels.WorkFlowViewModel)">
+            <summary>
+            Inserts a workflow
+            </summary>
+            <param name="viewModel">Properties of a new workflow</param>
+            <returns>Workflow insertion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.PutWorkflow(SmartTouch.CRM.ApplicationServices.ViewModels.WorkFlowViewModel)">
+            <summary>
+            updates a workflow
+            </summary>
+            <param name="viewModel">Properties of a updating workflow</param>
+            <returns>Workflow Updation Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.DeleteWorkflow(SmartTouch.CRM.ApplicationServices.Messaging.WorkFlow.DeleteWorkflowRequest)">
+            <summary>
+            Delete a workflow
+            </summary>
+            <param name="workflowIds">WorkflowIDs of deleting workflows</param>
+            <returns>Workflow Deletion Details Response</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetDropdownValues(SmartTouch.CRM.Entities.DropdownFieldTypes)">
+            <summary>
+            fetches all the dropdownvalues based on the account and the dropdownid (phonetype, lifecyclestage etc)
+            </summary>
+            <param name="DropDownID">DropdonwID</param>
+            <returns>Dropdown values</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetCampaigns(System.Boolean)">
+            <summary>
+            Fetches all the workflow campaigns and sent campaigns based on the status
+            </summary>
+            <param name="IsWorklfowCampaigns">for finding whether the request is for workflows or normal campaigns</param>
+            <returns>All campaigns</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetWorkflows(System.Int16)">
+            <summary>
+            To fetch single workflow
+            </summary>
+            <param name="WorkflowID">WorkflowID</param>
+            <returns>All workflows</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetRelatedCampaigns(System.Int16)">
+            <summary>
+            Get all the related campaigns associated with the workflow
+            </summary>
+            <param name="workflowID">WorkflowIDs</param>
+            <returns>workflow related campaigns</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetTags">
+            <summary>
+            Fetch all the tags for the account
+            </summary>        
+            <returns>All Tags</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.SearchTags(System.String)">
+            <summary>
+            Fetch all the tags for the account
+            </summary>        
+            <returns>All Tags</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetRecentPopularTags">
+            <summary>
+            Fetch all the tags for the account
+            </summary>        
+            <returns>All Recent Popular</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetForms">
+            <summary>
+            Fetch all the forms for the account
+            </summary>        
+            <returns>All Forms</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetSmartSearches">
+            <summary>
+            Fetch all the saved searches for the account
+            </summary>        
+            <returns>All Saved Searches</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetCampaignLinks(System.Int32)">
+            <summary>
+            Fetch all the campaign links associated with campaign
+            </summary>   
+            <param name="CampaignID">CampaignID</param>
+            <returns>All Campaign Links</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetUsers">
+            <summary>
+            To Fetch all the users associated with the accont
+            </summary>
+            <returns>All Users</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetFields">
+            <summary>
+            To fetch all the fields in the account
+            </summary>
+            <returns>All Saved Search Fields</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetUpdatableFields">
+            <summary>
+            Gets the updatable fields.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetPhoneNumbers">
+            <summary>
+            To get all the phone numbers associated with the account
+            </summary>
+            <returns>All Phone numbers</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetLeadAdapters">
+            <summary>
+            To get all the leadadapters associated with the account
+            </summary>
+            <returns>all leadadapters</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetAllNotificationFields">
+            <summary>
+            To get all the notification fields.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetAllCampaigns(SmartTouch.CRM.ApplicationServices.ViewModels.CampaignNameViewModel)">
+            <summary>
+            Get All Campaigns By Name
+            </summary>
+            <param name="campaign"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetActionTypes">
+            <summary>
+            Get Action Types
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Controllers.WorkflowController.GetTourTypes">
+            <summary>
+            Get Tour Types.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.DependencyResolution.IoC">
+            <summary>
+            for registering in Ioc
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.DependencyResolution.IoC.Container">
+            <summary>
+            creating a reference variable for Container
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.IoC.Configure(SimpleInjector.Container)">
+            <summary>
+            For Configuration
+            </summary>
+            <param name="container">container</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.DependencyResolution.SingletonLifestyleSelectionBehavior">
+            <summary>
+            creating class for Singleton Lifestyle Selection Behavior
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.SingletonLifestyleSelectionBehavior.SelectLifestyle(System.Type,System.Type)">
+            <summary>
+            for selecting Lifestyle
+            </summary>
+            <param name="serviceType">serviceType</param>
+            <param name="implementationType">implementationType</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.DependencyResolution.DependencyResolverScopeOption">
+            <summary>
+            Provides additional options for creating the <see cref="T:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver"/>.
+            </summary>
+        </member>
+        <member name="F:SmartTouch.CRM.WebService.DependencyResolution.DependencyResolverScopeOption.UseAmbientScope">
+            <summary>
+            When <see cref="M:System.Web.Http.Dependencies.IDependencyResolver.BeginScope"/> is called, an ambient 
+            <see cref="T:SimpleInjector.Extensions.ExecutionContextScoping.ExecutionContextScopeLifestyle"/> scope is used, if one already exists. Otherwise, it 
+            creates a new <see cref="T:SimpleInjector.Extensions.ExecutionContextScoping.ExecutionContextScopeLifestyle"/> scope before returning. 
+            This is the default value.
+            </summary>
+        </member>
+        <member name="F:SmartTouch.CRM.WebService.DependencyResolution.DependencyResolverScopeOption.RequiresNew">
+            <summary>
+            A new <see cref="T:SimpleInjector.Extensions.ExecutionContextScoping.ExecutionContextScopeLifestyle"/> scope  is always created by 
+            <see cref="M:System.Web.Http.Dependencies.IDependencyResolver.BeginScope"/> before returning.
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver">
+             <summary>Simple Injector <see cref="T:System.Web.Http.Dependencies.IDependencyResolver"/> implementation.</summary>
+             <example>
+             The following example shows the usage of the <b>SimpleInjectorWebApiDependencyResolver</b> in an
+             Web API application:
+             <code lang="cs"><![CDATA[
+             using System.Web.Http;
+             using SimpleInjector;
+             using SimpleInjector.Integration.WebApi;
+             
+             public static class WebApiConfig
+             {
+                 public static void Register(HttpConfiguration config)
+                 {
+                     var container = new Container();
+             
+                     // Make the container registrations, example:
+                     // container.Register<IUserRepository, SqlUserRepository>();
+             
+                     container.RegisterWebApiControllers(config);
+                     container.RegisterWebApiFilterProvider(config);
+            
+                     // Create a new SimpleInjectorDependencyResolver that wraps the,
+                     // container, and register that resolver in MVC.
+             
+                     container.Verify();
+             
+                     config.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
+             
+                     config.Routes.MapHttpRoute(
+                         name: "DefaultApi",
+                         routeTemplate: "api/{controller}/{id}",
+                         defaults: new { id = RouteParameter.Optional }
+                     );
+                 }
+             }
+             ]]></code>
+             The previous example show the use of the 
+             <see cref="M:SimpleInjector.SimpleInjectorWebApiExtensions.RegisterWebApiControllers(SimpleInjector.Container,System.Web.Http.HttpConfiguration)">RegisterWebApiControllers</see> and
+             <see cref="M:SimpleInjector.SimpleInjectorWebApiExtensions.RegisterWebApiFilterProvider(SimpleInjector.Container,System.Web.Http.HttpConfiguration)">RegisterWebApiFilterProvider</see>
+             extension methods and how the <b>SimpleInjectorWebApiDependencyResolver</b> can be used to set the created
+             <see cref="T:SimpleInjector.Container"/> instance as default dependency resolver in Web API.
+             </example>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver.#ctor(SimpleInjector.Container)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver"/> class with
+            the default scope option (i.e. to use an ambient <see cref="T:SimpleInjector.Extensions.ExecutionContextScoping.ExecutionContextScopeLifestyle"/> 
+            scope if one already exists).
+            </summary>
+            <param name="container">The container.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="container"/> parameter is
+            a null reference (Nothing in VB).</exception>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver.#ctor(SimpleInjector.Container,SmartTouch.CRM.WebService.DependencyResolution.DependencyResolverScopeOption)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver"/> class.
+            </summary>
+            <param name="container">The container.</param>
+            <param name="scopeOption">The scoping option.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when the <paramref name="container"/> parameter is
+            a null reference (Nothing in VB).</exception>
+            <exception cref="T:System.ComponentModel.InvalidEnumArgumentException">Thrown when the 
+            <paramref name="scopeOption"/> contains an invalid value.</exception>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver.System#Web#Http#Dependencies#IDependencyResolver#BeginScope">
+            <summary>Starts a resolution scope.</summary>
+            <returns>The dependency scope.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver.System#Web#Http#Dependencies#IDependencyScope#GetService(System.Type)">
+            <summary>Retrieves a service from the scope.</summary>
+            <param name="serviceType">The service to be retrieved.</param>
+            <returns>The retrieved service.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver.System#Web#Http#Dependencies#IDependencyScope#GetServices(System.Type)">
+            <summary>Retrieves a collection of services from the scope.</summary>
+            <param name="serviceType">The collection of services to be retrieved.</param>
+            <returns>The retrieved collection of services.</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.DependencyResolution.SimpleInjectorWebApiDependencyResolver.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged 
+            resources.
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.WebApiApplication">
+            <summary>
+            Note: For instructions on enabling IIS7 classic mode, 
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.WebApiApplication.Application_Start">
+            <summary>
+            for application start up
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.WebApiApplication.Application_Error">
+            <summary>
+            for application error
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Helpers.ExceptionDictionary">
+            <summary>
+            for Exception in Dictionary
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.ExceptionDictionary.ConvertToHttpStatusCode(System.Exception)">
+            <summary>
+            Convert To Http Status Code
+            </summary>
+            <param name="exception">exception</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.ExceptionDictionary.GetExceptionDictionary">
+            <summary>
+            Get Exception Dictionary
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Helpers.HttpResponseBuilder">
+            <summary>
+            for Http Response Builder
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.HttpResponseBuilder.BuildResponse(System.Net.Http.HttpRequestMessage,SmartTouch.CRM.ApplicationServices.Messaging.ServiceResponseBase)">
+            <summary>
+            for Build Response
+            </summary>
+            <param name="requestMessage">requestMessage</param>
+            <param name="baseResponse">baseResponse</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.HttpResponseBuilder.BuildFormSubmitResponse(System.Net.Http.HttpRequestMessage,SmartTouch.CRM.ApplicationServices.Messaging.ServiceResponseBase,System.String)">
+            <summary>
+            for Build Form Submit Response
+            </summary>
+            <param name="requestMessage">requestMessage</param>
+            <param name="baseResponse">baseResponse</param>
+            <param name="redirectUrl">redirectUrl</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.HttpResponseBuilder.BuildResponseTemp``1(System.Net.Http.HttpRequestMessage,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            for Http Response Message
+            </summary>
+            <typeparam name="T">T</typeparam>
+            <param name="requestMessage">requestMessage</param>
+            <param name="values">values</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Helpers.SmartTouchApiAuthorizationAttribute">
+            <summary>
+            for SmartTouch Api Authorization Attributes
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.SmartTouchApiAuthorizationAttribute.OnAuthorization(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            on Action excuting
+            </summary>
+            <param name="actionContext">actionContext</param>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.SmartTouchApiAuthorizationAttribute.SkipAuthorization(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            for Skiping Authorization
+            </summary>
+            <param name="actionContext">actionContext</param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Helpers.SmartTouchApiExceptionFilterAttribute">
+            <summary>
+            for SmartTouch Api Exception Filter Attribute
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.WebService.Helpers.SmartTouchApiExceptionFilterAttribute.OnException(System.Web.Http.Filters.HttpActionExecutedContext)">
+            <summary>
+            On Exception
+            </summary>
+            <param name="context">context</param>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Models.LoginInfo">
+            <summary>
+            LoginInfo
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Models.LoginInfo.UserName">
+            <summary>
+            Email that is used to login to SmartTouch Web Application
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Models.LoginInfo.Password">
+            <summary>
+             Password that is used to login to SmartTouch Web Application
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Models.LoginInfo.ApiKey">
+            <summary>
+             Client ID that is provided by SmartTouch Administrator
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.WebService.Models.RefreshTokenInfo">
+            <summary>
+            for  Refresh Token Information
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Models.RefreshTokenInfo.RefreshToken">
+            <summary>
+            RefreshToken is a property for RefreshTokenInfo class
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.WebService.Models.RefreshTokenInfo.ApiKey">
+            <summary>
+            ApiKey is a property for RefreshTokenInfo class
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,56 @@
+﻿
+@{
+
+    Layout = "~/Areas/HelpPage/Views/Shared/_ApiLayout.cshtml";
+}
+<div id="leftnav" class="well sidebar-nav sidebar-nav-fixed">
+    <ul class="nav nav-list" data-bind="foreach: ShowMethods().sort(function (l, r) { return l.SortID > r.SortID ? 1 : -1 })" id="leftnav-items">
+        <li>
+            <a href="javascript:void(0)" data-bind="attr:{id:View, name:Name},text:DisplayName"></a>
+        </li>
+
+    </ul>
+</div>
+
+<h1 id="method-name"></h1>
+<div id="partialView"></div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var viewModel = new apiViewModel(data); 
+        ko.applyBindings(viewModel, document.getElementById("leftnav"));
+
+        jQuery("#leftnav-items").prepend($("#fixed-menu-items").html());
+        jQuery('#leftnav li a').click(function () {
+            pageLoader();
+            $("#partialView").html("");
+            var anchor = this;
+            var partialViewName = '/Help/GetMethodDescription?methodName=' + anchor.id + '&methodId=' + anchor.name + '&displayName=' + encodeURI(anchor.innerText);
+            jQuery('#partialView').load(partialViewName,function(){
+                console.log("partial-"+viewModel.CurrentModal().MethodDescription().Name);
+                ko.cleanNode(document.getElementById("partial-"+viewModel.CurrentModal().MethodDescription().Name));
+                ko.applyBindings(viewModel.CurrentModal, document.getElementById("partial-"+viewModel.CurrentModal().MethodDescription().Name));
+                removepageloader();
+            });
+
+            viewModel.CurrentModal().MethodDescription(ko.utils.arrayFirst(viewModel.ShowMethods(),function(value){
+                return value.View == anchor.id;
+            }) );            
+
+            viewModel.CurrentModal().getScript(viewModel.CurrentModal().MethodDescription().Name);
+            
+            $('#method-name').text(this.innerText);
+            $('#leftnav-items li').removeClass('active');
+            $(this).parent().addClass('active')
+            setTimeout(function(){
+                $('#api-body a').each(function(){ this.setAttribute('target', '_blank');})
+            },1000);
+        });
+        
+        jQuery("#leftnav li a").first().click();
+        $('.documentation-body').css({'max-height':$(window).height() - $('#mainnav').height()});
+    })
+
+
+</script>

@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />-->
+<title>Let's partner in making your agency more mobile.</title>
+<!-- Classes should also be placed in style=" "... Some email clients ignore classes-->
+<style type="text/css">	
+
+a {color: #666666;}
+a:visited {color: #666666;}
+a:hover {color: #666666;}
+a:active {color: #666666;}
+body{
+	margin:0px;
+	padding:0px;
+}
+body,ul,li {font-family: Arial, Helvetica, sans-serif; font-size: 13px; line-height: 18px; color:#666666; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none;}
+.body {font-family: Arial, Helvetica, sans-serif; font-size: 13px; line-height: 18px; color:#666666; }
+.body p {padding:0px 0px 18px 0px;}
+.subhead {font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 18px; color:#f47b20; font-weight:bold;}
+.subhead p {padding:0px 0px 4px 0px;}
+.legal p{font-family: Arial, Helvetica, sans-serif; font-size: 10px; line-height:13px; color:#808080; padding:18px 18px 0px 18px;}
+
+<!-- Controls default link colors in various clients-->
+
+.appleLinks a {color:#666666; text-decoration: underline;}
+.appleLinksWhite a {color:#ffffff; text-decoration:underline;}
+.appleLinksBlue a {color:#666666;text-decoration: none;}
+
+<!-- Outlook.com line height fix -->
+.ExternalClass * {line-height: 100%} 
+
+.ExternalClass p, 
+.ExternalClass span,
+.ExternalClass font,
+.ExternalClass td
+{line-height: 100%}
+
+.ExternalClass p {padding:0px 0px 10px 0px;}
+
+</style>
+</head>
+	<body>
+	<!-- Main email start -->
+	<table cellpadding="0" cellspacing="0" border="0" width="100%" align="center">
+		<tr>
+			<td align="center" valign="top" style="padding:0px; margin:0px;">
+				<!-- Container table start -->
+				<table cellpadding="0" cellspacing="0" border="0" width="700">
+					<tr>
+						<td align="left" valign="top" style="padding:30px; margin:0px; background-color:#f6f6f6;">
+							<!-- Top Header start -->
+							<table cellpadding="0" cellspacing="0" border="0" width="100%">
+								<tr>
+									<!-- Account name start -->
+									<td align="left" valign="center" style="margin:0px;padding:0px 0px 25px 0px;font-size:18px; color:#6a6a6a;font-family:arial,sans-serif;">
+										[AccountName]
+									</td>
+									[AccountImage]
+								</tr>
+							</table>		 		
+							<!-- Top Header end -->
+							<!-- body table start -->
+							<table cellpadding="0" cellspacing="0" border="0" width="100%">
+								<tr>
+									<!-- body white background start -->
+									<td align="right" valign="center" style="margin:0px;padding:0px;background-color:#ffffff;border:solid 1px #dfdfdf; padding:25px;">
+										<!-- Content start -->
+										<table cellpadding="0" cellspacing="0" border="0" width="100%">		
+											<!-- first line start -->
+											<tr>
+												<td align="left" valign="center" style="margin:0px;padding:15px 0px 5px 0px;font-size:14px; color:#7b7b7b;font-family:arial,sans-serif;">
+													Workflow Name: <span style="color:#2B2B2B;">[WorkFlowName]</span>
+												</td>
+											</tr>
+											<!-- first line end -->
+											
+											<!-- Normal line start -->
+											<tr>
+												<td align="left" valign="center" style="margin:0px;padding:0px 0px 20px 0px;font-size:14px; color:#7b7b7b;font-family:arial,sans-serif;">
+													Contact Name:  <span style="color:#2B2B2B;">[ContactName]</span>
+												</td>
+											</tr>
+											<!-- Normal line end -->
+										</table>		 		
+									</td>
+									<!-- body white background end -->
+									</tr>
+
+									<tr>
+									<!-- Footer start -->
+									<td align="left" valign="center" style="margin:0px;padding:10px;font-size:14px; font-weight:normal;color:#555555;font-family:arial,sans-serif;">
+										<table cellpadding="0" cellspacing="0" border="0" width="100%" style="">
+											<tr>
+												<td align="left" valign="middle" style="font-size:12px; color:#9f9f9f; padding-top:15px;">
+													&copy; 4833 Spicewood Springs Road, Suite 102, Austin, Texas - 78759,<br/> United States; 512-333-4008
+												</td>
+												<td align="right" valign="middle" style="font-size:12px; color:#9f9f9f;padding-top:15px;">
+														<img src="https://smarttouch.net/images/sponcers-logo.png">
+												</td>
+											</tr>	
+										</table>
+
+									</td>
+
+									<!-- Footer end -->
+								</tr>
+							</table>		 		
+							<!-- body table end -->
+						</td>
+					</tr>
+				</table>
+				<!-- Container table end -->
+			</td>
+		</tr>		
+		<!-- Main email end -->
+	</body>
+</html>

@@ -1,0 +1,223 @@
+﻿@{
+    var page = ViewBag.page != null ? ViewBag.page : "";
+}
+<div class="form-horizontal">
+
+    <div class="formsubheading">
+        [|Configuration|]
+        <!--<div class="pull-right">
+            <a href="#config-acc" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+        </div>-->
+    </div>
+
+    <div class="in configuration-toggles" id="config-acc">
+        @*<div class="form-group">
+            <label class="col-sm-2 control-label pln">VMTA <span class="required">*</span></label>
+            <div class="col-sm-10">
+                <input type="text" placeholder="" class="form-control config-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label pln">Sending Domain<span class="required">*</span></label>
+            <div class="col-sm-10">
+                <input type="text" placeholder="" class="form-control config-input">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label pln">Image Domain<span class="required">*</span></label>
+            <div class="col-sm-10">
+                <input type="text" placeholder="" class="form-control config-input">
+            </div>
+        </div>*@
+        <div>
+
+            <div data-bind="foreach:Modules">
+                <!-- ko if : ModuleId() != 1 &&  ModuleId() != 37 && ModuleId() != 71 && ModuleId() != 72 && ModuleId() != 73 -->
+                <fieldset id="fieldset">
+                    <div class="form-group">
+                        <label class="col-md-3 col-sm-4 control-label bold">
+                            <!--ko if :ModuleId()==2-->
+                            <i class=" icon st-icon-user-2 mrm tooltiptoggle"></i>
+                            <!-- /ko -->
+                            <!--ko if :ModuleId()==3-->
+                            <i class="icon st-icon-users mrm"></i>
+                            <!--/ko-->
+                            <!--ko if : ModuleId()==4-->
+                            <i class=" icon st-icon-bullhorn-2 mrm tooltiptoggle"></i>
+                            <!--/ko-->
+                            <!--ko if :ModuleId()==9-->
+                            <i class="icon st-icon-tag mrm"></i>
+                            <!--/ko-->
+                            <!--ko if : ModuleId()==10-->
+                            <i class="icon st-icon-paragraph-justify-2 mrm tooltiptoggle"></i>
+                            <!--/ko-->
+                            <!--ko if : ModuleId()==16-->
+                            <i class="icon st-icon-opputunities mrm tooltiptoggle"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==19-->
+                            <i class="icon st-icon-polaroid-2 mrm tooltiptoggle"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==20-->
+                            <i class="icon st-icon-menu-pull-down mrm"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==21-->
+                            <i class="icon st-icon-marquee-plus mrm"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==22-->
+                            <i class="icon st-icon-database-add mrm tooltiptoggle"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==23-->
+                            <i class="icon st-icon-inbox mrm tooltiptoggle "></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==27-->
+                            <i class="icon st-icon-role mrm"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==24-->
+                            <i class="icon st-icon-clipboard-2 mrm"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==31-->
+                            <i class="icon st-icon-search-2 mrm"></i>
+                            <!--/ko-->
+                            <!--ko if: ModuleId()==29-->
+                            <i class="icon st-icon-polaroid mrm tooltiptoggle "></i>
+                            <!--/ko-->
+                            <!--ko if:ModuleId()==33-->
+                            <i class="icon st-icon-split mrm"></i>
+                            <!--/ko-->
+                            <!--ko if:ModuleId()==34-->
+                            <i class="icon st-icon-dashboard mrm"></i>
+                            <!--/ko-->
+                            <!--ko if:ModuleId()==35-->
+                            <i class="icon st-icon-browser-download mrm"></i>
+                            <!--/ko-->
+                            <!--ko if:ModuleId()==36-->
+                            <i class="icon st-icon-user-3 mrm"></i>
+                            <!--/ko-->
+                            <!--ko if:ModuleId()==70-->
+                            <i class="st-icon-image tooltiptoggle"></i>
+                            <!--/ko-->
+                            <!--ko if:ModuleId()==76-->
+                            <i class="icon st-icon-mail-incoming"></i>
+                            <!--/ko-->
+                            <span data-bind="text:ModuleName">
+                            </span><span class="required">*</span>
+                        </label>
+                        <fieldset>
+                            <div class="col-sm-8 col-md-9">
+                                <div class="btn-group" data-toggle="buttons" data-bind="attr:{id:ModuleId()}">
+                                    <label class="btn ">
+                                        <input type="radio" data-bind="attr:{name:ModuleName(),id:'confmainyes'+ModuleId(),value:'true'},checked:IsSelected,click:$parent.ParentClicked" /> [|On|]
+                                    </label>
+                                    <label class="btn active">
+                                        <input type="radio" data-bind="attr:{name:ModuleName(),id:'confmainno'+ModuleId(),value:'false'},checked:IsSelected,click:$parent.ParentClicked" /> [|Off|]
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <!-- ko if : ModuleId() === 16 -->
+                    <div>
+                        <div class="form-group ">
+                            <label class="col-md-3 col-sm-4 control-label pll sub-child">[|Customers are primarily|] <span class="required"></span></label>
+                            <div class="col-sm-8 col-md-9">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn active">
+                                        <input type="radio" data-bind="attr:{name:'Opportunity',value:'1',id:'oppPeople'},checked:$parent.OpportunityCustomers" /> [|People|]
+                                    </label>
+                                    <label class="btn">
+                                        <input type="radio" data-bind="attr:{name:'Opportunity',value:'2',id:'oppComp'},checked:$parent.OpportunityCustomers" /> [|Companies|]
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if:SubModules().length > 0 -->
+                    <div data-bind="foreach:SubModules">
+                        <div class="form-group ">
+                            <label class="col-md-3 col-sm-4 control-label pll sub-child">
+                                <!--ko if: ModuleId()==5-->
+                                <i class="icon st-icon-tick display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==6-->
+                                <i class="icon st-icon-book-lines display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==7-->
+                                <i class="icon st-icon-pin-2 display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==8-->
+                                <i class="icon st-icon-support-3 display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==25-->
+                                <i class="icon st-icon-envelope display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==26-->
+                                <i class="icon st-icon-speech-bubble-center-2 display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==30-->
+                                <i class="icon st-icon-user display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==17-->
+                                <i class="icon st-icon-tick display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if: ModuleId()==18-->
+                                <i class="icon st-icon-book-lines display-inline mrm"></i>
+                                <!--/ko-->
+                                <!--ko if :ModuleId()==32-->
+                                <i class="icon st-icon-tag mrm"></i>
+                                <!--/ko-->
+                                <!--ko if :ModuleId() == 82-->
+                                <span>[|Approve Leads|]</span>
+                                <span class="required">*</span>
+                                <!--/ko-->
+                                <!--ko if :ModuleId()!= 74 && ModuleId()!= 82-->
+                                <span data-bind="text:ModuleName"></span>
+                                <span class="required">*</span>
+                                <!--/ko-->
+                            </label>
+                        <!--ko if :ModuleId()!= 74-->
+                            <div class="col-sm-8 col-md-9">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn">
+                                        <input type="radio" data-bind="attr:{name:ModuleName(),id:'confsubyes'+ModuleId(),value:'true'},checked:IsSelected,click:$root.ChildClicked.bind($data,$parent)" /> [|On|]
+                                    </label>
+                                    <label class="btn active">
+                                        <input type="radio" data-bind="attr:{name:ModuleName(),id:'confsubno'+ModuleId(),value:'false'},checked:IsSelected,click:$root.ChildClicked.bind($data,$parent)" /> [|Off|]
+                                    </label>
+                                </div>
+                            </div>
+                        <!--/ko-->
+                        </div>
+                    </div>
+                    <!--/ko-->
+                </fieldset>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+    <div class="hr-border"></div>
+    <div>
+        <a class="btn btn-lg btn-primary" data-bind="click: function(data,event){saveAccount('Account')}"><span data-bind="text:saveText"></span></a>
+        @Html.ActionLink("[|Cancel|]", "AccountList", "Account", new { @class = "btn btn-lg" })
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var pagename = '@(page)';
+        onPageLoad = function () {
+            if (pagename == "Accounts") {
+                $('#fieldset').prop('disabled', false);
+            }
+            else {
+                $('#fieldset').attr("disabled", "disabled");
+            }
+            setTimeout(function () {
+                $('#3').closest('fieldset').attr("disabled", "disabled");
+                $('#29').closest('fieldset').attr("disabled", "disabled");
+                $('#34').closest('fieldset').attr("disabled", "disabled");
+            }, 1000)
+        };
+        onPageLoad();
+    });
+</script>
+

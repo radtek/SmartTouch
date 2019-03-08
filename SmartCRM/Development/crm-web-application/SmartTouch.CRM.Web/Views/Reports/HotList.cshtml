@@ -1,0 +1,271 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+
+@{
+    ViewBag.Title = "Saved Searches";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    bool runReportResults = ViewBag.RunReportResults;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+  
+}
+
+@*<script src="~/Scripts/ViewModels/HotListViewModel.js"></script>*@
+@Scripts.Render("~/bundles/hotListvm")
+
+<div style="display:none" data-bind="visible:true">
+    <div class="sub-container">
+        <ul class="breadcrumb mbl">
+            <li><a href="/reports">[|Reports|]</a></li>
+            <li class="active"><a href="javascript:void(0)" data-bind="text:ReportName()"></a></li>
+        </ul>
+
+        <div class="main-header mbl">
+            <span id="pagename" data-bind="text:ReportName()"></span>
+        </div>
+
+        <div class="form-horizontal-large">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="display-inline bold">[|Date Range|]</label>
+                    <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Period',dataValueField:'PeriodId', data: Periods ,value:PeriodId,change:periodChange}" />
+                </div>
+            </div>
+
+            <div class="clearfix">
+                <div class="form-group" data-bind="visible:CustomDateDisplay">
+                    <label class="bold">[|Custom Range|] :</label>
+                    <div class="select-medium display-inline">
+                        <input data-bind="kendoDatePicker: { value: CustomStartDate, max: fromMaxDate,format:DateFormat,change: fromDateChangeEvent }" />
+                    </div>
+                    <label class="display-inline mts mhl">[|To|]</label>
+                    <div class="select-medium display-inline">
+                        <input data-bind="kendoDatePicker: { value: CustomEndDate, max: toMaxDate,format:DateFormat,change: toDateChangeEvent }" />
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="display-inline bold">[|Account Executive|]</label>
+                    <select data-bind="kendoMultiSelect: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users, value: OwnerId ,itemTemplate: templ,optionLabel: '[|Select...|]',placeholder:'[|All|]'}" class="multiselectwidth" ></select>
+                    <span class="help-block">Note: Red color represents deleted users.</span>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="display-inline bold">[|Life Cycle|]</label>
+                    <select data-bind="kendoMultiSelect: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data: LifecycleStages, value: LifecycleStage ,optionLabel: '[|Select...|]',placeholder:'[|All|]'}" class="multiselectwidth" ></select>
+
+                </div>
+            </div>
+            @*<div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Show|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Text',dataValueField:'ShowTop', data: ShowList ,value:ShowTop}" />
+
+
+                    </div>
+                </div>*@
+
+
+            <div class="hr-border"></div>
+            <div>
+                <a href="#" id="run-report" data-bind="click:Runlist" class="btn btn-lg btn-primary">[|Run Report|]</a>
+
+
+            </div>
+
+        </div>
+        <br /><br />
+        <div data-bind="visible: gridvisible() =='True'">
+            <div class="clearfix mbl" data-bind="visible:TotalHits()>0">
+                <span class="pull-right ">
+                    <a data-posturl="savedserches" href="#" onclick="advanceView();" class="btn btn-lg btn-primary">[|Advanced View|]</a>
+                </span>
+            </div>
+                @*<div class="k-grid-content" id="HotListGrid"></div>*@
+                @(Html.Kendo().Grid<SmartTouch.CRM.Domain.Reports.HotlistData>()
+            .Name("HotListGrid").HtmlAttributes(new { @class = "k-grid-content" })
+                      .AutoBind(false)
+                      .Pageable(pageable => pageable
+                      .Refresh(false)
+                      .PageSizes(true)
+                      .ButtonCount(10).Messages(m => m
+                      .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Contacts|]")
+                      .Empty("[|No Contacts to display|]")
+                      .ItemsPerPage("[|Contacts per page|]")
+                      )
+                      )
+                        //.Scrollable()
+                          .ToolBar(toolbar =>
+                         {
+                           toolbar.Template(@<text>
+                           <div class="toolbar grid-ct-header">
+                               <a class="k-button k-button-icontext cu-grid-excel" id="excelexport">[|Export to Excel|]</a>
+                           </div>               
+                          </text>);       
+                        })
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.FullName).Title("[|Name|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        //  columns.Bound(p => p.CampaignDeliveryCount);
+        columns.Bound(p => p.AccountExec).Title("[|Account Executive|]");
+        columns.Bound(p => p.PhoneNumber).Title("[|Phone|]");
+        columns.Bound(p => p.Email).Title("[|Email Address|]");
+        columns.Bound(p => p.LeadSource).Title("[|Lead Source|]");
+        columns.Bound(p => p.Lifecycle).Title("[|Life Cycle|]");
+        columns.Bound(p => p.LeadScore).Title("[|Lead Score|]").HeaderHtmlAttributes(new { @class = "text-center" });
+        columns.Bound(p => p.NewPoints).Title("[|New Points|]").HeaderHtmlAttributes(new { @class = "text-center" });
+
+
+    })
+    .Resizable(resize => resize.Columns(true))
+                                                            .ClientRowTemplate(@"<tr class='odd'><td >
+                                        #if(FullName!=' '&&FullName!=null)
+                                   {#
+                                        <a href='/person/#:ContactId#'>#:FullName#</a>
+                                   #}
+                                else
+                                  {#
+                                        <a href='/person/#:ContactId#'>#:Email#</a>
+                                  #}#
+
+
+                  </td><td> #:AccountExec#</td>" +
+                    "<td> #=getName(PhoneNumber)#</td>" +
+                            "<td>#=getEmail(Email)#</td>" +
+                  "<td>#:LeadSource#</td>" +
+                  "<td>#=getName(Lifecycle)#</td>" +
+                  "<td class='text-center'>#:LeadScore#</td>" +
+                  "<td class='text-center'>#:NewPoints#</td>" +
+                  "</tr>")
+          .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+                 .PageSize(ItemsPerPage)
+     .Read(read => read.Action("ExcelRead_NewLeadsReport", "Reports"))
+               )
+                )
+            <div class="hr-border"></div>
+            <div data-bind="visible:TotalHits()>0">
+                <a data-posturl="savedserches" href="#" onclick="advanceView();" class="btn btn-lg btn-primary">[|Advanced View|]</a>
+
+            </div>
+
+            </div>
+
+    </div>
+    
+
+
+   
+</div>
+
+
+<script type="text/javascript">
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    var hotlist = @(Html.Raw(Json.Encode(Model)));
+    var ContactUrl =  '@Url.Content("~/Contact/")';
+    var users = [];
+    var dateformat = '@(DateFormat)';
+    var defaultowner = {"OwnerId":0,"OwnerName" : "All"};
+    var runReport='@(runReportResults)';
+    var itemsPerPage = '@(ItemsPerPage)';
+    var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+    var key = '@System.Configuration.ConfigurationManager.AppSettings["Excluded_Accounts"].ToString()';
+    var ids =key.split(',');
+    var enableExport = true;
+
+    $.each(ids,function(ind,val){
+        if(val == accountId)
+            enableExport=false;
+        else
+            enableExport=true;
+    });
+
+    var viewModel;
+
+    function onDataBinding(arg) {
+
+    }
+    function getName(name)
+    {
+        var tempName="";
+        if(name!=null)
+            tempName= name;
+
+        return tempName;
+    }
+    function getEmail(name)
+    {
+        var tempName="Email Not Available";
+        if(name!=null)
+            tempName= name;
+
+        return tempName;
+    }
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+    $(document).ready(function () {
+        $.ajax({
+            url: '/GetUsersList',
+            type: 'get',
+            dataType: 'json',
+            data:{ 'id': 0},
+            contentType: "application/json; charset=utf-8"
+        }).then(function (response) {
+            var filter = $.Deferred();
+            if (response.success) {
+                filter.resolve(response)
+            } else {
+                filter.reject(response.error)
+            }
+            return filter.promise()
+        }).done(function (data) {
+            var owner = data.response;
+            for(var own=0;own< owner.length;own++){
+                users.push(owner[own]);
+            }
+             viewModel = new hotlistViewModel(BASE_URL,hotlist,users,dateformat,runReport,itemsPerPage);
+            ko.applyBindings(viewModel);
+        }).fail(function (error) {
+            notifyError(error);
+        });
+    });
+    function RunReport(){
+        selfContact.Runlist();
+    }
+
+    $("#excelexport").click(function(){
+        if(enableExport)
+        {
+            viewModel.ExcelExport();
+        }else{
+            notifyError("[|You do not have permission to perform this operation.|]")
+        }
+    })
+
+   function advanceView()
+    {
+       var contactIds_Guid=$.cookie("ContactsGuid");
+       console.log(contactIds_Guid);
+       localStorage.setItem("ContactsGuid",contactIds_Guid );
+       window.location.href = '../reportcontacts?guid=' + contactIds_Guid + '&reportType=' + viewModel.ReportType() + '&reportId='+viewModel.ReportId()+'&reportName='+viewModel.ReportName();
+    }
+
+</script>
+
+

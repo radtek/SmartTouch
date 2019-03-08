@@ -1,0 +1,234 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model TourViewModel
+
+@*<script src="~/Scripts/ViewModels/TourViewModel.js"></script>*@
+@*@Scripts.Render("~/bundles/tourvm")*@
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+    bool isEditView = ViewBag.EditView;
+    bool contactMode = ViewBag.ContactMode;
+    bool isSTAdmin = ViewBag.IsSTAdmin;
+    bool isACTAdmin = ViewBag.IsACTAdmin;
+}
+
+<div id="Tour">
+    <div id="@(Model.TourID > 0 ? "editTour" : isModal ? "addTourModel" : "addTour")" class="@(isModal ? "" : "")">
+        <div>
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><span class="icon st-icon-pin-2 display-inline"></span> @(Model.TourID > 0 ? "Edit Tour" : "Add Tour")</h4>
+                </div>
+            }
+            else
+            {
+                <div class="drop-heading">
+                    <span class="icon st-icon-pin-2 display-inline"></span> <h4 class="panel-title display-inline plm">[|Add Tour|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "")">
+                <div class="dp-topnav-inner-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">[|Details|]</label>
+                        <textarea class="form-control" rows="3" data-bind="value:TourDetails!=null?TourDetails:'',hasFocus:!(TourDetails)" maxlength="1000"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label">[|Community|] <span class="required">*</span></label>
+                                <input title="Community" data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField:'DropdownValueID',data: Communities, value: CommunityID,optionLabel: '[|Select|]' }, valueUpdate: 'afterkeydown'" />
+                                <span class="validationMessage" data-bind="validationMessage:communityValidation"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">[|Tour Date|]</label>
+                                <div>
+                                    <input type="text" data-bind="kendoDateTimePicker: {value:TourDate,interval:15,format:DateFormat}">
+                                    <span class="validationMessage" data-bind="validationMessage:TourDate"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">[|Tour Type|] <span class="required">*</span></label>
+                                <input title="TourType" data-bind="kendoDropDownList: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data: TourTypes, value: TourType,optionLabel: '[|Select|]'}, valueUpdate: 'afterkeydown'" />
+                                <span class="validationMessage" data-bind="validationMessage:tourTypeValidation"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">[|Reminder Type|]</label>
+                                @*<input data-bind="kendoDropDownList: {dataTextField:'name',dataValueField:'Id', data: ReminderTypes, value: ReminderType,enabled:isReminderApplicable}" />*@
+                                <select data-bind="kendoMultiSelect: {dataTextField:'Name',dataValueField:'TypeId', data: ReminderTypes, value: SelectedReminderTypes, change: $root.reminderChange,enabled:isReminderApplicable, placeholder:'[|Select Reminder Types|]' }" class="multiselectwidth"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">[|Life Cycle|]</label>
+                                <input id="TourLifeCycleStage" title="Life Cycle"
+                                       data-bind="kendoDropDownList: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data: LifeCycleStages, value: LifeCycleStage,optionLabel: '[|Select|]'}, valueUpdate: 'afterkeydown'" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label id="reminderDateLabel" class="control-label">[|Remind on|]</label>
+                                <input type="text" data-bind="kendoDateTimePicker: { value:RemindOnDate,enabled: isReminderTypeValid,interval:15,format:DateFormat}">
+                                @*<span class="validationMessage" data-bind="validationMessage:reminderDateValidation"></span>*@
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="contrl-label">[|Reminder Time Frame|]</label>
+                                <span class="cu-re-center" data-bind="text:ReminderTimeFrameForTour,enabled: isReminderTypeValid"></span>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="form-group display-inline">
+                            <label data-bind="attr: {'class': IcsCalendarToContact() ?'checkbox  checked':'checkbox ' } " class="checkbox ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:IcsCalendarToContact,click:allowIcsCalenderToContact"> &nbsp; Send Calendar Event to Contact
+                            </label>
+                        </div>
+                        <div class="form-group display-inline ac-ics">
+                            <label data-bind="attr: {'class': IcsCanlender() ?'checkbox  checked':'checkbox ' } " class="checkbox ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:IcsCanlender,click:allowIcsCalender"> &nbsp; Send Calendar Event to User(s)
+                            </label>
+                        </div>
+                        <div class="form-group display-inline">
+                            <label data-bind="attr: {'class': IsCompleted() ?'checkbox  checked':'checkbox ' } ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked: IsCompleted,click:MarkAsComplete" /> &nbsp; [|Mark as completed|]
+                            </label>
+                        </div>
+                        <div data-bind="visible:IsCompleted()" class="form-group display-inline ctnsmy">
+                            <label data-bind="attr: {'class': AddToContactSummary() ?'checkbox  checked':'checkbox ' } ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked: AddToContactSummary,click:AddContactSummary" /> &nbsp; [|Add to Contact Summary|]
+                            </label>
+                        </div>
+                   
+                    <div class="form-group" data-bind="ifnot:SelectAll">
+                        <label class="control-label">[|People & Companies|] <span class="required">*</span></label>
+                        <div class="people-tags">
+                            <input id=@(Model.TourID == 0 ? isModal ? "addtourContacts" : "tourContacts" : "tourContactsModel") class="display-inline form-control tagsinput-info-round" data-bind="valueUpdate: 'afterkeydown'" />
+                            <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-bind="if: SelectAll">
+                        <label class="control-label">[|People & Companies|]<span class="required">  ( ALL )</span></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">[|Assigned Users|] <span class="required">*</span></label>
+                        <div class="people-tags">
+                            <select data-bind="kendoMultiSelect: {dataTextField:'Name',dataValueField:'Id', data: Users, value: OwnerIds,placeholder:'[|Select Users...|]',enabled:('@isSTAdmin' == 'True' || '@isACTAdmin' == 'True') ? true: '@contactMode' == 'False'}" class="multiselectwidth"></select>
+                            <span class="validationMessage" data-bind="validationMessage:UsersValidation"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                @*<div class="pull-left">
+                        <a class="btn btn-lg btn-primary" data-bind="@(Model.TourID > 0 ? "click:updateTour" : "click:insertTour")"><span>Save</span></a>
+                        <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                           data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">Cancel</a>
+                    </div>*@
+                <div class="pull-left">
+                    @if (Model.TourID > 0)
+                    {
+                        <a class="btn btn-lg btn-primary" id="saveBtn" data-bind="click:updateTour" aria-hidden="@(Model.TourID > 0 ? "true" : "")"><span>Update</span></a>
+                    }
+                    else
+                    {
+                        <a id="btnSave" class="btn btn-lg btn-primary" data-bind="click:insertTour" aria-hidden="@(Model.TourID > 0 ? "true" : "")"
+                           data-dismiss="@(Model.TourID > 0 ? "modal" : "")"><span>[|Save|]</span></a>
+                    }
+                    <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                       data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#btnSave').on("click",function(){
+        $(this).attr("disabled", "disabled");
+        setTimeout('$("a").removeAttr("disabled")', setTimeOutTimer);
+    });
+    var editView='@(isEditView)';
+    $(document).ready(function () {
+        var contactSuggestions = [];
+
+        var communityData;       
+
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var DropDownURL = '@Url.Content("~/DropdownValues/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var Tour = @(Html.Raw(Json.Encode(Model)));    
+
+        var fromContactDetails = typeof selfDetails != "undefined" ? true :false;
+        var fromOpportunityDetails = typeof selfOpportunity != "undefined" ? true : false;
+
+        var notselectall;
+        if(fromContactDetails == true)
+            notselectall = true;
+        else if(fromOpportunityDetails == true)
+            notselectall = true;
+        else
+            notselectall = readCookie("selectallsearchstring") == "" ? true : false ;
+
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var viewModel2 = new TourViewModel(Tour,BASE_URL,editView,notselectall, communityData);
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel2, accountId);
+        var counter = selfTour.LifeCycleCounter();
+        selfTour.LifeCycleCounter(counter + 1);
+        
+        $.ajax({
+            url: BASE_URL + 'GetUsers',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                viewModel2.Users(data.response);
+                var ids = viewModel2.OwnerIds();
+                viewModel2.OwnerIds([]);
+                viewModel2.OwnerIds(ids);
+
+            },
+            error: function () {
+                console.log(errors);
+            }
+        });
+
+        if(Tour.TourID == 0)
+        {
+            var popup = '@(isModal)';
+            if(popup=="True")
+            {
+                ko.applyBindings(viewModel2,document.getElementById("addTourModel"));
+                tagify.TagifyContacts("addtourContacts");
+            }
+            else
+            {
+                ko.applyBindings(viewModel2,document.getElementById("addTour"));
+                tagify.TagifyContacts("tourContacts");
+            }
+        }
+        else
+        {
+            ko.applyBindings(viewModel2,document.getElementById("editTour"));
+            tagify.TagifyContacts("tourContactsModel");
+        }      
+    });
+    appendCheckbox();  
+    $(':checkbox').on('change', function() {
+        $(this).triggerHandler('click');
+    });
+
+</script>

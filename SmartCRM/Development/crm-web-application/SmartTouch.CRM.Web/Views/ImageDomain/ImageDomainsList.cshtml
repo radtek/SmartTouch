@@ -1,0 +1,283 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ImageDomainViewModel
+
+@{
+    ViewBag.Title = "Image Domains";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+
+}
+
+@Scripts.Render("~/bundles/imagedomainvm")
+
+@using (Ajax.BeginForm("ImageDomainList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div class="page-title">[|Image Domains|]</div>
+    <div class="imagedomains-grid" id="imagedomainslist">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ImageDomainViewModel>()
+        .Name("gridDomain")
+     .HtmlAttributes(new { @class = "k-grid-content" })
+    .Pageable(pageable => pageable
+            .Refresh(false)
+           .PageSizes(true)
+                .ButtonCount(10).Messages(m => m
+                    .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Image Domain(s)|]")
+                    .Empty("[|No image domains to display|]")
+                    .ItemsPerPage("[|Image domains per page|]")))
+    .Columns(columns =>
+    {
+
+        columns.Template(e => "").Title("[|Domain Name|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Template(e => "").Title("[|Status|]").HeaderHtmlAttributes(new { @class = "col-15" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:90px;" });
+    })
+    .ClientRowTemplate(@"
+
+<tr class='odd'>
+
+<td class='grid-checkbox'>
+		<label class='col-20'>
+
+            #:Domain#
+
+		</label>
+	</td>
+<td>
+#if(Status == true){#<span class='at-active'>Active</span>#}
+		else{#<span class='at-inactive'>Inactive</span>#}#
+	</td>
+<td class='grid-row-controls'>
+		<span>
+			<a data-target='\\#modal' data-toggle='modal' href='editimagedomain?imageDomainId=#:ImageDomainId#'><i class='icon st-icon-edit'></i></a>
+            <a href='javascript:void(0)' onclick='deleteImageDomain(#:ImageDomainId#)' title='Delete Image Domain'><i class='icon st-icon-bin-3'></i></a>
+
+		</span>
+	</td>
+</tr>
+")
+                            .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                     .DataSource(dataSource => dataSource
+                                     .Ajax()
+                                     .PageSize(ItemsPerPage)
+                                     .Read(read => read.Action("ImageDomains", "ImageDomain", true).Data("additionalInfo"))//, new { name = "#=''#" }
+                                    )
+        )
+    </div>
+}
+
+@section Scripts{
+    <script>
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        localStorage.removeItem("domainsearchtext");
+        localStorage.removeItem("domainsearchcontent");
+        createCookie("domainpagenumber", 1, 1); createCookie("domainpagesize", '@(ItemsPerPage)', 1);
+
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("domainsearchtext"),
+                status: localStorage.getItem("domainsearchcontent")
+            }
+        }
+    </script>
+    <script>
+        var BASE_URL = '@Url.Content("~/ImageDomain/")';
+        var searchText;
+
+
+        //function bindCheckboxchnage()
+        //{
+        //    $('.chkdomain').change(function()
+        //    {
+        //        if(!$(this).is(':checked'))
+        //        {
+        //            $('#masterCheckBox').attr('checked',false);
+        //            $('#masterCheckBox').parent('label.checkbox').removeClass('checked');
+        //            $(this).parents('tr').removeClass('k-state-selected');
+        //        }
+        //        else{
+        //            if($('.chkdomain').length ==$('.chkdomain:checked').length )
+        //            {
+        //                $('#masterCheckBox').attr('checked','checked');
+        //                $('#masterCheckBox').parent('label.checkbox').addClass('checked');
+        //            }
+        //            $(this).parents('tr').addClass('k-state-selected');
+        //        }
+        //    });
+        //}
+
+        function domainTypeChange() {
+            var value = this.value();
+            localStorage.removeItem("domainsearchcontent");
+            localStorage.setItem("domainsearchcontent", value);
+
+            var grid = $("#gridDomain").data("kendoGrid");
+            var psize = readCookie("domainpagesize");
+            grid.dataSource.query({ page: 1, pageSize: psize });
+
+
+            $('[data-toggle="checkbox"]').each(function () { var $checkbox = $(this); $checkbox.checkbox(); });
+        }
+
+        function GetdomainBasedonsearch(e) {
+            setTimeout(function () {
+
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtdomainSearch").val() || (searchText === $("#txtdomainSearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtdomainSearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#gridDomain").data("kendoGrid"), searchBox = $("#txtdomainSearch").val(), domainType = $("#domainTypes").val(); //$("#contactTypes").val();
+
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.removeItem("domainsearchtext");
+                    localStorage.setItem("domainsearchtext", searchBox);
+
+                    //$("#gridDomain").data("kendoGrid").dataSource.read();
+                    var psize = readCookie("domainpagesize");
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    $('[data-toggle="checkbox"]').each(function () {
+                        var $checkbox = $(this);
+                        $checkbox.checkbox();
+                    });
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("domainsearchtext");
+                    $("#gridDomain").data("kendoGrid").dataSource.read();
+                    $('[data-toggle="checkbox"]').each(function () {
+                        var $checkbox = $(this);
+                        $checkbox.checkbox();
+                    });
+                }
+            }, 500);
+        }
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                $('[data-toggle="checkbox"]').each(function () {
+                    var $checkbox = $(this);
+                    $checkbox.checkbox();
+                });
+                bindCheckboxchnage('chkdomain');
+            }, 200)
+        }
+        function onDataBound(e) {
+
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+        function DeleteDomain(id)
+        {
+            alertifyReset("Delete Domain","Cancel");
+            //alertify.confirm("Are you sure you want to delete this Domain?", function (e) {
+            alertify.confirm("[|Are you sure you want to permanently DELETE the selected Domain(s)|]?", function (e) {
+                if (e)
+                {
+                    pageLoader();
+                    var aid = [id];
+                    jsondata = JSON.stringify({ 'DomainID': aid, 'StatusID':5});
+                    varDeleteURL = "DeleteDomain";
+
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: BASE_URL + varDeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ 'domainData': jsondata })
+                    }).then(function (response) {
+                        var filter = $.Deferred();
+                        if (response.success) {
+                            filter.resolve(response);
+                        }
+                        else {
+                            filter.reject(response.error);
+                        }
+                        return filter.promise();
+                    }).done(function (data) {
+                        notifySuccess("[|Successfully deleted the domain(s)|]");
+                        removepageloader();
+                        if (data.success === true) {
+                            $("#gridDomain").data("kendoGrid").dataSource.read();
+                        }
+                    }).fail(function (error) {
+                        removepageloader();
+                    });
+
+                }
+                else
+                {
+                    //notifyError("You've clicked Cancel");
+                    notifyError("[|Delete Domain requested canceled|]");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            removepageloader();
+            var domainview = @(Html.Raw(Json.Encode(Model)));
+            viewModel = new imageDomianListViewModel(domainview, BASE_URL);
+            ko.applyBindings(viewModel);
+            //var dropdownlisttype = $("#domainTypes").data("kendoDropDownList");
+            //dropdownlisttype.value(localStorage.getItem("domainsearchcontent"));
+            //$("#txtdomainSearch").val(localStorage.getItem("domainsearchtext"));
+            //tableMasterCheckBox('domains-grid');
+        });
+
+        function deleteImageDomain(imageDomainId){
+            alertifyReset("[|OK|]","[|Cancel|]");
+            alertify.confirm("Are you sure you want to delete this Image Domain?", function (e) {
+                if (e)
+                {
+                    var BASE_URL = '@Url.Content("~/ImageDomain/")';
+                    varDeleteURL = BASE_URL+ "DeleteImageDomain";
+                    jQuery.ajaxSettings.traditional = true
+                    $.ajax({
+                        url: varDeleteURL,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify({imageDomainId: imageDomainId}),
+                        contentType: 'application/json; charset=utf-8',
+                    }).then(function (response) {            
+                        var filter = $.Deferred();
+                        if (response.success) {
+                            filter.resolve(response);
+                        } 
+                        else {     
+                            filter.reject(response.error);
+                        }
+                        return filter.promise();
+                    }).done(function (data) {
+                        notifySuccess('[|Successfully deleted the Image Domain|]');
+                        setTimeout(
+                            function (){
+                                location.reload();
+                            },setTimeOutTimer)
+                    }).fail(function (error) {
+                        notifyError(error);
+                    });;
+                }
+                else
+                {
+                    notifyError("[|You've clicked Cancel|]");
+                }
+            });
+        }
+    </script>
+
+}

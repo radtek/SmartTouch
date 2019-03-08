@@ -1,0 +1,139 @@
+﻿@{
+    var page = ViewBag.page;
+    var key = Session["dropboxkey"];
+}
+<script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key='@key'></script>
+<div class="legend mbn">
+    <span class="icon st-icon-cloud-add"></span> [|Attached History|]
+    <span class="pull-right dropbox-btn">
+        @if (page != null && page != "")
+        {
+            <a id="googleDrive" href="#"  class="btn mlm icon st-icon-google-drive">Choose from Google Drive</a>
+        }
+        else
+        {
+            <span id="googleDrive" class="btn mlm icon st-icon-google-drive" style="opacity: 0.5">Choose from Google Drive</span>
+        }
+        @if (key != null && key != "")
+        {
+            <span id="container"></span>
+        }
+        else
+        {
+            <a id="dropbox-settings" href="#" class="dropbox-dropin-btn dropbox-dropin-default"><span class="dropin-btn-status"></span>Choose from Dropbox</a>
+        }
+    </span>
+</div>
+<div class="legend mbn">
+    <div id="result"></div>
+</div>
+
+<section id="cd-attachments" class="cd-container kendo-att">
+    <div data-bind="foreach:AttachmentData">
+        <div class='cd-attachments-block'>
+            <div class='cd-attachments-img cd-image' data-bind="visible:FileTypeID == 1">
+                <i class='icon st-icon-image'></i>
+            </div>
+            <div class='cd-attachments-img cd-pdf' data-bind="visible:FileTypeID == 2">
+                <i class='icon st-icon-pdf'></i>
+            </div>
+            <div class='cd-attachments-img cd-word' data-bind="visible:FileTypeID == 3">
+                <i class='icon st-icon-word'></i>
+            </div>
+            <div class='cd-attachments-img cd-excel' data-bind="visible:FileTypeID == 4">
+                <i class='icon st-icon-excel'></i>
+            </div>
+            <div class='cd-attachments-img cd-csv' data-bind="visible:FileTypeID == 5">
+                <i class='icon st-icon-csv'></i>
+            </div>
+            <div class='cd-attachments-img cd-txt' data-bind="visible:FileTypeID == 6">
+                <i class='icon st-icon-txt'></i>
+            </div>
+            <div class='cd-attachments-img cd-rtf' data-bind="visible:FileTypeID == 7">
+                <i class='icon st-icon-rtf'></i>
+            </div>
+            <div class='cd-attachments-img cd-document' data-bind="visible:FileTypeID == 8">
+                <i class='icon st-icon-document-add'></i>
+            </div>
+            <div class='cd-attachments-content'>
+                <h2>
+                    <span data-bind="text:'Created'"></span>
+                    <a target="_blank" href='javascript:void(0)' data-bind="text:OriginalFileName,attr: { href: FilePath }"></a>
+                </h2>
+                <span class='cd-controls'>
+                    <a href='javascript:void(0)' data-bind="click:$parent.deleteDocument"><i class='icon st-icon-bin-3'></i></a>
+                </span>
+                <span>by </span>
+                <span class='green bold' data-bind="text:UserName"></span>
+                <span class='cd-date' data-bind="text:AttachmentTime"> </span>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="row">
+    <div data-bind="visible:DisplayEndMessage">
+        <div data-bind="text:'[|No more attachments|]'" class="nomore-updates"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var page = '@page';
+    var key = '@key';
+ 
+    if (key != null && key.length > 1)
+        $('.dropbox-setting').css('visibility', 'visible');
+    else
+        $('.dropbox-setting').css('display', 'none');       //.fadeTo(500, 0.5);
+
+
+    function success() {
+        $("#gridAttach").data("kendoGrid").dataSource.read();
+    }
+    var counter = 0;
+    var googleKey = "";
+    var googleId = "";
+    $('.st-icon-google-drive').click(function (e) {
+        e.preventDefault();
+        if (page != null && page.length > 1) {
+            counter = counter + 1;
+                $.ajax({
+                    url: '/Contact/GetGoogleDriveAPIKey',
+                    type: 'get',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: { }
+                }).then(function (response) {
+                    var filter = $.Deferred()
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    if (data.response != null) {
+                        console.log(data.response);
+                        googleKey = data.response.APIKey;
+                        googleId = data.response.ClientID;
+                        if (googleId == "" || googleKey == "") {
+                            notifyError("Please configure Google Drive from Account Settings");
+                        }
+                        else {
+                            $("#googleDrive").attr("data-toggle", "modal").attr("data-target", "#googledrivemodal");
+                            $("#googledrivemodal").load("/Contact/GoogleDriveApi", { pageName: page, clientId: googleId, apiKey: googleKey });
+                        }
+                    }
+                }).fail(function (error) {
+                    notifyError("Please configure Google Drive from Account Settings");
+                });
+            //}
+        }
+        else
+            notifyError("Please configure Google Drive from Account Settings");
+    });
+
+    $("#dropbox-settings").click(function (e) {
+        notifyError("Please configure Dropbox from Account Settings");
+    });
+
+</script>

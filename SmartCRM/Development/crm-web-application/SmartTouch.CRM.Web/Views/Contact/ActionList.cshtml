@@ -1,0 +1,800 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ActionViewModel
+@{
+    ViewBag.Title = "Actions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var userIds = ViewBag.UserIds != null ? (IEnumerable<int>)ViewBag.UserIds : new List<int>();
+    var isMyActions = ViewBag.IsMyActions == null ? null : ViewBag.IsMyActions;
+    var startDate = ViewBag.StartDate;
+    var endDate = ViewBag.EndDate;
+    var actionTypes = ViewBag.ActionTypes;
+}
+
+
+
+
+@using (Ajax.BeginForm("ActionList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+
+    <div id="clientsDb">
+        <ul class="breadcrumb border-bottom-none">
+            @if (startDate != null && startDate != "")
+            {
+                <li><a href="/Reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)">[|Actions List|]</a></li>
+            }
+            else if (isMyActions != null)
+            {
+
+            }
+            else
+            {
+                <li><a href="/dashboard">[|Dashboard|]</a></li>
+                <li class="active"><a href="javascript:void(0)">[|Actions List|]</a></li>
+            }
+
+        </ul>
+        <div class="page-title">[|Actions List|]</div>
+        <div class="actions-grid">
+            @(Html.Kendo
+
+().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ActionViewModel>()
+    .Name("actiongrid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+  .AutoBind(true)
+    .Pageable(pageable => pageable
+        .Refresh(false)
+
+        .PageSizes(true)
+        .ButtonCount(10).Messages(m => m
+            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Action(s)|]")
+            .Empty("[|No actions to display|]").ItemsPerPage("[|Actions per page|]")))
+    .Columns(columns =>
+    {
+
+
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+
+
+
+        columns.Bound(c => c.ActionTypeValue).Sortable(false).Title("[|Action Type|]").
+            HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(c => c.ActionMessage).Sortable(true).Title("[|Action Details|]")
+
+.HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(c => c.ActionDateTime).Sortable(true).Title("[|Action Date|]").Sortable
+
+(true).HeaderHtmlAttributes(new { @class = "col-10" });
+        columns.Bound(c => c.IsCompleted).Sortable(false).Title("[|Action Status|]")
+
+
+.HeaderHtmlAttributes(new { @class = "col-10" });
+        columns.Bound(c => c.ContactName).Title("[|Contacts Associated|]").Sortable(false).HeaderHtmlAttributes(new { @class = "" })
+.HeaderHtmlAttributes(new { @class = "col-10" });
+        columns.Bound(c => c.UserName).Title("[|Assigned To|]").Sortable(false).HeaderHtmlAttributes(new { @class = "" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:90px;" });
+
+    })
+    .Sortable(sortabe => sortabe.AllowUnsort(true))
+    .Resizable(resize => resize.Columns(true))
+     // .Sortable(sortabe => sortabe.AllowUnsort(true))
+     .ToolBar(toolbar =>
+     {
+     toolbar.Template(@<text>
+                <div class="toolbar grid-ct-header">
+                    <div class="left-part">
+                        <label class="checkbox toggle-all" for="masterCheckBox">
+                            <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                            [|Select All|]
+                        </label>
+                    </div>
+                    <div class="right-part">
+                        <div class="grid-search">
+                            <input type="search" id="txtactionsearch" onkeydown="GetactionBasedonsearch(event);" class="form-control" placeholder="[|Search|]" />
+                            <i class="icon st-icon-search-2"></i>
+                        </div>
+                        <div class="grid-controls">
+                            <span class="sort-label">[|Filter by|]</span>
+                            <span class="sort-select">
+
+                                @(Html.Kendo().DropDownList()
+                                    .Name("filterType")
+                                            .DataTextField("Text")
+                                            .DataValueField("Value")
+                                     .Events(e => e.Change("filtertypeChange"))
+                                    .BindTo(new List<SelectListItem>() {
+                                        new SelectListItem() {
+                                            Text = "[|All|]",
+                                            Value = "0"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Completed|]",
+                                            Value = "1"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Not Completed|]",
+                                            Value = "2"
+                                        }
+                                })
+                                )
+                            </span>
+                            <span class="sort-label">[|Action Type|]</span>
+                            <span class="sort-select">
+                                @(Html.Kendo().DropDownList()
+                                    .Name("actionType")
+                                            .DataTextField("Text")
+                                            .DataValueField("Value")
+                                     .Events(e => e.Change("sorttypeChange"))
+                                    .BindTo(actionTypes)
+                                )
+                            </span>
+                        </div>
+                    </div>
+                </div>
+    </text>);
+     })
+    .ClientRowTemplate(
+                                                               @"<tr class='odd'>
+ <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkaction' data-id='#:ActionId#' data-actiontype='#:ActionTypeValue#' data-actiondate='#:ActionDateTime#' data-Iscompleted='#:IsCompleted#' data-toggle='checkbox'></label></td>
+<td>#:ActionTypeValue#</td>
+    <td><span title='#:ActionMessage#'>" + Html.ActionLink("#:ActionMessage#", "EditAction", "Contact", new { actionId = "aid" }, new { data_toggle = "modal", data_target = "modal", @class = "drop-lab" }).ToHtmlString().Replace("aid", "#:ActionId#") +
+                                    "</span></td>" +
+                        "<td>#=DisplaywithDateTimeFormat(ActionDateTime)#</td>" +
+     "<td>#=DisplayActionStatus(IsCompleted)#</td>" +
+
+ "<td>#=GetContacts(ActionId,ContactName)#</td>" +
+  "<td>#if(UserName == null || UserName == ''){# - #}else {# #:UserName# #}# </td>" +
+ "<td class='grid-row-controls'><span>" + Html.ActionLink("<i class='icon st-icon-edit' title ='Edit Action'></i>", "EditAction", "Contact", new { actionId = "aid" },
+
+    new { data_toggle = "modal", data_target = "modal", @class = "drop-lab" }).ToHtmlString().Replace("aid", "#:ActionId#") +
+
+"<span>" + Html.ActionLink("<i class='icon st-icon-bin-3' title ='Delete Action'></i>", "GetUserActionContactsCount", "Contact", new { actionId = "aid" }, new { data_toggle = "modal", data_target = "modal", @class = "drop-lab" }
+       ).ToHtmlString().Replace("aid", "#:ActionId#") + "</span></td>" +
+    "</tr>")
+.ClientAltRowTemplate(
+                                        @"<tr class='even'>
+    <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkaction' data-id='#:ActionId#' data-actiontype='#:ActionTypeValue#' data-actiondate='#:ActionDateTime#' data-Iscompleted='#:IsCompleted#' data-toggle='checkbox'></label></td>
+<td>#:ActionTypeValue#</td>
+    <td><span title='#:ActionMessage#'>" + Html.ActionLink("#:ActionMessage#", "EditAction", "Contact", new { actionId = "aid" }, new { data_toggle = "modal", data_target = "modal", @class = "drop-lab" }).ToHtmlString().Replace("aid", "#:ActionId#") +
+                                                        "</span></td>" +
+                        "<td>#=DisplaywithDateTimeFormat(ActionDateTime)#</td>" +
+    "<td>#=DisplayActionStatus(IsCompleted)#</td>" +
+
+"<td>#=GetContacts(ActionId,ContactName)#</td>" +
+ "<td>#if(UserName == null || UserName == ''){# - #}else {# #:UserName# #}# </td>" +
+    "<td class='grid-row-controls'><span>" + Html.ActionLink("<i class='icon st-icon-edit' title ='Edit Action'></i>", "EditAction", "Contact", new { actionId = "aid" }, new { data_toggle = "modal", data_target = "modal", @class = "drop-lab" }).ToHtmlString().Replace("aid", "#:ActionId#") +
+            "<span>" + Html.ActionLink("<i class='icon st-icon-bin-3' title ='Delete Action'></i>",
+                "GetUserActionContactsCount", "Contact", new { actionId = "aid" }, new { data_toggle = "modal", data_target = "modal", @class = "drop-lab" }).ToHtmlString().Replace("aid", "#:ActionId#") +
+                "</span></td>" +
+    "</tr>")
+.Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(ItemsPerPage)
+                                                                                .Read(read => read.Action("GetCreatedActions", "Contact").Data("searchParameters")).Sort(sort => sort.Add(t => t.ActionDateTime).Descending()
+    )
+    ))
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span data-bind="text:ActionCompletedMessage"></span>
+                <div style="margin-top:10px;">
+                    <label class="checkbox">
+                        <input type="checkbox" data-toggle="checkbox" id="addtonotesummary3" onclick="checkboxclick(this);" /> [|Add to Contact Summary|]
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+
+                    <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){Completed('one')}"><span data-bind="text:CompletedActionOption"></span></a>
+
+                    <a class="btn btn-lg" aria-hidden="true"
+                       data-dismiss="modal" data-bind="click:CancelAction" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mySendModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span> [|Are you sure you want to mark this action(s) as completed?|]</span>
+                <div style="margin-top:10px;">
+                    <label class="checkbox">
+                        <input type="checkbox" data-toggle="checkbox" id="addtonotesummary2" onclick="checkboxclick(this);" /> [|Add to Contact Summary|]
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+
+                    <a href="javascript:void(0)" class="btn btn-lg btn-primary" onclick="MarkAndSendMail()"><span>[|Mark as Complete & Send Email|]</span></a>
+                    <a class="btn btn-lg btn-primary" onclick="MarkAsComplete()"><span>[|Mark as Complete|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="true"
+                       data-dismiss="modal" data-bind="click:CancelAction" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myMarkModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span> [|Are you sure you want to mark this action(s) as completed?|]</span>
+                <div style="margin-top:10px;">
+                    <label class="checkbox">
+                        <input type="checkbox" data-toggle="checkbox" id="addtonotesummary1" onclick="checkboxclick(this);" /> [|Add to Contact Summary|]
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+
+                    <a class="btn btn-lg btn-primary" onclick="MarkAsComplete()"><span>[|Mark as Complete|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="true"
+                       data-dismiss="modal" data-bind="click:CancelAction" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myIncompleteSendModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span> [|Are you sure you want to mark this Action(s) as Incompleted?|]</span>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a href="javascript:void(0)" class="btn btn-lg btn-primary mark-in-cm" onclick="MarkInCompleteSendMail()"><span>[|Mark as Incomplete & Schedule Email Action|]</span></a>
+                    <a class="btn btn-lg btn-primary" onclick="MarkAsInComplete()"><span>[|Mark as Incomplete|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="true"
+                       data-dismiss="modal" data-bind="click:CancelAction" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myIncomplete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span> [|You cannot mark a past Completed action as Not Complete, Please create new Action.|]</span>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" data-bind="click:CancelAction" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myMarkInComplete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span> [|Are you sure you want to mark this Action(s) as Not Complete?|]</span>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" onclick="MarkAsInComplete()"><span>[|Mark as Incomplete|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" data-bind="click:CancelAction" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var userIds = '@Html.Raw(Json.Encode((IEnumerable<int>)ViewBag.UserIds))';
+        var Startdate = '@startDate';
+        var Enddate = '@endDate';
+        var actionTypes = '@(actionTypes)';
+        function searchParameters() {
+
+            var parameters = {
+                name: localStorage.getItem("actionsearchtext"),
+                filterdata: localStorage.getItem("filtercontent"),
+                isDashboard: false,
+                userIds: userIds,
+                StartDate: Startdate,
+                EndDate: Enddate,
+                type: localStorage.getItem("searchcontent")
+            }
+            return parameters;
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        var dateformat = '@(DateFormat)';
+        var searchText;
+
+        var Contacts_BASE_URL = '@Url.Content("~/Contact/")';
+        var isCombination = false;
+
+        localStorage.removeItem("filtercontent");
+        localStorage.removeItem("actionsearchtext");
+        localStorage.removeItem("searchcontent");
+        var AddNoteSumarry =false;
+        function checkboxclick(chk) {
+            var id = $(chk).attr('id');
+            if ($("#" + id).parent().prop('className') == "checkbox checked")
+                AddNoteSumarry = true;
+            else
+                AddNoteSumarry = false;
+        }
+
+        function filtertypeChange() {
+            var value = this.value();
+            localStorage.setItem("filtercontent", value);
+            $("#actiongrid").data("kendoGrid").dataSource.read();
+        };
+
+        function sorttypeChange() {
+            var value = this.value();
+            if (value == "0")
+                localStorage.setItem("searchcontent", "");
+            else
+                localStorage.setItem("searchcontent", value);
+
+            $("#actiongrid").data("kendoGrid").dataSource.read();
+        };
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        createCookie("dateformat", dateformat, 1);
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">No records found</span></div></td></tr>')
+            }
+        }
+
+        function onDataBinding(arg) {
+            // rowNumber = (arg.sender.dataSource.page() - 1) * arg.sender.dataSource.pageSize();
+            setTimeout(function () {
+                appendCheckbox();
+                $(".drop-lab").attr('data-target', '#modal');
+                bindCheckboxchnage('chkaction');
+            }, 200)
+        }
+
+        createCookie("actionpagenumber", 1, 1);
+        createCookie("actionpagesize", '@(ItemsPerPage)', 1);
+
+        function DisplaywithDateTimeFormat(date) {
+            var dateFormat = readCookie("dateformat").toUpperCase();
+            if (date == null) {
+                return "";
+            }
+            var utzDate = new Date(moment(date).toDate()).toUtzDate();
+            return moment(utzDate).format(dateFormat + " hh:mm A");
+        };
+
+        function checkboxClass(iscompleted) {
+            if (iscompleted == true)
+                return "checkbox  checked";
+            else
+                return "checkbox";
+        }
+
+        function CompletedOperation(iscompleted, actionid, opportunityid) {
+            return false;
+        }
+
+        function GetContacts(actionId,name) {
+            return '<a href= "/actiontagedcontacts?actionId=' + actionId + '&showingType=3">' + name + '</a>';
+        }
+
+        function DisplayActionStatus(sts) {
+            if (sts == true)
+                return "Completed";
+            else
+                return "Not Completed";
+        }
+
+
+        function GetactionBasedonsearch(e) {
+            setTimeout(function () {
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtactionsearch").val() || (searchText === $("#txtactionsearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtactionsearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#actiongrid").data("kendoGrid"), searchBox = $("#txtactionsearch").val();
+                localStorage.removeItem("actionsearchtext");
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.setItem("actionsearchtext", searchBox);
+                    var psize = readCookie("actionpagesize");
+                    var grid = $("#actiongrid").data("kendoGrid")
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("actionsearchtext");
+                    $("#actiongrid").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+
+
+        $('#txtactionsearch').keypress(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+                window.location = "/actions";
+            }
+        });
+
+
+        function MarkAsCompletedAction() {
+            checkedvaluesforactionsgrid = fnGetChkvalforActionGrid('chkaction');
+            if (checkedvaluesforactionsgrid.length == 0) {
+                notifyError("[|Please select at least one Action(s).|]");
+                return;
+            }
+
+            if ($.grep(checkedvaluesforactionsgrid, function (n) {
+                   return n.IsCompleted == 'true';
+            }).length > 0 && localStorage.getItem("filtercontent") !== "0") {
+                notifyError("[|One of the seleted Action(s) is complete. Please revisit your selection.|]");
+                return;
+            }
+
+            $('#myMarkModal').modal('show');
+            //var now = new Date().toUtzDate();
+            //var utc_now = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+            //if (checkedvaluesforactionsgrid.every(function (n) {
+            //    return n.ActionType == 'Email';
+            //}) && checkedvaluesforactionsgrid.every(function (n) {
+            //    var dateString = n.ActionDate.toString();
+            //    var utzdate = new Date();
+            //    if (dateString.indexOf('/Date') == 0) {
+            //         utzdate = ConvertToDate(n.ActionDate.toString()).toUtzDate();
+            //}
+            //else {
+            //        var date = Date.parse(n.ActionDate);
+            //         utzdate = ConvertToDate(date.toString());
+            //}
+            //   return utzdate.getTime() > utc_now.getTime();
+            //})) {
+            //    $('#mySendModal').modal('show');
+            //}
+            //else if ($.grep(checkedvaluesforactionsgrid, function (n) {
+            //       return n.ActionType == 'Email';
+            //}).length > 0 && $.grep(checkedvaluesforactionsgrid, function (n) {
+            //      var dateString = n.ActionDate.toString();
+
+            //      var utzdate = new Date();
+            //        if (dateString.indexOf('/Date') == 0) {
+            //             utzdate = ConvertToDate(n.ActionDate.toString()).toUtzDate();
+            //}
+            //else {
+            //                var date = Date.parse(n.ActionDate);
+            //                 utzdate = ConvertToDate(date.toString());
+            //}
+
+            //       return utzdate.getTime() > utc_now.getTime();
+            //}).length > 0) {
+            //    isCombination = true;
+            //    $('#mySendModal').modal('show');
+
+            //}
+            //else {
+            //    $('#myMarkModal').modal('show');
+            //}
+
+        }
+
+        function MarkInCompleteSendMail() {
+            pageLoader();
+            var array = new Array();
+            checkedvaluesforactionsgrid = fnGetChkvalforActionGrid('chkaction');
+            $.each(checkedvaluesforactionsgrid, function (ind, val) {
+                array.push(val.ActionID);
+            })
+
+            $.ajax({
+                url: Contacts_BASE_URL + "ActionsMarkedInComplete",
+                data: JSON.stringify({ id: array, isShedule: false }),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8'
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                notifySuccess("[|Successfully Not Completed the Action(s)|]");
+                removepageloader();
+                setTimeout(function () {
+                    window.location.href = document.URL;
+                }, setTimeOutTimer);
+            }).fail(function (error) {
+                notifyError(error);
+                removepageloader();
+            })
+        }
+
+        function MarkAsInComplete() {
+            pageLoader();
+            var array = new Array();
+            checkedvaluesforactionsgrid = fnGetChkvalforActionGrid('chkaction');
+            $.each(checkedvaluesforactionsgrid, function (ind, val) {
+                array.push(val.ActionID);
+            })
+
+            $.ajax({
+                url: Contacts_BASE_URL + "ActionsMarkedInComplete",
+                data: JSON.stringify({ id: array, isShedule: false }),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8'
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                notifySuccess("[|Successfully Not Completed the Action(s)|]");
+                removepageloader();
+                setTimeout(function () {
+                    window.location.href = document.URL;
+                }, setTimeOutTimer);
+            }).fail(function (error) {
+                notifyError(error);
+                removepageloader();
+            })
+        }
+
+        function MarkAsInCompletedAction() {
+
+            checkedvaluesforactionsgrid = fnGetChkvalforActionGrid('chkaction');
+            if (checkedvaluesforactionsgrid.length == 0) {
+                notifyError("[|Please select at least one Action(s).|]");
+                return;
+            }
+
+            if ($.grep(checkedvaluesforactionsgrid, function (n) {
+                 return n.IsCompleted == 'false';
+            }).length > 0) {
+                notifyError("[|One of the seleted Action(s) is  Not Completed. Please revisit your selection.|]");
+                return;
+            }
+            $('#myMarkInComplete').modal('show');
+            //var now = new Date().toUtzDate();
+            //var utc_now = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds(), now.getUTCMilliseconds());
+
+            //if (checkedvaluesforactionsgrid.every(function (n) {
+            //   return n.ActionType == 'Email';
+            //}) && checkedvaluesforactionsgrid.every(function (n) {
+            //        var dateString = n.ActionDate.toString();
+            //    var utzdate = new Date();
+            //    if (dateString.indexOf('/Date') == 0) {
+            //         utzdate = ConvertToDate(n.ActionDate.toString()).toUtzDate();
+            //}
+            //else {
+            //        var date = Date.parse(n.ActionDate);
+            //         utzdate = ConvertToDate(date.toString());
+            //}
+            //   return utzdate.getTime() > utc_now.getTime();
+            //})) {
+            //    $('#myIncompleteSendModal').modal('show');
+            //}
+            //else if (checkedvaluesforactionsgrid.every(function (n) {
+            //   return n.ActionType == 'Email';
+            //}) && checkedvaluesforactionsgrid.every(function (n) {
+            //     var dateString = n.ActionDate.toString();
+            //    var utzdate = new Date();
+            //    if (dateString.indexOf('/Date') == 0) {
+            //         utzdate = ConvertToDate(n.ActionDate.toString()).toUtzDate();
+            //}
+            //else {
+            //        var date = Date.parse(n.ActionDate);
+            //         utzdate = ConvertToDate(date.toString());
+            //}
+            //   return utzdate.getTime() < utc_now.getTime();
+            //})) {
+            //    $('#myIncomplete').modal('show');
+            //}
+            //else if ($.grep(checkedvaluesforactionsgrid, function (n) {
+            //       return n.ActionType == 'Email';
+            //}).length > 0 && $.grep(checkedvaluesforactionsgrid, function (n) {
+            //      var dateString = n.ActionDate.toString();
+            //    var utzdate = new Date();
+            //    if (dateString.indexOf('/Date') == 0) {
+            //         utzdate = ConvertToDate(n.ActionDate.toString()).toUtzDate();
+            //}
+            //else {
+            //        var date = Date.parse(n.ActionDate);
+            //         utzdate = ConvertToDate(date.toString());
+            //}
+            //   return utzdate.getTime() > utc_now.getTime();
+            //}).length > 0) {
+            //    isCombination = true;
+            //    $('#myIncompleteSendModal').modal('show');
+
+            //}
+            //else {
+            //    $('#myMarkInComplete').modal('show');
+            //}
+
+        }
+
+
+        function DeleteAction() {
+
+            var array = new Array();
+            checkedvaluesforactionsgrid = fnGetChkvalforActionGrid('chkaction');
+            $.each(checkedvaluesforactionsgrid, function (ind, val) {
+                array.push(val.ActionID);
+            })
+
+            if (checkedvaluesforactionsgrid.length == 0) {
+                notifyError("[|Please select at least one Action(s).|]");
+                return;
+            }
+
+            alertifyReset("OK", "Cancel");
+            // alertify.confirm("Are you sure you want to delete this Contact?", function (e) {
+            alertify.confirm("[|Are you sure you want to delete this Action(s)|]?", function (e) {
+                if (e) {
+                    pageLoader();
+                    // varDeleteURL = "Contact/DeleteContact?id=" + id;
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: Contacts_BASE_URL + "ActionsDelete",
+                        data: JSON.stringify({ id: array }),
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8'
+                    }).then(function (response) {
+                        var filter = $.Deferred()
+                        if (response.success) {
+                            filter.resolve(response)
+                        } else {
+                            filter.reject(response.error)
+                        }
+                        return filter.promise()
+                    }).done(function (data) {
+                        notifySuccess("[|Successfully deleted the Action(s)|]");
+                        setTimeout(function () {
+                            window.location.href = document.URL;
+                        }, setTimeOutTimer);
+                    }).fail(function (error) {
+                        notifyError(error);
+                        removepageloader();
+                    })
+
+                }
+                else {
+                    notifyError("[|You've clicked Cancel|].");
+                    // checkedvaluesforactionsgrid;
+                }
+            });
+        }
+
+        function MarkAndSendMail() {
+            pageLoader();
+            var array = new Array();
+            checkedvaluesforactionsgrid = fnGetChkvalforActionGrid('chkaction');
+            $.each(checkedvaluesforactionsgrid, function (ind, val) {
+                array.push(val.ActionID);
+            })
+
+            $.ajax({
+                url: Contacts_BASE_URL + "ActionsMarkedComplete",
+                data: JSON.stringify({ id: array, isShedule: false, AddToNoteSummary: AddNoteSumarry }),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8'
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                notifySuccess("[|Successfully Completed the Action(s)|]");
+                removepageloader();
+                setTimeout(function () {
+                    window.location.href = document.URL;
+                }, setTimeOutTimer);
+            }).fail(function (error) {
+                notifyError(error);
+                removepageloader();
+            })
+        }
+
+        function MarkAsComplete() {
+            pageLoader();
+            var array = new Array();
+            checkedvaluesforactionsgrid = fnGetChkvalforActionGrid('chkaction');
+            $.each(checkedvaluesforactionsgrid, function (ind, val) {
+                array.push(val.ActionID);
+            })
+
+            $.ajax({
+                url: Contacts_BASE_URL + "ActionsMarkedComplete",
+                data: JSON.stringify({ id: array, isShedule: false, AddToNoteSummary: AddNoteSumarry }),
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8'
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                notifySuccess("[|Successfully Completed the Action(s)|]");
+                removepageloader();
+                setTimeout(function () {
+                    window.location.href = document.URL;
+                }, setTimeOutTimer);
+            }).fail(function (error) {
+                notifyError(error);
+                removepageloader();
+            })
+        }
+
+        $(document).ready(function () {
+            var dropDown = $("#filterType").data("kendoDropDownList");
+            if (Startdate != null && Startdate != "") {
+                    dropDown.select(0);
+            }
+            else {
+                dropDown.select(2);
+            }
+            var grid = $('#actiongrid').data('kendoGrid');
+            var pno = readCookie("actionpagenumber");
+            var psize = readCookie("actionpagesize");
+            grid.dataSource.query({ page: pno, pageSize: psize });
+
+            $(':checkbox').on('change', function () {
+                $(this).triggerHandler('click');
+            });
+            tableMasterCheckBox('actions-grid');
+        });
+    </script>
+
+}

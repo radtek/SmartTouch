@@ -1,0 +1,44 @@
+﻿<div class="da-campaign-list">
+    <div class="list-inner">
+        <div class="title">
+            [|Campaign List|]
+            @*<a data-bind="attr: { href:CampaignListlink()}" class="view-all">View All</a>*@
+            <!--<span class="pull-right"><a href="#campaignlist" data-toggle="collapse" data-parent="#accordion" class="address-accordion"><i class="icon st-icon-dropdownarrow"></i></a></span>-->
+        </div>
+        <div class="k-grid k-widget k-secondary in no-grid-resize" id="campaignlist" style="">
+            <div class="k-grid-content">
+                <table id="grid" data-role="grid" role="grid">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead class="k-grid-header">
+                        <tr>
+                            <th class="k-header col-50">[|Campaign Name|]</th>
+                            <th class="k-header col-25 text-center">[|Open Rate|]</th>
+                            <th class="k-header col-25 text-center">[|Click Rate|]</th>
+                        </tr>
+                    </thead>
+                    <!-- ko if: CampaignsCount()> 0 -->
+                    <tbody data-bind="foreach:campaginList">
+                        <tr>
+                            <td>
+                                <a data-bind="attr:{ 'href': '@Url.Action("CampaignStatistics", "Campaign")?campaignId=' + Id, title:Name}"> <span data-bind="text:Name"></span></a>
+                            </td>
+                            <td data-bind="text:OpenRate" class="text-center"></td>
+                            <td data-bind="text:ClickRate" class="text-center"></td>
+                        </tr>
+                    </tbody>
+                    <!-- /ko -->
+                    <!-- ko if: CampaignsCount()==0 -->
+                    <tbody>
+                        <tr><td colspan="3" class="no-data"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>
+                    </tbody>
+                    <!-- /ko -->
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

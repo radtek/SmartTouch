@@ -1,0 +1,23 @@
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://localhost:56258/login');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'postman-token' => 'b1157dea-be54-bf55-2489-3dcd1f703e19',
+  'cache-control' => 'no-cache',
+  'content-type' => 'application/x-www-form-urlencoded'
+));
+
+$request->setContentType('application/x-www-form-urlencoded');
+$request->setPostFields(null);
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}
+ 

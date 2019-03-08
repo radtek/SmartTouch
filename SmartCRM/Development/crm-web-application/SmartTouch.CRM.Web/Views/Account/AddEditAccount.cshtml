@@ -1,0 +1,268 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+@using System.Web.Mvc
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model AccountViewModel
+
+@Styles.Render("~/Content/Redactor")
+@Scripts.Render("~/bundles/accountsettingsvm")
+@Scripts.Render("~/bundles/redactor")
+@{
+    ViewBag.Title = ViewBag.AccountsTitle != null ? ViewBag.AccountsTitle : "Accounts";
+    var domain = ViewBag.Domain != null ? ViewBag.Domain : "";
+    string mode = ViewBag.Mode != null ? ViewBag.Mode : "";
+    string page = ViewBag.page;
+
+
+    var accountCreation = ViewBag.AccountCreation != null ? ViewBag.AccountCreation : "";
+    ViewDataDictionary accountStatus = new ViewDataDictionary();
+    accountStatus.Add("AccountStatus", true);
+    accountStatus.Add("Domain", domain);
+}
+
+@using (Html.BeginForm("AddAccount", "Account", FormMethod.Post,
+                                      new { name = "form-data", id = "form" }))
+{
+    <div class="sub-container">
+        <ul class="breadcrumb">
+            <li>@Html.ActionLink("[|Accounts|]", "AccountSearch", "Account", null, null)</li>
+            <li class="active">
+                <a href="javascript:void(0)">
+                    <!-- ko if: AccountID() === 0 -->
+                    <span>[|Add Account|]</span>
+                    <!-- /ko -->
+                    <!-- ko if: AccountID() > 0 -->
+                    @if (mode == "E")
+                    {
+                        <span>[|Edit Account|]</span>
+                    }
+                    else
+                    {
+                        <span>[|Copy Account|]</span>
+                    }
+                    <!-- /ko -->
+                </a>
+            </li>
+        </ul>
+        <div class="main-header">
+            <!-- ko if: AccountID() === 0 -->
+            [|Add Account|]
+            <!-- /ko -->
+            <!-- ko if: AccountID() > 0 -->
+            @if (mode == "E")
+            {
+                <span>[|Edit Account|]</span>
+            }
+            else
+            {
+                <span>[|Copy Account|]</span>
+            }
+            <!-- /ko -->
+        </div>
+        <div class="tabbable new-tabs ptn">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#basicinfo"><span class="icon st-icon-users mrm"></span>[|Basic Info|]</a></li>
+                <!-- ko if: AccountID() != 1 && AccountID() != 0-->
+                <li><a href="#configuration"><span class="icon st-icon-settings-2 mrm"></span>[|Configuration|]</a></li>
+                <!-- /ko -->
+                <li><a href="#additionalsettings"><span class="icon st-icon-settings-2 mrm"></span>[|Additional Settings|]</a></li>
+
+            </ul>
+            <!-- /tabs -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="basicinfo">
+                    @{
+    Html.RenderPartial("~/Views/Account/_AccountDetails.cshtml", null, accountStatus);
+                    }
+                </div>
+                <div class="tab-pane" id="configuration">
+                    @{
+    Html.RenderPartial("~/Views/Account/_Configuration.cshtml");
+                    }
+                </div>
+                <div class="tab-pane" id="additionalsettings">
+                    @{
+    Html.RenderPartial("~/Views/Account/_AdditionalSettings.cshtml");
+                    }
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function(){
+        var viewModel;
+        var newAddress = '@Html.Raw(Json.Encode(ViewBag.NewAddress))';
+        var pagename = '@(page)';
+        var accountCreation = '@(accountCreation)';
+        var BASE_URL = '@Url.Content("~/Account/")';
+        var Account_Base_URL = '@Url.Content("~/Account/")';
+        var Contact_BASE_URL = '@Url.Content("~/Contact/")';
+        var ImagePath ='@Url.Content("~/img/NoImage.png")';
+        var User_Base_URL = '@Url.Content("~/User/")';
+        var account = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountmode = '@(mode)';
+        var dateFormat ='@Thread.CurrentPrincipal.Identity.ToDateFormat()';
+        var getCountries = function(){
+            $.ajax({
+                url: Contact_BASE_URL + 'GetCountries',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8"
+            }).then(function (response) {            
+                var filter = $.Deferred()            
+                if (response.success) {                
+                    filter.resolve(response)            
+                } else {                
+                    filter.reject(response.error)            
+                }            
+                return filter.promise()        
+            }).done(function (data) {
+                viewModel = new accountViewModel(account,data.response, Contact_BASE_URL, BASE_URL,newAddress,User_Base_URL,Account_Base_URL, accountmode,pagename,WEBSERVICE_URL,accountCreation,ImagePath,dateFormat);
+
+                $.each(viewModel.Phones(), function(index,value){
+                    value.PhoneType = ko.observable(value.PhoneType);
+                    value.PhoneNumber = ko.observable(value.PhoneNumber);
+                });
+
+                $.each(viewModel.SocialMediaUrls(), function(index,value){
+                    value.MediaType = ko.observable(value.MediaType);
+                    value.Url = ko.observable(value.Url);
+                });
+
+                $.each(viewModel.Modules(),function(index,value){
+                    value.ModuleId = ko.observable(value.ModuleId);
+                    value.ModuleName = ko.observable(value.ModuleName);
+                    value.IsSelected = ko.observable(false);
+                    value.IsPrivate = ko.observable(true);
+                    value.SubModules = ko.observableArray(value.SubModules);
+                    if(value.SubModules != null)
+                    {
+                        $.each(value.SubModules(),function(index,subValue){
+                            subValue.ModuleId = ko.observable(subValue.ModuleId);
+                            subValue.ModuleName = ko.observable(subValue.ModuleName);
+                            subValue.IsSelected = ko.observable(false);
+                            subValue.IsPrivate = ko.observable(true);
+                        });
+                    }
+                    if(value.ModuleId() == 3 || value.ModuleId() == 29 || value.ModuleId() == 34)
+                    {
+                        value.IsSelected(true);
+                        var id= "#confmainyes"+ value.ModuleId();
+                        setTimeout(function(){
+                            radiobtnActive(id);
+                        },2000);
+                    }
+                });
+                $.each(viewModel.SubscribedModules(),function(index,value){
+                    value.ModuleId = ko.observable(value.ModuleId);
+                    value.ModuleName = ko.observable(value.ModuleName);
+                    value.IsSelected = ko.observable(value.IsSelected);
+                    value.IsPrivate = ko.observable(value.IsPrivate);
+                    value.SubModules = ko.observableArray(value.SubModules);
+                    if(value.SubModules != null)
+                    {
+                        $.each(value.SubModules(),function(index,subValue){
+                            subValue.ModuleId = ko.observable(subValue.ModuleId);
+                            subValue.ModuleName = ko.observable(subValue.ModuleName);
+                            subValue.IsSelected = ko.observable(value.IsSelected);
+                            subValue.IsPrivate = ko.observable(value.IsPrivate);
+                        });
+                    }
+                });
+                var sharedModules = [];
+                var sharedSubModules = [];
+
+                if(viewModel.OpportunityCustomers() == '1')
+                {
+                    var id = '#oppPeople';
+                    setTimeout(function(){
+                        radiobtnActive(id);
+                    },2000);
+                }
+                else
+                {
+                    var id = '#oppComp';
+                    setTimeout(function(){
+                        radiobtnActive(id);
+                    },2000);
+                }
+                if(viewModel.SubscribedModules() !== null)
+                {
+                    $.each(viewModel.SubscribedModules(),function(index,value){
+                        sharedModules = ko.utils.arrayFilter(viewModel.SubscribedModules(), function(subscribedModule) {
+                            if(ko.toJSON(subscribedModule.IsPrivate()) === 'false'){
+                                var sharedId = '#mainshared'+ko.toJSON(subscribedModule.ModuleId());
+                                setTimeout(function(){
+                                    radiobtnActive(sharedId);
+                                },2000);
+                                return subscribedModule;
+                            }
+                        });
+
+                        ko.utils.arrayForEach(viewModel.Modules(),function(item){
+                            if(item.ModuleId() == ko.toJSON(value.ModuleId))
+                            {
+                                item.IsSelected(true);
+                                var id= "#confmainyes"+ item.ModuleId();
+                                setTimeout(function(){
+                                    radiobtnActive(id);
+                                },2000);
+                                if(value.SubModules != null)
+                                {
+                                    $.each(value.SubModules(),function(index,subValue){
+                                        if(item.SubModules().length >= 1)
+                                        {
+                                            ko.utils.arrayForEach(item.SubModules(),function(subItem){
+                                                if(subItem.ModuleId() == ko.toJSON(subValue.ModuleId))
+                                                {
+                                                    subItem.IsSelected(true);
+                                                    var id= "#confsubyes"+ subItem.ModuleId();
+                                                    setTimeout(function(){
+                                                        radiobtnActive(id);
+                                                    },2000);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    });
+                }
+                if(viewModel.LifecycleStage() === 5)
+                {
+                    viewModel.enablePartnerType(true);
+                }
+                ko.applyBindings(viewModel);
+            }).fail(function (error) {                            
+                notifyError(error);        
+            })
+        };
+        getCountries();
+
+        $(':radio').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+        
+        $("#termsEditor").redactor({
+            plugins: ['bufferbuttons', 'fontfamily', 'fontcolor', 'fontsize', 'table', 'fullscreen', 'textdirection', 'underline'],
+            focus: true,
+            source: true,
+            buttons: ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'link', 'alignment', 'horizontalrule', 'html'],
+            paragraphize: false,
+            replaceDivs: false,
+            boldTag: 'b',
+            cleanOnPaste: false,
+            linebreaks: true
+        });
+    });
+
+</script>

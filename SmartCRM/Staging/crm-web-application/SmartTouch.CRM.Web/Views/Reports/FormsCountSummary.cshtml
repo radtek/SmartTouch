@@ -1,0 +1,107 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+
+@{    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    var ItemsPerPage = ViewBag.ItemsPerPage;
+    bool runReportResults = ViewBag.RunReportResults;
+    
+}
+
+@*<script src="~/Scripts/ViewModels/FormsCountSummaryViewModel.js"></script>*@
+@Scripts.Render("~/bundles/formsCountSummaryvm")
+<div style="display:none" data-bind="visible:true">
+    <div>
+        <div class="sub-container">
+            <ul class="breadcrumb mbl">
+                <li><a href="/reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)" data-bind="text:ReportName()"></a></li>
+            </ul>
+            <div class="main-header mbl">
+                <span id="pagename" data-bind="text:ReportName()"></span>
+            </div>
+            <div class="form-horizontal-large">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Date Range|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Period',dataValueField:'PeriodId', data: Periods ,value:PeriodId,change:periodChange}" />
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible:CustomDateDisplay">
+                        <label class="bold">[|Custom Range|] :</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomStartDate, max: fromMaxDate,format:DateFormat,change: fromDateChangeEvent }" />
+                        </div>
+                        <label class="display-inline mts mhl">[|To|]</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomEndDate, max: toMaxDate,format:DateFormat,change: toDateChangeEvent }" />
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Group By|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Group',dataValueField:'GroupId', data: Groups ,value: GroupId,change : groupChange}" />
+                    </div>
+                </div>
+                <div class="clearfix" data-bind="visible: FormsVisible() =='True'">
+                    <div class="form-group group-by0">
+                        <label class="display-inline bold">[|Form Name|]</label>
+                        <select data-bind="kendoMultiSelect: {dataTextField:'Name',dataValueField:'Id', data: Forms, value: FormId ,optionLabel: '[|Select...|]',placeholder:'[|All|]'}" class="multiselectwidth" ></select>
+                    </div>
+                </div>
+                <div class="clearfix" data-bind="visible: LeadSourceVisible() =='True'">
+                    <div class="form-group group-by1">
+                        <label class="display-inline bold">[|Lead Adapter Name|]</label>
+                        <select data-bind="kendoMultiSelect: {dataTextField:'Name',dataValueField:'Id', data: LeadAdapters, value: LeadAdapterId ,optionLabel: '[|Select...|]',placeholder:'[|All|]'}" class="multiselectwidth" ></select>
+                    </div>
+                </div>
+                <div class="hr-border"></div>
+                <div>
+                    <a href="#" id="run-report" data-bind="click:Runlist" class="btn btn-lg btn-primary">[|Run Report|]</a>
+                </div>
+            </div>
+            
+            <div class="mtl" id="grid1" data-bind="visible: gridvisible() =='True'">
+                <div id="formsGrid" class="k-grid-content no-grid-resize">
+                    <table id="grid" data-bind="source: gridRows"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    var formsCountSummary = @(Html.Raw(Json.Encode(Model)));
+    var ContactUrl = '@Url.Content("~/Contact/")';
+    var formsViewModel;
+    var dateformat = '@(DateFormat)';
+    var itemsPerPage = '@(ItemsPerPage)';
+    var runReport='@(runReportResults)';
+  
+    function displayDate(date) {
+        if (date == null) {
+            return "";
+        }
+        return kendo.toString(kendo.parseDate(date, 'yyyy/MM/dd'), '@(DateFormat)');
+    }
+ 
+    function getEmail(FirstName)
+    {
+        console.log(FirstName);
+        return FirstName;
+    }
+
+    $(document).ready(function () {
+        formsViewModel = new formsCountSummaryViewModel(BASE_URL, formsCountSummary,dateformat,itemsPerPage,runReport);
+        ko.applyBindings(formsViewModel);     
+    });
+
+    function RunReport(){
+        selfReport.Runlist();
+    }
+ 
+</script>

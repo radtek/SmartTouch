@@ -1,0 +1,59 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using SmartTouch.CRM.Web.Utilities
+@model ResendCampaignViewModel
+@Scripts.Render("~/bundles/resendcampaignviewModelvm")
+@{
+    int campaignId = ViewBag.CampaignId;
+}
+
+
+<div id="resendcampaign">
+    <div class="drop-heading">
+        <span class="icon st-icon-user display-inline"></span> <h4 class="panel-title display-inline plm" data-bind="text:heading"></h4>
+    </div>
+    <div class="dp-topnav-inner-body">
+        <div class="form-group">
+            <label class="radio-inline">
+                <input type="radio" name="CampaignResentTo" value="122" data-bind="checked:CampaignResentTo" /> [|Resend To New Contacts|]
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="CampaignResentTo" value="123" data-bind="checked:CampaignResentTo" /> [|Resend To Not Viewed Contacts|]
+            </label>
+        </div>
+        <div class="form-group">
+            <label class="control-label">[|From|] <span class="required">*</span></label>
+            <input min="1" data-bind="kendoDropDownList: {dataTextField:'EmailId',dataValueField:'EmailId', data: UserEmails, valueTemplate: HeaderTemplate, value: From, template : EmailTemplate}" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">[|Sender Name|]</label>
+            <input type="text" id="sendername" class="display-inline form-control tagsinput-info-round" data-bind="value:SenderName" maxlength="150">
+        </div>
+        <div class="form-group">
+            <label class="control-label">[|Subject|]<span class="required">*</span></label>
+            <div>
+                <input class="form-control" id="subject" type="text" placeholder="[|Subject|]" data-bind="value:Subject" maxlength="75" />
+            </div>
+        </div>
+
+
+    </div>
+    <div class="panel-footer">
+        <div>
+            <div class="pull-left">
+                <a href="javascript:void(0)" class="btn btn-lg btn-primary" data-id="CampaignId" data-bind="click:ResendCamapign">[|Resend|]</a>
+                <a class="btn btn-lg" aria-hidden="true"
+                   data-dismiss="modal" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Campaign/")';
+        var ResendCampaign = @(Html.Raw(Json.Encode(Model)));
+        var viewmodel = new ResendCampaignViewModel(ResendCampaign,BASE_URL);
+        ko.applyBindings(viewmodel,document.getElementById("resendcampaign"));
+
+    });
+</script>

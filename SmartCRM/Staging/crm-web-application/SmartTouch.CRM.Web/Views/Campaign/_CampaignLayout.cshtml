@@ -1,0 +1,269 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.CampaignViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    ViewBag.Title = "Campaigns";
+    var mode = ViewBag.mode;
+    var redirection = ViewBag.RedirectTo;
+    var isWorkflowId = ViewBag.IsWorkflowId;
+    var emailGuid = ViewBag.EmailGuid;
+    var hasLitmusTest = ViewBag.LitmusTestPermission;
+    var mailTesterPermission = ViewBag.MailTesterPermission;
+    var hasDisclaimer = ViewBag.HasDisclaimer == null ? false : ViewBag.HasDisclaimer;
+    var hasLitmusAPIKey = ViewBag.HasLitmusAPIKey;
+    var replicatedCm= ViewBag.ReplicatedCM;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/campaignstyles")
+@Scripts.Render("~/bundles/campaignvm")
+@Scripts.Render("~/bundles/redactor")
+@Styles.Render("~/Content/Redactor")
+@Styles.Render("~/Content/codemirror")
+@Scripts.Render("~/bundles/codemirror")
+
+<div id="campaign" style="display:none" data-bind="visible:true">
+
+    <div class="sub-container st-subcampaign mbxxl">
+        <div class="campaigns affix-top" data-spy="affix" data-offset-top="197">
+            <div>
+                <!-- ko if : CampaignStatus() == '101' -->
+                <div class="btn-group select-campaign pull-right" data-toggle="buttons" id="campaignautomationstatus">
+                    <label data-bind="click:changeAutomationStatus, css:{'btn btn-primary':true, 'active': IsLinkedToWorkflows()==false } " id='1'>
+                        <input type="radio" data-bind="attr:{name:'CampaignSelection',id:'r1',value:'Normal'},checked:IsLinkedToWorkflows" /> [|Normal|]
+                    </label>
+                    <label data-bind="click:changeAutomationStatus, css:{'btn btn-primary':true, 'active': IsLinkedToWorkflows() } " id='2'>
+                        <input type="radio" data-bind="attr:{name:'CampaignSelection',id:'r2',value:'Automation'},checked:IsLinkedToWorkflows" /> [|Automation|]
+                    </label>
+                </div>
+                <!-- /ko -->
+                <ul class=" breadcrumb breadcrumb-n">
+                    <li>@Html.ActionLink("[|Campaigns|]", "Campaigns", "Campaign", null, null)</li>
+                    <li class="active" id="campaignname-breadcrumb" data-toggle="modal" data-bind="click:editCampaignName"><a href="javascript:void(0)" class="camp-cur"><span data-bind="text:Name()"></span></a><i class="icon st-icon-edit camp-cur"></i></li>
+                    <div id="editCampaignName" style="display:none">
+                        <div class="form-group">
+                            <label class="control-label">[|Name|]</label>
+                            <input type="text" id="campaignnewname" class="display-inline form-control tagsinput-info-round" maxlength="150">
+                        </div>
+                        <div class="form-group co-de-buttons" id="cmpnamesaveclosebtns">
+                            <button data-bind="click:saveCampaignName" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                            <button data-bind="click:cancelCampaignNameEdit" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                        </div>
+
+                    </div>
+
+                </ul>
+
+
+
+            </div>
+            <div data-bind="if:CampaignStatus()=='110'">
+                <div class="alert alert-warning" style="margin-top:30px">
+                    <i class="icon st-icon-spam"></i>
+                    <span data-bind="text:Remarks()"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <div data-bind="visible: CurrentView() == 'layout' && CampaignTypeId() == campaignType.REGULAR ?true:false">
+            @Html.Partial("_CampaignTemplates")
+        </div>
+        <div data-bind="visible: (CurrentView() == 'designer' ||  CurrentView() == 'htmlview' || CurrentView() == 'previewDesign')?true:false, with:Designer" id="customizeblock">
+            @Html.Partial("_CampaignDesigner")
+        </div>
+        <div data-bind="visible: CurrentView() == 'review'?true:false" id="reviewsendblock">
+            @Html.Partial("_ReviewCampaign")
+        </div>
+    </div>
+
+    <div class="campaignssteps-footer campaignssteps-footer-n">
+        <div class="back-btn" data-bind="click:clickback,visible:showBackButton()==true">
+            <a href=""><i class="icon st-icon-leftdropdownarrow"></i>Back</a>
+        </div>
+        <div class="steps-new">
+            <ul>
+                <li id="liLayout" data-bind="if:CampaignTypeId() == campaignType.REGULAR, click:showLayout">
+                    <a href="#Layout" data-bind="attr:{class:CurrentView() == 'layout'?'active':'completed'}"><i class="icon st-icon-layout-column-center"></i>[|Layout|]</a><span><i class="icon st-icon-rightdropdownarrow"></i></span>
+                </li>
+                <li id="liCustomize" data-bind="click:showDesigner">
+                    <a href="#Layout" data-bind="attr:{class:CurrentView() == 'layout'?'':(CurrentView() == 'designer' ||  CurrentView() == 'htmlview' || CurrentView() == 'previewDesign')?'active':'completed'}"><i class="icon st-icon-edit"></i>[|Customize|]</a><span><i class="icon st-icon-rightdropdownarrow"></i></span>
+                </li>
+                <li id="liReview">
+                    <a href="#Review" data-bind="click:reviewCampaign, attr:{class:CurrentView() != 'review'?'':'active'}"><i class="icon st-icon-outgoing"></i>[|Review & Send|]</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            @*<div class="next-btn" data-bind="visible:CurrentView()=='review'">
+                    <span data-bind="value:'Save',click:saveCampaign, visible:(CampaignStatus() == 101 || CampaignStatus() == 107)">
+                        <a class="icon active" data-posturl="campaingslist" href="#">[|Save|]</a>
+                    </span>
+
+                    <span data-bind="value:'Send',click:sendCampaign,visible:CampaignStatus() == 102 || CampaignStatus() == 106">
+                        <a data-posturl="campaingslist" href="#" class="icon active">[|Send|]</a>
+                    </span>
+                </div>*@
+            <div class="next-btn" data-bind="visible:CurrentView()!='review',click:clicknext">
+                <a href="">Next<i class="icon st-icon-rightdropdownarrow"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Campaign Modal -->
+<div class="modal fade" id="testCampaign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog model-test-email" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">[|Send a Test Email|]</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" data-bind="value:ToAddress,attr:{id:'Email_'+ 0}" class="form-control" placeholder="[|Enter an Email|]" />
+                    <span class="cmp-tst-ct">[|Separate email addresses with a comma to send to multiple test recipients|]</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0)" class="btn btn-primary testemail"
+                   data-bind="css: {disabled: TestEmailText() == 'Sending...'},click:sendTestMail,text:TestEmailText">[|Send|]</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-bind="click:cancelTestCampaign">[|Cancel|]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="litmusTest" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">[|Email Previews - Litmus&#x00AE; Test|]</h4>
+            </div>
+            <div class="modal-body">
+                <span class="cmp-tst-ct">[|Email Previews Powered by Litmus&#x00AE; will test your campaign across multiple email clients on both mobile and desktop versions. This test will help you gain better insight as to how your campaign will render on various devices. Your test results may take up to 2 minutes to process, and will show in the Notification Center icon on the top menu when ready to view.|]</span>
+                <br /><br />
+                <span class="ss-nte">[|Please Note: Clicking on Perform Test will save your campaign and submit the test to Litmus&#x00AE;|]</span>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0)" class="btn btn-primary" id="performLitmusTest" data-bind="click:afterLitmusTest">[|Perform Test|]</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">[|Cancel|]</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="mailTesterTest" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">[|Mail Tester|]</h4>
+            </div>
+            <div class="modal-body">
+                <span class="cmp-tst-ct">[|Our mail tester tool provides a quick and easy way to determine if your email will pass the most common spam filters as well as basic email authentication.|]</span>
+                <br /><br />
+                <span class="ss-nte">[|Please Note: Clicking on Perform Test will save your campaign and submit the test to Mail-Tester|]</span>
+            </div>
+            <div class="modal-footer">
+                <a data-bind="visible: MailTesterGuid(), attr:{'href': 'https://www.mail-tester.com/smarttouch-' + MailTesterGuid() }" target="_blank" class="pull-left">Click here to view your results</a>
+                <a href="javascript:void(0)" class="btn btn-primary" id="performMailTester" data-bind="click:performMailTester">[|Perform Test|]</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">[|Cancel|]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Campaign/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var imageDomain = '@HttpContext.Current.Application["image_hostedpath"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var isSTAdmin = '@Thread.CurrentPrincipal.Identity.IsSTAdmin()';
+        var campaignMode = '@mode'
+        var wfRedirect = '@redirection';
+        var wfIdFound ='@isWorkflowId';
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var hasLitmusTestPerm = '@hasLitmusTest';
+        var includeDisclaimer ='@hasDisclaimer';
+        var litmusAPIKey = '@hasLitmusAPIKey';
+        var mailTesterPermission = '@mailTesterPermission';
+        var IsReplicatedCM='@replicatedCm';
+
+        var fromSaveAs = @(Json.Encode(ViewBag.SaveAs));
+        var viewModel = new campaignViewModel(data,BASE_URL, WEBSERVICE_URL, imageDomain,isSTAdmin,campaignMode,wfRedirect,wfIdFound,hasLitmusTestPerm,includeDisclaimer,litmusAPIKey, mailTesterPermission,IsReplicatedCM);
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        campaignTemplateViewModel = '';
+        ko.applyBindings(viewModel);
+        viewModel.GetTemplates();
+
+        var htmlContent = data.HTMLContent;
+        var newHtml = $("<div>" + htmlContent + "</div>");
+        var divIdValue = $(newHtml).find("div[id='htmlcontent']");
+        imgs = $(newHtml).find("img[src*='/campaignimage?crid=*|CRID|*']");
+        $('body').css('overflow','hidden');
+        $.each(imgs, function(i,v){
+            $(newHtml).find(this).remove();
+            data.HTMLContent = newHtml.html();
+        });
+
+        if (divIdValue.length == 0) {
+            var appendNewDivToNewHtml = $("<div><div><div>" + newHtml.html() + "</div></div></div>");
+            appendNewDivToNewHtml.find("div:eq(1)").attr("id", "htmlcontent");
+            data.HTMLContent = appendNewDivToNewHtml.html();
+        }
+
+        if(viewModel.CampaignId() > 0 || (fromSaveAs !=null && fromSaveAs == true)){
+            viewModel.LoadControls(data.HTMLContent, data.CampaignTemplate);
+        }
+
+
+
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId,tagCreatedBy);
+        tagify.Tagify("campaignTags");
+        var recentJs = new RecentPopular(viewModel,"campaignContactTags",'C');
+        tagify.TagifyContactTags("campaignContactTags", data.AccountID,viewModel.ContactTags());
+        tagify.TagifySearchDefinitions("campaign-search-definitions",data.AccountID,viewModel.SearchDefinitions());
+
+        if (viewModel.IsRecipientsProcessed()) {
+            $("#tag-selection *").attr("disabled", true).off('click');
+            $("#search-selection *").attr("disabled", true).off('click');
+        }
+        else {
+            $("#tag-selection *").attr("disabled", false);
+            $("#search-selection *").attr("disabled", false);
+        }
+
+        //setTimeout(function () {
+        //    $('#contentdesignelements, #contentimageselements').fadeOut('');
+        //},500);
+
+
+        $(document).on('keydown keypress keyup', "#templatesearch", function () {
+            setTimeout(function () {
+                viewModel.searchTemplateQuery($("#templatesearch").val());
+                Reset();
+            }, 500)
+        });
+
+        $(document).on('keypress keyup keydown', '#campaignsubject', function (event) {
+            $("#campaignsubjectlength").removeClass('hide');
+            if ($('#campaignsubject').val().length > 75) {
+                $("#campaignsubjectlength").addClass('red').removeClass('green');
+                $("#campaignsubjectlength").text((75 - $("#campaignsubject").val().length)+' [|too many characters|]');
+            }
+            else
+            {
+                $("#campaignsubjectlength").addClass('green').removeClass('red');
+                $("#campaignsubjectlength").text((75 - $("#campaignsubject").val().length) + ' [|characters remaining|]');
+            }
+
+        });
+        $("#campaignsubject").focusout(function () {
+            $("#campaignsubjectlength").addClass('hide');
+        });
+    });
+
+</script>
+

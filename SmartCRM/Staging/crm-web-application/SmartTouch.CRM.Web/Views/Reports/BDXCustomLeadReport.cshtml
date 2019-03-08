@@ -1,0 +1,226 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    bool runReportResults = ViewBag.RunReportResults;
+}
+
+
+@Scripts.Render("~/bundles/bdxCustomLeadReportvm")
+<div style="display:none" data-bind="visible:true">
+    <div>
+        <div class="sub-container">
+            <ul class="breadcrumb mbl">
+                <li><a href="/reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)" data-bind="text:ReportName()"></a></li>
+            </ul>
+            <div class="main-header mbl">
+                <span id="pagename" data-bind="text:ReportName()"></span>
+            </div>
+            <div class="form-horizontal-large">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Date Range|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'PeriodText',dataValueField:'periodID', data: Periods ,value:periodID,change:periodChange}" />
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible:CustomDateDisplay">
+                        <label class="bold">[|Custom Range|]:</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomStartDate, max: fromMaxDate,format:DateFormat,change: fromDateChangeEvent }" />
+                        </div>
+                        <label class="display-inline mts mhl">[|To|]</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomEndDate, max: toMaxDate,format:DateFormat,change: toDateChangeEvent }" />
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-border"></div>
+                <div>
+                    <a href="#" id="run-report" data-bind="click:Runlist" class="btn btn-lg btn-primary">[|Run Report|]</a>
+                </div>
+            </div>
+
+            <div class="k-grid k-widget k-secondary no-grid-resize mtl cu-table-responsive" id="grid1" data-bind="visible: gridvisible() =='True'">
+                <div class="clearfix mbl" data-bind="visible:TotalHits() > 0">
+                    <span class="pull-right ">
+                        <a data-posturl="savedserches" href="#" onclick="advanceView();" class="btn btn-lg btn-primary">[|Advanced View|]</a>
+                    </span>
+                </div>
+                @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.BDXLeadReportEntry>()
+                    .Name("contactList")
+                                    .HtmlAttributes(new { @class = "k-grid-content" })
+                    .AutoBind(false)
+                      .ToolBar(toolbar =>
+                         {
+                             toolbar.Template(@<text>
+                                <div class="toolbar grid-ct-header">
+                                    <a class="k-button k-button-icontext cu-grid-excel" id="excelexport">[|Export to Excel|]</a>
+                                </div>
+                            </text>);
+                         })
+                                    .Pageable(pageable => pageable
+                                .PageSizes(true)
+                                .ButtonCount(10).Messages(m => m
+                                .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Contacts|]")
+                                .Empty("[|No Contacts to Display|]")
+                                .ItemsPerPage("[|Contacts Per Page|]")))
+                                .Sortable()
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.CreatedDate).Title("[|Date|]").HeaderHtmlAttributes(new { @class = "col-20" });
+                                columns.Bound(p => p.LeadSource).Title("[|Lead Source|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.LeadType).Title("[|Lead Type|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.ContactCreated).Title("[|Contact Created|]").HeaderHtmlAttributes(new { @class = "col-10" });
+                                columns.Bound(p => p.FullName).Title("[|Name|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.PrimaryEmail).Title("[|Email|]").HeaderHtmlAttributes(new { @class = "col-20" });
+                                columns.Bound(p => p.Phone).Title("[|Phone|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.StreetAddress).Title("[|Street Address|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.City).Title("[|City|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.State).Title("[|State|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.PostalCode).Title("[|Postal Code|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.Comments).Title("[|Comments|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.MarketName).Title("[|Market Name|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.StateName).Title("[|State Name|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.BuilderName).Title("[|Builder Name|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.BuilderNumber).Title("[|Builder Number|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.CommunityNumber).Title("[|Community Number|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.CommunityName).Title("[|Community Name|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.PlanNumber).Title("[|Plan Number|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.PlanName).Title("[|Plan Name|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                                columns.Bound(p => p.FileName).Title("[|File Name|]").HeaderHtmlAttributes(new { @class = "col-15" });                                                              
+                                columns.Bound(p => p.LeadAdapterJobLogDetailID).Title("[|Lead Submission|]").HeaderHtmlAttributes(new { @class = "col-20" });
+                   
+                            }).ClientRowTemplate(@"<tr class='odd'>
+                                                <td>#=displayDate_n(CreatedDate)#</td>
+                                                <td>#:LeadSource#</td>
+                                                <td>#:LeadType#</td>
+                                                <td>#:ContactCreated#</td>
+                                                 <td>
+                                                    <a href='/person/#:ContactID#'>#=displayName(FullName,PrimaryEmail)#</a>
+                                                </td>
+                                                <td>#=getEmail(PrimaryEmail)#</td>
+                                                 <td>#:Phone#</td>
+                                                 <td>#:StreetAddress#</td>
+                                                 <td>#:City#</td>
+                                                <td>#:State#</td>
+                                                <td>#:PostalCode#</td>
+                                                 <td>#:Comments#</td>
+                                                 <td>#:MarketName#</td>
+                                                <td>#:StateName#</td>
+                                                <td>#:BuilderName#</td>
+                                                 <td>#:BuilderNumber#</td>
+                                                  <td>#:CommunityNumber#</td>
+                                                 <td>#:CommunityName#</td>
+                                                <td>#:PlanNumber#</td>
+                                                <td>#:PlanName#</td>
+                                                 <td>#=getFileName(FileName)#</td>
+                                                <td>#:LeadAdapterJobLogDetailID#</td>                                                
+                                            </tr>")
+                            .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                            .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(ItemsPerPage)
+                            )
+                )
+                <div class="hr-border"></div>
+                <div data-bind="visible:TotalHits() > 0">
+                    <a data-posturl="savedserches" href="#" onclick="advanceView();" class="btn btn-lg btn-primary">[|Advanced View|]</a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    var BDXContactsList = @(Html.Raw(Json.Encode(Model)));
+    var ContactUrl =  '@Url.Content("~/Contact/")';
+    var dateformat = '@(DateFormat)';
+    var itemsPerPage = '@(ItemsPerPage)';
+    var runresults = '@(runReportResults)';
+    var viewModel;
+    function displayDate_n(date) {
+        if (date == null) {
+            return "";
+        }
+        var utzdate = ConvertToDate(date).ToUtcUtzDate();
+        return kendo.toString(utzdate, '@(DateFormat)' + " hh:mm");
+    }
+
+    function onDataBinding(arg) {
+
+    }
+
+    function getEmail(email)
+    {
+        if(!email)
+            return '[|Email Not Available|]';
+        else
+            return email;
+    }
+
+    function displayName(Name,PrimaryEmail) {
+        if (Name ==" " )
+            return PrimaryEmail;
+        else
+            return Name;
+    }
+
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No Records Found|]</span></div></td></tr>')
+        }
+    }
+
+    $(document).ready(function () {
+        viewModel = new BDXCustomLeadReport(BDXContactsList,BASE_URL,dateformat,parseInt(itemsPerPage));
+        if (runresults.toString().toLowerCase() == 'true')
+        {
+            viewModel.gridvisible('True');
+            viewModel.Runlist();
+        }
+        ko.applyBindings(viewModel);
+    });
+
+    function RunReport(){
+        selfBDXCustomLeadReport.Runlist();
+    }
+
+    $("#excelexport").click(function(){
+        viewModel.ExcelExport();
+    });
+
+    function advanceView()
+    {
+        var contactIds_Guid=$.cookie("ContactsGuid");
+        console.log(contactIds_Guid);
+        localStorage.setItem("ContactsGuid",contactIds_Guid );
+        window.location.href = '../reportcontacts?guid=' + contactIds_Guid + '&reportType=13&reportId='+viewModel.ReportId()+'&reportName='+viewModel.ReportName();
+    }
+
+    function getFileName(filename){
+        if(filename)
+            return filename.replace(/^.*[\\\/]/, '');
+        else
+            return '';
+    }
+
+</script>
+
+
+

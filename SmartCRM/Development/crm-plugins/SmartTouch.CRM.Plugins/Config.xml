@@ -1,0 +1,50 @@
+<configuration>
+  <general>
+    <syncContacts>1</syncContacts>
+    <syncOutlookToWebContacts>1</syncOutlookToWebContacts>
+    <syncWebToOutlookContacts>1</syncWebToOutlookContacts>
+    <syncTasks>1</syncTasks>
+    <syncOutlookToWebTasks>1</syncOutlookToWebTasks>
+    <syncWebToOutlookTasks>1</syncWebToOutlookTasks>
+    <syncCalendars>1</syncCalendars>
+    <syncOutlookToWebCalendars>1</syncOutlookToWebCalendars>
+    <syncWebToOutlookCalendars>1</syncWebToOutlookCalendars>
+    <syncOutlookToWebDocuments>0</syncOutlookToWebDocuments>
+    <syncWebToOutlookDocuments>0</syncWebToOutlookDocuments>
+    <syncDocuments>0</syncDocuments>
+    <allowPeriodicSync>1</allowPeriodicSync>
+    <defaultSyncInterval>30</defaultSyncInterval>
+    <SyncPriority>Outlook</SyncPriority>
+    <allowChangePriority>0</allowChangePriority>
+    <MaxNumRecords>20</MaxNumRecords>
+    <WebItemOpenUrl></WebItemOpenUrl>
+    <ProductUpdateUrl></ProductUpdateUrl>
+    <maxDocumentSize />
+    <allowedDocumentExtensions />
+  </general>
+  <toolbar>
+    <showLoginMenu>1</showLoginMenu>
+    <loginURL></loginURL>
+    <showHelpMenu>0</showHelpMenu>
+    <helpURL></helpURL>
+    <showSynchronizeNowButton>1</showSynchronizeNowButton>
+    <categorizeItemsButton>1</categorizeItemsButton>
+  </toolbar>
+  <folders>
+    <contactsFolderName>Contacts</contactsFolderName>
+    <calendarsFolderName>Calendar</calendarsFolderName>
+    <tasksFolderName>Tasks</tasksFolderName>
+    <deletedItemsFolderName>Deleted Items</deletedItemsFolderName>
+    <DashboardFolderName>ImplicitSync</DashboardFolderName>
+  </folders>
+  <email>
+    <uploadEmail>1</uploadEmail>
+    <autoUploadEmail>1</autoUploadEmail>
+    <uploadHTMLEmailBody>1</uploadHTMLEmailBody>
+    <uploadEmailAttachments>0</uploadEmailAttachments>
+    <isEmailCategoryRequired>1</isEmailCategoryRequired>
+  </email>
+  <entities>
+    <typesCount>0</typesCount>
+  </entities>
+</configuration>

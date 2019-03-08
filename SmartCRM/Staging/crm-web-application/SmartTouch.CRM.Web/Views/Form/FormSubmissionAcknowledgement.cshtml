@@ -1,0 +1,43 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.FormViewModel
+
+@{
+    Layout = null;
+}
+@*<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Form</title>
+    <link href="Form_files/css.css" rel="stylesheet" type="text/css">
+</head>*@
+@Scripts.Render("~/bundles/knockout")
+
+    <div style="font-family: 'Open Sans', sans-serif; padding: 50px 0;">
+        <div style="width:620px;margin:0 auto;">
+            <div style="text-align:center;">
+                @*<figure style="margin:0;padding:40px 0;"><img src="Form_files/logo.png" alt="smarttouch"> </figure>*@
+            </div>
+            <div style="background-color:#ffffff;box-shadow:0 0 5px rgba(0,0,0,0.5);padding:50px 25px;border-radius:5px;min-height:300px;">
+                <div style="background-color: #dff0d8; color: #3c763d; border: 1px solid #d6e9c6; border-radius: 4px; margin-bottom: 20px; padding: 15px;">
+                    @Model.Acknowledgement
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    //@*$(document).ready(function () {
+        alert(1);
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var viewModel = new formSubmissionViewModel(data);
+
+        ko.applyBindings(viewModel);
+    });
+    
+    var formSubmissionViewModel = function (data) {
+        selfFormSubmission = this;
+        console.log(data.Acknowledgement);
+        selfFormSubmission.Message = data.Acknowledgement;
+    };*@
+
+</script>

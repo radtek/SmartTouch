@@ -1,0 +1,76 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model UserViewModel
+
+@Scripts.Render("~/bundles/addedituservm")
+<div>
+    @using (Html.BeginForm("AddEditUser", "User", FormMethod.Post,
+                                      new { name = "form-data", id = "form" }))
+    {
+        Html.RenderPartial("~/Views/User/_UserDetails.cshtml", Model);
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var newAddress = '@Html.Raw(Json.Encode(ViewBag.NewAddress))';
+        var viewModel;
+        var Contact_BASE_URL = '@Url.Content("~/Contact/")';
+        var BASE_URL = '@Url.Content("~/User/")';
+        var myJsVariable = '@ViewBag.PageName';
+        var account = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var IsAccountStAdmin=false;
+        var getCountries = function () {
+            $.ajax({
+                url: Contact_BASE_URL + 'GetCountries',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+            }).then(function (response) {            
+                var filter = $.Deferred();
+                if (response.success) {
+                    filter.resolve(response);
+                } 
+                else {     
+                    filter.reject(response.error);
+                }
+                return filter.promise();
+            }).done(function (data) {
+                viewModel = new userViewModel(account, data.response, Contact_BASE_URL, newAddress,BASE_URL, myJsVariable,IsAccountStAdmin);
+
+                $.each(viewModel.Phones(), function (index, value) {
+                    value.PhoneType = ko.observable(value.PhoneType);
+                    value.PhoneNumber = ko.observable(value.PhoneNumber);
+                });
+
+                $.each(viewModel.SocialMediaUrls(), function (index, value) {
+                    value.MediaType = ko.observable(value.MediaType);
+                    value.Url = ko.observable(value.Url);
+                });
+
+                //$.each(viewModel.LifecycleStages(), function(index,value){
+                //    value.MediaType = ko.observable(value.TypeId);
+                //    value.Name = ko.observable(value.Name);
+                //});
+
+                //$.each(viewModel.PartnerTypes(), function(index,value){
+                //    value.TypeId = ko.observable(value.TypeId);
+                //    value.Name = ko.observable(value.Name);
+                //});
+
+
+                if (myJsVariable == "EditUser") {
+                    ko.applyBindings(viewModel);
+                } else {
+                    ko.cleanNode(document.getElementById("personalsettings"));
+                    ko.applyBindings(viewModel, document.getElementById("personalsettings"));
+                }
+            }).fail(function (error) {
+                notifyError(error);
+            });;
+        };
+        getCountries();
+    });
+</script>
+
+

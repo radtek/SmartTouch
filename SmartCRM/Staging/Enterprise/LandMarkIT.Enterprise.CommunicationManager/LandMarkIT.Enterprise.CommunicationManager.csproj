@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DC326331-F62A-4482-86FF-1A4FC9D09C51}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LandmarkIT.Enterprise.CommunicationManager</RootNamespace>
+    <AssemblyName>LandmarkIT.Enterprise.CommunicationManager</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>CA1709</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Data, Version=2.0.2.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Mail, Version=1.5.0.3, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Mail.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net, Version=1.3.4.1, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.BoxNet, Version=1.4.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.BoxNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.Dropbox, Version=1.3.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.Dropbox.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.Facebook, Version=1.10.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.Facebook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.Ftp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.Ftp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.Rss, Version=1.1.4.1, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.Rss.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.SugarSync, Version=1.2.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.SugarSync.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.Twitter, Version=1.3.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.Twitter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.Net.WindowsLive, Version=1.4.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.Net.WindowsLive.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HigLabo.WindowsAzure.RestService, Version=1.2.0.0, Culture=neutral, PublicKeyToken=20abaee7662647f3, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\HigLabo.WindowsAzure.RestService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="JWT, Version=1.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\JWT.1.3.4\lib\3.5\JWT.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqKit, Version=1.1.3.1, Culture=neutral, PublicKeyToken=bc217f8844052a91, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\LinqKit.1.1.3.1\lib\net45\LinqKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MailChimp, Version=1.1.87.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MailChimp.NET.1.1.87.0\lib\net35\MailChimp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b9a188c8922137c6, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HigLabo.2.3.7.0\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="port25.pmta.api.submitter">
+      <HintPath>..\..\references\PMTA\port25.pmta.api.submitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Refactored.Email, Version=2.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Refactored.Email.2.1.3.0\lib\net45\Refactored.Email.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RestSharp.105.2.3\lib\net451\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.9.71.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ServiceStack.Text.3.9.71\lib\net35\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Twilio.Api, Version=3.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Twilio.4.7.0\lib\3.5\Twilio.Api.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Database\EmailLinksDb.cs" />
+    <Compile Include="Database\EmailStatisticsDb.cs" />
+    <Compile Include="Database\ReceivedMailInfoDb.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="MailTriggers\IMailProvider.cs" />
+    <Compile Include="MailTriggers\SmartTouchProvider.cs" />
+    <Compile Include="Contracts\IGenericRepository.cs" />
+    <Compile Include="Contracts\ITextService.cs" />
+    <Compile Include="Contracts\IUnitOfWork.cs" />
+    <Compile Include="DatabaseEntities\ServiceErrorStatus.cs" />
+    <Compile Include="Database\CronJobHistoryDb.cs" />
+    <Compile Include="Database\CronJobDb.cs" />
+    <Compile Include="Database\CronJobType.cs" />
+    <Compile Include="Database\FtpRegistrationDb.cs" />
+    <Compile Include="Database\JobDb.cs" />
+    <Compile Include="Database\ScheduledJobDb.cs" />
+    <Compile Include="Database\SendTextQueueDb.cs" />
+    <Compile Include="Database\SentTextDb.cs" />
+    <Compile Include="Database\SentTextDetailsDb.cs" />
+    <Compile Include="Extensions\StoredProcedureExtensions.cs" />
+    <Compile Include="Extensions\MailRequestConverterExtensions.cs" />
+    <Compile Include="Database\MailRegistrationDb.cs" />
+    <Compile Include="Database\SentMailDb.cs" />
+    <Compile Include="Database\SentMailDetailDb.cs" />
+    <Compile Include="Database\SentMailQueueDb.cs" />
+    <Compile Include="Database\TextRegistrationDb.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\DbContextExtensions.cs" />
+    <Compile Include="Contracts\IMailService.cs" />
+    <Compile Include="Operations\BaseService.cs" />
+    <Compile Include="Operations\EmailRecipient.cs" />
+    <Compile Include="Operations\FtpService.cs" />
+    <Compile Include="Operations\RecipientMergeVar.cs" />
+    <Compile Include="Operations\Registration.cs" />
+    <Compile Include="Operations\VMTACampaign.cs" />
+    <Compile Include="Processors\SendGridMailService.cs" />
+    <Compile Include="Processors\SmtpMailService.cs" />
+    <Compile Include="Operations\JobService.cs" />
+    <Compile Include="Operations\MailService.cs" />
+    <Compile Include="Operations\MailChimpCampaign.cs" />
+    <Compile Include="Operations\TextService.cs" />
+    <Compile Include="Processors\VmtaMailService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EfGenericRepository.cs" />
+    <Compile Include="Repositories\EfUnitOfWork.cs" />
+    <Compile Include="Requests\MailProvider.cs" />
+    <Compile Include="Requests\RegisterFtpRequest.cs" />
+    <Compile Include="Requests\SendMailMergeFieldsRequest.cs" />
+    <Compile Include="Requests\SendMailRequest.cs" />
+    <Compile Include="Requests\SendSingleMailRequest.cs" />
+    <Compile Include="Requests\SendTextRequest.cs" />
+    <Compile Include="Requests\SocialProvider.cs" />
+    <Compile Include="Requests\StorageProvider.cs" />
+    <Compile Include="Requests\TextProvider.cs" />
+    <Compile Include="Requests\RegisterTextRequest.cs" />
+    <Compile Include="Responses\SendMailResponse.cs" />
+    <Compile Include="Requests\RegisterMailRequest.cs" />
+    <Compile Include="Responses\CommunicationStatus.cs" />
+    <Compile Include="Responses\RegistrationResponse.cs" />
+    <Compile Include="Responses\SendTextResponse.cs" />
+    <Compile Include="Processors\TwilioTextService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="LandMarkIT.Enterprise.snk" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\crm-domain\SmartTouch.CRM.Domain\SmartTouch.CRM.Domain.csproj">
+      <Project>{02f0054a-4091-4b5e-ad5a-40b04728c6f5}</Project>
+      <Name>SmartTouch.CRM.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.Entities\SmartTouch.CRM.Entities.csproj">
+      <Project>{2c8eab14-9691-4396-86fb-b5bfdee8ae94}</Project>
+      <Name>SmartTouch.CRM.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.Infrastructure\SmartTouch.CRM.Infrastructure.csproj">
+      <Project>{34a8702b-08e7-4857-b5f4-d00643730e86}</Project>
+      <Name>SmartTouch.CRM.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LandMarkIT.Enterprise.Common\LandmarkIT.Enterprise.Common.csproj">
+      <Project>{c6e48414-87fa-4254-937c-e5552b567b00}</Project>
+      <Name>LandmarkIT.Enterprise.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LandMarkIT.Enterprise.Extensions\LandmarkIT.Enterprise.Extensions.csproj">
+      <Project>{1c044987-8995-4044-a6b7-0fb28f7f914c}</Project>
+      <Name>LandmarkIT.Enterprise.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LandMarkIT.Enterprise.Utilities\LandmarkIT.Enterprise.Utilities.csproj">
+      <Project>{0563ead0-f211-48bc-a919-428da9325725}</Project>
+      <Name>LandmarkIT.Enterprise.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,51 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model LeadAdapterSubmittedDataViewModel
+@using SmartTouch.CRM.Web.Utilities
+<div id="LeadAdapterSubmission">
+    <div>
+        <div>
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title"><span class="icon st-icon-polaroid-2"></span> Lead Adapter Submission</h4>
+            </div>
+            <div class="modal-body">
+                <div class="dp-topnav-inner-body">
+                    <div class="k-grid k-widget k-secondary" id="grid1">
+                        <div>
+                            <table>
+                                <thead class="k-grid-header">
+                                    <tr>
+                                        <th class="k-header">
+                                            Field
+                                        </th>
+                                        <th class="col-40 k-header">
+                                            New Value
+                                        </th>
+                                        <th class="col-30 k-header">
+                                            Old Value
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.submittedDetails)
+                                    {
+                                    <tr>
+                                            <td><span>@item.Title</span></td>
+                                            <td style="white-space:initial;text-overflow:ellipsis">@Html.Raw(item.NewValue)</td>
+                                            <td style="white-space:initial;text-overflow:ellipsis">@Html.Raw(item.OldValue)</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

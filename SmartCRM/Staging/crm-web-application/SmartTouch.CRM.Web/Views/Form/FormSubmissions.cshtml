@@ -1,0 +1,353 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+
+@{
+    ViewBag.Title = "FormSubmissions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var PeriodId = ViewBag.PeriodId;
+    var FormId = ViewBag.FormId;
+    var FormName = ViewBag.FormName;
+    var CustomStartDateTicks = ViewBag.CustomStarDateTicks;
+    var CustomEndDateTicks = ViewBag.CustomEndDateTicks;
+    var SubmittedData = ViewBag.SubmittedData;
+}
+
+@Scripts.Render("~/bundles/formsubmissionsvm")
+<script>
+    var itemsPerPage = '@ItemsPerPage';
+    var periodId = '@PeriodId';
+    var formId = '@FormId';
+    var formName = '@FormName';
+    var customStartDateTicks = '@CustomStartDateTicks';
+    var customEndDateTicks = '@CustomEndDateTicks';
+    var submittedData = '@SubmittedData';
+
+</script>
+
+@using (Ajax.BeginForm("GetFormSubmissions", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div class="sub-container">
+        <div id="form-submissions" style="display:none" data-bind="visible:true">
+            <ul class="breadcrumb mbl">
+                <li><a href="/Forms">[|Forms|]</a></li>
+                <li class="active"><a href="javascript:void(0)">[|Form Submissions|]</a></li>
+            </ul>
+
+            <div class="main-header">
+                <div class="page-title" data-bind="html:FormName +' - Form Submissions'"></div>
+            </div>
+            <div id="formSubmissionsGrid" @*class="k-content"*@>
+                @*<table id="grid" data-bind="source: gridRows"></table>*@
+            </div>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#formSubmissionDetails" id="showFormSubmissionDetails" style="display:none">
+                Launch Form Submission
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="formSubmissionDetails" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Form Submission</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="dp-topnav-inner-body">
+                                <div class="k-grid k-widget k-secondary" id="submissiondetails">
+                                    <div>
+                                        <table>
+                                            <thead class="k-grid-header">
+                                                <tr>
+                                                    <th data-bind="text: 'Field'">
+                                                    </th>
+                                                    <th data-bind="text: 'New Value'">
+                                                    </th>
+                                                    <th data-bind="text: 'Old Value'">
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody data-bind="foreach:uniqueFormSubmissionColumns">
+                                                <tr>
+
+                                                    <td><span data-bind="text:$data"></span></td>
+
+
+                                                    <td><span data-bind="text:$parent.submissionDetails()[$data] ? $parent.submissionDetails()[$data].NewValue:''"></span></td>
+                                                    <td><span data-bind="text:$parent.submissionDetails()[$data] ? $parent.submissionDetails()[$data].OldValue:''"></span></td>
+
+
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/x-kendo-template" id="template">
+    <div class="toolbar grid-ct-header">
+        <a class="k-button k-button-icontext cu-grid-excel" onclick="fSExcelExport()" id="fSExcelExport">[|Export to Excel|]</a>
+    </div>
+</script>
+
+<script>
+
+    var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+    var key = '@System.Configuration.ConfigurationManager.AppSettings["Excluded_Accounts"].ToString()';
+    var ids = key.split(',');
+    var enableExport = true;
+
+    $.each(ids, function (ind, val) {
+        if (val == accountId)
+            enableExport = false;
+        else
+            enableExport = true;
+    });
+
+    function fSExcelExport() {
+        if (enableExport) {
+            pageLoader();
+            $.ajax({
+                url: BASE_URL + '/FormSubmissionsExprortAsFile',
+                type: 'get',
+                data: { 'formId': formId, 'pageLimt': 10000, 'pageNumber': 1, 'periodId': periodId, 'customStartDateTicks': customStartDateTicks.toString(), 'customEndDateTicks': customEndDateTicks.toString() },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                traditional: true,
+            }).then(function (response) {
+                removepageloader();
+                var filter = $.Deferred();
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                removepageloader();
+                console.log("download success");
+                window.location = '/form/DownloadFile?fileKey=' + data.fileKey + '&fileName=' + data.fileName;
+            }).fail(function (error) {
+                notifyError(error);
+
+            });
+        }
+        else {
+            notifyError("[|You do not have permission to perform this operation.|]")
+        }
+
+    }
+    var columns = [];
+    var rows = [];
+    uniqueColumns = [];
+    $(document).ready(function () {
+        submittedData = submittedData.replace(/&quot;/g, '"');
+        fetchColumns();
+        var viewModel = new formSubmissionViewModel(formName);
+        ko.applyBindings(viewModel);
+    })
+    function additionalInfo() {
+        return {
+            formId: formId,
+            pageLimt: itemsPerPage,
+            pageNumber: 0
+        }
+    }
+    var BASE_URL = '@Url.Content("~/Form/")';
+
+    formSubmissionViewModel = function (formName) {
+        selfSubmissions = this;
+        selfSubmissions.SubmittedData = []
+        selfSubmissions.FormSubmissionDetails = [];
+        selfSubmissions.FormName = formName;
+        selfSubmissions.uniqueFormSubmissionColumns = ko.observableArray([]);
+
+        pageLoader();
+        CreateFormSubmissionsGrid();
+        selfSubmissions.submissionDetails = ko.observable();
+
+        function CreateFormSubmissionsGrid() {
+            var newDataSource = new kendo.data.DataSource({
+                transport: {
+                    read: function (options) {
+                        var pageNumber = typeof ($("#formSubmissionsGrid").data("kendoGrid").dataSource.page()) != "undefined" ? $("#formSubmissionsGrid").data("kendoGrid").dataSource.page() : 0;
+                        var pagesize = typeof ($("#formSubmissionsGrid").data("kendoGrid").dataSource.pageSize()) != "undefined" ? $("#formSubmissionsGrid").data("kendoGrid").dataSource.pageSize() : parseInt(parseInt(readCookie('pagesize')));
+                        $.ajax({
+                            url: BASE_URL + '/GetFormSubmissions',
+                            type: 'get',
+                            data: { 'formId': formId, 'pageLimt': pagesize, 'pageNumber': pageNumber, 'periodId': periodId, 'customStartDateTicks': customStartDateTicks.toString(), 'customEndDateTicks': customEndDateTicks.toString() },
+                            dataType: 'json',
+                            contentType: "application/json; charset=utf-8",
+                            traditional: true,
+                        }).then(function (response) {
+                            removepageloader();
+                            var filter = $.Deferred();
+                            if (response.success) {
+                                filter.resolve(response)
+                            } else {
+                                filter.reject(response.error)
+                            }
+                            return filter.promise()
+                        }).done(function (data) {
+                            selfSubmissions.FormSubmissionDetails = data.response.FormSubmissions;
+                            removepageloader();
+                            if (data != null) {
+                                if (data.success == true) {
+                                    $.each(selfSubmissions.FormSubmissionDetails, function (i, v) {
+                                        if (v.SubmittedData) {
+                                            v.SubmittedData = v.SubmittedData.replace(/\\n/g, "\\n")
+                                                                         .replace(/\\'/g, "\\'")
+                                                                         .replace(/\\"/g, '\\"')
+                                                                         .replace(/\\&/g, "\\&")
+                                                                         .replace(/\\r/g, "\\r")
+                                                                         .replace(/\\t/g, "\\t")
+                                                                         .replace(/\\b/g, "\\b")
+                                                                         .replace(/\\f/g, "\\f").replace(/\s+/g, ' ');
+                                        }
+                                    });
+                                    //Generate rows and columns
+                                    rows = [];
+                                    $(selfSubmissions.FormSubmissionDetails).each(function (index, value) {
+                                        var submissionObj = JSON.parse(value.SubmittedData);
+                                        if (submissionObj) {
+                                            submissionObj["SubmissionDate"] = { NewValue: formatDate(value.SubmittedOn), OldValue: formatDate(value.SubmittedOn) };
+                                            selfSubmissions.SubmittedData.push(submissionObj);
+                                        }
+                                        rows.push(submissionObj);
+                                    });
+
+                                    modifiedRows = [];
+                                    $.each(rows, function (i, v) {
+                                        var data = {};
+                                        for (var k in v) {
+                                            prop = k.replace(/\s+/g, '');
+                                            prop = prop.replace('*', '');
+                                            data[prop] = typeof v[k] == "object" && v[k] != null ? v[k].NewValue : v[k];
+                                            data["SubmissionId"] = selfSubmissions.FormSubmissionDetails[i].FormSubmissionId;
+                                        }
+                                        modifiedRows.push(data);
+                                    });
+                                    var gridData = { Data: modifiedRows, Total: data.response.TotalHits };
+                                    options.success(gridData);
+
+                                }
+                            }
+                        }).fail(function (error) {
+                            notifyError(error);
+                        });
+                    },
+                },
+                serverPaging: true,
+                schema: {
+                    data: "Data",
+                    total: "Total"
+                },
+                pageSize: itemsPerPage
+            });
+            $("#formSubmissionsGrid").kendoGrid({
+                dataSource: newDataSource,
+                scrollable: false,
+                sortable: true,
+                columns: columns,
+                dataBound: function (e) {
+                    onDataBound(e)
+                },
+                pageable: {
+                    pageSizes: [10, 25, 50, 100, 250, 500],
+                    messages: {
+                        display: "[|Showing|] {0}-{1} [|from|] {2:n0} [|Form(s)|]"
+                    },
+                },
+                toolbar: kendo.template($("#template").html())
+            });
+
+            var formsubmissionGrid = $("#formSubmissionsGrid").data("kendoGrid");
+
+            $("#formSubmissionsGrid").wrap("<div class='cu-table-responsive bdx-report-grid'></div>");
+            $(".st-icon-eye").parent().css({ 'text-align': 'center' });
+            $(".k-grid-excel").addClass("cu-grid-excel");
+        };
+
+
+
+        function formatDate(dateString) {
+            var date = new Date(parseInt(dateString.replace('/Date(', '')));
+            if (isNaN(Date.parse(date))) {
+                return "";
+            }
+            else {
+                var dateFormat = readCookie("dateformat").toUpperCase();;
+                if (dateFormat == null || dateFormat == 'undefined')
+                    return new Date(Date.parse(date)).toDateString();
+                else {
+                    var utzDate = new Date(moment(date).toDate()).toUtzDate();
+                    return moment(utzDate).format(dateFormat + " hh:mm A");
+                }
+            }
+        }
+
+        function onDataBinding(arg) {
+            $("th:contains('SubmissionId')").text("");
+        }
+
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+            $("th:contains('Submission Id')").text("");
+            $('#formSubmissionsGrid tbody tr').each(function () {
+                var lastTd = $(this).find('td:last-child');
+                var submissionId = $(lastTd).html();
+                $(lastTd).html('<i class="icon st-icon-eye notifiy-view" id="' + $(lastTd).html() + '"></i>');
+                $(lastTd).click(function () {
+                    var currentIndex = selfSubmissions.FormSubmissionDetails.map(function (e) { return e.FormSubmissionId == submissionId }).indexOf(true);
+                    var subData = selfSubmissions.SubmittedData[currentIndex];
+                    if (subData["SubmissionDate"])
+                        delete subData["SubmissionDate"];
+                    selfSubmissions.submissionDetails(subData);
+                    selfSubmissions.uniqueFormSubmissionColumns(Object.getOwnPropertyNames(subData));
+
+                    $('#showFormSubmissionDetails').click();
+                })
+            })
+        }
+    }
+
+    function fetchColumns() {
+        submittedData = submittedData.replace(/\\n/g, "\\n").replace(/\\'/g, "\\'")
+                                                            .replace(/\\"/g, '\\"')
+                                                            .replace(/\\&/g, "\\&")
+                                                            .replace(/\\r/g, "\\r")
+                                                            .replace(/\\t/g, "\\t")
+                                                            .replace(/\\b/g, "\\b")
+                                                            .replace(/\\f/g, "\\f").replace(/\s+/g, ' ');
+        var submissionObj = JSON.parse(submittedData);
+
+        if (submissionObj)
+            uniqueColumns = Object.getOwnPropertyNames(submissionObj);
+        $.each(uniqueColumns, function (i, v) {
+            columns.push({ title: v, field: v.replace(/[^\w\s]/gi, '').replace(/\s+/g, '') });
+        });
+        columns.push({ title: "Submission Id", field: 'SubmissionId' });
+        columns.splice(columns.length - 2, 1);
+        columns.splice(0, 0, { title: 'Submission Date', field: 'SubmissionDate' });
+    }
+
+
+</script>

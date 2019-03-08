@@ -1,0 +1,323 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+@model LeadScoreRuleViewModel
+
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+    List<AppModules> appModules = new List<AppModules>();
+    List<dynamic> Categories = new List<dynamic>();
+    List<dynamic> Conditions = new List<dynamic>();
+    appModules.Add(AppModules.Forms);
+    appModules.Add(AppModules.Campaigns);
+    appModules.Add(AppModules.Contacts);
+    appModules.Add(AppModules.SendMail);
+    appModules.Add(AppModules.ContactNotes);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.ContactTours);
+    appModules.Add(AppModules.SendText);
+    var modulePermissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div id="leadscore">
+    <div id="@(Model.LeadScoreRuleID > 0 ? "editRule" : isModal ? "addRuleModel" : "addRule")" class="@(isModal ? "" : "")">
+        <div class="@(Model.LeadScoreRuleID > 0 ? "" : "")">
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><span class="icon st-icon-create-rule prm"></span>@(Model.LeadScoreRuleID > 0 ? "[|Edit Rule|]" : "[|Create Rule|]")</h4>
+                </div>
+            }
+            else
+            {
+                <div class="drop-heading">
+                    <span class="icon st-icon-create-rule display-inline"></span>
+                    <h4 class="panel-title display-inline plm">[|Create Rule|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "")">
+                <div class="dp-topnav-inner-body">
+                    <div class="form-group" >
+                        <label for="exampleInputEmail1">[|Condition Description|]<span class="required">*</span></label>
+                        <textarea class="form-control" rows="3" data-bind="value:ConditionDescription,valueUpdate:'afterkeydown'" maxlength="500"></textarea>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6" id="leadscorecategory">
+                            <label class="control-label">[|Category|]</label>
+                            <input id="category" data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'Id', data: Categories, value: CategoryID, optionLabel: '[|Select...|]' }" />
+                            <span class="validationMessage" data-bind="validationMessage:CategoryIDValidation"></span>
+                        </div>
+                        <div class="form-group col-md-6" id="leadscorecondition">
+                            <label class="control-label">[|Condition|] <span class="required">*</span></label>
+                            <input id="condition" data-bind="kendoDropDownList: { dataTextField: 'Name', dataValueField:'Id',data: Conditions, value:ConditionID,change:ConditionChange, optionLabel: '[|Select...|]'}" />
+                            <span class="validationMessage" data-bind="validationMessage:ConditionIDValidation"></span>
+                        </div>
+                    </div>
+
+                    <div class="row" data-bind="visible:showTags">
+                        <div class="form-group col-md-12">
+                            <label class="control-label">[|Tags|] <span class="required">*</span></label>
+                            <input id="@(Model.LeadScoreRuleID > 0 ? "editRule_leadScoreTags" : isModal ? "addRuleModel_leadScoreTags" : "addRule_leadScoreTags")" placeholder="[|All|]" class="form-control" data-bind="valueUpdate:'afterkeydown'" maxlength="75" />
+                        </div>
+                    </div>
+
+                    <!--ko ifnot: (Template() == 0 || Template() == 6 || Template() == 7) -->
+                    <div class="row" data-bind="template: { name: Template,data:$data }"></div>
+                    <!--/ko-->
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label">[|Points|] <span class="required">*</span></label>
+                            <input type="text" placeholder="100" class="form-control" data-bind="value:Score,valueUpdate:'afterkeydown'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                <div class="pull-left">
+                    @if (Model.LeadScoreRuleID > 0)
+                    {
+                        <a class="btn btn-lg btn-primary" id="saveBtn" data-bind="click: updateRule" aria-hidden="@(Model.LeadScoreRuleID > 0 ? "true" : "")"><span>[|Update|]</span></a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-lg btn-primary" id="save" data-bind="click: insertRule" aria-hidden="@(Model.LeadScoreRuleID > 0 ? "true" : "")"
+                           data-dismiss="@(Model.LeadScoreRuleID > 0 ? "modal" : "")"><span>[|Save|]</span></a>
+                    }
+                    <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                       data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@* A contact opens an email *@
+<script type="text/html" id="1">
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Campaign Name|]<span class="required">*</span></label>
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: { dataTextField: 'Name', dataValueField:'Id', data: Campaigns, value: SelectedCampaignID,placeholder:'[|All|]' }"></select>
+
+    </div>
+</script>
+
+@* A contact clicks a link *@
+<script type="text/html" id="2">
+
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Campaign Name|]<span class="required">*</span></label>
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: { dataTextField: 'Name', dataValueField:'Id', data: Campaigns, value: SelectedCampaignID,placeholder:'[|All|]'  }"></select>
+
+    </div>
+
+
+    <div class="form-group col-md-12 stc-create-links">
+        <label class="control-label">[|Links|]<span class="required">*</span> <span class="num-characters" data-bind="text:NoOfLinks,visible: (SelectedCampaignID()[0] != 0 && SelectedCampaignID().length>0),attr:{class:CampaignLinks().length == 0?'red':'green'}"></span></label>
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: {dataValueField: 'CampaignLinkId', dataTextField:'URL.URL', data: CampaignLinks, value: SelectedCampaignLinkID,placeholder:'[|All|]'  }"></select>
+    </div>
+
+</script>
+
+@* A contact submits a form *@
+<script type="text/html" id="3">
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Form Name|]<span class="required">*</span></label>
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: { dataTextField: 'Name', dataValueField:'Id', data: Forms, value: SelectedFormID,placeholder:'[|All|]'  }"></select>
+
+    </div>
+</script>
+
+@* A contact visits a web site *@
+<script type="text/html" id="4">
+    <div class="form-group col-md-6">
+        <label class="control-label">[|Website|]<span class="required">*</span></label>
+        <input data-bind="kendoDropDownList: {dataValueField: 'TrackingDomain', dataTextField:'TrackingDomain', data: WebAnalyticsProviders, value: ConditionValue,optionLabel: 'Select...'}" />
+        <span class="validationMessage" data-bind="validationMessage:ConditionValueValidation"></span>
+    </div>
+</script>
+
+@* A contact visits a web page *@
+<script type="text/html" id="5">
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Web Page|]<span class="required">*</span></label>
+        <input type="text" class="form-control" data-bind="value:ConditionValue,valueUpdate:'afterkeydown'" />
+        <span class="help-block">Note: Please use page name instead of full URL. Example : give '/contact-us' instead of 'www.smarttouchinteractive.com/contactus'.</span>
+    </div>
+</script>
+
+@* An action includes the tag or A note includes the tag *@
+<script type="text/html" id="6">
+    <div class="form-group col-md-12">
+        @*<label class="control-label">[|Tag|] <span class="required">*</span></label>*@
+        @*<input id="@(Model.LeadScoreRuleID > 0 ? "editRule_leadScoreTags" : isModal ? "addRuleModel_leadScoreTags" : "addRule_leadScoreTags")" class="form-control" data-bind="value:Tags,valueUpdate:'afterkeydown'" maxlength="75" />*@
+        @*<input class="multiselect-scroll" data-bind="kendoMultiSelect: {dataValueField: 'TagID', dataTextField:'TagName', data: AllTags, value: SelectedTagID,placeholder:'[|All|]' }" />*@
+    </div>
+</script>
+
+@* An action includes the tag or A note includes the tag *@
+<script type="text/html" id="7">
+    <div class="form-group col-md-12">
+        @*<label class="control-label">[|Tag|] <span class="required">*</span></label>*@
+        @*<input class="multiselect-scroll" data-bind="kendoMultiSelect: {dataValueField: 'TagID', dataTextField:'TagName', data: AllTags, value: SelectedTagID,placeholder:'[|All|]' }" />*@
+        @*<input id="@(Model.LeadScoreRuleID > 0 ? "editRule_leadScoreTags" : isModal ? "addRuleModel_leadScoreTags" : "addRule_leadScoreTags")" class="form-control" data-bind="value:Tags,valueUpdate:'afterkeydown'" maxlength="75" />*@
+    </div>
+</script>
+
+@* The lead source is *@
+<script type="text/html" id="8">
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Lead Source|] <span class="required">*</span></label>
+        @*<input data-bind="kendoDropDownList: {dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: LeadSources, value: ConditionValue,optionLabel: 'Select...'}" />*@
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: {dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: LeadSources, value: SelectedLeadSourceID,placeholder:'[|All|]' }"></select>
+
+    </div>
+</script>
+
+@* The tour type is *@
+<script type="text/html" id="9">
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Tour Type|] <span class="required">*</span></label>
+        @*<input data-bind="kendoDropDownList: { dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: TourTypes, value: ConditionValue,optionLabel: 'Select...'}" />*@
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: {dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: TourTypes, value: SelectedTourTypeID,placeholder:'[|All|]' }"></select>
+
+    </div>
+</script>
+
+@* The note category is *@
+<script type="text/html" id="27">
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Note Category|] <span class="required">*</span></label>
+        @*<input data-bind="kendoDropDownList: { dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: TourTypes, value: ConditionValue,optionLabel: 'Select...'}" />*@
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: {dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: NoteCategories, value: SelectedNoteCategoryID,placeholder:'[|All|]' }"></select>
+
+    </div>
+</script>
+
+@* The tour type is *@
+<script type="text/html" id="23">
+    <div class="form-group col-md-12">
+    </div>
+</script>
+@* A Text is Sent *@
+<script type="text/html" id="30">
+    <div class="form-group col-md-12">
+    </div>
+</script>
+
+@* Email is Received *@
+<script type="text/html" id="31">
+    <div class="form-group col-md-12">
+    </div>
+</script>
+
+<script type="text/html" id="29">
+    <div class="form-group col-md-12">
+        <label class="control-label">[|Action Type|] <span class="required">*</span></label>
+        @*<input data-bind="kendoDropDownList: { dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: TourTypes, value: ConditionValue,optionLabel: 'Select...'}" />*@
+        <select class="multiselect-scroll" data-bind="kendoMultiSelect: {dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: ActionTypes, value: SelectedActionTypeID,placeholder:'[|All|]' }"></select>
+
+    </div>
+</script>
+
+@* A contact visits a web page *@
+<script type="text/html" id="26">
+    <div class="clearfix">
+        <div class="form-group">
+            <div class="form-group col-md-6">
+                <label class="control-label">[|Duration more than|]<span class="required">*</span></label>
+                <div class="col-cu-6">
+                    <div class="ed-label">Min</div>
+                    <div class="ed-select">
+                        <input id="minutes" type="text" data-bind="kendoNumericTextBox:{ value:PageDurationContdition.Minutes,decimals:0,format:'#',min:0, max:29 }, valueUpdate:'afterkeydown'" placeholder="00" />
+                        <span class="validationMessage" data-bind="validationMessage: PageDurationContdition.minutesValidation"></span>
+                    </div>
+                </div>
+                <div class="col-cu-6  pdr0">
+                    <div class="ed-label">Sec</div>
+                    <div class="ed-select">
+                        <input id="seconds" type="text" data-bind="kendoNumericTextBox:{ value:PageDurationContdition.Seconds,decimals:0,format:'#',min:0, max:59 }, valueUpdate:'afterkeydown'" placeholder="00" />
+                        <span class="validationMessage" data-bind="validationMessage: PageDurationContdition.secondsValidation"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6 ">
+                <label class="control-label">[|Any Page|]<span class="required">*</span></label>
+                <input type="checkbox" data-bind="checked:PageDurationContdition.AnyPage" />
+            </div>
+        </div>
+    </div>
+    <div class="clearfix" data-bind="if:!PageDurationContdition.AnyPage()">
+        <div class="form-group">
+
+            <div class="form-group col-md-12">
+                <label class="control-label">[|Web Page|]<span class="required">*</span></label>
+                <input type="text" class="form-control" data-bind="value:PageDurationContdition.PageVisited,valueUpdate:'afterkeydown'" />
+                <span class="help-block">Note: Please use page name instead of full URL. Example : give '/contact-us' instead of 'www.smarttouchinteractive.com/contactus'.</span>
+            </div>
+        </div>
+    </div>
+</script>
+@*<script src="~/Scripts/ViewModels/LeadScoreViewModel.js"></script>*@
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        var tags = [];
+
+        var BASE_URL = '@Url.Content("~/LeadScore/")';
+        var Campaign_URL = '@Url.Content("~/Campaign/")';
+        var Contact_URL = '@Url.Content("~/Contact/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var LeadScore = @(Html.Raw(Json.Encode(Model)));
+        var modulePermissions= @(Html.Raw(Json.Encode(modulePermissions)));
+        var viewModel2 = new leadScoreViewModel(LeadScore,BASE_URL, Campaign_URL, WEBSERVICE_URL,modulePermissions);
+        var scoreTagId;
+        if(LeadScore.LeadScoreRuleID == 0)
+        {
+            var popup = '@(isModal)';
+            if(popup=="True")
+            {
+                ko.applyBindings(viewModel2,document.getElementById("addRuleModel"));
+                scoreTagId = "addRuleModel_leadScoreTags";
+            }
+            else
+            {
+                ko.applyBindings(viewModel2,document.getElementById("addRule"));
+                scoreTagId = "addRule_leadScoreTags";
+            }
+        }
+        else
+        {
+            ko.applyBindings(viewModel2,document.getElementById("editRule"));
+            scoreTagId = "editRule_leadScoreTags";
+        }
+        viewModel2.ScoreTagElementID(scoreTagId);
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel2, accountId,tagCreatedBy);
+        tagify.Tagify(scoreTagId);
+        setTimeout(function(){
+            $("#" + scoreTagId + "_tag").attr('placeholder',viewModel2.PlaceHolderName());
+        },500);
+
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        function getAllTags() {
+            return $.ajax({
+                url:  WEBSERVICE_URL + '/getalltags',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+                }
+            });
+        };
+
+    });
+</script>

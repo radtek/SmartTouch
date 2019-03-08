@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Home Page";  
+}
+<script src="~/Scripts/jquery-2.1.0.js"></script>
+<script src="~/Scripts/XSockets.latest.js"></script>
+<script src="~/Scripts/knockout-3.1.0.js"></script>
+<!-- For easy convert to .NET datetime //-->
+<script src="~/Scripts/moment.js"></script>
+
+<label>Minutes from now until the start of the meeting...</label>
+<input id="input-timer" type="number" min="1" max="10" step="1" value="1" /><br />
+
+<button id="btn-save-appointment">Add Appointment</button>
+
+<hr />
+<span>
+    If you are offline (not on the page) and an notification is sent to you you will still get it as long as you are back within 5 minutes...<br />
+    Read server side code for more info...
+</span>
+<hr />
+<div id="notifications" data-bind="foreach:Notifications">
+    <div>
+        <h4 data-bind="text:Subject"></h4>
+        <span data-bind="text:Details"></span>
+    </div>
+</div>
+
+<script>
+    var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+    var conn = undefined;
+
+    //ViewModel
+    var VM = {
+        Notifications: ko.observableArray()
+    };
+
+    $(function () {
+        //Activate knockout
+        ko.applyBindings(VM);
+
+        //create a connection
+        if (window.location.protocol != "https:")
+            socketUrl = 'ws://' + hostname + ":4502/Notifier";
+        else
+            socketUrl = 'wss://' + hostname + ":4502/Notifier";
+
+        console.log(conn);
+        conn.on(XSockets.Events.open, function () {
+
+            console.log("connected");
+            //Connection open
+
+            //subscribe to Notify event
+            conn.on('notify', function (n) {
+                //Your logic here... Show a notification and play a sound...
+                //I just output it to the viewmodel
+                console.log("notified");
+                console.log(n);
+                notifyInfo("Blah blah");
+                VM.Notifications.unshift(n);
+            });
+
+            $.ajax({
+                url: WEBSERVICE_URL + "/Notifications",
+                type: 'get',
+                dataType: 'json',
+                data: { 'userId': 43 },
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $.each(response.Notifications, function (index, notification) {
+                        conn.publish('addreminder', notification);
+                    });
+
+                }
+            });
+
+            //Add a new appointment...
+            //$('#btn-save-appointment').('click', function () {
+            $("#btn-save-appointment").click(function(){
+                console.log("publishing");
+                //Add a fake that occurs in x minutes where x is the value of our input-timer
+                conn.publish('addreminder', { Subject: 'Fake Subject', Details: 'Fake Details....', Duration: 10, Time: moment().add('minutes', $('#input-timer').val()).format("YYYY-MM-DD HH:mm:ss") });
+            });
+        });
+    });
+</script>

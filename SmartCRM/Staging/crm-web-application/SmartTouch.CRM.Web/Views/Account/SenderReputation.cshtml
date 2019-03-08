@@ -1,0 +1,145 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ReportViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    bool runReportResults = ViewBag.RunReportResults;
+    var ItemsPerPage = ViewBag.ItemsPerPage;
+}
+
+@Scripts.Render("~/bundles/senderreputationreport")
+
+<div class="sub-container" id="CampaignReport" style="display:none" data-bind="visible:true">   
+
+    <ul class="breadcrumb mbl">
+        <li><a href="/accounts">[|Accounts|]</a></li>
+        <li class="active"><a href="javascript:void(0)">[|Campaign Report|]</a></li>
+    </ul>
+    <div class="main-header mbl">
+        <span id="pagename">[|Campaign Report|]</span>
+    </div>
+
+    <div class="form-horizontal-large">
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="display-inline bold">[|Date Range|]</label>
+                @*<input type="text" data-bind="kendoDateTimePicker: {value:TourDate, interval :15}">*@
+                <input data-bind="kendoDropDownList: {dataTextField:'PeriodText',dataValueField: 'PeriodId', data: dateRange, value: PeriodId,change:periodChange}" />
+
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group" data-bind="visible:CustomDateDisplay">
+                <label class="bold">[|Custom Range :|]</label>
+                <div class="select-medium display-inline">
+                    <input data-bind="kendoDatePicker: { value: CustomStartDate, max: fromMaxDate,format:DateFormat,change: fromDateChangeEvent }" />
+                </div>
+                <label class="display-inline mts mhl">[|To|]</label>
+                <div class="select-medium display-inline">
+                    <input data-bind="kendoDatePicker: { value: CustomEndDate, max: toMaxDate,format:DateFormat,change: toDateChangeEvent }" />
+                </div>
+            </div>
+        </div>
+        @*<div class="clearfix">
+                <div class="form-group">
+                    <label class="display-inline bold">[|Show|]</label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'Id', data: selectionTopRange, value: ShowTop}" />
+                </div>
+            </div>*@
+        <div class="hr-border"></div>
+        <div>
+            <a href="javascript:void(0)" class="btn btn-primary" data-bind="click:RunReportData">[|Run Report|]</a>
+        </div>
+    </div>
+
+   
+       
+   
+    
+    <div class="clearfix pvl" id="new-lead">
+        <div>
+            <label class="bold">Reputation Count : <span data-bind="text:reputation"></span></label>
+
+        </div>
+        <div class="clearfix no-grid-resize" data-bind="visible: gridvisible() == 'True' ">
+
+
+
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.CampaignEntryViewModel>()
+    .Name("Campaigngrid")
+            .HtmlAttributes(new { @class = "k-grid-content" })
+    .HtmlAttributes(new { })
+           .AutoBind(false)
+
+        .Pageable(pageable => pageable
+             .Refresh(false)
+             .PageSizes(true)
+             .ButtonCount(10).Messages(m => m
+             .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Campaigns|]")
+             .Empty("[|No Campaigns To Display|]")
+
+           .ItemsPerPage("[|Campaigns Per Page|]"))).Reorderable(reorder => reorder.Columns(true))
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Name).Title("[|Campaign Name|]");
+        columns.Bound(p => p.Subject).Title("[|Campaign Email Subject|]");
+        columns.Bound(p => p.TotalSends).Title("[|Sent Count|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+        columns.Bound(p => p.OpenRate).Title("[|Open Rate|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+        columns.Bound(p => p.WorkflowsCount).Title("[|Workflows|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+        columns.Bound(p => p.ClickRate).Title("[|Click Rate|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+        columns.Bound(p => p.ComplaintRate).Title("[|Complaint Rate|]").HeaderHtmlAttributes(new { @style = "width:150px;" });
+        columns.Bound(p => p.ProcessedDate).Title("[|Date Sent|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+        columns.Bound(p => p.ProviderName).Title("[|VMTA|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+        columns.Bound(p => p.JobId).Title("[|JobID|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+    })
+                 
+               .Pageable()
+               .ClientRowTemplate(@"<tr class='odd'><td >#:Name#
+                                        </td><td>#:Subject#</td><td>#:TotalSends#</td><td>#:OpenRate# | #:OpenRatePercent#</td><td>#if(WorkflowsCount == 0){# #:WorkflowsCount# #} else{# <span>#:WorkflowsCount# </span>#}
+#</td><td>#:ClickRate# | #:ClickRatePercent#</td><td>#:ComplaintRate# | #:ComplaintRatePercent#</td>
+                                        <td>#:ProcessedDate#</td><td>#:ProviderName#</td><td>#:JobId#</td>                   
+</tr>")
+               .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+               .DataSource(dataSource => dataSource
+               .Ajax()
+
+            .Read(read => read.Action("RunCampaignReport", "Reports"))
+            )
+            )
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function onDataBinding(arg) {
+
+    }
+
+    function onDataBound(e) {
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+    var runReport='@(runReportResults)';
+    var itemsPerPage = '@(ItemsPerPage)';
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    var ACCOUNTS_BASE_URL = '@Url.Content("~/Account/")';
+    var dateformat = '@(DateFormat)';
+    $(document).ready(function () {
+        var reportView = @(Html.Raw(Json.Encode(Model)));
+        var reportViewModel = new campaignListReport(reportView, BASE_URL,dateformat,runReport,itemsPerPage,ACCOUNTS_BASE_URL);
+        ko.applyBindings(reportViewModel);
+    });
+    function RunReport(){
+
+        selfCampaign.RunReportData();
+    }
+</script>
+
+

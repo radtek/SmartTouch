@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "Actions";
+    var DateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = 10;
+}
+
+<script>
+    function searchParameters() {
+        var parameters = {
+            name: localStorage.getItem("actionsearchtext"),
+            filterdata: localStorage.getItem("filtercontent"),
+            isDashboard: true,
+            StartDate: null,
+            EndDate: null,
+            type: localStorage.getItem("searchcontent")
+        }
+        return parameters;
+    }
+</script>
+
+<div>
+  
+    @using (Ajax.BeginForm("ActionsList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+    {
+
+        <div id="clientsDb">
+        
+            <div class="actions-grid">
+                @(Html.Kendo
+
+().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ActionViewModel>()
+    .Name("actiongrid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+  .AutoBind(true)
+  .Columns(columns =>
+  {
+      columns.Bound(c => c.ActionTypeValue).Sortable(false).Title("[|Action Type|]")
+          .HeaderHtmlAttributes(new { @class = "col-20" });
+      columns.Bound(c => c.ActionMessage).Sortable(true).Title("[|Action Details|]")
+
+.HeaderHtmlAttributes(new { @class = "col-25" });
+      columns.Bound(c => c.ActionDateTime).Sortable(true).Title("[|Action Date|]").Sortable
+
+ (true).HeaderHtmlAttributes(new { @class = "col-10" });
+      columns.Bound(c => c.IsCompleted).Sortable(false).Title("[|Action Status|]")
+
+
+
+.HeaderHtmlAttributes(new { @class = "col-10" });
+      columns.Bound(c => c.ContactName).Sortable(false).Title("[|Contacts Associated|]").HeaderHtmlAttributes(new { @class = "" })
+.HeaderHtmlAttributes(new { @class = "col-10" });
+      columns.Bound(c => c.UserName).Sortable(false).Title("[|Assigned To|]").HeaderHtmlAttributes(new { @class = "" });
+
+  })
+    .Sortable(sortabe => sortabe.AllowUnsort(true))
+    .Resizable(resize => resize.Columns(true))
+     .ToolBar(toolbar =>
+     {
+     toolbar.Template(@<text>
+
+        </text>);
+    })
+                                            .ClientRowTemplate(
+                                          @"<tr class='odd'><td>#:ActionTypeValue#</td>
+
+                                             <td>#=DisplayActionMessage(ActionMessage,ActionId)#</td>" +
+                                        "<td>#=DisplaywithDateTimeFormat1(ActionDateTime)#</td>" +
+                                             "<td>#=DisplayActionStatus(IsCompleted)#</td>" +
+
+                                         "<td>#=GetContacts(ActionId,ContactName)#</td>" +
+                                        "<td>#if(UserName == null || UserName == ''){# - #}else {# #:UserName# #}# </td>" +
+                                            "</tr>")
+                                        .ClientAltRowTemplate(
+                                         @"<tr class='even'><td>#:ActionTypeValue#</td>
+                                            <td>#=DisplayActionMessage(ActionMessage,ActionId)#</td>" +
+                                        "<td>#=DisplaywithDateTimeFormat1(ActionDateTime)#</td>" +
+                                            "<td>#=DisplayActionStatus(IsCompleted)#</td>" +
+
+                                        "<td>#=GetContacts(ActionId,ContactName)#</td>" +
+                                        "<td>#if(UserName == null || UserName == ''){# - #}else {# #:UserName# #}# </td>" +
+
+                                            "</tr>")
+                                        .Events(events => events.DataBound("onDataBound1"))
+                                       .DataSource(dataSource => dataSource
+                                       .Ajax()
+                                       .PageSize(ItemsPerPage)
+                                       .Read(read => read.Action("GetCreatedActions", "Contact").Data("searchParameters")).Sort(sort => sort.Add(t => t.ActionDateTime).Descending()
+                           )
+                       ))
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<script type="text/javascript">
+
+    var dateformat = '@(DateFormat)';
+    var searchText;
+
+    var Contacts_BASE_URL = '@Url.Content("~/Contact/")';
+
+    localStorage.removeItem("filtercontent");
+    localStorage.removeItem("actionsearchtext");
+    localStorage.removeItem("searchcontent");
+
+
+
+
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+    createCookie("dateformat", dateformat, 1);
+
+
+
+
+    createCookie("actionpagenumber", 1, 1);
+    createCookie("actionpagesize", '@(ItemsPerPage)', 1);
+
+    function DisplaywithDateTimeFormat1(date) {
+        var dateFormat = readCookie("dateformat").toUpperCase();
+        if (date == null) {
+            return "";
+        }
+        var utzDate = new Date(moment(date).toDate()).toUtzDate();
+        return moment(utzDate).format(dateFormat + " hh:mm A");
+    };
+
+    function onDataBound1(e) {     
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="4" ><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }      
+    }
+
+    function CompletedOperation(iscompleted, actionid, opportunityid) {
+        return false;
+    }
+
+    function GetContacts(actionId, name) {
+        return '<a href= "/actiontagedcontacts?actionId=' + actionId + '&showingType=3">' + name + '</a>';
+    }
+
+
+    function DisplayActionMessage(message, actionid) {
+        return '<a class="drop-lab" data-target="#modal" data-toggle="modal" href="/editaction?actionId=' + actionid + '">' + message + '</a>';
+    }
+
+    function DisplayActionStatus(sts) {
+        if (sts == true)
+            return "Completed";
+        else
+            return "Not Completed";
+    }
+
+
+    $(document).ready(function () {
+
+        var grid = $('#actiongrid').data('kendoGrid');
+
+    });
+</script>

@@ -1,0 +1,131 @@
+﻿@{
+    var page = ViewBag.pageName;
+    var clientid = ViewBag.ClientID;
+    var ApiKey = ViewBag.APIKey;
+}
+
+<script type="text/javascript">
+
+    var pageName = '@page';
+    // The API developer key obtained from the Google Developers Console.
+    var developerKey = '@ApiKey';
+    var clientId = '@clientid';
+    // The Client ID obtained from the Google Developers Console.
+    // malli client id = 836608660346-ulbl048edth8fmst4gvp98kia1b0lt81.apps.googleusercontent.com
+    //var clientId = '814476538527-ldlf21ue8ga439km5vfo9s5jk4u5oq58.apps.googleusercontent.com';
+
+    // Scope to use to access user's photos.
+    var scope = ['https://www.googleapis.com/auth/drive'];
+
+    var pickerApiLoaded = false;
+    var oauthToken;
+
+    // Use the API Loader script to load google.picker and gapi.auth.
+    function onApiLoad() {
+        if (clientId == null || clientId == "")
+            notifyError("Please configure Google Drive from Account Settings");
+        else {
+            gapi.load('auth', { 'callback': onAuthApiLoad });
+            gapi.load('picker', { 'callback': onPickerApiLoad });
+        }
+    }
+
+    function onAuthApiLoad() {
+        window.gapi.auth.authorize(
+            {
+                'client_id': '@clientid',
+                'scope': scope,
+                'immediate': false
+            },
+            handleAuthResult);
+    }
+
+    function onPickerApiLoad() {
+        pickerApiLoaded = true;
+        createPicker();
+    }
+
+    function handleAuthResult(authResult) {
+        if (authResult && !authResult.error) {
+            oauthToken = authResult.access_token;
+            createPicker();
+        }
+    }
+    // var uploadView = new google.picker.DocsUploadView();
+    // Create and render a Picker object for picking user Photos.
+    var picker = null;
+    function createPicker() {
+        if (pickerApiLoaded && oauthToken) {
+            picker = new google.picker.PickerBuilder().
+                enableFeature(google.picker.Feature.MULTISELECT_ENABLED).
+                //enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+                addView(new google.picker.DocsView()).
+               // addView(uploadView).
+                //enableFeature(new google.picker.Feature.MULTISELECT_ENABLED)
+                setOAuthToken(oauthToken).
+                setDeveloperKey(developerKey).
+                setCallback(pickerCallback).
+                build();
+            picker.setVisible(true);
+        }
+    }
+
+    // A simple callback implementation.
+    function pickerCallback(data) {
+        if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+            var arr = [];
+            var docs = data.docs;
+            for (var i = 0; i < docs.length; i++) {
+                arr.push({
+                    Link: docs[i].url,
+                    Icon: docs[i].iconUrl,
+                    Name: docs[i].name,
+                    Bytes: docs[i].sizeBytes
+                });
+            }
+            if (pageName != "SendEmail") {
+
+                var contactid = null;
+                var opportunityid = null;
+                if (pageName == "contacts")
+                    contactid = viewModel1.ContactID();
+                else
+                    opportunityid = viewModel1.OpportunityID();
+
+                $.ajax({
+                    url: "/Communication/SaveAttachment",
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'filesViewModel': arr, 'page': pageName, 'StorageSource': 'G', 'ContactID': contactid, 'OpportunityID': opportunityid }),
+                    success: function (data) {
+                        viewModel1.AttachmentViewModel().GetNewData()
+                        $('.modal-backdrop').remove();
+                    },
+                    error: function (data) {
+                    }
+                });
+            }
+            else {
+                fnsuccess(arr);
+            }
+        }
+    }
+
+
+    $(document).ready(function () {
+        console.log(clientId);
+        setTimeout(function () {
+            //$('#modal').removeClass('in').css('display', 'none');
+            $('.modal-backdrop').remove();
+            $('#sendemailmodal').removeClass('in').css('display', 'none');
+            $('#googledrivemodal').removeClass('in').css('display', 'none');
+            //$('.modal-backdrop').last().removeClass('in');
+        }, 500);
+    });
+</script>
+
+
+<!-- The Google API Loader script. -->
+<script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+

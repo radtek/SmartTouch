@@ -1,0 +1,289 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model AccountViewModel
+
+@*<script src="~/Scripts/ViewModels/AccountViewModel.js"></script>*@
+@Scripts.Render("~/bundles/accountsettingsvm")
+
+@{
+    ViewBag.Title = ViewBag.AccountsTitle != null ? ViewBag.AccountsTitle : "Account Settings";
+    var domain = ViewBag.Domain != null ? ViewBag.Domain : "";
+    string mode = ViewBag.Mode != null ? ViewBag.Mode : "";
+    bool webAnalyticsPermission = ViewBag.WebAnalyticsPermission != null ? ViewBag.WebAnalyticsPermission : "";
+    string page = ViewBag.page;
+    var accountCreation = ViewBag.AccountCreation != null ? ViewBag.AccountCreation : "";
+    ViewDataDictionary accountStatus = new ViewDataDictionary();
+    accountStatus.Add("AccountStatus", false);
+    accountStatus.Add("Domain", domain);
+}
+
+<div class="sub-container">
+    <div class="page-title">
+        Account Settings
+    </div>
+    <div class="tabbable new-tabs ptn" style="display:none" data-bind="visible:true">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#basicinfo"><span class="icon st-icon-users mrm"></span>[|Basic Info|]</a></li>
+            @*<li><a href="#configuration"><span class="icon st-icon-settings-2 mrm"></span>Configuration</a></li>*@
+            @if (@Thread.CurrentPrincipal.Identity.ToAccountID() != 1)
+            {
+                <li><a href="#datasharing"><span class="icon st-icon-outgoing mrm"></span>[|Data Sharing|]</a></li>
+            }
+
+            @if (@Thread.CurrentPrincipal.Identity.IsSTAdmin())
+            {
+                <li><a href="#Communication"><span class="icon st-icon-swap mrm"></span>[|Communication Providers|]</a></li>
+            }
+
+            @if (@Thread.CurrentPrincipal.Identity.IsSTAdmin() && webAnalyticsPermission)
+            {
+                <li><a href="#visistat"><span class="icon st-icon-browser-download mrm"></span>[|Kickfire|]</a></li>
+            }
+                     
+        </ul>
+        <!-- /tabs -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="basicinfo">
+                @{
+                    Html.RenderPartial("~/Views/Account/_AccountDetails.cshtml", null, accountStatus);
+                }
+            </div>
+
+            @if (@Thread.CurrentPrincipal.Identity.IsSTAdmin())
+            {
+                <div class="tab-pane" id="Communication">
+                    @{
+                Html.RenderPartial("~/Views/Account/_CommunicationProvider.cshtml");
+                    }
+                </div>
+            }
+
+            <div class="tab-pane" id="datasharing">
+                @{
+                    Html.RenderPartial("~/Views/Account/_DataSharing.cshtml");
+                }
+            </div>
+            @if (@Thread.CurrentPrincipal.Identity.IsSTAdmin() && webAnalyticsPermission)
+            {
+                <div class="tab-pane" id="visistat">
+                    @{
+                Html.RenderPartial("~/Views/Account/_VisiStatConfiguration.cshtml");
+                    }
+                </div>
+            }
+            
+        </div>
+    </div>
+
+
+    @*<div class="row mtm">
+            <div class="hr-border"></div>
+            <div class="pull-left">
+                <a href="#" class="save-message btn btn-lg btn-primary">Save</a>
+                <a href="javascript:void(0)" class="btn btn-lg" data-original-title="" title="">Cancel</a>
+            </div>
+        </div>*@
+
+</div>
+@section Scripts{
+    <script>
+    $(document).ready(function(){
+
+        var viewModel;
+        var newAddress = '@Html.Raw(Json.Encode(ViewBag.NewAddress))';
+        var pagename = '@(page)';
+        var accountCreation = '@(accountCreation)';
+        var BASE_URL = '@Url.Content("~/Account/")';
+        var Contact_BASE_URL = '@Url.Content("~/Contact/")';
+        var Account_Base_URL = '@Url.Content("~/Account/")';
+        var User_Base_URL = '@Url.Content("~/User/")';
+        var account = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountmode = '@(mode)';
+        var IsAccountStAdmin= '@ViewBag.IsAccountStAdmin';
+        var smartTouchPartnerKey = '@System.Configuration.ConfigurationManager.AppSettings["SMARTTOUCH_PARTNER_KEY"]';
+        var dateFormat = '@Thread.CurrentPrincipal.Identity.ToDateFormat()';
+
+        //var timeZones = new kendo.data.DataSource({
+        //    transport: {
+        //        read: {
+        //            url: BASE_URL + "GetTimeZones",
+        //            dataType: "json",
+        //            complete: function(data){
+        //                console.log(data);
+        //            }
+        //        }
+        //    }
+        //});
+
+        var getCountries = function(){
+            $.ajax({
+                url: Contact_BASE_URL + 'GetCountries',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8"
+            }).then(function (response) {            
+                var filter = $.Deferred()            
+                if (response.success) {                
+                    filter.resolve(response)            
+                } else {                
+                    filter.reject(response.error)            
+                }            
+                return filter.promise()        
+            }).done(function (data) {
+                viewModel = new accountViewModel(account,data.response, Contact_BASE_URL, BASE_URL,newAddress,User_Base_URL,Account_Base_URL, accountmode,pagename,WEBSERVICE_URL,accountCreation, IsAccountStAdmin, smartTouchPartnerKey,dateFormat);
+                //$.each(viewModel.Addresses(), function(index, value){
+
+                //    value.States=ko.observableArray(value.States);
+                //    value.Countries=ko.observableArray(value.Countries);
+                //    //value.AccountCountries=ko.observableArray(value.Countries);
+                //    value.State.Code= ko.observable(value.State.Code).extend({ required: { message: "Country is required" } });
+                //    value.Country.Code = ko.observable(value.Country.Code).extend({ required: { message: "State is required" } });
+                //    value.Country.Code.subscribe(function(selectedCountry){
+                //        viewModel.countryChanged(value,value.State.Code);
+                //    });
+                //    selfAccount.timeZones(timeZones);
+                //    selfAccount.AccountCountries(countries);
+                //    value.Countries= countries;
+                //    viewModel.countryChanged(value, value.State.Code);
+                //    value.AddressTypeID=ko.observable(value.AddressTypeID);
+                //});
+
+                $.each(viewModel.Phones(), function(index,value){
+                    value.PhoneType = ko.observable(value.PhoneType);
+                    value.PhoneNumber = ko.observable(value.PhoneNumber);
+                });
+
+                $.each(viewModel.SocialMediaUrls(), function(index,value){
+                    value.MediaType = ko.observable(value.MediaType);
+                    value.Url = ko.observable(value.Url);
+                });
+
+                $.each(viewModel.Modules(),function(index,value){
+                    value.ModuleId = ko.observable(value.ModuleId);
+                    value.ModuleName = ko.observable(value.ModuleName);
+                    value.IsSelected = ko.observable(false);
+                    value.IsPrivate = ko.observable(true);
+                    value.SubModules = ko.observableArray(value.SubModules);
+                    if(value.SubModules != null)
+                    {
+                        $.each(value.SubModules(),function(index,subValue){
+                            subValue.ModuleId = ko.observable(subValue.ModuleId);
+                            subValue.ModuleName = ko.observable(subValue.ModuleName);
+                            subValue.IsSelected = ko.observable(false);
+                            subValue.IsPrivate = ko.observable(true);
+                        });
+                    }
+                    if(value.ModuleId() == 3)
+                    {
+                        value.IsSelected = ko.observable(true);
+                    }
+
+                });
+                $.each(viewModel.SubscribedModules(),function(index,value){
+                    value.ModuleId = ko.observable(value.ModuleId);
+                    value.ModuleName = ko.observable(value.ModuleName);
+                    value.IsSelected = ko.observable(value.IsSelected);
+                    value.IsPrivate = ko.observable(value.IsPrivate);
+                    value.SubModules = ko.observableArray(value.SubModules);
+                    if(ko.toJSON(value.IsPrivate()) === 'true')
+                    {
+                        $('#sharingfieldset').prop('disabled', true);
+                    }
+                    if(value.SubModules != null)
+                    {
+                        $.each(value.SubModules(),function(index,subValue){
+                            subValue.ModuleId = ko.observable(subValue.ModuleId);
+                            subValue.ModuleName = ko.observable(subValue.ModuleName);
+                            subValue.IsSelected = ko.observable(value.IsSelected);
+                            subValue.IsPrivate = ko.observable(value.IsPrivate);
+                        });
+                    }
+                });
+                var sharedModules = [];
+                var sharedSubModules = [];
+                if(viewModel.SubscribedModules() !== null)
+                {
+                    $.each(viewModel.SubscribedModules(),function(index,value){
+                        sharedModules = ko.utils.arrayFilter(viewModel.SubscribedModules(), function(subscribedModule) {
+                            if(ko.toJSON(subscribedModule.IsPrivate()) === 'false'){
+                                var sharedId = '#mainshared'+ko.toJSON(subscribedModule.ModuleId());
+                                setTimeout(function(){
+                                    radiobtnActive(sharedId);
+                                },2000);
+                                return subscribedModule;
+                            }
+                        });
+
+                        ko.utils.arrayForEach(viewModel.Modules(),function(item){                     // value : SubscribedModules; item : Modules
+                            if(item.ModuleId() == 3)
+                            {
+                                item.IsSelected(true);
+                                var id= "#confmainyes"+ 3;
+                                setTimeout(function(){
+                                    radiobtnActive(id);
+                                },2000);
+                            }
+                            if(item.ModuleId() == ko.toJSON(value.ModuleId))
+                            {
+                                item.IsSelected(true);
+                                var id= "#confmainyes"+ item.ModuleId();
+                                setTimeout(function(){
+                                    radiobtnActive(id);
+                                },2000);
+                                if(value.SubModules != null)
+                                {
+                                    $.each(value.SubModules(),function(index,subValue){
+                                        //sharedSubModules = ko.utils.arrayFilter(value.SubModules(), function(subscribedSubModule) {
+                                        //    if(ko.toJSON(subscribedSubModule.IsPrivate()) === 'false'){
+                                        //        var sharedId = '#subshared'+ ko.toJSON(subscribedSubModule.ModuleId());
+                                        //        setTimeout(function(){
+                                        //            radiobtnActive(sharedId);
+                                        //        },2000);
+                                        //        return subscribedSubModule;
+                                        //    }
+                                        //});
+                                        if(item.SubModules().length >= 1)
+                                        {
+                                            ko.utils.arrayForEach(item.SubModules(),function(subItem){
+                                                if(subItem.ModuleId() == ko.toJSON(subValue.ModuleId))
+                                                {
+                                                    subItem.IsSelected(true);
+                                                    var id= "#confsubyes"+ subItem.ModuleId();
+                                                    setTimeout(function(){
+                                                        radiobtnActive(id);
+                                                    },2000);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    });
+                }
+                if(viewModel.LifecycleStage() === 5)
+                {
+                    viewModel.enablePartnerType(true);
+                }
+                ko.applyBindings(viewModel);
+                      
+            }).fail(function (error) {                           
+                notifyError(error);        
+            })
+        };
+        getCountries();
+
+        $(':radio').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+
+        $('body').addClass('accountsettingspage');
+    });
+
+</script>
+}

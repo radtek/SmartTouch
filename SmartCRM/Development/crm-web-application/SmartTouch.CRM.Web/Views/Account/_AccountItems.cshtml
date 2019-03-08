@@ -1,0 +1,160 @@
+﻿<div class="sub-container" data-bind="with:CopyItems">
+
+    <div class="main-header">
+        [|Copy Items|]
+    </div>
+
+    <div>
+        <div class="k-grid roles-grid">
+            <table>
+                <tbody data-bind="foreach:Modules">
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="checkbox" data-bind="attr:{for:'Checkbox2'+($index() + 1)}">
+                                    <input type="checkbox" data-toggle="checkbox" data-bind="checked:IsSelected,attr:{id:'Checkbox2'+(ModuleId() + 1)},click:$parent.parentModuleChecked">
+                                    <label class="col-sm-offset-1 control-label pln bold" data-bind="template:{name:ModuleId()+''}">
+                                    </label>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- ko if:SubModules().length > 0 -->
+                    <tr>
+                        <td data-bind="foreach:SubModules">
+                            <div class="form-group col-sm-3 col-xs-3">
+                                <label class="checkbox" data-bind="attr:{for:'Checkbox2'+($index() + 1)}">
+                                    <input type="checkbox" data-toggle="checkbox" data-bind="checked:IsSelected,attr:{id:'Checkbox2'+(ModuleId() + 1)},click:$root.childModuleChecked($parent,$data)">
+                                    <label class="col-sm-offset-1 control-label phn" data-bind="template:{name:ModuleId()+''}"></label>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <!--/ko-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="hr-border"></div>
+</div>
+
+<script type="text/html" id="1">
+    <i class="icon st-icon-polaroid mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="2">
+    <i class=" icon st-icon-user-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="3">
+    <i class="icon st-icon-users mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="4">
+    <i class=" icon st-icon-bullhorn-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="9">
+    <i class="icon st-icon-tag mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="10">
+    <i class="icon st-icon-paragraph-justify-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="16">
+    <i class="icon st-icon-opputunities mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="19">
+    <i class="icon st-icon-polaroid-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="20">
+    <i class="icon st-icon-menu-pull-down mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="21">
+    <i class="icon st-icon-marquee-plus mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="22">
+    <i class="icon st-icon-database-add mrm tooltiptoggle "></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="23">
+    <i class="icon st-icon-inbox mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="24">
+    <i class="icon st-icon-clipboard-2 mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="27">
+    <i class="icon st-icon-role mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="31">
+    <i class="icon st-icon-search-2 mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="5">
+    <i class="icon st-icon-tick display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="6">
+    <i class="icon st-icon-book-lines display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="7">
+    <i class="icon st-icon-pin-2 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="8">
+    <i class="icon st-icon-support-3 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="17">
+    <i class="icon st-icon-tick display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="18">
+    <i class="icon st-icon-book-lines display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="25">
+    <i class="icon st-icon-envelope display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="26">
+    <i class="icon st-icon-speech-bubble-center-2 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="29">
+    <i class="icon st-icon-speech-bubble-center-2 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="30">
+    <i class="icon st-icon-user display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="32">
+    <i class="icon st-icon-tag mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="33">
+    <i class="icon st-icon-split mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="34">
+    <i class="icon st-icon-dashboard mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="35">
+    <i class="icon st-icon-browser-download mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="36">
+    <i class="icon st-icon-browser-download mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>

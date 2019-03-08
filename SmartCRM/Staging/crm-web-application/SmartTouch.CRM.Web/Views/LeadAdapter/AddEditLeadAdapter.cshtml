@@ -1,0 +1,215 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model LeadAdapterViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@Scripts.Render("~/bundles/leadadapterviewmodel")
+@{
+    var fbAppID = ViewBag.FacebookAPPId;
+}
+<script></script>
+@using (Html.BeginForm("AddLeadAdapter", "Account", FormMethod.Post,
+                                      new { name = "form-data", id = "form" }))
+{
+    <div class="sub-container" id="divLeadAdapter">
+        <ul class="breadcrumb">
+            <li>@Html.ActionLink("[|Lead Adapters|]", "LeadAdapterList", "LeadAdapter")</li>
+            <li class="active">
+                <a href="javascript:void(0)">
+                    <!-- ko if: LeadAdapterID() === 0 -->
+                    <span>[|Add Lead Adapter|]</span>
+                    <!-- /ko -->
+                    <!-- ko if: LeadAdapterID() > 0 -->
+                    <span>[|Edit Lead Adapter|]</span>
+                    <!-- /ko -->
+                </a>
+            </li>
+        </ul>
+        <!-- ko if: LeadAdapterID() === 0 -->
+        <div class="main-header">[|Add Lead Adapter|]</div>
+        <!-- /ko -->
+        <!-- ko if: LeadAdapterID() > 0 -->
+        <div class="main-header">[|Edit Lead Adapter|]</div>
+        <!-- /ko -->
+
+
+        <div class="mtl">
+            <div class="form-horizontal-large">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="control-label">[|Lead Adapter|]<span class="required">*</span></label>
+                        <input data-bind="kendoDropDownList: {dataTextField:'Type',dataValueField:'Id', data:LeadAdapterTypes, value: LeadAdapterType,optionLabel:'[|Select Leadadapter|]'}" />
+                        <span class="validationMessage" data-bind="validationMessage:LeadAdapterTypeValidation"></span>
+                    </div>
+                    <div class="form-group" data-bind="visible: LeadAdapterType() == 13">
+                        <label class="control-label"></label>
+                        <img src="/img/fb_Button.png" data-bind="click:myFacebookLogin" style="padding-top: 20px;" />
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible: LeadAdapterType() != 13">
+                        <label class="control-label">[|Builder Number|]<span class="required">*</span></label>
+                        <textarea rows="2" cols="75" placeholder="[|Builder Number|]" class="form-control" data-bind="value:BuilderNumber, valueUpdate: 'afterkeydown'" maxlength="2000"></textarea>
+                    </div>
+                    @*NEXG-2817*@
+                    @*<div class="form-group" data-bind="visible: LeadAdapterType() != 13">
+                        <label class="control-label">[|Community Number|]</label>
+                        <textarea rows="2" cols="75" placeholder="[|Community Number|]" class="form-control" data-bind="value:CommunityNumber, valueUpdate: 'afterkeydown'" maxlength="2000"></textarea>
+                    </div>*@
+                </div>
+                <div class="legend">[|Host Information|]</div>
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible: LeadAdapterType() != 13">
+                        <label class="control-label">[|Host|]<span class="required">*</span></label>
+                        <input type="text" placeholder="[|Host|]" class="form-control" data-bind="value:Url, valueUpdate: 'afterkeydown'">
+                    </div>
+                    <div class="form-group" data-bind="visible: LeadAdapterType() != 13">
+                        <div data-bind="visible:showport">
+                            <label class="control-label">[|Port|]</label>
+                            <input type="text" min="0" placeholder="[|Port|]" class="form-control" data-bind="value:Port" maxlength="5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible: LeadAdapterType() == 13">
+                        <label class="control-label">[|Name|]<span class="required">*</span></label>
+                        <input type="text" placeholder="[|Facebook Lead Adapter Name|]" class="form-control" data-bind="value:FacebookLeadAdapterName, valueUpdate: 'afterkeydown'">
+                    </div>
+                    <div class="form-group" data-bind="visible: LeadAdapterType() == 13">
+                            <label class="control-label">[|Add ID|]<span class="required">*</span></label>
+                            <input type="text" min="0" placeholder="[|Add ID|]" class="form-control" data-bind="value:AddID">
+                    </div>
+                </div>
+                @*<div class="clearfix">
+                        <div class="form-group" data-bind="visible: LeadAdapterType() == 13">
+                            <label class="control-label">[|Page ID|]<span class="required">*</span></label>
+                            <input type="text" min="0" placeholder="[|Page ID|]" class="form-control" data-bind="value:PageID">
+                        </div>
+                        <div class="form-group" data-bind="visible: LeadAdapterType() == 13">
+                            <label class="control-label">[|Page Access Token|]<span class="required">*</span></label>
+                            <input type="text" placeholder="[|Page Access Token|]" class="form-control" data-bind="value:PageAccessToken, valueUpdate: 'afterkeydown'">
+                        </div>
+                    </div>*@
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible: (LeadAdapterType() != 12 && LeadAdapterType() != 13)">
+                        <label class="control-label">[|User Name|]<span class="required">*</span></label>
+                        <input type="text" placeholder="[|Username|]" class="form-control" data-bind="value:UserName, valueUpdate: 'afterkeydown'" maxlength="75">
+                    </div>
+                    <div class="form-group" data-bind="visible: (LeadAdapterType() != 12 && LeadAdapterType() != 13)">
+                        <label class="control-label">[|Password|]<span class="required">*</span></label>
+                        <input type="password" placeholder="[|Password|]" class="form-control" data-bind="value:Password, valueUpdate: 'afterkeydown'" maxlength="75">
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="control-label">[|Lead Source|]<span class="required">*</span></label>
+                        <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField: 'DropdownValueID',  data:$root.LeadSourceDropdownValues, value: LeadSourceType,optionLabel:'[|Select Lead Source|]' },valueUpdate: 'afterkeydown'" />
+                        <span class="validationMessage" data-bind="validationMessage:LeadSourceTypeValidation"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">[|Tags To Apply|]</label>
+                        <input id="leadadaptertags" class="select-block" data-bind="valueUpdate: 'afterkeydown'" />
+                    </div>
+                </div>
+
+                <div class="clearfix hide">
+                    <div class="form-group">
+                        <label class="control-label">[|EnableSSL|]</label>
+                        <input type="checkbox" placeholder="" data-bind="checked:EnableSSL">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="hr-border"></div>
+            <div>
+                <a class="btn btn-lg btn-primary" data-bind="click:saveLeadAdapter"><span data-bind="text:saveText"></span></a>
+                <a class="btn btn-lg" href="/leadadapters"><span>[|Cancel|]</span></a>
+            </div>
+        </div>
+
+
+
+
+        <ul id="fb_page_list"></ul>
+        <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="names" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content" @*style="width:900px"*@>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">Select your page on which your Add is running</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="dp-topnav-inner-body">
+                            <div class="k-grid k-widget k-secondary" id="grid1">
+                                <div>
+                                    <div>
+                                        <table>
+                                            <tbody data-bind="foreach:Pages">
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input type="radio" name="facebookpage" data-bind="checked:IsSelected" />
+                                                            <span data-bind="text:name"></span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                            <div class="pull-left">
+                                <a data-dismiss="" aria-hidden="" data-bind="click:saveFBPage" class="btn btn-lg btn-primary" id="btnSave"><span>Ok</span></a>
+                                <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="fb-root"></div>
+}
+
+
+<script>
+    var fbAppID = '@(fbAppID)';
+    window.fbAsyncInit = function () {
+        console.log(fbAppID);
+        FB.init({
+            appId: fbAppID, //'212470989202752',
+            xfbml: true,
+            version: 'v2.7'
+        });
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9&appId=" + fbAppID;
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    $(document).ready(function () {
+        var viewModel;
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var leadAdapterModel = @(Html.Raw(Json.Encode(Model)));
+        var BASE_URL = '@Url.Content("~/Account/")';
+        var LeadAdapterBaseURL = '@Url.Content("~/LeadAdapter/")';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var fbAppID = '@(fbAppID)';
+
+
+
+        viewModel = new leadAdapterViewModel(leadAdapterModel,WEBSERVICE_URL,BASE_URL,LeadAdapterBaseURL, fbAppID);
+        ko.applyBindings(viewModel,document.getElementById("divLeadAdapters"));
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId);
+        tagify.Tagify("leadadaptertags");
+    });
+</script>

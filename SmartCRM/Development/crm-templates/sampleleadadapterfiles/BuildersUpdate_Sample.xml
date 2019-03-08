@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<BHILeads xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Lead Source="BDX" LeadType="Rec. Community">
+    <Contact FirstName="Alicia" LastName="Williams" Phone="(916) 419-3920 " PostalCode="95835" Email="alicia54@surewest.net" Country="USA" />
+    <Qualifications Comments="safe  neighborhoods This prospect was matched to your community based on their request for homes similar to: a spec home in the mid $200's, with 3 bedrooms, 2 baths. " />
+    <PropertyInterest StateName="ID" MarketName="Boise" BuilderNumber="HHM01" BuilderName="Hayden Homes LLC" CommunityNumber="PAMEA00" CommunityName="Paisley Meadows" />
+    <Telemetry CountElements="14" />
+  </Lead>
+  <Lead Source="BDX" LeadType="Home">
+    <Contact FirstName="Alicia" LastName="Williams" Phone="(916) 419-3920 " PostalCode="95835" Email="alicia54@surewest.net" Country="USA" />
+    <Qualifications Comments="Lead Type: Brochure - safe  neighborhoods " />
+    <PropertyInterest StateName="ID" MarketName="Boise" BuilderNumber="HHM01" BuilderName="Hayden Homes LLC" CommunityNumber="ROSEL00" CommunityName="Roselands" PlanNumber="ROSEL00s180001" PlanName="Orchard" SpecNumber="ROSEL03-005-0011" SpecAddress="11219 W Water Birch St" Price="259990" />
+    <Telemetry CountElements="19" />
+  </Lead>
+</BHILeads>

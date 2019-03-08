@@ -1,0 +1,409 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    var ViewSearch = ViewBag.ViewSearch == null ? "" : "viewsearch";
+    bool grid = ViewBag.grid;
+    var PageSize = ViewBag.ItemsPerPage != null ? (short)ViewBag.ItemsPerPage : 10;
+    var emailPermissions = ViewBag.EmailPermission;
+    bool isRunSearch = ViewBag.IsRunSearch != null ? ViewBag.IsRunSearch : false;
+    bool IsAccountAdmin = ViewBag.IsAccountAdmin != null ? ViewBag.IsAccountAdmin : false;
+}
+
+@Scripts.Render("~/bundles/advancedsearchvm")
+
+<div class="sub-container" id="all" style="display:none" data-bind="visible:true">
+    
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("[|Saved Searches|]", "SavedSearch", "AdvancedSearch", null, null)</li>
+    </ul>
+    <div class="main-header mbl">
+        <div class="display-inline form-inline">
+            <div class="form-group">
+                <label>[|Search Name|] <span class="required">*</span></label>
+            </div>
+            <div class="form-group validation-form-control">
+                <input type="text" placeholder="[|Search Name|]" class="form-control " data-bind="value:SearchDefinitionName,valueUpdate: 'afterkeydown',attr:{ placeholder:'[|Search Name|]' }" maxlength="75" />
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix mbl mtl">
+        <span class="st-custag"><span class="icon st-icon-tag prs"></span>[|Tags|] :</span>
+        <input name="tagsinput" class="mbn" id="searchTags" />
+    </div>
+
+    <div class="form-horizontal-large mtl">
+
+        <div class="clearfix">
+            <div class="formsubheading pln">[|Filters|]</div>
+
+            <div class="clearfix">
+
+                <div class="collapse in" id="addressfieldsac">
+                    <div>
+                        <div class="form-group mll">
+                            <div class="control-label bold">[|Filter Logic|]</div>
+                            <input data-bind="kendoDropDownList: {dataTextField:'PredicateType',dataValueField:'SearchPredicateTypeID', data: SearchPredicates, value: SearchPredicateTypeID}" id="searchfields" />
+                        </div>
+                    </div>
+
+                    <div class="form-group mll">
+                        <textarea class="form-control" data-bind="value: CustomPredicateScript,enable:enableCustomScript"></textarea>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mbs">
+                <div data-bind="foreach:SearchFilters">
+                    <div class="clearfix filter-group">
+                        <span class="display-inline mrs mts" data-bind="text: $index() + 1 + '.'"></span>
+                        <div class="form-group medium">
+                            <input id="searchFieldsDropdown" data-bind="kendoDropDownList: {dataTextField:'Title',dataValueField:'ComputedFieldId',data: $parent.SearchFields, value: ComputedFieldId,select:searchFieldSelect, template: kendo.template($('#itemTemplate').html()), change: $parent.dropdownlist_change}" /> @*//kendo.template($('#itemTemplate').html())*@
+                        </div>
+                        <div class="form-group medium">
+                            <input data-bind="kendoDropDownList: {dataTextField:'SearchQualifier',dataValueField:'SearchQualifierTypeID', data: SearchQualifiers, value: SearchQualifierTypeID}" />
+                        </div>
+                        <div class="form-group medium">
+                            <!-- ko if : InputTypeId() == 8 || InputTypeId() == 10 -->
+                            <input data-bind="value:SearchText,enable: Enabled" class="form-control">
+                            <!--/ko-->
+                            <!-- ko if : InputTypeId() == 5 && FieldId() != 46 -->
+                            <input type="number" data-bind="value:SearchText,enable: Enabled" class="form-control">
+                            <!--/ko-->
+                            <!-- ko if : InputTypeId() == 14 -->
+                            <textarea data-bind="value:SearchText,enable: Enabled" class="form-control"></textarea>
+                            <!--/ko-->
+                            <!-- ko if : InputTypeId() == 3 -->
+                            <input data-bind="value:SearchText,enable: Enabled" class="form-control" />
+                            <!-- /ko -->
+                            <!-- ko if : (InputTypeId() == 6 || InputTypeId() == 11) && FieldId() != 18 && FieldId() != 20 -->
+                            <div id="control-template">
+                                <input name="dropdown" data-bind="kendoDropDownList: { dataTextField: 'Value', dataValueField:'Id',template: templ,data: ValueOptions,value: SearchText,optionLabel: '[|Select...|]',enabled: Enabled}">
+                            </div>
+                            <!--/ko-->
+                            <!-- ko if : (InputTypeId() == 6 || InputTypeId() == 11 ) && (FieldId() == 18 || FieldId() == 20 )-->
+                            <div id="control-template">
+                                <input name="dropdown" data-bind="kendoDropDownList: { dataTextField: 'Value', dataValueField:'Code',data: ValueOptions,value: SearchText,optionLabel: '[|Select...|]',enabled: Enabled}">
+                            </div>
+                            <!--/ko-->
+                            <!-- ko if : InputTypeId() == 1 || InputTypeId() == 12 -->
+                            <div id="control-template">
+                                <select data-bind="kendoMultiSelect: {dataTextField:'Value',dataValueField:'Id', data: ValueOptions, value: SearchText,optionLabel: '[|Select...|]',enabled: Enabled}" class="multiselectwidth"></select>
+                            </div>
+                            <!-- /ko-->
+                            <!-- ko if : InputTypeId() == 2 || InputTypeId() == 13-->
+                            <input id="kendodatetimepicker" data-bind="kendoDatePicker: { value: SearchText,enabled: Enabled,format:$root.GetDateFormat()}" />
+                            <!-- /ko -->
+                            <!-- ko if : InputTypeId() == 9 -->
+                            <input id="kendotimepicker" data-bind="kendoTimePicker: { value: SearchText,enabled: Enabled, interval: 1}" />
+                            <!-- /ko -->
+                            <!-- ko if : FieldId() == 46-->
+                            <div class ="col-cu-6">
+                                <div class="ed-label">Min</div>
+                                <div class="ed-select">
+                                    <input id="minutes" type="text" data-bind="kendoNumericTextBox:{ value:Minutes,decimals:0,format:'#',min:0, max:59 }, valueUpdate:'afterkeydown'" placeholder="00" />
+                                </div>
+                            </div>
+                            <div class="col-cu-6  pdr0">
+                                <div class="ed-label">Sec</div>
+                                <div class="ed-select">
+                                    <input id="seconds" type="text" data-bind="kendoNumericTextBox:{ value:Seconds, decimals:0,format:'#',min:0, max:59 }, valueUpdate:'afterkeydown'" placeholder="00" />
+                                </div>
+                            </div>
+                            <!-- /ko-->
+                        </div>
+                        <div class="form-group mini mts">
+                            <a href="javascript:void(0)" class="mrm delreportquery" data-bind="click:$parent.DeleteCustomFilter,visible:$parent.IsDeleteVisible"><span class="icon st-icon-bin-3 black"></span></a>
+                            <span data-bind="text:$parent.FilterLogic, visible: $index() == 0"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mbl">
+                    <a href="javascript:void(0)" data-bind="click:AddCustomFilter"><span class="icon st-icon-add prs"></span>[|Add Custom Filter|]</a>
+                    <span class="validationMessage" data-bind="validationMessage:FilterValidation"></span>
+                </div>
+
+            </div>
+
+            <div class="clearfix mbl">
+                <a href="javascript:void(0)" data-bind="click:function(data,event){ RunAdvancedSearch('RunSearch', 1)} " class="btn btn-primary" onclick="CloseTopInner(this)">[|Run Search|]</a>
+
+            </div>
+
+            <div class="clearfix" data-bind="visible: gridvisible() == 'true'">
+                @*() == 'True'*@
+                <div class="formsubheading">[|Search Results|]</div>
+
+                <div class="clearfix mbl">
+                    @*<div class="total-results">*@
+                    @*<span data-bind="text:TotalHits"></span>*@
+                    <span id="totalhits"></span>
+
+                    <span class="pull-right ">
+                        @*<input data-bind="kendoMultiSelectBox:{ data : SearchFields, value: Fields, dataValueField: 'FieldId', dataTextField: 'Title'}">*@
+                        <a data-posturl="savedserches" href="../advancedview" class="btn btn-primary">[|Advanced View|]</a>
+                    </span>
+                    @*</div>*@
+                </div>
+
+                <div id="clientsDb">
+                    <div class="resultsgrid contacts-gridresults">
+                        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ContactAdvancedSearchEntry>()
+    .Name("grid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+                                .AutoBind(false)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+            .ButtonCount(10)
+            .Numeric(true).Messages(m => m
+            .Display("[|Showing|] {0:#,#} - {1:#,#} [|from|] {2:n0} [|Contact(s)|]")
+                .Empty("[|No contacts to display|]").ItemsPerPage("[|Contacts per page|]")))
+    .Columns(columns =>
+    {
+        columns.Bound(b => b.FirstName).Title("First Name").ClientTemplate("#= firstName(data.FirstName, data.ContactID) # ").HtmlAttributes(new { @id = "firstname", @title = "#:FirstName#" })
+            .HeaderHtmlAttributes(new { @title = "First Name", @data_fieldId = "1" }).HtmlAttributes(new { @data_fieldId = "1" });
+
+        columns.Bound(b => b.LastName).Title("Last Name").ClientTemplate("#= lastName(data.LastName, data.ContactID) #").HtmlAttributes(new { @id = "lastname", @title = "#:LastName#" })
+            .HeaderHtmlAttributes(new { @title = "Last Name", @data_fieldId = "2" }).HtmlAttributes(new { @data_fieldId = "2" });
+
+        columns.Bound(b => b.CompanyName).Title("Company Name").ClientTemplate("#= companyName(data.ContactID,data.CompanyID,data.CompanyName,data.ContactType)#")
+            .HtmlAttributes(new { @id = "companyname", @data_fieldId = "3" }).HeaderHtmlAttributes(new { @title = "Company Name", @data_fieldId = "3" });
+
+        columns.Bound(b => b.PrimaryEmail).Title("Primary Email").ClientTemplate("#=emailFormat(data.Name, data.PrimaryContactEmailID, data.PrimaryEmail, data.DoNotEmail, data.PrimaryEmailStatus)#")
+            .HtmlAttributes(new { @id = "primaryemail", @data_fieldId = "7" }).HeaderHtmlAttributes(new { @title = "Primary Email", @data_fieldId = "7" });
+
+    })
+                                //.Sortable(sortabe => sortabe.AllowUnsort(true))
+    .Resizable(r => r.Columns(true))
+                                .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                .DataSource(dataSource => dataSource
+                                .Ajax()
+                                        .Events(e => e.Error("onError"))
+                                .PageSize(PageSize)
+                                .Read(read => read.Action("ContactsResultViewRead", "AdvancedSearch").Data("searchParameters"))
+                                ))
+                    </div>
+                </div>
+                <div class="hr-border"></div>
+                <div>
+                    <a data-posturl="savedserches" href="#" data-bind="click:saveAdvancedSearch" class="btn btn-lg btn-primary">[|Save|]</a>
+                    @*<a data-posturl="savedserches" href="#" data-bind="click:viewContacts" class="btn btn-lg btn-primary"></a>*@
+                    <a data-posturl="savedserches" href="../advancedview" class="btn btn-lg btn-primary">[|Advanced View|]</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <iframe id="hiddenFrameResult" src="" style="display:none; visibility:hidden;"></iframe>
+</div>
+
+<script id="itemTemplate" type="text/html">
+    #if(AccountID == null){#
+    <div class="defaults">
+        #= Title #
+    </div>
+    #}
+    else if(AccountID != null && IsLeadAdapterField.toString() == "false"){#
+    <div class="custom">
+        #= Title #
+    </div>
+    #}
+    else if(AccountID != null && IsLeadAdapterField.toString() == "true"){#
+    <div class="leadadapter">
+        #= Title #
+    </div>
+    #}
+    else{#
+    <div> #= Title #</div>
+    #}#
+</script>
+<script id="totalcount" type="text/html">
+    <span> #= kendo.toString(count, "n0") #</span>
+    #if(count != "No records found")
+    {#
+    <span>Contact(s)</span>
+    #}#
+</script>
+
+<script type="text/javascript">
+    localStorage.removeItem("ContactsGrid");
+    var viewModel;
+    var emailPermissions = false;
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/AdvancedSearch/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var pageSize = '@(PageSize)';
+        var isRunSearch = '@(isRunSearch)';
+        emailPermissions = '@(emailPermissions)';//&& $root.EmailPermission == 'True'
+        var gridVisible = '@grid';
+
+        viewModel = new AdvancedSearchViewModel(data,BASE_URL, WEBSERVICE_URL, emailPermissions, gridVisible, isRunSearch, pageSize);
+
+        ko.applyBindings(viewModel);
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId,tagCreatedBy);
+        tagify.Tagify("searchTags");
+        viewModel.customFieldValueOptions = null;
+
+        var listclass = $('ul.k-list')
+
+        listclass.each(function(){
+            var $this=$(this);
+
+            $this.find('li .defaults').parent('li').addClass('defaults-list');
+            $this.find('li .custom').parent('li').addClass('custom-list');
+            $this.find('li .leadadapter').parent('li').addClass('leadadapter-list');
+
+            $this.find('li.defaults-list').first().addClass('defaults-list-first');
+            $this.find('li.custom-list').first().addClass('custom-list-first');
+            $this.find('li.leadadapter-list').first().addClass('leadadapter-list-first');
+        });
+    });
+
+    var rowNumber = 0;
+    var rnumber = 0;
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    var data = ko.toJSON(ko.contextFor($("#all")));
+    function searchParameters() {
+        if(viewModel != null && typeof(viewModel) != typeof(undefined))
+            $.each(viewModel.SearchFilters(), function (index, searchFilter) {
+                if (searchFilter.InputTypeId() == 1 || searchFilter.InputTypeId() == 12) {  // 1 - Checkbox , 2 - Multiselect
+                    if (searchFilter.SearchText() != null && Array.isArray(searchFilter.SearchText())) {
+                        var searchText = searchFilter.SearchText().join('|');
+                        searchFilter.SearchText(searchText);
+                    }
+                }
+            });
+        var parameters = {
+            aviewModel: ko.toJSON(viewModel)
+        }
+        return parameters;
+    };
+
+    //$('#myfunc').on('click', function(e) {
+    //    console.log(e);
+    //    var myData = ko.contextFor(e.target);
+    //    data = ko.toJSON(myData.$data);
+    //    myData.$data.gridvisible('true');
+
+    //    var grid = $("#grid").data("kendoGrid");
+    //    grid.dataSource.read();
+    //});
+
+    function onDataBound(e) {
+        $("#clientsDb").show();
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var grid = e.sender;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").not("#asExport").data('kendoDropDownList').setDataSource(dataSource);
+
+        var template = kendo.template($("#totalcount").html());
+        var totalcount = grid.dataSource._total == 0 ? "[|No records found|]" : grid.dataSource._total;
+        var data = {count : totalcount};
+        var result = template(data);
+        $("#totalhits").html(result);
+
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + (colCount) + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">No records found</span></div></td></tr>')
+        }
+        $('#masterCheckBox').attr('checked', false);
+        $('#masterCheckBox').parent('label.checkbox').removeClass('checked');
+        $(this).parents('tr').removeClass('k-state-selected');
+
+        if(viewModel != null && typeof(viewModel) != typeof(undefined))
+            $.each(viewModel.SearchFilters(), function (index, searchFilter) {
+                if (searchFilter.InputTypeId() == 1 || searchFilter.InputTypeId() == 12) {
+                    if (searchFilter.SearchText().indexOf('|') > -1) {
+                        var text = searchFilter.SearchText().split('|');
+                        searchFilter.SearchText(text);
+                    }
+                }
+            });
+    }
+
+    function onDataBinding(arg) {
+        rowNumber = (arg.sender.dataSource.page() - 1) * arg.sender.dataSource.pageSize();
+        ++rnumber;
+        setTimeout(function () {
+            appendCheckbox();
+            bindCheckboxchnage('chkcontacts');
+            $(".drop-lab").attr('data-target', '#modal');
+        }, 200)
+    }
+
+    function onError(e, status){
+        if(e.status == "customerror"){
+            notifyError(e.errors);
+        }
+        else
+            notifyError("[|An error occured please contact adminstrator|]");
+        viewModel.gridvisible(false);
+    }
+
+    function emailFormat(name, emailID, email, doNotEmail, emailStatus) {
+        var isSendEmail = emailPermissions;
+        if (email == 'Email Not Available')
+            return "Email Not Available";
+        else {
+            if (isSendEmail == 'False' || doNotEmail == 'true' || emailStatus == 53 || emailStatus == 54 || emailStatus == 57)
+                return "<label>" + email + "</label>"
+            else
+            {
+                // console.log("<a data-toggle='modal' data-target='#modal' href='/contact/_ContactSendMailModel?contactName=" + getEmailData(name, email) + "&emailID=" + emailID + "'>" + email + "</a>");
+                return "<a data-toggle='modal' data-target='#modal' href='/contact/_SendMailModel?contactName=" + getEmailData(name, email) + "&email=" + emailID + "'>" + email + "</a>";
+            }
+        }
+    }
+
+    function getEmailData(contactname, PrimaryEmialID) {
+        var Text = contactname + " " + "<" + PrimaryEmialID + ">" + " " + "*";
+        var name = encodeURIComponent(Text);
+        return name;
+    }
+
+    function companyName(contactId, companyId, companyName, type) {
+        if (type == 1 && companyId != null && companyName != null)
+            return "<a href= /company/" + companyId + ">" + companyName + "</a>";
+        else if (type == 2 && contactId != null && companyName != null)
+            return "<a href= /company/" + contactId + ">" + companyName + "</a>";
+        else if(companyName != null)
+            return companyName;
+        else
+            return "";
+    }
+
+    function firstName(name, contactId) {
+        if (name != null)
+            return "<a href= /person/" + contactId + ">" + name + "</a>";
+        else
+            return "";
+    }
+
+    function lastName(name, contactId) {
+        if (name != null)
+            return "<a href= /person/" + contactId + ">" + name + "</a>";
+        else
+            return "";
+    }
+
+</script>

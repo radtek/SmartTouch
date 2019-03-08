@@ -1,0 +1,183 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model RelationshipViewModel
+
+@*<script src="~/Scripts/ViewModels/RelationshipViewModel.js"></script>*@
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+    var Mode = ViewBag.Mode;
+}
+<div id="Relationship">
+    <div id="@(Model.Id > 0 ? "editRelation" : isModal ? "addRelationModel" : "addRelation")" class="@(isModal ? "" : "moreinner")">
+        <div class="@(isModal ? "" : "")">
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><i class="icon st-icon-support-3 display-inline"></i> @(Model.Id > 0 ? "Edit Relationship to " + Model.Name : "Add Relationship")  </h4>
+                </div>
+            }
+            else
+            {
+                <div class="more-heading">
+                    <i class="icon st-icon-support-3 display-inline"></i> <h4 class="panel-title display-inline plm">[|Add Relationship|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "")">
+                <div class="moreinner-body">
+
+                    <div class="@(Model.Id > 0 ? "hide" : "")">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">[|People & Companies|] <span class="required">* </span></label>
+                            <div>
+                                <span data-bind="if:SelectAll == true"> (All)</span>
+                            </div>
+                            <div class="people-tags" data-bind="if:SelectAll == false">
+                                <input id="@(isModal == true ? "txtPeopleModel" : "txtPeople")" class="display-inline form-control tagsinput-info-round" data-bind="valueUpdate: 'afterkeydown'" />
+
+                                <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5 col-sm-5 ">
+                            <div class="form-group">
+                                <label>[|Relationship|]</label>
+                                <input data-bind="kendoDropDownList: {dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data:RelationshipTypes, value: RelationshipType}" />
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-sm-5 st-spouse-input">
+                            <div class="form-group">
+
+                                <label class="control-label" data-bind="text:RelatedContactTitle">&nbsp;</label>
+                                <input id="@(isModal == true ? "addContactsModel" : "addContacts")" class="display-inline form-control tagsinput-info-round" data-bind="value:RelationContactFullNames,valueUpdate:'afterkeydown'" />
+
+                                @*<input id="addContacts" class="display-inline form-control tagsinput-info-round" data-bind="valueUpdate: 'afterkeydown'" />*@
+
+                            </div>
+                        </div>
+                        <div class="@(Model.Id > 0 ? "hide" : "col-md-2 col-sm-2 add-relation-btn")">
+                            <label>&nbsp;</label>
+                            <a class="btn btn-primary add-relation" data-bind="click: addItem"><span data-bind="text:addText"></span></a>
+                        </div>
+                    </div>
+                    <div id="divError"></div>
+                    <div data-bind=" if: SelectAll == false">
+                        <ul class="@(Model.Id > 0 ? "hide" : "boxscroll relationship row")" data-bind="foreach: Relationshipentry">
+                            <li class="add-relation">
+                                <div class="col-md-11 col-sm-10">
+                                    <div class="loadedcontacts">
+                                        <span class="mtl " data-bind="text: DisplayContact"></span>
+                                        <br>
+                                        <span class="mtl  bold" data-bind="text: DisplayRelationShipTypeValues"></span>
+                                        <span class="mtl ">[|is|]</span>
+                                        <span class="mtl" data-bind="text: RelatedContact"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-2 delete-st">
+                                    <a href="javascript:void(0)" data-bind="click: $parent.removeRelationshipentry"><i class="icon st-icon-bin-3 black" id="abc"></i></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div data-bind=" if : SelectAll==true">
+                        <span class="mtl " data-bind=" if :selfRelation.Relationshipentry().length >0">[|For all contacts|]</span>
+                        <ul class="@(Model.Id > 0 ? "hide" : "boxscroll relationship row")" data-bind="foreach: uniqueRelationTypes">
+                            <li class="add-relation">
+                                <div class="col-md-11 col-sm-10">
+                                    <div class="loadedcontacts">
+
+                                        <span class="mtl  bold" data-bind="text: ko.utils.arrayFirst(selfRelation.Relationshipentry(),function(item){return item.RelationshipType == $data}).RelatedContact"></span>
+                                        <span class="mtl ">[| is |]</span>
+                                        <span class="mtl bold" data-bind="text: ko.utils.arrayFirst(selfRelation.Relationshipentry(),function(item){return item.RelationshipType == $data}).DisplayRelationShipTypeValues"></span>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-2 delete-st">
+                                    <a href="javascript:void(0)" data-bind="click: $parent.removeRelationshipentry"><i class="icon st-icon-bin-3 black" id="abc"></i></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" data-bind="click: saveRelationship"><span data-bind="text:saveText"></span></a>
+                    <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                       data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#divGrid").html('');
+    $(document).ready(function () {
+        var mode = '@(Mode)';
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var Relations = @(Html.Raw(Json.Encode(Model)));
+
+        var DropDownURL = '@Url.Content("~/DropdownValues/")';
+        console.log("drp");
+        console.log(DropDownURL);
+
+        //var relationShipTypesData;
+        //var relationShipTypes = function(){
+        //    $.ajax({
+        //        url: DropDownURL + 'GetPhoneTypes',
+        //        type: 'get',
+        //        dataType: 'json',
+        //        contentType: "application/json; charset=utf-8",
+        //        data: { 'DropDownID': 9 },
+        //        success: function (relationtypes) {
+        //            relationShipTypesData = relationtypes;
+        //            console.log("rt"+ relationtypes);
+        //        }
+        //    });
+        //}
+
+       // relationShipTypesData = relationShipTypes();
+
+        var viewModel = new relationshipViewModel(Relations, BASE_URL, mode, DropDownURL);
+
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId);
+        if(Relations.Id == 0)
+        {
+            var popup= '@(isModal)';
+            if(popup=="True")
+            {
+                ko.applyBindings(viewModel,document.getElementById("addRelationModel"));
+                
+                tagify.TagifyContacts("txtPeopleModel");
+                tagify.TagifyRelatedContacts("addContactsModel", viewModel.RelationshipType, BASE_URL);
+            }
+            else
+            {
+                ko.applyBindings(viewModel,document.getElementById("addRelation"));
+               
+                tagify.TagifyContacts("txtPeople");
+                tagify.TagifyRelatedContacts("addContacts", viewModel.RelationshipType, BASE_URL);
+            }
+        }
+        else
+        {
+            ko.applyBindings(viewModel,document.getElementById("editRelation"), BASE_URL);
+           
+            tagify.TagifyContacts("txtPeopleModel");
+            tagify.TagifyRelatedContacts("addContactsModel", selfRelation.RelationshipType, BASE_URL);
+        }
+       
+      
+      
+       
+    });
+</script>
+
+
+

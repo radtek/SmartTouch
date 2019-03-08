@@ -1,0 +1,960 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4BD898B5-94A7-412E-9377-38416D7980F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SmartTouch.CRM.ApplicationServices</RootNamespace>
+    <AssemblyName>SmartTouch.CRM.ApplicationServices</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\SmartTouch.CRM.WebService\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>CA1709</NoWarn>
+    <DocumentationFile>ApplicationServicesXMLDocument.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Facebook, Version=6.0.10.0, Culture=neutral, PublicKeyToken=58cb4f2111d1e6de, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Facebook.7.0.6\lib\net45\Facebook.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlRenderer, Version=1.5.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlRenderer.Core.1.5.0.6\lib\net45\HtmlRenderer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlRenderer.WinForms, Version=1.5.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\HtmlRenderer.WinForms.1.5.0.6\lib\net45\HtmlRenderer.WinForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqToTwitter.AspNet, Version=3.2.0.30483, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\linqtotwitter.4.1.0\lib\net45\LinqToTwitter.AspNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LinqToTwitter.net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=957107be965c25d9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\linqtotwitter.4.1.0\lib\net45\LinqToTwitter.net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Administration.7.0.0.0\lib\net20\Microsoft.Web.Administration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\RestSharp.105.2.3\lib\net451\RestSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting" />
+    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Typesafe.Mailgun">
+      <HintPath>..\..\packages\mnailgun.0.7.0\lib\4.0\Typesafe.Mailgun.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Exceptions\PrivateDataAccessException.cs" />
+    <Compile Include="Exceptions\ResourceNotFoundException.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="InitializeAutoMapper.cs" />
+    <Compile Include="Messaging\Accounts\CheckDomainURLAvailabilityRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountAuthorizationRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountDomainUrlRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountImageStorageNameRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountPermissionsRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountPrimaryEmailRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountSubscriptionDataRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAddressRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAllAccountsBySubscriptionRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetBdxAccountsRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetBulkOperationDataRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetDailySummaryEmailsRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetDataAccessPermissionsRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetGoogleDriveAPIKeyRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetImportRowData.cs" />
+    <Compile Include="Messaging\Accounts\GetIndexingDataRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetModuleSharingPermissionRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetPrimaryPhoneRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetPrivateModulesRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetSenderReputationCountRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetSubscriptionSettingsRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetTermsAndConditionsRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetWebAnalyticsProviderKeysRequest.cs" />
+    <Compile Include="Messaging\Accounts\InsertIndexingDataRequest.cs" />
+    <Compile Include="Messaging\Accounts\InsertNeverBounceRequest.cs" />
+    <Compile Include="Messaging\Accounts\RolePermissionsRequest.cs" />
+    <Compile Include="Messaging\AccountSettings\GetAccountUnsubscribeViewByAccountIdRequest.cs" />
+    <Compile Include="Messaging\Accounts\ShowTCRequest.cs" />
+    <Compile Include="Messaging\Action\BulkSendEmailRequest.cs" />
+    <Compile Include="Messaging\Action\DeleteActionsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\CampaignIndexingRequest.cs" />
+    <Compile Include="Messaging\Campaigns\CampaignStatisticsByWorkflow.cs" />
+    <Compile Include="Messaging\Campaigns\CampaignUnsubscribeRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetAutomationCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignIdsSeekingAnalysisRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignLinkRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignLinksRequest.cs" />
+    <Compile Include="Messaging\Campaigns\CampaignLitmusMapRequests.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignMailTesterGuid.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignMailTesterRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignRecipientsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignReipientIdsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignSocialMediaPost.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignStatisticsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignStatusRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignTemplateNameRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignThemesRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetClientIPAddressRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetLinkURlResponse.cs" />
+    <Compile Include="Messaging\Campaigns\GetNextAutomationCampaignRecipientsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetReEngagementInfoRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetResentCampaignCountRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetWorkflowLinkActionsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\InsertCampaignLogDetailsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\InsertBulkRecipientsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\InsertCampaignMailTesterRequest.cs" />
+    <Compile Include="Messaging\Campaigns\InsertCampaignOpenEntryRequest.cs" />
+    <Compile Include="Messaging\Campaigns\InsertCampaignRecipientRequest.cs" />
+    <Compile Include="Messaging\Campaigns\InsertCampaignTemplateRequest.cs" />
+    <Compile Include="Messaging\Campaigns\MailChimpWebhookRequest.cs" />
+    <Compile Include="Messaging\Campaigns\ResentCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\SearchCampaignsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\SendTestEmailRequest.cs" />
+    <Compile Include="Messaging\Campaigns\UnsubscribeContactRequest.cs" />
+    <Compile Include="Messaging\Campaigns\UpdateCampaignDeliveryStatusRequest.cs" />
+    <Compile Include="Messaging\Campaigns\UpdateCampaignStatusRequest.cs" />
+    <Compile Include="Messaging\Campaigns\UpdateMailTesterRequest.cs" />
+    <Compile Include="Messaging\Campaigns\WorkflowRelatedCampaigns.cs" />
+    <Compile Include="Messaging\Common\GetAllFieldsRequest.cs" />
+    <Compile Include="Messaging\Communication\CommunicationProviderRegistrationRequest.cs" />
+    <Compile Include="Messaging\Communication\GetCommunicationTypeRequest.cs" />
+    <Compile Include="Messaging\Communication\GetCommunicatioProvidersRequest.cs" />
+    <Compile Include="Messaging\Communication\GetCurrencyRequest.cs" />
+    <Compile Include="Messaging\Communication\GetDateFormatRequest.cs" />
+    <Compile Include="Messaging\Communication\GetDefaultBulkEmailServiceProviderRequest.cs" />
+    <Compile Include="Messaging\Communication\GetDefaultCampaignEmailProvider.cs" />
+    <Compile Include="Messaging\Communication\GetEmailBodyRequest.cs" />
+    <Compile Include="Messaging\Communication\GetEmailProviders.cs" />
+    <Compile Include="Messaging\Communication\GetServiceProviderByIdRequest.cs" />
+    <Compile Include="Messaging\Communication\GetServiceProviderImageDomainRequest.cs" />
+    <Compile Include="Messaging\Communication\InsertServiceProviderRequest.cs" />
+    <Compile Include="Messaging\Communication\ScheduleMailRequest.cs" />
+    <Compile Include="Messaging\Contacts\AssignUserRequest.cs" />
+    <Compile Include="Messaging\Contacts\ChangeLifecycleRequest.cs" />
+    <Compile Include="Messaging\Contacts\ChangeOwnerRequest.cs" />
+    <Compile Include="Messaging\Contacts\CheckContactDuplicateRequest.cs" />
+    <Compile Include="Messaging\Contacts\CompletedActionsRequest.cs" />
+    <Compile Include="Messaging\Contacts\ContactIndexingRequest.cs" />
+    <Compile Include="Messaging\Contacts\ContactLeadScoreListRequest.cs" />
+    <Compile Include="Messaging\Contacts\DeleteOpportunityContactRequest.cs" />
+    <Compile Include="Messaging\Contacts\FindContactsByEmailRequest.cs" />
+    <Compile Include="Messaging\Contacts\FindContactsByPrimaryEmailsRequest.cs" />
+    <Compile Include="Messaging\Contacts\FindContactsOfUserByFirstAndLastNameRequest.cs" />
+    <Compile Include="Messaging\Contacts\FindMatchedSavedSearchesRequest.cs" />
+    <Compile Include="Messaging\Contacts\FindMatchedSavedSearchQueryRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetActionRelatedContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetAPILeadSubmissionDataRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetBulkContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetCampaignContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactAuditLeadScoreRequest .cs" />
+    <Compile Include="Messaging\Contacts\GetContactCreatorsInfoRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactIDsByIPRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactLeadScoreRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactOwnerByContactIDRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactsByIDsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactsByReferenceIdsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactsDataRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactsToSyncRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactFormSubmissionsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactSummaryRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactWebVisitsCountRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactWebVisitReportRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactEngagementSummaryRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetEmailLinkURLRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetEmailsCountRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetEngagementDetailsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetFormContactsResponse.cs" />
+    <Compile Include="Messaging\Contacts\GetNeverBounceBadEmailContactRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetOpportunitySummaryRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetPersonsCountRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetSchemaResponse.cs" />
+    <Compile Include="Messaging\Contacts\GetSearchDefinitionContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetTagContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetUsersRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetRelationShipRequest.cs" />
+    <Compile Include="Messaging\Contacts\CopyContactRequest.cs" />
+    <Compile Include="Messaging\Contacts\DeactivateContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\ExportPersonsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetImportedContactRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetWorkflowContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\ImportDataUpdateRequest.cs" />
+    <Compile Include="Messaging\Contacts\InserImplicitSyncEmailInfoRequest.cs" />
+    <Compile Include="Messaging\Contacts\InsertAPILeadSubmissionRequest.cs" />
+    <Compile Include="Messaging\Contacts\InsertBulkOperationRequest.cs" />
+    <Compile Include="Messaging\Contacts\InsertEmailOpenOrClickEntryRequest.cs" />
+    <Compile Include="Messaging\Contacts\OutlookEmailSentRequest.cs" />
+    <Compile Include="Messaging\Contacts\ProcessFullContactRequest.cs" />
+    <Compile Include="Messaging\Contacts\RemoveFromElasticRequest.cs" />
+    <Compile Include="Messaging\Contacts\SendEmailRequest.cs" />
+    <Compile Include="Messaging\Contacts\UpdateContactCustomFieldRequest.cs" />
+    <Compile Include="Messaging\Contacts\UpdateContactFieldsRequest.cs" />
+    <Compile Include="Messaging\Contacts\UpdateContactViewRequest.cs" />
+    <Compile Include="Messaging\Contacts\UpdateLastTouchedRequest.cs" />
+    <Compile Include="Messaging\Contacts\UpdateSyncedEntitiesRequest.cs" />
+    <Compile Include="Messaging\CustomFields\DeleteCustomFieldRequest.cs" />
+    <Compile Include="Messaging\CustomFields\GetAllCustomFieldsRequest.cs" />
+    <Compile Include="Messaging\CustomFields\GetContactCustomFieldsRequest.cs" />
+    <Compile Include="Messaging\CustomFields\GetCustomFieldRequest.cs" />
+    <Compile Include="Messaging\CustomFields\GetCustomFieldsRequest.cs" />
+    <Compile Include="Messaging\CustomFields\GetCustomFieldsValueOptionsResponse.cs" />
+    <Compile Include="Messaging\CustomFields\GetLeadAdapterCustomFieldRequest.cs" />
+    <Compile Include="Messaging\CustomFields\GetSavedSearchsCountForCustomFieldRequest.cs" />
+    <Compile Include="Messaging\CustomFields\InsertCustomFieldRequest.cs" />
+    <Compile Include="Messaging\CustomFields\UpdateCustomFieldRequest.cs" />
+    <Compile Include="Messaging\Dashboard\GetDashboardChartDetailsRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\DeleteDropdownRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\GetDropdownListRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\GetDropdownValueRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\GetOpportunityStageGroupRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\GetTemplateDataRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\InsertDropdownRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\UpdateDropdownRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\GetCommunitiesRequest.cs" />
+    <Compile Include="Messaging\DropdownValues\GetLeadSourcesRequest.cs" />
+    <Compile Include="Messaging\Enterprices\GetAllReportedCouponsRequest.cs" />
+    <Compile Include="Messaging\Enterprices\SendEmailRequest.cs" />
+    <Compile Include="Messaging\Forms\CreateAPIFormsRequest.cs" />
+    <Compile Include="Messaging\Forms\FormIndexingRequest.cs" />
+    <Compile Include="Messaging\Forms\FormSubmissionAPIRequest.cs" />
+    <Compile Include="Messaging\Forms\GetAllContactFieldsRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFiledDataByIdRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFormFieldIDsRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFormNameByIdRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFormRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFormSubmissionDataRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFormSubmissionRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFormSubmissionsRequest.cs" />
+    <Compile Include="Messaging\Forms\SearchFormsRequest.cs" />
+    <Compile Include="Messaging\Forms\SubmitFormRequest.cs" />
+    <Compile Include="Messaging\Forms\UpdateFormNameRequest.cs" />
+    <Compile Include="Messaging\Geo\GetAllStatesRequest.cs" />
+    <Compile Include="Messaging\Geo\GetCountriesAndStatesRequest.cs" />
+    <Compile Include="Messaging\Accounts\HealthReportRequest.cs" />
+    <Compile Include="Messaging\ImageDomain\DeleteImageDomainRequest.cs" />
+    <Compile Include="Messaging\ImageDomain\GetImageDomainRequest.cs" />
+    <Compile Include="Messaging\ImageDomain\GetImageDomainsRequest.cs" />
+    <Compile Include="Messaging\ImageDomain\InsertImageDomainRequest.cs" />
+    <Compile Include="Messaging\ImageDomain\UpdateImageDomainRequest.cs" />
+    <Compile Include="Messaging\Image\DownloadImageRequest.cs" />
+    <Compile Include="Messaging\Image\SaveImageRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\GetActionsToSyncRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\GetLoginInfoByUsernameRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\GetNotesToSyncRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\GetOutlookEmailInformationRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\GetTasksToSyncRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\GetToursToSyncRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\InsertOutlookEmailAuditInformationRequest.cs" />
+    <Compile Include="Messaging\ImplicitSync\TrackReceivedEmailRequest.cs" />
+    <Compile Include="Messaging\ImportData\GetContactEmailsRequest.cs" />
+    <Compile Include="Messaging\ImportData\GetImportedContactsRequest.cs" />
+    <Compile Include="Messaging\ImportData\GetImportForAccountRequest.cs" />
+    <Compile Include="Messaging\ImportData\GetImportsRequest.cs" />
+    <Compile Include="Messaging\ImportData\GetNeverBounceAcceptedRequests.cs" />
+    <Compile Include="Messaging\ImportData\GetNeverBounceRequests.cs" />
+    <Compile Include="Messaging\ImportData\NeverBounceEmailDataRequest.cs" />
+    <Compile Include="Messaging\ImportData\UpdateEmailStatusRequest.cs" />
+    <Compile Include="Messaging\ImportData\UpdateNeverBouncePollingRequest.cs" />
+    <Compile Include="Messaging\ImportData\UpdateNeverBounceRequest.cs" />
+    <Compile Include="Messaging\IntegerIdRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetFacebookApp.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetFacebookLeadGensRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetImportDataRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetLeadAdapterJobLogDetailsListRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetLeadAdapterSubmissionRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetViewLeadAdapterListRequest.cs" />
+    <Compile Include="Messaging\ImportData\ImportDataRequest.cs" />
+    <Compile Include="Messaging\ImportData\GetImportdataRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\InsertFacebookLeadGenRequest.cs" />
+    <Compile Include="Messaging\LeadScore\AdjustLeadscoreRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetCampaignsRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetFormsRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetLeadScoreCategoriesRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetLeadScoreConditionsRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetLeadScoreRuleByConditionRequest.cs" />
+    <Compile Include="Messaging\LeadScore\InsertLeadScoreRequest.cs" />
+    <Compile Include="Messaging\LeadScore\LeadScoreAuditCheckRequest.cs" />
+    <Compile Include="Messaging\LeadScore\UpdateLeadScoreRequest.cs" />
+    <Compile Include="Messaging\MailGun\GetRestResponse.cs" />
+    <Compile Include="Messaging\MarketingMessages\DeleteMarketingMessageRequest.cs" />
+    <Compile Include="Messaging\MarketingMessages\GetAllMarketingMessageContentRequest.cs" />
+    <Compile Include="Messaging\MarketingMessages\GetAllMarketingMessagesRequest.cs" />
+    <Compile Include="Messaging\MarketingMessages\GetMarketingMessageRequestById.cs" />
+    <Compile Include="Messaging\MarketingMessages\InsertMarketingMessageRequest.cs" />
+    <Compile Include="Messaging\MarketingMessages\UpdateMarketingMessageRequest.cs" />
+    <Compile Include="Messaging\Messages\GetMessagesRequest.cs" />
+    <Compile Include="Messaging\Opportunity\DeleteOpportunityRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetAllContactsRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetAllUsersRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetOpportunityBuyerRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetOpportunityContactsRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetOpportunityListByContactRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetOpportunityListRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetOpportunityRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetOpportunityStageContactsRequest.cs" />
+    <Compile Include="Messaging\Opportunity\GetStageRequest.cs" />
+    <Compile Include="Messaging\Opportunity\InsertOpportunityBuyerRequest.cs" />
+    <Compile Include="Messaging\Opportunity\InsertOpportunityRequest.cs" />
+    <Compile Include="Messaging\Opportunity\OpportunityIndexingRequest.cs" />
+    <Compile Include="Messaging\Opportunity\SearchOpportunityRequest.cs" />
+    <Compile Include="Messaging\Opportunity\UpdateOpportunityBuyerRequest.cs" />
+    <Compile Include="Messaging\Opportunity\UpdateOpportunityRequest.cs" />
+    <Compile Include="Messaging\Opportunity\UpdateOpportunityViewRequest.cs" />
+    <Compile Include="Messaging\Reports\BDXCustomLeadReportRequest.cs" />
+    <Compile Include="Messaging\Reports\CustomReportDataRequest.cs" />
+    <Compile Include="Messaging\Reports\GetReportNameByTypeRequest.cs" />
+    <Compile Include="Messaging\Reports\GetReportsRequest.cs" />
+    <Compile Include="Messaging\Reports\GetWorkflowsForCampaignReport.cs" />
+    <Compile Include="Messaging\Reports\HotListRequest.cs" />
+    <Compile Include="Messaging\Reports\InsertDefaultReportsRequest.cs" />
+    <Compile Include="Messaging\Reports\InsertLastRunActivityRequest.cs" />
+    <Compile Include="Messaging\Reports\ReportDataRequest.cs" />
+    <Compile Include="Messaging\Reports\ReportExportRequest.cs" />
+    <Compile Include="Messaging\Reports\StandardReportRequest.cs" />
+    <Compile Include="Messaging\Reports\TourByContactsRequest.cs" />
+    <Compile Include="Messaging\Role\GetModulesForRoleRequest.cs" />
+    <Compile Include="Messaging\Role\GetModulesRequest.cs" />
+    <Compile Include="Messaging\Role\GetRolesRequest.cs" />
+    <Compile Include="Messaging\Role\GetUserRolePermissionsRequest.cs" />
+    <Compile Include="Messaging\Role\InsertRolePermissionsRequest.cs" />
+    <Compile Include="Messaging\ReIndexDocumentRequest.cs" />
+    <Compile Include="Messaging\Search\AdvancedSearchRequest.cs" />
+    <Compile Include="Messaging\Search\GetAdvancedViewColumnsRequest.cs" />
+    <Compile Include="Messaging\Search\GetAdvanceSearchFieldsRequest.cs" />
+    <Compile Include="Messaging\Search\GetContactEmailsRequest.cs" />
+    <Compile Include="Messaging\Search\GetSavedSearchContactIdsRequest.cs" />
+    <Compile Include="Messaging\Search\GetSearchDefinitionDescriptionRequest.cs" />
+    <Compile Include="Messaging\Search\GetSearchQualifiersRequest.cs" />
+    <Compile Include="Messaging\Search\GetUpdatableFieldsRequest.cs" />
+    <Compile Include="Messaging\Search\InsertLastRunActivityRequest.cs" />
+    <Compile Include="Messaging\Search\InsertViewActivityRequest.cs" />
+    <Compile Include="Messaging\Search\SaveAdvancedViewColumnsRequest.cs" />
+    <Compile Include="Messaging\Search\SearchDefinitionContactSummaryRequest.cs" />
+    <Compile Include="Messaging\Search\ExportSearchRequest.cs" />
+    <Compile Include="Messaging\Search\GetSavedSearchesResponse.cs" />
+    <Compile Include="Messaging\Search\DeleteSearchResponse.cs" />
+    <Compile Include="Messaging\Search\GetSearchRequest.cs" />
+    <Compile Include="Messaging\Search\SaveAdvancedSearchRequest.cs" />
+    <Compile Include="Messaging\SeedList\GetSeedListRquest.cs" />
+    <Compile Include="Messaging\SeedList\InsertSeedListRequest.cs" />
+    <Compile Include="Messaging\Subscriptions\GetAllAccountSubscriptionTypesRequest.cs" />
+    <Compile Include="Messaging\Subscriptions\InsertSubscriptionPermissionsRequest.cs" />
+    <Compile Include="Messaging\Search\QuickSearchRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\CheckSuppressionEmailsRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\SearchSuppressionListRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\DeleteSuppressionEmailRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\GetSuppressionEmailsRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\InsertSuppressionListRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\ReIndexSuppressionListRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\InsertSuppressedDomainRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\InsertSuppressedEmailRequest.cs" />
+    <Compile Include="Messaging\SuppressionList\ReIndexSuppressionEmailsRequest.cs" />
+    <Compile Include="Messaging\Tags\GetRecentAndPopularTagsRequest.cs" />
+    <Compile Include="Messaging\Tags\PopularTagsRequest.cs" />
+    <Compile Include="Messaging\Tags\RecentTagsRequest.cs" />
+    <Compile Include="Messaging\Tags\SaveContactTagsRequest.cs" />
+    <Compile Include="Messaging\Tags\TagIndexingRequest.cs" />
+    <Compile Include="Messaging\Tags\WorkflowAddTagRequest.cs" />
+    <Compile Include="Messaging\Tags\WorkflowRemoveTagRequest.cs" />
+    <Compile Include="Messaging\ThirdPartyClient\DeleteApiKeyRequest.cs" />
+    <Compile Include="Messaging\ThirdPartyClient\GetApiKeyByIDRequest.cs" />
+    <Compile Include="Messaging\ThirdPartyClient\GetThirdPartyClientRequest.cs" />
+    <Compile Include="Messaging\ThirdPartyClient\InsertThirdPartyClientRequest.cs" />
+    <Compile Include="Messaging\ThirdPartyClient\UpdateApiKeyRequest.cs" />
+    <Compile Include="Messaging\TourCMS\GetAllTourDetailsRequest.cs" />
+    <Compile Include="Messaging\TourCMS\GetByDivisionRequest.cs" />
+    <Compile Include="Messaging\TourCMS\UpdateApplicationTourRequest.cs" />
+    <Compile Include="Messaging\TourCMS\UpdateTourCMSRequest.cs" />
+    <Compile Include="Messaging\TourCMS\UpdateTourVisitRequest.cs" />
+    <Compile Include="Messaging\Tour\CompletedTourRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetFirstLoginUserSettingsRequest.cs" />
+    <Compile Include="Messaging\Accounts\UpdateTCAcceptanceRequest.cs" />
+    <Compile Include="Messaging\User\AddNotificationRequest.cs" />
+    <Compile Include="Messaging\User\ChangeOwnerLogRequest.cs" />
+    <Compile Include="Messaging\User\CheckIfLimitExceeded.cs" />
+    <Compile Include="Messaging\User\ContactReadActivityRequest.cs" />
+    <Compile Include="Messaging\User\DeleteBulkNotificationsRequest.cs" />
+    <Compile Include="Messaging\User\DeleteNotificationRequest.cs" />
+    <Compile Include="Messaging\User\FindUsersByEmailsRequest.cs" />
+    <Compile Include="Messaging\User\GetAccountAddressRequest.cs" />
+    <Compile Include="Messaging\User\GetNotificationsCountByDateRequest.cs" />
+    <Compile Include="Messaging\User\GetRecentViwedContactsRequest.cs" />
+    <Compile Include="Messaging\User\GetRecentWebVisitsRequest.cs" />
+    <Compile Include="Messaging\User\GetUserActivityDetailRequest.cs" />
+    <Compile Include="Messaging\User\GetUserCalenderRequest.cs" />
+    <Compile Include="Messaging\User\GetUserFullNameRequest.cs" />
+    <Compile Include="Messaging\User\GetUserNotificationCountRequest.cs" />
+    <Compile Include="Messaging\User\GetUserNotificationsRequest.cs" />
+    <Compile Include="Messaging\User\DeleteUserActivityRequest.cs" />
+    <Compile Include="Messaging\User\GetUserActivityResponse.cs" />
+    <Compile Include="Messaging\User\GetUserRoleRequest.cs" />
+    <Compile Include="Messaging\User\GetUsersByUserIDsRequest.cs" />
+    <Compile Include="Messaging\User\GetUserSettingRequest.cs" />
+    <Compile Include="Messaging\User\GetUserTimeZoneRequest.cs" />
+    <Compile Include="Messaging\User\InsertProfileAuditRequest.cs" />
+    <Compile Include="Messaging\User\InsertUserSettingsRequest.cs" />
+    <Compile Include="Messaging\Forms\DeleteFormRequest.cs" />
+    <Compile Include="Messaging\Forms\GetFormsRequest.cs" />
+    <Compile Include="Messaging\Forms\InsertFormRequest.cs" />
+    <Compile Include="Messaging\Forms\UpdateFormRequest.cs" />
+    <Compile Include="Messaging\Tags\ContactTagSummaryRequest.cs" />
+    <Compile Include="Messaging\User\IsAccountAdminExistRequest.cs" />
+    <Compile Include="Messaging\User\MarkNotificationAsReadRequest.cs" />
+    <Compile Include="Messaging\User\UserSocialIntegrations.cs" />
+    <Compile Include="Messaging\WebAnalytics\AddContactWebVisistRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\CompareKnownContactIdentitiesRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetAccountIdsToSendWebVisitDailySummaryRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetContactWebVisitsSummaryRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetUsersOptedInstantWebVisitEmailRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetUsersOptedWebVisitSummaryEmailRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetWebVisitByVisitReferenceRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetWebVisitDailySummaryRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetCurrentWebVisitNotificationsRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetWebVisitProviderByAccountIdRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\GetWebVisitsByVisitDateRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\InsertWebVisitDailySummaryEmailAuditRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\InsertWebVisitNotificationAuditRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\ReIndexWebVisitsRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\UpdateWebVisitNotificationsRequest.cs" />
+    <Compile Include="Messaging\WebAnalytics\ValidateVisiStatKeyRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\CanContactReenterWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\DeactivateWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\DeleteWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\DidContactEnteredWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetActiveWorkflowsRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetContactLastStateRequestcs.cs" />
+    <Compile Include="Messaging\WorkFlow\GetContactWorkflowsRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetNextBatchToProcess.cs" />
+    <Compile Include="Messaging\WorkFlow\GetNotifyUserActionRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetUserAssignmentActionRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetWorkflowEndStateRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetWorkflowsRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\HasContactCompletedWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\InsertContactWorkflowAuditRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\InsertWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\GetWorkflowListRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\IsEnrolledToRemoveRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\NotifyUserRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\RemoveFromOtherWorkflowsRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\UpdateActionBatchStatus.cs" />
+    <Compile Include="Messaging\WorkFlow\UpdateContactFieldRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\UpdateNotifyUserActionRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\UpdateUserAssignmentActionRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\UpdateWorkflowRequest.cs" />
+    <Compile Include="Messaging\WorkFlow\WorkflowStatus.cs" />
+    <Compile Include="ObjectMappers\DbToEntityProfile.cs" />
+    <Compile Include="ObjectMappers\EntityExtensions.cs" />
+    <Compile Include="ObjectMappers\EntityToDbProfile.cs" />
+    <Compile Include="ObjectMappers\MapperConfigurationProvider.cs" />
+    <Compile Include="ObjectMappers\ViewModelToEntityProfile.cs" />
+    <Compile Include="ObjectMappers\EntityToViewModelProfile.cs" />
+    <Compile Include="Messaging\Accounts\AccountStatusUpdate.cs" />
+    <Compile Include="Messaging\Accounts\DeleteAccountRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountRequest.cs" />
+    <Compile Include="Messaging\Accounts\GetAccountsRequest.cs" />
+    <Compile Include="Messaging\Accounts\InsertAccountRequest.cs" />
+    <Compile Include="Messaging\Accounts\UpdateAccountRequest.cs" />
+    <Compile Include="Messaging\Action\CompletedActionRequest.cs" />
+    <Compile Include="Messaging\Action\DeactivateActionContactRequest.cs" />
+    <Compile Include="Messaging\Action\DeleteActionRequest.cs" />
+    <Compile Include="Messaging\Action\GetActionListRequest.cs" />
+    <Compile Include="Messaging\Action\GetActionRequest.cs" />
+    <Compile Include="Messaging\Action\GetContactsCountRequest.cs" />
+    <Compile Include="Messaging\Action\InsertActionRequest.cs" />
+    <Compile Include="Messaging\Action\UpdateActionRequest.cs" />
+    <Compile Include="Messaging\Campaigns\CancelCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\DeleteCampaignImageRequest.cs" />
+    <Compile Include="Messaging\Campaigns\DeleteCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignImagesRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Messaging\Campaigns\GetCampaignsRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignListRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignTemplatesRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetCampaignTemplateRequest.cs" />
+    <Compile Include="Messaging\Campaigns\GetNextCampaignToTriggerResponse.cs" />
+    <Compile Include="Messaging\Campaigns\InsertCampaignImageRequest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Messaging\Campaigns\InsertCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\SendCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\UpdateCampaignRequest.cs" />
+    <Compile Include="Messaging\Campaigns\UpdateCampaignTriggerStatusRequest.cs" />
+    <Compile Include="Messaging\Communication\ServiceProviderRequest.cs" />
+    <Compile Include="Messaging\Communication\CommunicationTrackerRequest.cs" />
+    <Compile Include="Messaging\Communication\GetCommunicationLogInDetailsRequest.cs" />
+    <Compile Include="Messaging\Communication\GetCommunicationTracker.cs" />
+    <Compile Include="Messaging\Communication\AttachmentRequest.cs" />
+    <Compile Include="Messaging\Communication\GetEmailRequest.cs" />
+    <Compile Include="Messaging\Communication\SaveAttchmentRequest.cs" />
+    <Compile Include="Messaging\Communication\SendMailRequest.cs" />
+    <Compile Include="Messaging\Communication\SendTextRequest.cs" />
+    <Compile Include="Messaging\Contacts\DeactivateContactRequest.cs" />
+    <Compile Include="Messaging\Contacts\DeleteRelationRequest.cs" />
+    <Compile Include="Messaging\Contacts\DeleteContactRequest.cs" />
+    <Compile Include="Messaging\Contacts\DeleteIndexRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetCompanyRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetTimeLineRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetContactTypeRequest.cs" />
+    <Compile Include="Messaging\Contacts\IndexCompanyNameRequest.cs" />
+    <Compile Include="Messaging\Contacts\SearchContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\GetPersonRequest.cs" />
+    <Compile Include="Messaging\Contacts\InsertCompanyRequest.cs" />
+    <Compile Include="Messaging\Contacts\InsertPersonRequest.cs" />
+    <Compile Include="Messaging\Contacts\ReIndexContactsRequest.cs" />
+    <Compile Include="Messaging\Contacts\SaveRelationshipRequest.cs" />
+    <Compile Include="Messaging\Contacts\UpdateCompanyRequest.cs" />
+    <Compile Include="Messaging\Contacts\UpdatePersonRequest.cs" />
+    <Compile Include="Messaging\Geo\GetCountriesRequest.cs" />
+    <Compile Include="Messaging\Geo\GetStatesRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\DeleteLeadAdapterRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetLeadAdapterListRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetLeadAdapterRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\GetLeadAdapterTypesRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\InsertLeadAdapterRequest.cs" />
+    <Compile Include="Messaging\LeadAdapters\UpdateLeadAdapterRequest.cs" />
+    <Compile Include="Messaging\LeadScore\DeleteLeadScoreRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetCategoriesRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetConditionsRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetLeadSourceRequest.cs" />
+    <Compile Include="Messaging\LeadScore\GetLeadScoreListRequest.cs" />
+    <Compile Include="Messaging\LeadScore\InsertLeadScoreRuleRequest.cs" />
+    <Compile Include="Messaging\LeadScore\LeadScoreDuplicareRuleCountRequest.cs" />
+    <Compile Include="Messaging\LeadScore\UpdateLeadScoreRuleRequest.cs" />
+    <Compile Include="Messaging\Menu\GetMenuListRequest.cs" />
+    <Compile Include="Messaging\Notes\DeactivateNotesContactRequest.cs" />
+    <Compile Include="Messaging\Notes\DeleteNoteRequest.cs" />
+    <Compile Include="Messaging\Notes\GetContactsCountRequest.cs" />
+    <Compile Include="Messaging\Notes\GetNoteRequest.cs" />
+    <Compile Include="Messaging\Notes\GetNotesListRequest.cs" />
+    <Compile Include="Messaging\Notes\SaveNoteRequest.cs" />
+    <Compile Include="Messaging\Notes\UpdateNoteRequest.cs" />
+    <Compile Include="Messaging\Search\AutoCompleteSearchRequest.cs" />
+    <Compile Include="Messaging\ServiceRequestBase.cs" />
+    <Compile Include="Messaging\ServiceResponseBase.cs" />
+    <Compile Include="Messaging\Tags\DeleteTagRequest.cs" />
+    <Compile Include="Messaging\Tags\GetTagListRequest.cs" />
+    <Compile Include="Messaging\Tags\GetTagRequest.cs" />
+    <Compile Include="Messaging\Tags\GetTagsRequest.cs" />
+    <Compile Include="Messaging\Tags\ReIndexTagsRequest.cs" />
+    <Compile Include="Messaging\Tags\SaveTagRequest.cs" />
+    <Compile Include="Messaging\Tags\SearchTagsRequest.cs" />
+    <Compile Include="Messaging\Tags\UpdateTagRequest.cs" />
+    <Compile Include="Messaging\Tour\DeleteTourRequest.cs" />
+    <Compile Include="Messaging\Tour\GetTourContactsCountRequest.cs" />
+    <Compile Include="Messaging\Tour\GetTourListRequest.cs" />
+    <Compile Include="Messaging\Tour\GetTourRequest.cs" />
+    <Compile Include="Messaging\Tour\InsertTourRequest.cs" />
+    <Compile Include="Messaging\Tour\UpdateTourRequest.cs" />
+    <Compile Include="Messaging\User\ChangeRoleRequest.cs" />
+    <Compile Include="Messaging\User\DeactivateUserRequest.cs" />
+    <Compile Include="Messaging\User\GetRoleRequest.cs" />
+    <Compile Include="Messaging\User\GetUserRequest.cs" />
+    <Compile Include="Messaging\User\GetUserListRequest.cs" />
+    <Compile Include="Messaging\User\InsertUserRequest.cs" />
+    <Compile Include="Messaging\User\UpdateUserRequest.cs" />
+    <Compile Include="Messaging\User\UserStatusRequest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Messaging\SearchRequest.cs" />
+    <Compile Include="ServiceAgents\EmailAgent.cs" />
+    <Compile Include="ServiceAgents\FTPAgent.cs" />
+    <Compile Include="ServiceAgents\TextAgent.cs" />
+    <Compile Include="ServiceImplementations\AccountService.cs" />
+    <Compile Include="ServiceImplementations\AccountSettingsService.cs" />
+    <Compile Include="ServiceImplementations\ActionService.cs" />
+    <Compile Include="ServiceImplementations\AdvancedSearchService.cs" />
+    <Compile Include="ServiceImplementations\ApplicationTourService.cs" />
+    <Compile Include="ServiceImplementations\AttachmentActivityAnalyzer.cs" />
+    <Compile Include="ServiceImplementations\CachingService.cs" />
+    <Compile Include="ServiceImplementations\CampaignService.cs" />
+    <Compile Include="ServiceImplementations\ContactRelationshipService.cs" />
+    <Compile Include="Messaging\Contacts\GetContactEmailRequest.cs" />
+    <Compile Include="ServiceImplementations\EnterpriseService.cs" />
+    <Compile Include="ServiceImplementations\FindSpamService.cs" />
+    <Compile Include="ServiceImplementations\ImageDomainService.cs" />
+    <Compile Include="ServiceImplementations\ImageService.cs" />
+    <Compile Include="ServiceImplementations\IMessageService.cs" />
+    <Compile Include="ServiceImplementations\ImportDataService.cs" />
+    <Compile Include="ServiceImplementations\LeadScoreService.cs" />
+    <Compile Include="ServiceImplementations\CommunicationProviderService.cs" />
+    <Compile Include="ServiceImplementations\CommunicationService.cs" />
+    <Compile Include="ServiceImplementations\ContactService.cs" />
+    <Compile Include="ServiceImplementations\AttachmentService.cs" />
+    <Compile Include="ServiceImplementations\CustomFieldService.cs" />
+    <Compile Include="ServiceImplementations\DropdownValuesService.cs" />
+    <Compile Include="ServiceImplementations\FormService.cs" />
+    <Compile Include="ServiceImplementations\GeoService.cs" />
+    <Compile Include="ServiceImplementations\LeadAdapterService.cs" />
+    <Compile Include="ServiceImplementations\LeadScoreRuleService.cs" />
+    <Compile Include="ServiceImplementations\MailGunService.cs" />
+    <Compile Include="ServiceImplementations\MarketingMessageService.cs" />
+    <Compile Include="ServiceImplementations\MenuService.cs" />
+    <Compile Include="ServiceImplementations\NoteService.cs" />
+    <Compile Include="ServiceImplementations\OpportunityService.cs" />
+    <Compile Include="ServiceImplementations\ReportService.cs" />
+    <Compile Include="ServiceImplementations\RoleService.cs" />
+    <Compile Include="ServiceImplementations\SeedEmailService.cs" />
+    <Compile Include="ServiceImplementations\SocialIntegrationService.cs" />
+    <Compile Include="ServiceImplementations\SubscriptionService.cs" />
+    <Compile Include="ServiceImplementations\SuppressionListService.cs" />
+    <Compile Include="ServiceImplementations\TagService.cs" />
+    <Compile Include="ServiceImplementations\ThirdPartyClientService.cs" />
+    <Compile Include="ServiceImplementations\TimelineActivityAnalyzer.cs" />
+    <Compile Include="ServiceImplementations\TourService.cs" />
+    <Compile Include="ServiceImplementations\UrlService.cs" />
+    <Compile Include="ServiceImplementations\UserActivityAnalyzer.cs" />
+    <Compile Include="ServiceImplementations\UserService.cs" />
+    <Compile Include="ServiceImplementations\WebAnalyticsProviderService.cs" />
+    <Compile Include="ServiceImplementations\WorkflowService.cs" />
+    <Compile Include="ServiceInterfaces\IAccountService.cs" />
+    <Compile Include="ServiceInterfaces\IAccountSettingsService.cs" />
+    <Compile Include="ServiceInterfaces\IActionService.cs" />
+    <Compile Include="ServiceInterfaces\IAdvancedSearchService.cs" />
+    <Compile Include="ServiceInterfaces\IApplicationTourService.cs" />
+    <Compile Include="ServiceInterfaces\ICachingService.cs" />
+    <Compile Include="ServiceInterfaces\ICampaignService.cs" />
+    <Compile Include="ServiceInterfaces\IContactRelationshipService.cs" />
+    <Compile Include="ServiceInterfaces\IEnterpriseService.cs" />
+    <Compile Include="ServiceInterfaces\IFindSpamService.cs" />
+    <Compile Include="ServiceInterfaces\IImageDomainService.cs" />
+    <Compile Include="ServiceInterfaces\IImageService.cs" />
+    <Compile Include="ServiceInterfaces\IImportDataService.cs" />
+    <Compile Include="ServiceInterfaces\ILeadScoreService.cs" />
+    <Compile Include="ServiceInterfaces\ICommunicationProviderService.cs" />
+    <Compile Include="ServiceInterfaces\ICommunicationService.cs" />
+    <Compile Include="ServiceInterfaces\IContactService.cs" />
+    <Compile Include="ServiceInterfaces\IAttachmentService.cs" />
+    <Compile Include="ServiceInterfaces\ICustomFieldService.cs" />
+    <Compile Include="ServiceInterfaces\IDropdownValuesService.cs" />
+    <Compile Include="ServiceInterfaces\IFormService.cs" />
+    <Compile Include="ServiceInterfaces\IGeoService.cs" />
+    <Compile Include="ServiceInterfaces\ILeadAdapterService.cs" />
+    <Compile Include="ServiceInterfaces\ILeadScoreRuleService.cs" />
+    <Compile Include="ServiceInterfaces\IMailGunService.cs" />
+    <Compile Include="ServiceInterfaces\IMarketingMessageService.cs" />
+    <Compile Include="ServiceInterfaces\IMenuServices.cs" />
+    <Compile Include="ServiceInterfaces\INoteService.cs" />
+    <Compile Include="ServiceInterfaces\IOpportunitiesService.cs" />
+    <Compile Include="ServiceInterfaces\IReportService.cs" />
+    <Compile Include="ServiceInterfaces\IRoleService.cs" />
+    <Compile Include="ServiceInterfaces\ISeedEmailService.cs" />
+    <Compile Include="ServiceInterfaces\ISocialIntegrationService.cs" />
+    <Compile Include="ServiceInterfaces\ISubscriptionService.cs" />
+    <Compile Include="ServiceInterfaces\ISuppressionListService.cs" />
+    <Compile Include="ServiceInterfaces\ITagService.cs" />
+    <Compile Include="ServiceInterfaces\IThirdPartyClientService.cs" />
+    <Compile Include="ServiceInterfaces\ITourService.cs" />
+    <Compile Include="ServiceInterfaces\IUrlService.cs" />
+    <Compile Include="ServiceInterfaces\IUserService.cs" />
+    <Compile Include="ServiceInterfaces\IWebAnalyticsProviderService.cs" />
+    <Compile Include="ServiceInterfaces\IWorkflowService.cs" />
+    <Compile Include="ServiceInterfaces\MessageService.cs" />
+    <Compile Include="ViewModels\AccountSettingsViewModel.cs" />
+    <Compile Include="ViewModels\AddEditCustomFieldTabs.cs" />
+    <Compile Include="ViewModels\AddTagViewModel.cs" />
+    <Compile Include="ViewModels\AdvancedSearchExportViewModel.cs" />
+    <Compile Include="ViewModels\AdvancedViewViewModel.cs" />
+    <Compile Include="ViewModels\APILeadSubmissionViewModel.cs" />
+    <Compile Include="ViewModels\ApplicationTourViewModel.cs" />
+    <Compile Include="ViewModels\AttachmentDataViewModel.cs" />
+    <Compile Include="ViewModels\AVColumnPreferenceViewModel.cs" />
+    <Compile Include="ViewModels\BaseWorkflowActionConverter.cs" />
+    <Compile Include="ViewModels\BouncedEmailReportViewModel.cs" />
+    <Compile Include="ViewModels\BulkMailOperationViewModel.cs" />
+    <Compile Include="ViewModels\CalenderTimeSlotViewModel.cs" />
+    <Compile Include="ViewModels\CampaignLinkViewModel.cs" />
+    <Compile Include="ViewModels\CampaignNameViewModel.cs" />
+    <Compile Include="ViewModels\CampaignOpenEntryViewModel.cs" />
+    <Compile Include="ViewModels\CampaignResponseViewModel.cs" />
+    <Compile Include="ViewModels\CampaignStatisticsViewModel.cs" />
+    <Compile Include="ViewModels\CampaignThemeViewModel.cs" />
+    <Compile Include="ViewModels\ChangeOwnerViewModel.cs" />
+    <Compile Include="ViewModels\ContactDataViewModel.cs" />
+    <Compile Include="ViewModels\ContactGridViewModel.cs" />
+    <Compile Include="ViewModels\ContactLeadScoreListViewModel.cs" />
+    <Compile Include="ViewModels\ContactSummaryViewModel.cs" />
+    <Compile Include="ViewModels\CRMOutlookSyncViewModel.cs" />
+    <Compile Include="ViewModels\ContactResultViewModel.cs" />
+    <Compile Include="ViewModels\CustomContactViewModel.cs" />
+    <Compile Include="ViewModels\DashboardChartDetailsViewModel.cs" />
+    <Compile Include="ViewModels\DashboardSettingViewModel.cs" />
+    <Compile Include="ViewModels\DeleteNotificationViewModel.cs" />
+    <Compile Include="ViewModels\EmailLinkViewModel.cs" />
+    <Compile Include="ViewModels\EmailValidatorViewModel.cs" />
+    <Compile Include="ViewModels\ErrorViewModel.cs" />
+    <Compile Include="ViewModels\HealthReport.cs" />
+    <Compile Include="ViewModels\ImageDomainViewModel.cs" />
+    <Compile Include="ViewModels\LeadadapterSubmittedDetails.cs" />
+    <Compile Include="ViewModels\LoginFrequencyReportViewModel.cs" />
+    <Compile Include="ViewModels\NightlyCampaignReportViewModel.cs" />
+    <Compile Include="ViewModels\NightlyStatusReportViewModel.cs" />
+    <Compile Include="ViewModels\NeverBounceRequestViewModel.cs" />
+    <Compile Include="ViewModels\PageDataViewModel.cs" />
+    <Compile Include="ViewModels\ParentWorkflowViewModel.cs" />
+    <Compile Include="ViewModels\ReEngagementReportViewModel.cs" />
+    <Compile Include="ViewModels\ReportedCouponsViewModel.cs" />
+    <Compile Include="ViewModels\LeadAdapterSubmittedDataViewModel.cs" />
+    <Compile Include="ViewModels\LeadScoreConditionValueViewModel.cs" />
+    <Compile Include="ViewModels\MarketingMessageAccountMapViewModel.cs" />
+    <Compile Include="ViewModels\MarketingMessageContentMapViewModel.cs" />
+    <Compile Include="ViewModels\MarketingMessagesViewModel.cs" />
+    <Compile Include="ViewModels\OpportunityStageGroupViewModel.cs" />
+    <Compile Include="ViewModels\ProviderViewModel.cs" />
+    <Compile Include="ViewModels\ReportDataViewModel.cs" />
+    <Compile Include="ViewModels\ReportViewModel.cs" />
+    <Compile Include="ViewModels\HotListViewModel.cs" />
+    <Compile Include="ViewModels\ReportListViewModel.cs" />
+    <Compile Include="ViewModels\ResendCampaignViewModel.cs" />
+    <Compile Include="ViewModels\SeedEmailViewModel.cs" />
+    <Compile Include="ViewModels\SendCampaignViewModel.cs" />
+    <Compile Include="ViewModels\ServiceProviderRegistrationViewModel.cs" />
+    <Compile Include="ViewModels\CommunicationTypeViewModel.cs" />
+    <Compile Include="ViewModels\ContactCustomFieldMapViewModel.cs" />
+    <Compile Include="ViewModels\AdvancedSearchViewModel.cs" />
+    <Compile Include="ViewModels\DropdownViewModel.cs" />
+    <Compile Include="ViewModels\ContactExportViewModel.cs" />
+    <Compile Include="ViewModels\DropdownValueViewModel.cs" />
+    <Compile Include="ViewModels\CustomFieldViewModel.cs" />
+    <Compile Include="ViewModels\ExportPersonViewModel.cs" />
+    <Compile Include="ViewModels\FieldViewModel.cs" />
+    <Compile Include="ViewModels\FormEntryViewModel.cs" />
+    <Compile Include="ViewModels\FormSubmissionViewModel.cs" />
+    <Compile Include="ViewModels\ImportListViewModel.cs" />
+    <Compile Include="ViewModels\AccountViewModel.cs" />
+    <Compile Include="ViewModels\ActionListViewModel.cs" />
+    <Compile Include="ViewModels\ActionViewModel.cs" />
+    <Compile Include="ViewModels\AddressViewModel.cs" />
+    <Compile Include="ViewModels\CampaignEntryViewModel.cs" />
+    <Compile Include="ViewModels\CampaignTemplateViewModel.cs" />
+    <Compile Include="ViewModels\CampaignViewModel.cs" />
+    <Compile Include="ViewModels\FilesViewModel.cs" />
+    <Compile Include="ViewModels\ForgotPasswordViewModel.cs" />
+    <Compile Include="ViewModels\FormViewModel.cs" />
+    <Compile Include="ViewModels\ImportDataViewModel.cs" />
+    <Compile Include="ViewModels\LeadAdapterJobLogDeailsViewModel.cs" />
+    <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\ImportViewModel.cs" />
+    <Compile Include="ViewModels\LeadAdapterViewModel.cs" />
+    <Compile Include="ViewModels\LeadScoreListViewModel.cs" />
+    <Compile Include="ViewModels\LeadScoreViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\MyProfileViewModel.cs" />
+    <Compile Include="ViewModels\OpportunitiesList.cs" />
+    <Compile Include="ViewModels\OpportunityViewModel.cs" />
+    <Compile Include="ViewModels\PeopleInvolvedViewModel.cs" />
+    <Compile Include="ViewModels\QuickSearchViewModel.cs" />
+    <Compile Include="ViewModels\RawContactViewModel.cs" />
+    <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\RelationshipTypesViewModel.cs" />
+    <Compile Include="ViewModels\ResetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\LeadScoreRuleViewModel.cs" />
+    <Compile Include="ViewModels\RolePermissionsViewModel.cs" />
+    <Compile Include="ViewModels\SendMailViewModel.cs" />
+    <Compile Include="ViewModels\ServiceProviderViewModel.cs" />
+    <Compile Include="ViewModels\CommunicationTrackerViewModel.cs" />
+    <Compile Include="ViewModels\CommunicationViewModel.cs" />
+    <Compile Include="ViewModels\CommunityViewModel.cs" />
+    <Compile Include="ViewModels\CompanyViewModel.cs" />
+    <Compile Include="ViewModels\ContactEntry.cs" />
+    <Compile Include="ViewModels\ContactListEntry.cs" />
+    <Compile Include="ViewModels\AttachmentViewModel.cs" />
+    <Compile Include="ViewModels\IContactViewModel.cs" />
+    <Compile Include="ViewModels\MenuViewModel.cs" />
+    <Compile Include="ViewModels\NoteViewModel.cs" />
+    <Compile Include="ViewModels\PersonViewModel.cs" />
+    <Compile Include="ViewModels\RelationshipViewModel.cs" />
+    <Compile Include="ViewModels\SendTextViewModel.cs" />
+    <Compile Include="ViewModels\SubmitFormViewModel.cs" />
+    <Compile Include="ViewModels\SubscriptionViewModel.cs" />
+    <Compile Include="ViewModels\SuppressedDomainViewModel.cs" />
+    <Compile Include="ViewModels\SuppressedEmailViewModel.cs" />
+    <Compile Include="ViewModels\SuppressionListViewModel.cs" />
+    <Compile Include="ViewModels\TagSummaryRequestViewModel.cs" />
+    <Compile Include="ViewModels\TagTypesViewModel.cs" />
+    <Compile Include="ViewModels\TagViewModel.cs" />
+    <Compile Include="ViewModels\ThirdPartyClientViewModel.cs" />
+    <Compile Include="ViewModels\TimeLineEntryViewModel.cs" />
+    <Compile Include="ViewModels\TimeLineGroupViewModel.cs" />
+    <Compile Include="ViewModels\TimeLineViewModel.cs" />
+    <Compile Include="ViewModels\TimeZoneViewModel.cs" />
+    <Compile Include="ViewModels\TourByContactsViewModel.cs" />
+    <Compile Include="ViewModels\TourViewModel.cs" />
+    <Compile Include="ViewModels\UserActivityViewModel.cs" />
+    <Compile Include="ViewModels\UserSettingsViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ViewModels\ViewLeadAdapterViewModel.cs" />
+    <Compile Include="ViewModels\WebAnalyticsProviderViewModel.cs" />
+    <Compile Include="ViewModels\WebVisitEmailStatusViewModel.cs" />
+    <Compile Include="ViewModels\ContactWebVisitSummaryViewModel.cs" />
+    <Compile Include="ViewModels\WebVisitReportViewModel.cs" />
+    <Compile Include="ViewModels\WebVisitViewModel.cs" />
+    <Compile Include="ViewModels\WorkFlowViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\crm-domain\SmartTouch.CRM.Domain\SmartTouch.CRM.Domain.csproj">
+      <Project>{02f0054a-4091-4b5e-ad5a-40b04728c6f5}</Project>
+      <Name>SmartTouch.CRM.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-engines\SmartTouch.CRM.SearchEngine\SmartTouch.CRM.SearchEngine.csproj">
+      <Project>{71df1c5f-9936-45c7-b182-e6dee1a28cab}</Project>
+      <Name>SmartTouch.CRM.SearchEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.Entities\SmartTouch.CRM.Entities.csproj">
+      <Project>{2c8eab14-9691-4396-86fb-b5bfdee8ae94}</Project>
+      <Name>SmartTouch.CRM.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.Infrastructure\SmartTouch.CRM.Infrastructure.csproj">
+      <Project>{34a8702b-08e7-4857-b5f4-d00643730e86}</Project>
+      <Name>SmartTouch.CRM.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.MessageQueues\SmartTouch.CRM.MessageQueues.csproj">
+      <Project>{0748a6d3-6c9d-49f9-a0b7-4569511bad2a}</Project>
+      <Name>SmartTouch.CRM.MessageQueues</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-persistence\SmartTouch.CRM.Repository\SmartTouch.CRM.Repository.csproj">
+      <Project>{4c4d83a2-a1d7-431a-9ae4-57071c0f1053}</Project>
+      <Name>SmartTouch.CRM.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\LandMarkIT.Enterprise.CommunicationManager\LandmarkIT.Enterprise.CommunicationManager.csproj">
+      <Project>{dc326331-f62a-4482-86ff-1a4fc9d09c51}</Project>
+      <Name>LandmarkIT.Enterprise.CommunicationManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\LandMarkIT.Enterprise.Extensions\LandmarkIT.Enterprise.Extensions.csproj">
+      <Project>{1c044987-8995-4044-a6b7-0fb28f7f914c}</Project>
+      <Name>LandmarkIT.Enterprise.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\LandMarkIT.Enterprise.Utilities\LandmarkIT.Enterprise.Utilities.csproj">
+      <Project>{0563ead0-f211-48bc-a919-428da9325725}</Project>
+      <Name>LandmarkIT.Enterprise.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="XMLDocument.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
+  <!-- <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" /> -->
+  <!-- <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild"> -->
+  <!-- <PropertyGroup> -->
+  <!-- <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText> -->
+  <!-- </PropertyGroup> -->
+  <!-- <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" /> -->
+  <!-- </Target> -->
+  <!-- <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" /> -->
+  <!-- <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''"> -->
+  <!-- <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" /> -->
+  <!-- <Error Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" /> -->
+  <!-- </Target> -->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

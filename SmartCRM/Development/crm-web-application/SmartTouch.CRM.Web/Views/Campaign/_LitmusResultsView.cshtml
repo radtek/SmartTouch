@@ -1,0 +1,117 @@
+﻿
+
+@{
+    //  ViewBag.Title = "Litmus Results";
+    //  Layout = "~/Views/Shared/_Layout.cshtml";
+    var emailClients = new Dictionary<string, string>();
+    emailClients.Add("OL2000", "Outlook 2000");
+    emailClients.Add("OL2002", "Outlook 2002");
+    emailClients.Add("OL2003", "Outlook 2003");
+    emailClients.Add("OL2007", "Outlook 2007");
+    emailClients.Add("OL2010", "Outlook 2010");
+    emailClients.Add("OL2011", "Outlook 2011");
+    emailClients.Add("OL2013", "Outlook 2013");
+    emailClients.Add("OL2013DPI120", "Outlook 2013 120 DPI");
+    emailClients.Add("OL2016", "Outlook 2016");
+    emailClients.Add("IPHONE5S", "iPhone 5s (IOS 7)");
+    emailClients.Add("IPHONE6", "iPhone 6");
+    emailClients.Add("IPHONE6S", "iPhone 6s");
+    emailClients.Add("IPHONE6SPLUS", "iPhone 6s Plus");
+    emailClients.Add("IPAD", "iPad (Retina)"); 
+    emailClients.Add("CHROMEGMAILNEW", "Gmail (Chrome)");
+    emailClients.Add("CHROMEGOOGLEINBOX", "Inbox by Gmail (Chrome)");
+    emailClients.Add("OUTLOOKCOM", "Outlook.com (Explorer)");
+    emailClients.Add("FFOUTLOOKCOM", "Outlook.com (Firefox)");
+    // var campaignId = ViewBag.CampaignID;
+    var emailGuid = ViewBag.EmailGuid;
+
+}
+
+<div class="main-template">
+    <div class="clearfix brdr-btm">
+        <div class="pull-left" id="templatechange">
+            <span class="litms-rslt">[|Litmus&#x00AE; Results|]</span>
+        </div>
+        <div class="pull-right">
+            <span class="pull-right back active" style="cursor:pointer">
+                <a href="javascript:void(0)" id="re-run-tst" data-bind="click:ReRunLitmusTest">
+                    [|Re Run Litmus&#x00AE; Test|]
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="mtl show" id="ftemplate">
+        <ul class="campaigns-layouts">
+            @if (ViewBag.EmailGuid != null)
+            {
+                foreach (var client in emailClients)
+                {
+                    var thumburl = string.Format("https://instant-api.litmus.com/v1/emails/{0}/previews/{1}/thumb450", ViewBag.EmailGuid, client.Key);
+                    <li>
+                        <div>
+                            <img src="@thumburl" alt="@client.Value"
+                                 height="200" width="200"
+                                 data-client="@client.Key"
+                                 data-clientValue="@client.Value"
+                                 onclick="imagePreview(this)" style="cursor:pointer;" />
+                        </div>
+                        <div class="layout-title-lm" title="'@client.Key.ToLower()'">@client.Value</div>
+                    </li>
+
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="modal fade st-actual-imgpreviw" id="litmus-img-preview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <a  class="pull-right prw-cls" onclick="imgpopprwclose()" >[|Back|] </a>
+                <h4 class="modal-title" id="mdl-hdr-cnt"></h4>
+            </div>
+            <div class="modal-body" id="lmt-img-ctn" style="min-height:500px">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="imgpopprwclose()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script type='text/javascript'>
+
+function backEvent(id)
+{
+    window.location.href = "/editcampaign?campaignId=" + id;
+}
+
+function imagePreview(e) {
+    $("#litmus-img-preview").modal('toggle');
+    $("#lmt-img-ctn img").remove();
+    var emailGuid = '@ViewBag.EmailGuid'
+    var client = $(e).data('client')
+    var clientValue = $(e).data('clientvalue');
+    var fullSrc = 'https://instant-api.litmus.com/v1/emails/' + emailGuid + '/previews/' + client + '/full';
+    var x = document.createElement("img");
+    x.setAttribute("src", fullSrc);
+    x.setAttribute("height", "auto");
+    x.setAttribute("width", "auto");
+    document.getElementById('lmt-img-ctn').appendChild(x);
+    console.log(clientValue);
+    $('#mdl-hdr-cnt').text(clientValue);
+}
+    function imgpopprwclose() {
+        $("#litmus-img-preview").modal('toggle');
+        $("#lmt-img-ctn img").remove();
+    }
+   
+</script>
+

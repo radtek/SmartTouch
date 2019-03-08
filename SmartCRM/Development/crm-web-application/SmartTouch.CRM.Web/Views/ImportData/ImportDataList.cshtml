@@ -1,0 +1,268 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ImportListViewModel
+@{
+    ViewBag.Title = "Import Data";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var DateFormat = ViewBag.DateFormat;
+}
+@Scripts.Render("~/bundles/importdatavm")
+<body onload="clearSession()">
+    <div class="page-title">[|Import Data|]</div>
+    <div class="importdata-grid" id="importdata">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ImportListViewModel>()
+        .Name("gridImport")
+                .HtmlAttributes(new { @class = "k-grid-content" })
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+                    .ButtonCount(10).Messages(m => m
+                        .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Import(s)|]")
+                                .Empty("[|No imports to display|]").ItemsPerPage("[|Imports per page|]")))
+    .Columns(columns =>
+    {
+        columns.Bound(c => c.FileName).Title("[|File Name|]").HeaderHtmlAttributes(new { @class = "col-25" });
+        columns.Bound(e => e.RecordUpdated).Title("[|Records Updated|]").HeaderHtmlAttributes(new { @class = "text-center col-15" });
+        columns.Bound(e => e.RecordCreated).Title("[|Records Created|]").HeaderHtmlAttributes(new { @class = "text-center col-15" });
+        columns.Bound(e => e.TotalRecords).Title("[|Imported Records|]").HeaderHtmlAttributes(new { @class = "text-center col-15" });
+        columns.Bound(e => e.CreatedDateTime).Title("[|Date & Time|]").HeaderHtmlAttributes(new { @class = "col-15" });
+        columns.Bound(e => e.LeadAdapterJobStatus).Title("[|Status|]").HeaderHtmlAttributes(new { @class = "col-15" });
+        columns.Bound(e => e.IsValidated).Title("[|Is Validated|]").HeaderHtmlAttributes(new { @class = "col-15" });
+        columns.Bound(e => e.GoodEmailsData).Title("[|Good Emails|]").HeaderHtmlAttributes(new { @class = "col-15" });                
+        columns.Bound(e => e.BadEmailsData).Title("[|Bad Emails|]").HeaderHtmlAttributes(new { @class = "col-15" });        
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtimportsearch" onkeydown="GetimportBasedonsearch();" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                </div>
+            </div>
+        </text>                                );
+    }).ClientRowTemplate(
+           @"<tr class='odd'>
+                <td>#:FileName#</td>
+                    <td class='text-center'>
+                        #if(RecordUpdated == 0){#
+                            <span>0</span>
+                        #} else{#
+                            <a href='importedcontacts?ImportedJobID=#:LeadAdapterJobLogID#&recordStatus=Updated'>#:RecordUpdated#</a>
+                        #}#
+                    </td>
+                    <td class='text-center'>
+                        #if(RecordCreated == 0){#
+                            <span>0</span>
+                        #} else{#
+                            <a href='importedcontacts?ImportedJobID=#:LeadAdapterJobLogID#&recordStatus=Created'>#:RecordCreated#</a>
+                        #}#
+                    </td>
+                    <td class='text-center'>
+                        #if(TotalRecords == 0){#
+                            <span>0</span>
+                        #} else{#
+                            <a href='importedcontacts?ImportedJobID=#:LeadAdapterJobLogID#&recordStatus=All'>#:TotalRecords#</a>
+                        #}#
+                    </td>
+                    <td>#=displayDate_n(CreatedDateTime)#</td>
+                    <td>#=status(LeadAdapterJobStatus)#</td>
+                    <td> #if (IsValidated == 0){# <span>No</span> #} else{# <span>Yes</span> #}#</td>
+                    <td>
+                        #if(GoodEmailsData == '' || GoodEmailsData == null){#
+                            <span></span>
+                        #}
+                        else if(GoodEmailsData == '0% | 0')
+                        {#
+                            <span>#:GoodEmailsData#</span>
+                        #}
+                         else{#
+                            <a href='nvbbemcts?nbrid=#:NeverBounceRequestID#&emailStatus=51'>#:GoodEmailsData#</a>
+                        #}#
+                    </td>
+                    <td>
+                        #if(BadEmailsData == '' || BadEmailsData == null){#
+                            <span></span>
+                        #}
+                        else if(BadEmailsData == '0% | 0')
+                        {#
+                            <span>#:BadEmailsData#</span>
+                        #}
+                         else{#
+                            <a href='nvbbemcts?nbrid=#:NeverBounceRequestID#&emailStatus=53'>#:BadEmailsData#</a>
+                        #}#
+                    </td> 
+                </tr>")
+        .ClientAltRowTemplate(
+             @"<tr class='odd'>
+                <td>#:FileName#</td>
+                    <td class='text-center'>
+                        #if(RecordUpdated == 0){#
+                            <span>0</span>
+                        #} else{#
+                            <a href='importedcontacts?ImportedJobID=#:LeadAdapterJobLogID#&recordStatus=Updated'>#:RecordUpdated#</a>
+                        #}#
+                    </td>
+                    <td class='text-center'>
+                        #if(RecordCreated == 0){#
+                            <span>0</span>
+                        #} else{#
+                            <a href='importedcontacts?ImportedJobID=#:LeadAdapterJobLogID#&recordStatus=Created'>#:RecordCreated#</a>
+                        #}#
+                    </td>
+                    <td class='text-center'>
+                        #if(TotalRecords == 0){#
+                            <span>0</span>
+                        #} else{#
+                            <a href='importedcontacts?ImportedJobID=#:LeadAdapterJobLogID#&recordStatus=All'>#:TotalRecords#</a>
+                        #}#
+                    </td>
+                    <td>#=displayDate_n(CreatedDateTime)#</td>
+                    <td>#=status(LeadAdapterJobStatus)#</td>
+                    <td> #if (IsValidated == 0){# <span>No</span> #} else{# <span>Yes</span> #}#</td>
+                    <td>
+                        #if(GoodEmailsData == '' || GoodEmailsData == null){#
+                            <span></span>
+                        #}
+                        else if(GoodEmailsData == '0% | 0')
+                        {#
+                            <span>#:GoodEmailsData#</span>
+                        #}
+                         else{#
+                            <a href='nvbbemcts?nbrid=#:NeverBounceRequestID#&emailStatus=51'>#:GoodEmailsData#</a>
+                        #}#
+                    </td>
+                    <td>
+                         #if(BadEmailsData == '' || BadEmailsData == null){#
+                            <span></span>
+                        #}
+                        else if(BadEmailsData == '0% | 0')
+                        {#
+                            <span>#:BadEmailsData#</span>
+                        #}
+                         else{#
+                            <a href='nvbbemcts?nbrid=#:NeverBounceRequestID#&emailStatus=53'>#:BadEmailsData#</a>
+                        #}#
+                     </td>
+                </tr>")
+             .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+            .DataSource(dataSource => dataSource
+            .Ajax()
+            .PageSize(ItemsPerPage)
+            .Read(read => read.Action("ImportsViewRead", "ImportData").Data("additionalInfo"))
+                                       )
+        )
+    </div>
+
+
+</body>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        function clearSession() {
+            localStorage.removeItem("importsearchtext");
+            createCookie("importpagenumber", 1, 1);
+            createCookie("importpagesize", '@(ItemsPerPage)', 1);
+        }
+
+        createCookie("importdatapagesize", '@(ItemsPerPage)', 1);
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("importsearchtext")
+            }
+        }
+
+
+
+        function GetimportBasedonsearch() {
+            setTimeout(function () {
+                $filter = new Array();
+                var grid = $("#gridImport").data("kendoGrid"), searchBox = $("#txtimportsearch").val();
+                localStorage.removeItem("importsearchtext");
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.setItem("importsearchtext", searchBox);
+                    var psize = readCookie("importdatapagesize");
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    $('[data-toggle="checkbox"]').each(function () {
+                        var $checkbox = $(this);
+                        $checkbox.checkbox();
+                    });
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    grid.dataSource.read();
+                    $('[data-toggle="checkbox"]').each(function () {
+                        var $checkbox = $(this);
+                        $checkbox.checkbox();
+                    });
+                }
+            }, 500);
+        }
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chkaccount');
+            }, 200)
+        }
+
+        function onDataBound(e) {
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+
+        function displayDate_n(date) {
+            if (date == null) {
+                return "";
+            }
+            var value = date.ToUtcUtzDate();
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd'), '@DateFormat' + " hh:mm tt");
+        }
+
+        function status(leadAdapterStatus) {
+            if (leadAdapterStatus == "Inprogress") {
+                return "In Progress";
+            }
+            else if (leadAdapterStatus == "ReadyToProcess") {
+                return "Ready To Process";
+            }
+            else if (leadAdapterStatus == "ReadyToIndex" || leadAdapterStatus == "Indexing" || leadAdapterStatus == "ProcessingContacts") {
+                return "Processing";
+            }
+            else if (leadAdapterStatus == "PartialSuccess") {
+                return "Partiallly Suceeded";
+            }
+            else
+                return leadAdapterStatus;
+        }
+
+        function ViewImportHistory() {
+            window.location.href = 'importfilehistory';
+        }
+
+
+        $(document).ready(function () {
+            removepageloader();
+            tableMasterCheckBox('importdata-grid');
+        });
+
+    </script>
+
+}

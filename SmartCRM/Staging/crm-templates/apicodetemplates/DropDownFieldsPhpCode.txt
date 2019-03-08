@@ -1,0 +1,23 @@
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('https://services.smarttouch.net/DropDownValueFields');
+$request->setMethod(HTTP_METH_GET);
+
+$request->setQueryData(array(
+  'accountId' => '{ACCOUNTID}'
+));
+
+$request->setHeaders(array(
+  'cache-control' => 'no-cache',
+  'content-type' => 'application/json; charset=utf-8',
+  'authorization' => 'Bearer {ACCESS_TOKEN}'
+));
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}

@@ -1,0 +1,1217 @@
+﻿@{
+    ViewBag.Title = "Contacts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var Details = ViewBag.ContactDetail == null ? 0 : 1;
+    var JobID = ViewBag.JobID == null ? null : ViewBag.JobID;
+    var TagID = ViewBag.TagID == null ? null : ViewBag.TagID;
+    var FormID = ViewBag.FormID == null ? null : ViewBag.FormID;
+    var WorkflowID = ViewBag.WorkflowID == null ? null : ViewBag.WorkflowID;
+    var ActionID = ViewBag.ActionID == null ? null : ViewBag.ActionID;
+    var OppID = ViewBag.OpportunityID == null ? null : ViewBag.OpportunityID;
+    var recordStatus = ViewBag.recordStatus == null ? null : ViewBag.recordStatus;
+    var IsSendEmail = ViewBag.EmailPermission != null ? ViewBag.EmailPermission : false;
+    var Persons = ViewBag.Persons == null ? null : ViewBag.Persons;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var WorkflowContactState = ViewBag.WorkflowContactState == null ? null : ViewBag.WorkflowContactState;
+    var IsAccountAdmin = ViewBag.IsAccountAdmin;
+    var CampaignID = ViewBag.CampaignID == null ? null : ViewBag.CampaignID;
+    var CampaignDrillDownActivity = ViewBag.CampaignDrillDownActivity == null ? null : ViewBag.CampaignDrillDownActivity;
+    var IsSavedSearch = ViewBag.IsSavedSearch;
+    var IsFromDashboard = ViewBag.IsFromDashboard;
+    var searchFields = (IEnumerable<SmartTouch.CRM.ApplicationServices.ViewModels.FieldViewModel>)ViewBag.SearchFields;
+    var AccountId = ViewBag.AccountId;
+    var ViewDynamicGrid = ViewBag.IsDynamicGrid == null ? false : ViewBag.IsDynamicGrid;
+    var guid = ViewBag.Guid == null ? null : ViewBag.Guid;
+    var selectedFields = ViewBag.SelectedFields != null ? (IEnumerable<int>)ViewBag.SelectedFields : null;
+    var adSearchName = ViewBag.SearchName;
+    var adSearchId = ViewBag.SearchId;
+    var adPreconfigured = ViewBag.Preconfigured;
+    var adFavorite = ViewBag.Favorite;
+    var EntityId = ViewBag.EntityId;
+    var EntityType = ViewBag.EntityType;
+    var reportName = ViewBag.ReportName;
+    var isNewContactsReportSearch = ViewBag.IsNewContactsSearch;
+    var searchDescription = ViewBag.SearchDescription;
+    var showingType = ViewBag.ShowingType;
+    var fromSSGrid = ViewBag.FromSSGrid;
+    var name = ViewBag.Name;
+    var type = ViewBag.Type;
+    var sort = ViewBag.Sort;
+    var leadAdapterTypes = (IEnumerable<SmartTouch.CRM.Domain.LeadAdapters.LeadAdapterType>)ViewBag.LeadAdapterTypes;
+}
+
+@Scripts.Render("~/bundles/contactsresultsview")
+@Scripts.Render("~/bundles/Opportunityvm")
+
+<style type="text/css">
+    .k-grid tr {
+        -webkit-transform: scale3d(1,1,1);
+    }
+
+    .k-grid th,
+    .k-grid td {
+        -webkit-transform: translateZ(0);
+    }
+</style>
+<script>
+
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+    localStorage.removeItem("ContactsGrid");
+    var contactDtls = '@(Details)';
+    if (contactDtls == 0) {
+        localStorage.removeItem("searchtext");
+        localStorage.removeItem("searchcontent");
+        localStorage.removeItem("sortcontent");
+        createCookie("pagenumber", 1, 1);
+        createCookie("pagesize", '@(ItemsPerPage)', 1);
+        localStorage.setItem("searchcontent", "2");
+    }
+    var type = '@(type)';
+    var name = '@(name)'
+    var sort = '@(sort)'
+
+
+    var JobID = '@(JobID)';
+    var TagID = '@(TagID)';
+    var FormID = '@(FormID)';
+    var recordStatus = '@(recordStatus)';
+    var IntegratedPersons = '@(Persons)';
+    var WorkflowID = '@(WorkflowID)';
+    var CampaignID = '@(CampaignID)';
+    var ActionID = '@(ActionID)';
+    var OpptyID = '@(OppID)';
+    var WorkflowContactState = '@(WorkflowContactState)';
+    var IsAccountAdmin = '@(IsAccountAdmin)';
+
+    if (JobID != null) {
+        localStorage.setItem("ImportedJobID", JobID);
+    } else {
+        localStorage.removeItem("ImportedJobID");
+    }
+
+    if (TagID != null) {
+        localStorage.setItem("TagID", TagID);
+    } else {
+        localStorage.removeItem("TagID");
+    }
+
+    if (ActionID != null) {
+        localStorage.setItem("ActionID", ActionID);
+    } else {
+        localStorage.removeItem("ActionID");
+    }
+
+    if (OpptyID != null)
+        localStorage.setItem("OpptyID", OpptyID);
+    else
+        localStorage.removeItem("OpptyID");
+
+
+    if (FormID != null) {
+        localStorage.setItem("ViewSubmissionFormID", FormID);
+    } else {
+        localStorage.removeItem("ViewSubmissionFormID");
+    }
+
+    if (recordStatus != null && recordStatus != "") {
+        localStorage.setItem("ImportedRecordStatus", recordStatus);
+    } else {
+        localStorage.removeItem("ImportedRecordStatus");
+    }
+
+    if (IntegratedPersons != "") {
+        localStorage.setItem("IntegratedPersons", IntegratedPersons);
+    } else {
+        localStorage.removeItem("IntegratedPersons");
+    }
+
+    if (WorkflowID != null) {
+        localStorage.setItem("WorkflowID", WorkflowID);
+        localStorage.setItem("WorkflowContactState", WorkflowContactState);
+    } else {
+        localStorage.removeItem("WorkflowID");
+        localStorage.removeItem("WorkflowContactState");
+    }
+
+    if (CampaignID != null) {
+        localStorage.setItem("CampaignID", CampaignID);
+        localStorage.setItem("CampaignDrillDownActivity", '@CampaignDrillDownActivity');
+    } else {
+        localStorage.removeItem("CampaignID");
+        localStorage.removeItem("CampaignDrillDownActivity");
+    }
+
+    if (name) {
+        localStorage.removeItem("searchtext");
+        localStorage.setItem("searchtext", '@(name)');
+    } else {
+        localStorage.removeItem("searchtext");
+    }
+
+    if (type) {
+        localStorage.removeItem("searchcontent");
+        localStorage.setItem("searchcontent", '@(type)');
+    } else {
+        localStorage.setItem("searchcontent", "2");
+    }
+
+    if (sort) {
+        localStorage.removeItem("sortcontent");
+        localStorage.setItem("sortcontent", '@(sort)');
+    } else {
+        localStorage.removeItem("sortcontent");
+    }
+
+    localStorage.removeItem("contactdetails");
+
+    function searchParameters() {
+        console.log(localStorage.getItem("searchcontent"));
+        var parameters = {
+            name: localStorage.getItem("searchtext"),
+            type: localStorage.getItem("searchcontent"),
+            sorter: localStorage.getItem("sortcontent"),
+            JobID: localStorage.getItem("ImportedJobID"),
+            TagID: localStorage.getItem("TagID"),
+            FormID: localStorage.getItem("ViewSubmissionFormID"),
+            recordStatus: localStorage.getItem("ImportedRecordStatus"),
+            IntegratedPersons: localStorage.getItem("IntegratedPersons"),
+            WorkflowID: localStorage.getItem("WorkflowID"),
+            WorkflowContactState: localStorage.getItem("WorkflowContactState"),
+            CampaignID: localStorage.getItem("CampaignID"),
+            CampaignDrillDownActivity: localStorage.getItem("CampaignDrillDownActivity"),
+            ActionID: localStorage.getItem("ActionID"),
+            isSavedSearch: '@(IsSavedSearch)',
+            viewDynamicGrid: '@(ViewDynamicGrid)',
+            guid: '@(guid)',
+            IsNewContactsSearch: '@(isNewContactsReportSearch)',
+            OpportunityID: localStorage.getItem("OpptyID")
+        }
+        return parameters;
+    }
+
+</script>
+
+@using (Ajax.BeginForm("ContactList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="clientsDb" style="display:none">
+        <div class="page-title">
+            [|Advanced View|]
+            <span>
+                <a class="back" data-bind="attr:{'href': IsDynamicGrid == 'True' ? '../contacts/search' : document.referrer}">
+                    <i class="icon st-icon-leftdropdownarrow"></i> [|Back|]
+                </a>
+            </span>
+        </div>
+        <div data-bind="visible: (IsSavedSearch() == 'True' &&  SearchName() != '')" class="st-saved-search-info">
+            <p>
+                <span class="control-label"> [|Saved Search Name :|] </span><span data-bind="text:SearchName"></span><span>
+                    <a data-bind="visible:SearchId() != '0',attr:{ 'href': '@Url.Action("EditSearch", "AdvancedSearch")?SearchDefinitionID='+SearchId()+''}">
+                        <i class="icon st-icon-edit"></i>
+                    </a>
+                </span>
+            </p>
+            <span class="control-label"> [|Criteria : |]</span><span data-bind="html:SearchTitle"></span>
+
+        </div>
+        <script>
+            //document.write('<a class="pull-right mbl" href="' + document.referrer + '">[|Back|]</a>');  ="javascript:history.go(-1)"
+        </script>
+            <div class="resultsgrid contacts-gridresults">
+                @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ContactListEntry>()
+    .Name("grid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(false)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+            .ButtonCount(10)
+            .Numeric(true).Messages(m => m
+        .Display("[|Showing|] {0:#,#} - {1:#,#} [|from|] {2:n0} [|Contact(s)|]")
+                .Empty("[|No contacts to display|]").ItemsPerPage("[|Contacts per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(t => "").Title("")
+            .ClientTemplate("#= addCheckBoxTemplate(data.CompanyName, data.PrimaryEmail, data.ContactType, data.Phone,data.PrimaryEmailStatus, data.DoNotEmail, data.IsDelete, IsAccountAdmin, data.ContactID, data.PrimaryContactPhoneNumberID, data.PrimaryContactEmailID, data.Name) #")
+            .HeaderHtmlAttributes(new { @class = "customth k-header", @style = "width:60px;" });
+
+        //columns.Bound(b => b.ContactID).ClientTemplate("#=data.ContactID#, #=data.ContactType#").Hidden();
+
+        columns.Bound(b => b.FirstName).Title("First Name").ClientTemplate("#= firstName(data.FirstName, data.ContactID) # ").HtmlAttributes(new { @id = "firstname", @title = "#:FirstName#" })
+            .HeaderHtmlAttributes(new { @title = "First Name", @data_fieldId = "1" }).HtmlAttributes(new { @data_fieldId = "1" });
+
+        columns.Bound(b => b.LastName).Title("Last Name").ClientTemplate("#= lastName(data.LastName, data.ContactID) #").HtmlAttributes(new { @id = "lastname", @title = "#:LastName#" })
+            .HeaderHtmlAttributes(new { @title = "Last Name", @data_fieldId = "2" }).HtmlAttributes(new { @data_fieldId = "2" });
+
+        columns.Bound(b => b.CompanyName).Title("Company Name").ClientTemplate("#= companyName(data.CompanyName,data.ContactID,data.CompanyID,data.CompanyName,data.Name,data.ContactType)#")
+            .HtmlAttributes(new { @id = "companyname", @data_fieldId = "3" }).HeaderHtmlAttributes(new { @title = "Company Name", @data_fieldId = "3" });
+
+        columns.Bound(b => b.PrimaryEmail).Title("Primary Email").ClientTemplate("#=emailFormat(data.Name, data.PrimaryContactEmailID, data.PrimaryEmail, data.DoNotEmail, data.PrimaryEmailStatus)#")
+            .HtmlAttributes(new { @id = "primaryemail", @data_fieldId = "7" }).Sortable(true).HeaderHtmlAttributes(new { @title = "Primary Email", @data_fieldId = "7" });
+
+        columns.Bound(b => b.Title).Title("Title").Hidden().HeaderHtmlAttributes(new { @title = "Title", @data_fieldId = "8" }).Sortable(true).HtmlAttributes(new { @data_fieldId = "8" });
+
+        columns.Bound(b => b.LifecycleName).Title("Life Cycle").Hidden().HeaderHtmlAttributes(new { @title = "Life Cycle", @data_fieldId = "22" }).Sortable(true).HtmlAttributes(new { @data_fieldId = "22" });
+
+        columns.Bound(b => b.DoNotEmail).Title("Do not email").Hidden().ClientTemplate("<span>#=doNotEmail(data.DoNotEmail)#</span>").Sortable(true).HtmlAttributes(new
+        {
+            @id = "donotemail",
+            @data_fieldId = "23"
+        })
+            .HeaderHtmlAttributes(new { @title = "Do not email", @data_fieldId = "23" });
+
+        columns.Bound(b => b.LastTouched).Title("Last Touched").Hidden().ClientTemplate("<span>#=formatDate(data.LastTouched)#</span>").Sortable(true).HtmlAttributes(new { @data_fieldId = "29" })
+            .HeaderHtmlAttributes(new { @title = "Last Contacted", @data_fieldId = "29" });
+
+        columns.Bound(b => b.PartnerTypeName).Title("Partner Type").Hidden().HeaderHtmlAttributes(new { @title = "Partner Type", @data_fieldId = "21" }).Sortable(true).HtmlAttributes(new { @data_fieldId = "21" });
+
+        columns.Bound(b => b.LastTouchedThrough).Title("Last Touched Method").Hidden().HeaderHtmlAttributes(new { @title = "Last Touched Method", @data_fieldId = "41" }).Sortable(false)
+            .HtmlAttributes(new { @data_fieldId = "41" });
+
+        columns.Bound(b => b.LeadScore).Title("Lead Score").Hidden().HeaderHtmlAttributes(new { @title = "Lead Score", @data_fieldId = "26" }).Sortable(true).HtmlAttributes(new { @data_fieldId = "26" });
+
+        columns.Bound(b => b.FacebookUrl).Title("Facebook Url").Hidden().ClientTemplate("#=formatUrl(data.FacebookUrl)#").HtmlAttributes(new { @data_fieldId = "9" }).Sortable(true)
+            .HeaderHtmlAttributes(new { @title = "Facebook Url", @data_fieldId = "9" });
+
+        columns.Bound(b => b.LinkedInUrl).Title("Linkedln Url").Hidden().ClientTemplate("#=formatUrl(data.LinkedlnUrl)#").HtmlAttributes(new { @data_fieldId = "11" })
+            .HeaderHtmlAttributes(new { @title = "Linkedln Url", @data_fieldId = "11" });
+
+        columns.Bound(b => b.GooglePlusUrl).Title("GooglePlus Url").Hidden().ClientTemplate("#=formatUrl(data.GooglePlusUrl)#").HtmlAttributes(new { @data_fieldId = "12" })
+            .HeaderHtmlAttributes(new { @title = "GooglePlus Url", @data_fieldId = "12" });
+
+        columns.Bound(b => b.WebsiteUrl).Title("Website Url").Hidden().ClientTemplate("#=formatUrl(data.WebsiteUrl)#").HtmlAttributes(new { @data_fieldId = "13" })
+            .HeaderHtmlAttributes(new { @title = "Website Url", @data_fieldId = "13" });
+
+        columns.Bound(b => b.BlogUrl).Title("Blog Url").Hidden().ClientTemplate("#=formatUrl(data.BlogUrl)#").HtmlAttributes(new { @data_fieldId = "14" })
+            .HeaderHtmlAttributes(new { @title = "Blog Url", @data_fieldId = "14" });
+
+        columns.Bound(b => b.TwitterUrl).Title("Twitter Url").Hidden().ClientTemplate("#=formatUrl(data.TwitterUrl)#").HtmlAttributes(new { @data_fieldId = "10" })
+            .HeaderHtmlAttributes(new { @title = "Twitter Url", @data_fieldId = "10" });
+
+        columns.Bound(b => b.LeadSources).Title("Lead Source").Hidden().HeaderHtmlAttributes(new { @title = "Lead Source", @data_fieldId = "24" }).HtmlAttributes(new { @data_fieldId = "24", @title = "#:LeadSources#" });
+
+        columns.Bound(b => b.LeadSourceDate).Title("Lead Source Date").Hidden().ClientTemplate("<span>#=formatDateList(data.LeadSourceDate)#</span>").HeaderHtmlAttributes(new { @title = "Lead Source Date", @data_fieldId = "50" })
+            .HtmlAttributes(new { @data_fieldId = "50", @title = "#=formatDateList(data.LeadSourceDate)#" });
+
+        columns.Bound(b => b.FirstLeadSource).Title("First Lead Source").Hidden().HeaderHtmlAttributes(new { @title = "First Lead Source", @data_fieldId = "51" }).HtmlAttributes(new { @data_fieldId = "51" });
+
+        columns.Bound(b => b.FirstLeadSourceDate).Title("First Lead Source Date").Hidden().ClientTemplate("<span>#=formatDate(data.FirstLeadSourceDate)#</span>").HeaderHtmlAttributes(new { @title = "First Lead Source Date", @data_fieldId = "52" })
+            .HtmlAttributes(new { @data_fieldId = "52" });
+
+        columns.Bound(b => b.SourceType).Title("First Source Type").Hidden().HeaderHtmlAttributes(new { @title = "First Source Type", @data_fieldId = "44" }).HtmlAttributes(new { @data_fieldId = "44" });
+
+        columns.Bound(b => b.OwnerName).Title("Owner Name").Hidden().HeaderHtmlAttributes(new { @title = "Owner Name", @data_fieldId = "25" }).HtmlAttributes(new { @data_fieldId = "25" });
+
+        columns.Bound(b => b.CreatedByUser).Title("Created By").Hidden().HeaderHtmlAttributes(new { @title = "Created By", @data_fieldId = "27" }).HtmlAttributes(new { @data_fieldId = "27" });
+
+        columns.Bound(b => b.CreatedOn).Title("Created On").Hidden().ClientTemplate("<span>#=formatDate(data.CreatedOn)#</span>").HtmlAttributes(new { @data_fieldId = "28" })
+            .HeaderHtmlAttributes(new { @title = "Created On", @data_fieldId = "28" });
+
+        columns.Template(t => "").Title("Address Line 1").Hidden().ClientTemplate("<span>#=address(data.PrimaryAddress,1)#</span>").HtmlAttributes(new { @data_fieldId = "15" })
+            .HeaderHtmlAttributes(new { @title = "Address Line 1", @data_fieldId = "15" });
+
+        columns.Template(t => "").Title("Address Line 2").Hidden().ClientTemplate("<span>#=address(data.PrimaryAddress,2)#</span>").HtmlAttributes(new { @data_fieldId = "16" })
+            .HeaderHtmlAttributes(new { @title = "Address Line 2", @data_fieldId = "16" });
+
+        columns.Template(t => "").Title("City").Hidden().ClientTemplate("<span>#=address(data.PrimaryAddress,3)#</span>").HtmlAttributes(new { @data_fieldId = "17" })
+            .HeaderHtmlAttributes(new { @title = "City", @data_fieldId = "17" });
+
+        columns.Template(t => "").Title("State").Hidden().ClientTemplate("<span>#=address(data.PrimaryAddress,4)#</span>").HtmlAttributes(new { @data_fieldId = "18" })
+            .HeaderHtmlAttributes(new { @title = "State", @data_fieldId = "18" });
+
+        columns.Template(t => "").Title("Country").Hidden().ClientTemplate("<span>#=address(data.PrimaryAddress,5)#</span>").HtmlAttributes(new { @data_fieldId = "20" })
+            .HeaderHtmlAttributes(new { @title = "Country", @data_fieldId = "20" });
+
+        columns.Template(t => "").Title("Zipcode").Hidden().ClientTemplate("<span>#=address(data.PrimaryAddress,6)#</span>").HtmlAttributes(new { @data_fieldId = "19" })
+            .HeaderHtmlAttributes(new { @title = "Zipcode", @data_fieldId = "19" });
+
+        columns.Template(t => "").Title("Contact Summary").Hidden().ClientTemplate("<span>#=data.NoteSummary#</span>").HtmlAttributes(new { @data_fieldId = "54", @title = "#:data.NoteSummary#" })
+            .HeaderHtmlAttributes(new { @title = "Contact Summary", @data_fieldId = "54" });
+
+        columns.Template(t => "").Title("Last Note Date").Hidden().ClientTemplate("<span>#=formatDate(data.LastNoteDate)#</span>").HtmlAttributes(new { @data_fieldId = "55" })
+            .HeaderHtmlAttributes(new { @title = "Last Note Date", @data_fieldId = "55" });
+
+        columns.Template(t => "").Title("Email Status").Hidden().ClientTemplate("<span>#=emailStatuses(data.PrimaryEmailStatus)#</span>").HtmlAttributes(new { @data_fieldId = "59" })
+            .HeaderHtmlAttributes(new { @title = "Email Status", @data_fieldId = "59" });
+        columns.Template(t => "").Title("Lead Adapter").Hidden().ClientTemplate("<span>#=GetLeadAdapterTypeName(data.FirstSourceType)#</span>").HtmlAttributes(new { @data_fieldId = "61" })
+           .HeaderHtmlAttributes(new { @title = "Lead Adapter", @data_fieldId = "61" });
+        columns.Template(t => "").Title("Last Note").Hidden().ClientTemplate("<span>#=DisplayLastNote(data.LastNote)#</span>").HtmlAttributes(new { @data_fieldId = "69", @title = "#:data.LastNote#" })
+            .HeaderHtmlAttributes(new { @title = "Last Note", @data_fieldId = "69" });
+
+        foreach (var field in searchFields.Where(w => w.AccountID != null))
+        {
+            columns.Template(t => "").Title(field.Title).HeaderHtmlAttributes(new
+            {
+                @data_type = "custom",
+                @data_fieldId = field.FieldId,
+                @data_fieldInputTypeId = field.FieldInputTypeId,
+                @data_IsPhoneField = field.IsDropdownField,
+                @title = field.Title
+                //@style = "width=150px"
+            }).HtmlAttributes(new { @data_fieldId = field.FieldId }).Hidden();
+        }
+
+        columns.Template(t => "").Title("").Hidden().HeaderHtmlAttributes(new { @style = "width:1px;" }).ClientTemplate("");
+
+        columns.Template(t => "").Title("").HeaderHtmlAttributes(new { @class = "customth k-header", @style = "width:80px;" }).HtmlAttributes(new { @class = "grid-row-controls" })
+       .ClientTemplate("#= addEditDeleteButtons(data.CompanyName, data.PrimaryEmail, data.ContactType, data.Phone,data.PrimaryEmailStatus, data.DoNotEmail, data.IsDelete, IsAccountAdmin, data.ContactID, data.PrimaryContactPhoneNumberID, data.PrimaryContactEmailID, data.Name) #");        //<div class="notecordsfound">
+    })
+    .Sortable(sortabe => sortabe.AllowUnsort(true))
+    .Resizable(r => r.Columns(true))
+    .ToolBar(toolbar =>
+    {
+    toolbar.Template(@<text>
+                <div class="toolbar grid-ct-header">
+                    <div class="left-part">
+                        <div class="stc-select-all">
+                            <div class="stc-select-main" onclick="ArrowClick()">
+                                <label id="selectcheckbox" class="checkbox stc-all-check toggle-all"
+                                       for="masterCheckBox">
+                                    <span class="icons">
+                                        <span class="first-icon st-icon-checkbox-normal"></span><span class="second-icon st-icon-checkbox-selected"></span>
+                                    </span><input type="checkbox" data-toggle="checkbox" id="masterCheckBox">
+                                    <span id="selectcheckbox_text">Select All</span>
+                                </label>
+                                <i class="icon stc-drop-icon st-icon-dropdownarrow mlm"></i>
+                            </div>
+                            <div class="stc-select-drop">
+                                <label id="selectallcheckbox" class="checkbox toggle-all" for="masterCheckBox_all">
+                                    <span class="icons">
+                                        <span class="first-icon st-icon-checkbox-normal"></span><span class="second-icon st-icon-checkbox-selected"></span>
+                                    </span><input type="checkbox" data-toggle="checkbox" onchange="SelectAllPages(this)" id="masterCheckBox_all">
+                                    <span id="selectallcheckbox_text">All Pages</span>
+
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-part">
+                        <div class="grid-search">
+                            <input type="search" id="txtSearch" onkeydown="GetContactsBasedonsearch(event);" class=" form-control" placeholder="[|Search|]" />
+                            <i class="icon st-icon-search-2"></i>
+                        </div>
+                        <div class="grid-controls">
+                            <span class="sort-label">[|Showing|]</span>
+                            <span class="sort-select">
+                                <input data-bind="kendoDropDownList:{ data : ShowingFields, value: ShowingType, dataValueField: 'Value', dataTextField: 'Text'}" />
+                            </span>
+                            <span class="sort-label">[|Fields|]</span>
+                            <span class="sort-select">
+                                <select class="cu-multiselect" data-bind="kendoMultiSelect:{ data : SearchFields, value: Fields, dataValueField: 'FieldId', dataTextField: 'Title', multiple:'multiple'}"></select>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+        </text>);
+    })
+        .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(ItemsPerPage)
+
+        .Read(read => read.Action("ContactsViewRead", "Contact").Data("searchParameters"))
+        ))
+            </div>
+        </div>
+
+
+}
+<script>
+    localStorage.setItem("ContactsGrid", "2"); // 2# advannced
+    localStorage.removeItem("OpportunityView");
+    localStorage.removeItem("OpportunityName");
+    localStorage.removeItem("OpportunityID");
+    createCookie("selectallsearchstring", "", 1);
+    var leadAdapterTypes = '@Html.Raw(Json.Encode(ViewBag.LeadAdapterTypes))';
+
+    function GetLeadAdapterTypeName(typeId) {
+        var leadAdapterData = JSON.parse(leadAdapterTypes)
+        var LeadAdapterName="";
+        if (typeId) {
+            if (typeId > 0) {
+                $.each(leadAdapterData, function (ind, val) {
+                    if (val.LeadAdapterTypeID == 11)
+                        val.Name = "Import";
+
+                    if (val.LeadAdapterTypeID == typeId)
+                        LeadAdapterName = val.Name;
+                });
+                return LeadAdapterName
+            }
+            else
+                return LeadAdapterName;
+        }
+        else
+            return LeadAdapterName;
+
+    }
+
+    function DisplayLastNote(lastNote) {
+        if (lastNote)
+            return lastNote;
+        else
+            return "";
+    }
+
+    $('#menuItem236').removeAttr('display');
+
+    function goBack() {
+
+        if (document.referrer.indexOf('editreport') > -1) {
+            var url = document.referrer.replace("False", "True");
+            window.location.href = url;
+        }
+        else
+            window.location.href = document.referrer;
+    }
+    $('#fields').change(function (e) {
+        var index = $('#fields :selected').index() + 2;
+        // toggleHeader(index);
+        // toggleBody(index);
+    });
+    function toggleHeader(index) {
+        var myGrid = $('#grid').data('kendoGrid');
+        //var column = myGrid.columns[index - 1];
+        //if (column.hidden == true)
+        //    myGrid.showColumn(index - 1);
+        //else
+        //    myGrid.hideColumn(index - 1);
+        myGrid.thead.find("th:nth-child(" + index + ")").each(function () {
+            $(this).toggle();
+
+        });
+
+    };
+    function toggleBody(index) {
+        var myGrid = $('#grid').data('kendoGrid');
+        myGrid.tbody.find("td:nth-child(" + index + ")").each(function () {
+            $(this).toggle();
+        });
+    };
+
+    var emailFormat = function (name, emailID, email, doNotEmail, emailStatus) {
+        var isSendEmail = '@(IsSendEmail)';
+        if (email == 'Email Not Available')
+            return "Email Not Available";
+        else {
+            if (isSendEmail == 'False' || doNotEmail == 'true' || emailStatus == 53 || emailStatus == 54 || emailStatus == 57)
+                return "<label style='margin-top:0px; margin-bottom:0px'>" + email + "</label>"
+            else
+                return "<a data-toggle='modal' data-target='#modal' href='/contact/_SendMailModel?contactName=" + getEmailData(name, email) + "&email=" + emailID + "'>" + email + "</a>";
+        }
+    };
+
+    function getEmailData(contactname, PrimaryEmialID) {
+        var Text = contactname + " " + "<" + PrimaryEmialID + ">" + " " + "*";
+        var name = encodeURIComponent(Text);
+        return name;
+    }
+
+    function Contact(data) {
+        return data == 1 ? "Person" : "Company";
+    }
+
+    function doNotEmail(data) {
+        return data == true ? "Yes" : "No";
+    }
+
+    function formatDate(date) {
+        if (isNaN(Date.parse(date))) {
+            return "";
+        }
+        else {
+            var dateFormat = readCookie("dateformat");
+            if (dateFormat == null || dateFormat == 'undefined')
+                return new Date(Date.parse(date)).ToUtcUtzDate().toDateString();
+            else {
+                var utzDate = new Date(moment(date).toDate()).ToUtcUtzDate();
+                return kendo.toString(utzDate, dateFormat + " hh:mm tt");
+            }
+        }
+    }
+
+    function formatDateList(date) {
+        var dateString = "";
+        if (date != null && date != 'undefined' && date.toString().indexOf(',') > -1) {
+            var dateArray = date.toString().split(',');
+            $.each(dateArray, function (i, v) {
+
+                dateString += formatDate(v) + ", ";
+            });
+            return dateString;
+        }
+        else
+            return formatDate(date);
+    }
+
+    function formatUrl(data) {
+        if (data != null)
+            return "<a href=" + data + ">" + data + "</a>";
+        else
+            return "";
+    }
+
+    function companyName(name, contactId, companyId, companyName, fullName, type) {
+        if (type == 1 && companyId != null)
+            return "<a href= /company/" + companyId + ">" + companyName + "</a>";
+        else if (type == 2 && contactId != null)
+            return "<a href= /company/" + contactId + ">" + name + "</a>";
+        else
+            return companyName;
+    }
+
+    function firstName(name, contactId) {
+        if (name != null)
+            return "<a href= /person/" + contactId + ">" + name + "</a>";
+        else
+            return "";
+    }
+
+    function lastName(name, contactId) {
+        if (name != null)
+            return "<a href= /person/" + contactId + ">" + name + "</a>";
+        else
+            return "";
+    }
+
+    function emailStatus(emailStatus) {
+        if (emailStatus == 50)
+            return "Not Verified";
+        else if (emailStatus == 51)
+            return "Verified";
+        else
+            return "";
+    };
+
+    function address(primaryAddress, val) {
+        if (primaryAddress != null) {
+            if (val == 1)
+                return (primaryAddress.AddressLine1 != null) ? primaryAddress.AddressLine1 : "";
+            else if (val == 2)
+                return (primaryAddress.AddressLine2 != null) ? primaryAddress.AddressLine2 : "";
+            else if (val == 3)
+                return (primaryAddress.City != null) ? primaryAddress.City : "";
+            else if (val == 4)
+                if (primaryAddress.State != null)
+                    return primaryAddress.State.Name ? primaryAddress.State.Name : "";
+                else
+                    return "";
+            else if (val == 5)
+                if (primaryAddress.Country != null)
+                    return primaryAddress.Country.Name ? primaryAddress.Country.Name : "";
+                else
+                    return "";
+            else if (val == 6)
+                return (primaryAddress.ZipCode != null) ? primaryAddress.ZipCode : "";
+        }
+        else
+            return "";
+    };
+
+    function emailStatuses(status) {
+        if (status == "50")
+            return "Not Verified";
+        else if (status == "51")
+            return "Verified";
+        else if (status == "52")
+            return "Soft Bounce";
+        else if (status == "53")
+            return "Hard Bounce";
+        else if (status == "54")
+            return "Unsubscribed";
+        else if (status == "55")
+            return "Subscribed";
+        else if (status == "56")
+            return "Complained";
+        else if (status == "57")
+            return "Suppressed";
+        else
+            return "";
+    }
+
+    localStorage.removeItem("contactsData");
+    localStorage.setItem("ContactOpportunity", "grid");
+    localStorage.setItem("contactsdisplayurl", document.URL);
+    var searchText;
+    var IsSendEmail = '@IsSendEmail';
+    var boundCount = 0;
+
+    var Contacts_BASE_URL = '@Url.Content("~/Contact/")';
+
+    function contactTypeChange() {
+        var value = this.value();
+        localStorage.setItem("searchcontent", value);
+        var dropDown = $("#contactTypes").data("kendoDropDownList");
+        $("#grid").data("kendoGrid").dataSource.read();
+        appendCheckbox();
+    }
+
+    function sorttypeChange() {
+        var value = this.value();
+        localStorage.setItem("sortcontent", value);
+        $("#grid").data("kendoGrid").dataSource.read();
+    };
+
+    function formatPhoneNumber(phone) {
+        var phoneTYpe = phone.split(",");
+
+        if (phone == "(xxx) xxx - xxxx") {
+            return phone;
+        } else {
+            return formatPhone(phoneTYpe[0]);
+        }
+    }
+
+    var rowNumber = 0;
+    var rnumber = 0;
+    function renderNumber(data) {
+        // return ++rowNumber;
+    }
+
+    function GetContactsBasedonsearch(e) {
+        setTimeout(function () {
+            var enterKeyPressCode = 13;
+            if (searchText !== $("#txtSearch").val() || (searchText === $("#txtSearch").val() && e.keyCode == enterKeyPressCode))
+                searchText = $("#txtSearch").val();
+            else
+                return;
+
+            $filter = new Array();
+            var grid = $("#grid").data("kendoGrid");
+            var searchBox = $("#txtSearch").val();
+            var contactType = $("#contactTypes").val();
+
+            if ($.trim(searchBox).length > 2) {
+                localStorage.removeItem("searchtext");
+                var psize = readCookie("pagesize");
+                localStorage.setItem("searchtext", searchBox);
+
+                grid.dataSource.query({ page: 1, pageSize: psize });
+
+                appendCheckbox();
+
+            }
+            else if ($.trim(searchBox).length === 0) {
+                localStorage.removeItem("searchtext");
+                $("#grid").data("kendoGrid").dataSource.read();
+                appendCheckbox();
+            }
+        }, 800);
+    }
+
+    //selectedRow = {};
+    //function onRowSelection(e) {
+    //    selectedRow = e;
+    //    var contactID = 0, contactType = 0;
+    //    var html = $(e.sender.select()).find('td')[1].innerHTML;
+    //    if (html != null) {
+    //        var dataArray = html.split(',');
+    //        if (dataArray) {
+    //            contactID = dataArray[0]; contactType = dataArray[1];
+    //        }
+    //    }
+    //}
+
+    function onDataBound(e) {
+        $("#clientsDb").show();
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").not("#contactsGridExport").data('kendoDropDownList').setDataSource(dataSource);
+
+
+        var grid = e.sender;
+        var fieldId;
+        var inputTypeId;
+        var isPhoneField;
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var authToken = readCookie("accessToken");
+        var accountId = '@(AccountId)';
+        $.ajax({
+            url: WEBSERVICE_URL + '/customfieldsvalueoptions?accountId=' + accountId,
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+            },
+            success: function (response) {
+                selfContactsResults.ValueOptions(response);
+                var startTimeInner = new Date().getTime();
+                var tableHeaders = grid.thead.find("th[data-type='custom']");
+                var tableRows = grid.tbody.find('tr');
+                var hasDataItems = grid.dataItems().length > 0;
+                var selectedFields = selfContactsResults.selectedFields();
+                var ids = [];
+                $.each(tableHeaders, function (i, v) { ids.push($(this).data("fieldid").toString()); });
+                var displayFields = [];
+                $.each(selectedFields, function (i, v) {
+                    if (ids.indexOf(v) > -1) {
+                        var field = tableHeaders.filter(function () { return $(this).data("fieldid") == v; });
+                        if (field) 
+                            displayFields.push(field[0]);
+                    }
+                });
+                selfContactsResults.processColumnsBinding(grid, displayFields, hasDataItems);
+                //$.each(displayFields, function (i, v) {
+                //    var index = $(this).data('index');
+                //    fieldId = $(this).data('fieldid');
+                //    inputTypeId = $(this).data('fieldinputtypeid');
+                //    isPhoneField = $(this).data('isphonefield');
+                //    $.each(tableRows, function (ix, val) {
+                //        var fieldValue = "";
+                //        if (hasDataItems) {
+                //            var customFields = grid.dataItems()[ix].CustomFields;
+                //            var valueOptions = response;
+                //            if (customFields != null && customFields.length > 0) {
+                //                var matchedField = ko.utils.arrayFirst(customFields, function (field, ai) {
+                //                    return field.CustomFieldId == fieldId;
+                //                });
+                //                if (matchedField != null) {
+                //                    if (inputTypeId == 'checkbox' || inputTypeId == 'radio' || inputTypeId == 'dropdown' || inputTypeId == 'multiselectdropdown')
+                //                        fieldValue = getCustomFieldValueOption(matchedField.Value, valueOptions);
+                //                    else if (inputTypeId == 'time')
+                //                        fieldValue = getTime(matchedField.Value_Date);
+
+                //                    else if (inputTypeId == 'date' || inputTypeId == 'datetime')
+                //                        fieldValue = formatDate(matchedField.Value);
+                //                    else
+                //                        fieldValue = matchedField.Value;
+                //                }
+                //            }
+                //            if (isPhoneField == "True") {
+                //                fieldValue = getPhoneNumber(fieldId, grid.dataItems()[ix].Phones);
+                //            }
+                //            $(this).find('td').eq(index).text(fieldValue).attr('title', fieldValue);
+                //        }
+                //    });
+                //    appendCheckbox();
+                //});
+                
+                removepageloader();
+                var endTimeInner = new Date().getTime();
+                var time = endTimeInner - startTimeInner;
+                console.log('Ajax Sucess execution time: ' + time);
+            },
+            error: function (response) {
+                notifyError(response.responseText);
+            }
+        });
+        var startTime = new Date().getTime();
+
+        //Fields selected in Adv.Search issues with firstname, lastname
+        if (boundCount == 0) {          //First time loading
+            var fields = '@Html.Raw(Json.Encode(ViewBag.SelectedFields))';
+            if (fields != 'null') {
+                fields = JSON.parse(fields);
+                $.each(fields, function (ind, va) {
+                    if (va != null && !(selfContactsResults.selectedFields().indexOf(va.toString()) > -1)) {
+                        var id = "#grid > table > thead > tr > th[data-fieldid = " + va.toString() + "]"
+                        $(id).show();
+                        selfContactsResults.selectedFields.push(va.toString());
+                    };
+                });
+            }
+        }
+        else{           //loading the grid after first time
+            var defaultFields = [1, 2, 3, 7];
+            $.each(defaultFields, function (i, v) {
+                if (selfContactsResults.selectedFields().indexOf(v.toString()) < 0) {
+                    var id = "#grid > table > tbody > tr > td[data-fieldid = " + v.toString() + "]";
+                    $(id).hide();
+                }
+            });
+        }
+        var selectorTimer = new Date().getTime();
+        
+        $.each(selfContactsResults.selectedFields(), function (i, v) {
+            var index = grid.thead.find('th[data-fieldid="' + v + '"]')[0].dataset.index;
+            index = parseInt(index) + 1;
+            //$('th:nth-child(' + index +')').show();
+            $('td:nth-child(' + index + ')').show();
+        });
+        var selectorEndtime = new Date().getTime();
+        var selectordiff = selectorEndtime - selectorTimer;
+        console.log('Selector execution time: ' + selectordiff);
+
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + (colCount + 2) + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">No records found</span></div></td></tr>')
+        }
+        $('#masterCheckBox').attr('checked', false);
+        $('#masterCheckBox').parent('label.checkbox').removeClass('checked');
+
+        $('#masterCheckBox_all').attr('checked', false);
+        $('#masterCheckBox_all').parent('label.checkbox').removeClass('checked');
+
+        $(this).parents('tr').removeClass('k-state-selected');
+
+        boundCount += 1;
+        var endTime = new Date().getTime();
+        var time = endTime - startTime;
+        console.log('Execution time: ' + time);
+    }
+
+    function replaceAll(str, find, replace) {
+        return str.replace(new RegExp(find, 'g'), replace);
+    }
+
+    function addCheckBoxTemplate(companyname, email, contactType, phone, emailStatus, doNotEmail, isDelete, isAccountAdmin, contactId, phoneNumberID, emailID, name) {
+        return "<label class='checkbox'>" +
+                        "<input type='checkbox' class='chkcontacts' id='" + contactId + "' data-name= '" + name + "' " + "data-company='" + companyname + "' " + "data-Email='" + email + "' " +
+                        "data-email-id='" + emailID + "' " + "data-phone-id='" + phoneNumberID + "' " + "data-contacttype='" + contactType + "' " + "data-phone='" + phone + "' " + "data-EmailStatus='" +
+                        emailStatus + "' " + "data-DonotEmail='" + doNotEmail + "' " + "data-IsDelete='" + isDelete + "' " + "data-IsAccountAdmin='" + isAccountAdmin + "' " + "data-toggle='checkbox'/>" +
+                        "</label>";
+    }
+
+    function addEditDeleteButtons(companyname, email, contactType, phone, emailStatus, doNotEmail, isDelete, isAccountAdmin, contactId, phoneNumberID, emailID, name) {
+        //return "<span>" + ((contactType == 1) ? "<a href='/editperson?contactId=" + contactId + "&contactType=" + contactType + "'" +
+        //        "title='Edit Contact'><i class='icon st-icon-edit'></i></a>" : "<a href='/editcompany?contactId=" + contactId + "&contactType=" + contactType + "' title='Edit Contact'>" +
+        //        "<i class='icon st-icon-edit'></i></a>") + ((isDelete === true || isAccountAdmin == 'True') ? "<a href='javascript:void(0)' onclick='DeleteContact(" + contactId + ")' title='Delete Contact'>" +
+        //        "<i class='icon st-icon-bin-3'></i></a>" : "") + "</span>";
+        return "<span></span>";
+    }
+
+    var getPhoneNumber = function (fieldId, phones) {
+        var number = "";
+        if (phones == null)
+            return number;
+
+        var phonesList = ko.utils.arrayFilter(phones, function (phone) {
+            return phone.PhoneType == fieldId;
+        });
+        var phoneNumbers = "";
+        if (phonesList.length > 0)
+            phoneNumbers = ko.utils.arrayMap(phonesList, function (phone) {
+                if (phone.IsPrimary == true)
+                    return (phone.CountryCode != null ? "+" + phone.CountryCode + " " : "") + formatPhone(phone.Number) + (phone.Extension != null ? " Ext. " + phone.Extension + " " : "") + " *";
+                else
+                    return (phone.CountryCode != null ? "+" + phone.CountryCode + " " : "") + formatPhone(phone.Number) + (phone.Extension != null ? " Ext. " + phone.Extension + " " : "");
+            }).join(", ");
+        number = phoneNumbers;
+        return number;
+    };
+
+    function formatPhone(phonenum) {
+        var regexObj = /^(?:\+?1[-. ]?)?(?:\(?([0-9]{3})\)?[-. ]?)?([0-9]{3})[-. ]?([0-9]{4})$/;
+        if (regexObj.test(phonenum)) {
+            var parts = phonenum.match(regexObj);
+            var phone = "";
+            if (parts[1]) { phone += "(" + parts[1] + ") "; }
+            phone += parts[2] + "-" + parts[3];
+            return phone;
+        }
+        else {
+            return phonenum;
+        }
+    }
+
+    var getCustomFieldValueOption = function (valueOptionId, valueOptions) {
+        var optionText = "";
+        var optionIds = valueOptionId.toString().split('|');
+        $.each(optionIds, function (outerIndex, optionId) {
+            var option = ko.utils.arrayFirst(valueOptions, function (opt, i) {
+                return opt.CustomFieldValueOptionId == optionId;
+            });
+            if (option != null)
+                optionText = outerIndex > 0 ? optionText + ", " + option.Value : option.Value;
+        });
+        return optionText;
+    }
+
+    var getTime = function (value) {
+        var time = value;
+        var date = new Date(value).ToUtcUtzDate();
+        if (date != 'Invalid Date') {
+            time = kendo.toString(new Date(moment(time).toDate()).ToUtcUtzDate(), "T")
+        }
+        return time;
+    }
+
+    function DeleteContact(id) {
+        alertifyReset("Delete Contact", "Cancel");
+        alertify.confirm("[|You are about to Delete 1 Contact(s) and their history. This action cannot be undone. Are you sure you want to delete 1 Contact(s)?|]", function (e) {
+            if (e) {
+                pageLoader();
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: Contacts_BASE_URL + "DeleteContact",
+                    data: JSON.stringify({ id: id }),
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8'
+                }).then(function (response) {
+                    var filter = $.Deferred()
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    notifySuccess("[|Successfully deleted the Contact|]");
+                    setTimeout(function () {
+                        window.location.href = document.URL;
+                    }, setTimeOutTimer);
+                }).fail(function (error) {
+                    notifyError(error);
+                })
+            }
+            else {
+                notifyError("[|You've clicked Cancel|].[|The Contact(s) will not be deleted|].");
+            }
+        });
+    }
+
+    function onDataBinding(arg) {
+        rowNumber = (arg.sender.dataSource.page() - 1) * arg.sender.dataSource.pageSize();
+        ++rnumber;
+        setTimeout(function () {
+            appendCheckbox();
+            bindCheckboxchnage('chkcontacts');
+            $(".drop-lab").attr('data-target', '#modal');
+        }, 200)
+    }
+
+    function SelectAllPages(e) {
+        var selectallsearchstring = "";
+
+        if ($("#selectcheckbox_text").text() == "Select All") {
+            $("#selectcheckbox_text").text("All Pages");
+            $("#selectallcheckbox_text").text("Select All");
+            selectallsearchstring = (localStorage.getItem("searchtext") == null ? "" : localStorage.getItem("searchtext")) + "$" +
+              (localStorage.getItem("searchcontent") == null ? "" : localStorage.getItem("searchcontent")) + "$" + (localStorage.getItem("sortcontent") == null ? "0" : localStorage.getItem("sortcontent"));
+            $('#maincheckbox').addClass("checked");
+            createCookie("selectallsearchstring", selectallsearchstring, 1);
+            createCookie("selectallsearchstring", selectallsearchstring, 1);
+        }
+        else if ($("#selectcheckbox_text").text() == "All Pages") {
+            $("#selectcheckbox_text").text("Select All");
+            $("#selectallcheckbox_text").text("All Pages");
+            createCookie("selectallsearchstring", "", 1);
+        }
+    }
+
+    function ArrowClick() {
+        $("#selectallcheckbox").removeClass("checked");
+        $('#masterCheckBox_all').attr('checked', false);
+        $('#masterCheckBox_all').parent('label.checkbox').removeClass('checked');
+        if ($(".stc-select-drop").hasClass("stc-open")) {
+            $(".stc-select-drop").removeClass("stc-open");
+        }
+        else {
+            $(".stc-select-drop").addClass("stc-open");
+        }
+        $(".stc-select-drop").click(function () {
+            $(this).removeClass("stc-open");
+        });
+        $(document).mouseup(function (e) {
+            var container = $(".stc-select-all");
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                $(".stc-select-drop").removeClass("stc-open"); XMLDocument
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#306, #325').css({ 'display': 'none' });
+        pageLoader();
+        createCookie("log", true, 1);
+
+        var searchfieldslist = '@Html.Raw(Json.Encode(ViewBag.searchFields))';
+        var selectedFields = '@Html.Raw(Json.Encode(ViewBag.SelectedFields))';
+        var searchName = '@Html.Raw(Json.Encode(ViewBag.SearchName))';
+        var isSavedSearch = '@(IsSavedSearch)';
+        var IsFromDashboard = '@(IsFromDashboard)';
+        var IsDynamicGrid = '@(ViewDynamicGrid)';
+        
+        var searchId = '@(adSearchId)';
+        var isPreconfigured = '@(adPreconfigured)';
+        var isFavorite = '@(adFavorite)';
+        var searchTitle = '@Html.Raw(Json.Encode(ViewBag.SearchDescription))';
+        var entityId = '@(EntityId)';
+        var entityType = '@(EntityType)';
+        var reportName = '@(reportName)';
+        var showingType = '@(showingType)';
+        var fromSSGrid = '@(fromSSGrid)';
+
+        var viewModel = new ContactsResultsViewModel(searchfieldslist, searchName, isSavedSearch, searchId, isPreconfigured, isFavorite, searchTitle, entityId, entityType, selectedFields, Contacts_BASE_URL, showingType, fromSSGrid, reportName, IsDynamicGrid);
+        viewModel.referrer = readCookie('backButtonHref');
+        ko.applyBindings(viewModel, document.getElementById("clientsDb"));
+
+        var grid = $('#grid').data('kendoGrid');
+
+        $.each(grid.columns, function (i, e) {
+            var value = e.field;
+            var title = e.title;
+            $('#fields').append("<option value='" + value + "'>" + title + "</option>");
+        });
+
+        $("#txtSearch").val(localStorage.getItem("searchtext"));
+        var grid = $('#grid').data('kendoGrid');
+        var pno = readCookie("pagenumber");
+        var psize = readCookie("pagesize");
+        grid.dataSource.query({ page: pno, pageSize: psize });
+
+        tableMasterCheckBox('resultsgrid');
+
+        //$("#grid .k-grid-header-wrap").find("colgroup col").width(100);
+        //$("#grid .k-grid-content").find("colgroup col").width(100);
+
+        //$("#grid").on("click", ".contactEdit", function (e) {
+        //    e.preventDefault();
+        //    var grid = $("#grid").data("kendoGrid");
+        //    var model = grid.dataItem($(e.target).closest("tr"));
+        //    window.location.href = model.ContactType == 1 ? "/editperson?contactId=" + model.ContactID + "&contactType=" + model.ContactType : "/editcompany?contactId=" + model.ContactID + "&contactType=" + model.ContactType;
+        //});
+        //$("#grid").on("click", ".contactDelete", function (e) {
+        //    e.preventDefault();
+        //    var grid = $("#grid").data("kendoGrid");
+        //    var model = grid.dataItem($(e.target).closest("tr"));
+        //    DeleteContact(model.ContactID);
+        //});
+    });
+
+    function AddOpportunity() {
+        var checkedvaluesforaddopportunity = fnGetChkvalGridForOpportunities('chkcontacts');
+        var IsPeople = readCookie("IsPeople");
+
+        var companies = $.grep(checkedvaluesforaddopportunity, function (n) {
+            return n.type === "2";
+        }).length;
+
+        var people = $.grep(checkedvaluesforaddopportunity, function (n) {
+            return n.type === "1";
+        }).length;
+
+        if (checkedvaluesforaddopportunity.length == 0) {
+            window.location.href = "addbuyermodal";
+        } else {
+
+            if ((IsPeople == "2" && companies > 1) || (IsPeople == "2" && companies == 0))
+                notifyError("[|Please select only one company|]");
+            else if (IsPeople == "1" && people == 0)
+                notifyError("[|Please select alteast one people|]");
+            else {
+                var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+
+                var array = [];
+                $.each(checkedvaluesforaddopportunity, function (index, value) {
+                    if (value.type == IsPeople)
+                        array.push(value.Id);
+                });
+                $.ajax({
+                    url: Opportunity_BASE_URL + 'StoreContacts',
+                    type: 'post',
+                    data: { 'ContactIDs': array.join() },
+                    dataType: 'json',
+                    success: function (response) {
+                        removepageloader();
+                        window.location.href = Opportunity_BASE_URL + "AddOpportunityWithBuyers?referencekey=" + response.stringKey;
+                    },
+                    error: function (response) {
+                        var error = jQuery.parseJSON(response.responseText);
+                        removepageloader();
+                        notifyError(error.Exception.Message);
+                    }
+                });
+            }
+        }
+    };
+
+    function copyContact() {
+        checkedvalue = fnGetChkvalGrid('chkcontacts');
+        if (checkedvalue != "") {
+            if (checkedvalue.length == 1) {
+                var contacttype = fnGetCheckedContactWithType();
+                if (contacttype == 1)
+                    window.location.href = "../copyperson?contactId=" + checkedvalue + "&contactType=" + contacttype;
+                else
+                    window.location.href = "../copycompany?contactId=" + checkedvalue + "&contactType=" + contacttype;
+            }
+            else {
+                notifyError("[|Please select only one contact|]");
+            }
+        }
+        else {
+            notifyError("[|Please select at least one contact|]");
+        }
+    }
+
+    function deleteContacts() {
+        checkedvaluesforcontacts = fnGetChkvalforContactsGrid('chkcontacts');
+        checkedContactStatus = false;
+        checkedContactStatus = fnGetChkStsforContact('chkcontacts');
+
+        if (checkedvaluesforcontacts != "") {
+            alertifyReset("Delete Contacts", "Cancel");
+            //alertify.confirm("Are you sure you want to delete these " + checkedvalues.length + " contact(s)?", function (e) {
+            if (readCookie("selectallsearchstring") != "")
+                DeleteMutlipleContacts("[|You are about to Bulk Delete Contacts and their history. This action cannot be undone. Are you sure you want to delete Contacts?|] ", checkedvaluesforcontacts);
+            else if (checkedContactStatus == true)
+                DeleteMutlipleContacts("[|You are about to Delete|] " + checkedvaluesforcontacts.length + " [|Contact(s) and their history. This action cannot be undone. Are you sure you want to delete|] " + checkedvaluesforcontacts.length + " [|Contact(s)?|]", checkedvaluesforcontacts);
+            else
+                DeleteMutlipleContacts("[|Restricted Access: You are attempting to delete Contact(s) which you have not created.|]" + "</br>" + checkedvaluesforcontacts.length + " [|Contact(s) created by you can only be deleted.|]", checkedvaluesforcontacts);
+        }
+        else {
+            notifyError("[|Please select at least one Contact created by you.|]");
+        }
+    }
+
+    function DeleteMutlipleContacts(confirmMessage, checkedvaluesforcontacts) {
+        alertify.confirm(confirmMessage, function (e) {
+            if (e) {
+                pageLoader();
+                varDeleteURL = "../Contact/DeleteContacts?contactIds=" + checkedvaluesforcontacts.toString();
+
+                $.ajax({
+                    url: Contacts_BASE_URL + "DeleteContacts",
+                    type: 'post',
+                    dataType: 'json',
+                    data: { 'contactIds': checkedvaluesforcontacts.toString() }
+                }).then(function (response) {
+                    var filter = $.Deferred();
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    // Process success result    
+
+                    if (readCookie("selectallsearchstring") != "")
+                        notifySuccess("[|Successfully deleted|] " + " [|Bulk Contact(s)|]");
+                    else
+                        notifySuccess("[|Successfully deleted|] " + data.response + " [|Contact(s)|]");
+
+                    setTimeout(
+                        function () {
+                            createCookie('log', false, 1);
+                            window.location.href = document.URL;
+                        }, setTimeOutTimer);
+                }).fail(function (error) {
+                    // Display error message to user            
+                    removepageloader();
+                    notifyError(error);
+                });
+            }
+            else {
+                notifyError("[|You've clicked Cancel|].[|The Contact(s) will not be deleted|]");
+            }
+        });
+    }
+
+    function SyncContact() {
+
+    };
+</script>

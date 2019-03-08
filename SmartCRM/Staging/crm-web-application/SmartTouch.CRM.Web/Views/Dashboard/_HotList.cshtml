@@ -1,0 +1,77 @@
+﻿@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+<div class="da-hot-list">
+    <div class="list-inner" data-bind="visible:Settings()[6].Value">
+        @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+        {
+            <div class="title">
+                [|Hot List|]
+                <a data-bind="attr: { href:HotListLink()}" class="view-all">View All</a> <div>
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="title">
+                [|Hot List|]
+            </div>
+        }
+
+        <div class="k-grid k-widget k-secondary in no-grid-resize" id="hotlist" style="">
+           
+            <div class="k-grid-content">
+                <table id="grid" data-role="grid" role="grid">
+                    <colgroup>
+                        <col />
+                        <col />
+                        <col />
+                    </colgroup>
+                    <thead class="k-grid-header">
+                        <tr>
+                            <th class="k-header col-50">[|Contact Name|]</th>
+                            <th class="k-header col-25">[|Life Cycle|]</th>
+                            <th class="k-header col-25 text-center">[|Lead Score|]</th>
+                        </tr>
+                    </thead>
+                    <!-- ko if: ContactsCount() > 0 -->
+                    <tbody data-bind="foreach:contactLeadScoreList">
+                        <tr>
+                            <!-- ko if: (FullName!=" "&&FullName!=null)-->
+                            <td>
+                                <a data-bind="attr:{ 'href':'/person/' + ContactId, title:FullName}">
+                                    <span data-bind="text:FullName"></span>
+                                </a>
+                            </td>
+                            <!--/ko-->
+                            <!-- ko if: (FullName==" " || FullName==null)-->
+                            <td>
+                                <a data-bind="attr:{ 'href':'/person/' + ContactId, title:FullName}">
+                                    <span data-bind="text:Email"></span>
+                                </a>
+                            </td>
+                            <!--/ko-->
+                            @*<td><a data-bind="attr:{ 'href': '@Url.Action("editperson", "Contact")?contactId=' + Id  }"> <span data-bind="text:FullName"></span></a></td>*@
+                            <td data-bind="text:Lifecycle"></td>
+                            <td data-bind="text:LeadScore" class="text-center"></td>
+                        </tr>
+                    </tbody>
+                    <!-- /ko -->
+                    <!-- ko if: ContactsCount()==0 -->
+                    <tbody>
+                        <tr><td colspan="3" class="no-data"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>
+                    </tbody>
+                    <!-- /ko -->
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

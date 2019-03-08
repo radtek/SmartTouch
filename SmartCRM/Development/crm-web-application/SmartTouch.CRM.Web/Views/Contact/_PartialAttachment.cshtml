@@ -1,0 +1,139 @@
+﻿<script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="zltdbgb7l7h1yi3"></script>
+
+<form method="post" action='@Url.Action("Submit")' style="width:45%">
+    
+    <div id="container"></div>
+    <div class="legend mbn"><span class="icon st-icon-cloud-add"></span> Attached History</div>
+    <div class="attachments kendo-att">
+        <div class="spine"></div>
+           @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.AttachmentViewModel>()
+    .Name("gridAttach")
+       .Columns(columns =>
+        {
+            columns.Template(e => { }).ClientTemplate(" ").Title("Details");
+        })
+
+        .Scrollable(scrollable => scrollable.Virtual(true))
+        .HtmlAttributes(new { style = "height:600px;" })
+        .ClientRowTemplate(
+                                           @"<tr class='odd'>
+              <td class='details'>
+
+                <div class='element'>
+    <span class='activity'><i class='icon st-icon-document'></i></span>
+                    <div class='tl-recordupdates'>
+        <div class='att-dis'><span class='bold'>#: UserName# </span> have uploaded <a href='javascript:void(0)' data-name='#:FilePath#' onclick='DownloadFile(this)'>#: OriginalFileName # </a></div>
+        <div class='controls'>
+            <span class='date-time'>#: kendo.toString(ModifiedDate, 'd') # </span>
+            <span class='ele-controls'> <a href='javascript:void(0)' data-name='#:StorageFileName#' onclick='DeleteDocument(#: DocumentID #,this)'><i class='icon st-icon-bin-3'></i></a></span>" +
+        @"</div>
+                    </div>
+                </div>
+
+                </td></tr>")
+
+         .ClientAltRowTemplate(
+           @"<tr class='even'>
+              <td class='details'>
+                <div class='element'>
+                    <span class='activity'><i class='icon st-icon-document'></i></span>
+                    <div class='tl-recordupdates'>
+                        <div class='att-dis'><span class='bold'>#: UserName# </span> have uploaded <a href='javascript:void(0)' data-name='#:FilePath#' onclick='DownloadFile(this)'>#: OriginalFileName # </a></div>
+                <div class='controls'>
+                    <span class='date-time'>#: kendo.toString(ModifiedDate, 'd') # </span>
+            <span class='ele-controls'> <a href='javascript:void(0)' data-name='#:StorageFileName#' onclick='DeleteDocument(#: DocumentID #,this)'><i class='icon st-icon-bin-3'></i></a></span>" +
+                @"</div>
+                    </div>
+                </div>
+
+                </td></tr>")
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+               .Read(read => read.Action("ReadAttachments", "Communication"))
+     )
+        )
+        <iframe id="myDownloaderFrame" style="display:none;"></iframe>
+    </div>
+        <script type="text/javascript">
+            var options = {
+                // Required. Called when a user selects an item in the Chooser.
+                success: function (files) {
+                    $.ajax({
+                        url: "/Communication/SaveAttachment",
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ 'filesViewModel': files, 'contactID': getParameterByName("contactId") }),
+                        success: function (data) {
+                            $('.success-msg').remove();
+                            if (data.success === true) {
+                                $("#gridAttach").data("kendoGrid").dataSource.read();
+                            }
+                            if (data.success === false) {
+                                $("#gridAttach").data("kendoGrid").dataSource.read();
+
+                            }
+                        },
+                        error: function (data) {
+                        }
+                    });
+                },
+                cancel: function () {
+                },
+                linkType: "preview", // or "direct"
+                multiselect: true, // or true
+                extensions: ['.pdf', '.doc', '.docx'],
+            };
+
+            var file = {
+                name: "filename.txt",
+                link: "https://...",
+                bytes: 464,
+                icon: "https://...",
+                thumbnailLink: "https://...?bounding_box=75&mode=fit",
+            };
+
+            var button = Dropbox.createChooseButton(options);
+            document.getElementById("container").appendChild(button);
+            function DownloadFile(file)
+            {
+
+                var name = $(file).attr('data-name');
+                window.open(name, "_blank");
+
+            }
+
+
+            function DeleteDocument(id, obj) {
+                var BASE_URL = '@Url.Content("~/Communication/")';
+                var name = $(obj).attr('data-name');
+                if (confirm('Are you sure you want to delete this Attachment?')) {
+                    varDeleteURL = BASE_URL + "RemoveDropboxData?DocID=" + id + "&StorageFileName=" + name;
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: varDeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+                            if (data.success === true) {
+                                $("#gridAttach").data("kendoGrid").dataSource.read();
+                            }
+                        },
+                        error: function (x, y, z) {
+                        }
+                    });
+                }
+            }
+
+            //Query String for ContactID
+            function getParameterByName(name) {
+                name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+                var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                    results = regex.exec(location.search);
+                return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+            }
+
+</script>
+</form>

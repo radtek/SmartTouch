@@ -1,0 +1,32 @@
+﻿@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div class="da-traffic-source">
+    @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+    {
+        <div class="title">
+            [|Top 5 Tour Sources|]
+            <a data-bind="attr: { href:TrafficBySourceLink()}" class="view-all">View All</a> <div>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="title">
+            [|Top 5 Tour Sources|]
+        </div>
+    }
+
+    <!-- ko if:TourbySourcePieChartVisible()=="True" -->
+    <div class="bg-chart" id="datoptrafficsource"></div>
+    <!--/ko-->
+    <!-- ko if:TourbySourcePieChartVisible()=="False" -->
+    <div class="dash-nodata new-tour-souce">[|No data found|]</div>
+    <!--/ko-->
+</div>

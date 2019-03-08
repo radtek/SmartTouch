@@ -1,0 +1,124 @@
+﻿@using System.Threading;
+@using SmartTouch.CRM.Web.Utilities
+
+<div class="modal-body" id="new-campaign">
+    <div class="campaigns">
+        <div class="display-inline form-inline">
+            <div class="form-group">
+                <label>[|Campaign Name|]</label><span class="required">*</span>
+            </div>
+            <div class="form-group validation-form-control">
+                <input type="text" class="form-control" placeholder="[|Campaign Name|]" data-bind="value:Name" />
+            </div>
+        </div>
+        <div class="clearfix mbl mtl">
+            <span class="st-custag"><span class="icon st-icon-tag prs"></span>[|Tags|]:</span>
+            <input id="campaignTags" class="display-inline form-control tagsinput-info-round" placeholder="[|Add contacts by tags|]" />
+        </div>
+    </div>
+    <div>
+        <div class="campaign-type">
+            <div>
+                Regular campaign
+                <input type="radio" name="campaigntype" value="131" data-bind="checked:CampaignType" />
+            </div>
+            <div>
+                Plain-text campaign
+                <input type="radio" name="campaigntype" value="132" data-bind="checked:CampaignType" />
+            </div>
+            <div>
+                Code your own
+                <input type="radio" name="campaigntype" value="133" data-bind="checked:CampaignType" />
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <span data-bind="value:'Save'">
+            <a class="btn btn-lg btn-primary" data-posturl="campaingslist" href="#" data-bind="click:Proceed.bind($data)">[|Proceed|]</a>
+        </span>
+        
+        <span>
+            <a class="btn btn-lg" href="#">[|Cancel|]</a>
+        </span>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // tagify.Tagify("campaignTags");
+        console.log(123)
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+            var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        
+            var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        console.log(accountId);
+        console.log(tagCreatedBy);
+        var authToken = readCookie("accessToken");
+
+        campaignViewModel = function () {
+            selfNewCampaign = this;
+            
+            selfNewCampaign.Name = ko.observable("")
+                .extend({
+                    required: {
+                        message: "Campaign name is required"
+                    }
+                });
+            selfNewCampaign.CampaignType = ko.observable("131");
+            selfNewCampaign.TagsList = ko.observableArray([]);
+            selfNewCampaign.Proceed = function () {
+                if (selfNewCampaign.errors().length > 0)
+                {
+                    selfNewCampaign.errors.showAllMessages();
+                    return;
+                }
+                var jsonData = ko.toJSON(selfNewCampaign);
+                pageLoader();
+                console.log(jsonData);
+
+                $.ajax({
+                    url: WEBSERVICE_URL + '/Campaign',
+                    type: type,
+                    data: jsonData,
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    success: function () {
+                        //   removepageloader();
+                        notifySuccess('[|Successfully saved the Campaign|]');
+                        setTimeout(function () {
+                            removepageloader();
+                            window.location.href = "/campaigns";
+                        }, setTimeOutTimer);
+                    },
+                    error: function (response) {
+                        notifyError(response.responseText);
+                        setTimeout(function () {
+                            removepageloader();
+                            if (response.responseText == "The campaign cannot be saved   the deleted links are associated with automation workflow") {
+                                alertifyReset();
+                                alertify.confirm("[|Do you want to reload the page to get the original links?|]", function (e) {
+                                    if (e) {
+                                        location.reload();
+                                    }
+                                });
+                            }
+                        }, setTimeOutTimer);
+
+
+                        selfCampaign.Designer().Controls(currentControls);
+                        selfCampaign.Designer().Controls.valueHasMutated();
+                    }
+                });
+            }
+            ko.validatedObservable(ko.mapping.fromJS(selfNewCampaign));
+
+            selfNewCampaign.errors = ko.validation.group(selfNewCampaign);
+        }
+        var viewModel = new campaignViewModel();
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId, tagCreatedBy);
+        tagify.Tagify("campaignTags");
+        ko.applyBindings(viewModel, document.getElementById('new-campaign'));
+    });
+</script>

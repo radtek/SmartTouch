@@ -1,0 +1,20 @@
+<hsleads>
+<lead>
+<submit_date_time>1489203600000</submit_date_time>
+<zillow_propertyid>2095165822</zillow_propertyid>
+<firstname>Cynthia</firstname>
+<lastname>martin</lastname>
+<email>porcupinebiker@hotmail.com</email>
+<phone>(801) 703-1710</phone>
+<listingurl/>
+<message>
+I am interested in Clearwater - Glacier Meadows by Hayden Homes LLC.
+</message>
+<buildernumber>HHM01</buildernumber>
+<builderreportingname>Hayden Homes LLC</builderreportingname>
+<communitynumber>GLAMD00</communitynumber>
+<communityplannumber>GLAMD00s123501</communityplannumber>
+<communityspecnumber/>
+<communitylotnumber/>
+</lead>
+</hsleads>

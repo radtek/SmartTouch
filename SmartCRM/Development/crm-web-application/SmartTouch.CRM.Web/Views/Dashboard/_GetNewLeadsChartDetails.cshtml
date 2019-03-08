@@ -1,0 +1,31 @@
+﻿@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);    
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div class="da-lead-source">
+    @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+    {
+        <div class="title">
+            [|Top 5 Lead Sources|]
+            <a data-bind="attr: { href:NewLeadsLink()}" class="view-all">View All</a> <div>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="title">
+            [|Top 5 Lead Sources|]
+        </div>
+    }  
+    <!-- ko if:NewLeadsPieChartVisible()=="True" -->
+    <div class="bg-chart" id="datopleadsource"></div>
+    <!--/ko-->
+    <!-- ko if:NewLeadsPieChartVisible()=="False" -->
+    <div class="dash-nodata lead-source">[|No data found|]</div>
+    <!--/ko-->
+</div>

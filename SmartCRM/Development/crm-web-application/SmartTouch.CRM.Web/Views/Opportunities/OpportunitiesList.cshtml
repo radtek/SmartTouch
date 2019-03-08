@@ -1,0 +1,401 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel
+@{
+    ViewBag.Title = "Opportunities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Detail = ViewBag.OpportunityDetail == null ? 0 : 1;
+    var DateFormat = ViewBag.DateFormat;
+    var CurrencyFormat = ViewBag.Currency;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var SummaryOpportunities = ViewBag.SummaryOpportunities;
+    var IsPeople = ViewBag.IsPeople;
+    var userIds = ViewBag.UserIds != null ? (IEnumerable<int>)ViewBag.UserIds : null ;
+    var startDate = ViewBag.StartDate;
+    var endDate = ViewBag.EndDate;
+
+
+}
+@Scripts.Render("~/bundles/Opportunityvm")
+
+@using (Ajax.BeginForm("OpportunitiesList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="opportunitylist">
+        <ul class="breadcrumb border-bottom-none">
+            @if (startDate != null && startDate != "")
+            {
+                <li><a href="/Reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)">[|Opportunities List|]</a></li>
+            }
+        </ul>
+
+        <div class="page-title">[|Opportunities|]</div>
+        <div class="opportunities-grid">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel>()
+        .Name("gridOpportunity")
+        //.HtmlAttributes(new { @class = "k-grid-content" })
+        .Reorderable(reorder => reorder.Columns(false))
+        .Resizable(resize => resize.Columns(true))
+         .AutoBind(true)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+            .ButtonCount(10).Messages(m => m
+                .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Opportunities|]")
+                .Empty("[|No opportunities to display|]").ItemsPerPage("[|Opportunities per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Bound(c => c.OpportunityName).Title("[|Opportunity|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20" });
+        //columns.Template(c => "").Title("[|People|]").HeaderHtmlAttributes(new { @class = "col-30" });
+        columns.Bound(c => c.OpportunityType).Title("[|Opportunity Type|]").Sortable(true).HeaderHtmlAttributes(new { });
+        columns.Bound(c => c.ProductType).Title("[|Product Type|]").Sortable(true).HeaderHtmlAttributes(new { });
+        columns.Bound(c => c.Potential).Title("[|Potential|]").Sortable(true).HeaderHtmlAttributes(new { });
+        columns.Bound(c => c.ContactName).Title("[|Buyer(s)|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-30" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:90px;" });
+    })
+    .Sortable(sortabe => sortabe.AllowUnsort(true))
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="left-part">
+                    <label class="checkbox toggle-all" for="masterCheckBox">
+                        <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                        [|Select All|]
+                    </label>
+                </div>
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtopportunitysearch" onkeydown="GetopportunityBasedonsearch(event);" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                </div>
+            </div>
+        </text>);
+    })
+.ClientRowTemplate(
+       @"<tr class='odd'>
+                <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' OpportunityID='#:OpportunityID#' OpportunityName='#:OpportunityName#' PeopleInvolved='#:Peopleinvolved(Contacts,PeopleInvolved)#' class='chkopportunity' data-toggle='checkbox'></label></td>
+                <td>" + Html.ActionLink("#:OpportunityName#", "ViewOpportunity", new { opportunityID = "oid", index = "idx" }, new { @title = "#:OpportunityName#" })
+                            .ToHtmlString().Replace("oid", "#:OpportunityID#").Replace("idx", "#= ++rowNumber #") + "</td>" +
+        "<td>#=dispalyType(OpportunityType)#</td>" +
+        "<td>#=dispalyType(ProductType)#</td>" +
+        "<td>#=dispalyPotential(Potential)#</td>" +
+        "<td>#=displayContacts(OpportunityID,ContactName,ContactType)#</td>" +
+        "<td class='grid-row-controls'><span>" +
+        //"<a data-target='\\#buyerModal' data-toggle='modal' href='javascript:void(0)' onclick='GetOpportunityBuyers(#:OpportunityID#)' title='Buyers'><i class='icon st-icon-users'></i></a>" +
+        Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditOpportunity", new { opportunityID = "uid" }, new { @title = "Edit Opportunity" })
+                                                     .ToHtmlString().Replace("uid", "#:OpportunityID#") +
+          "<a href='javascript:void(0)' onclick='DeleteOpportunity(#:OpportunityID#)' title='Delete Opportunity'><i class='icon st-icon-bin-3'></i></a></span></td>" +
+        "</tr>")
+.ClientAltRowTemplate(
+       @"<tr class='even'>
+                <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkopportunity'  OpportunityName='#:OpportunityName#' PeopleInvolved='#:Peopleinvolved(Contacts,PeopleInvolved)#' OpportunityID='#:OpportunityID#' data-toggle='checkbox'></label></td>
+                <td>" + Html.ActionLink("#:OpportunityName#", "ViewOpportunity", new { opportunityID = "oid", index = "idx" }, new { @title = "#:OpportunityName#" })
+                            .ToHtmlString().Replace("oid", "#:OpportunityID#").Replace("idx", "#= ++rowNumber #") + "</td>" +
+        "<td>#=dispalyType(OpportunityType)#</td>" +
+        "<td>#=dispalyType(ProductType)#</td>" +
+        "<td>#=dispalyPotential(Potential)#</td>" +
+        "<td>#=displayContacts(OpportunityID,ContactName,ContactType)#</td>" +
+        "<td class='grid-row-controls'><span>" +
+        //"<a data-target='\\#buyerModal' data-toggle='modal' href='javascript:void(0)' onclick='GetOpportunityBuyers(#:OpportunityID#)' title='Buyers'><i class='icon st-icon-users'></i></a>" +
+         Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditOpportunity", new { opportunityID = "uid" }, new { @title = "Edit Opportunity" })
+                                                     .ToHtmlString().Replace("uid", "#:OpportunityID#") +
+          "<a href='javascript:void(0)' onclick='DeleteOpportunity(#:OpportunityID#)' title='Delete Opportunity'><i class='icon st-icon-bin-3'></i></a></span></td>" +
+
+        "</tr>")
+            .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+        .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(ItemsPerPage)
+        .Read(read => read.Action("OpportunitiesViewRead", "Opportunities").Data("additionalInfo"))
+       )
+            )
+        </div>
+    </div>
+
+    <div id="buyerModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Buyer(s)</h4>
+                </div>
+                <div class="modal-body" id="buyer-names">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+
+
+@section Scripts{
+    <script>
+        if ("@(Detail)" == "0")
+            localStorage.removeItem("opportunitysearchtext");
+        if ('@(SummaryOpportunities)' != "")
+            localStorage.setItem("SummaryOpportunities", '@(SummaryOpportunities)');
+        else {
+            if ("@(Detail)" == "0")
+                localStorage.removeItem("SummaryOpportunities");
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        localStorage.removeItem("OpportunityName");
+        localStorage.removeItem("contactsData");
+        localStorage.removeItem("contactdetails");
+        localStorage.removeItem("ContactOpportunity");
+        localStorage.removeItem("OpportunityID");
+        var userIDs =  '@Html.Raw(Json.Encode(ViewBag.UserIds))';
+        var Startdate = '@startDate';
+        var Enddate = '@endDate';
+        var searchText;
+        var rowNumber = 0;
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        // localStorage.removeItem("opportunitysearchtext");
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("opportunitysearchtext"),
+                Ids: localStorage.getItem("SummaryOpportunities"),
+                userIds: userIDs,
+                StartDate: Startdate,
+                EndDate: Enddate
+            }
+        }
+
+
+        function Peopleinvolved(contacts, peopleInvolved) {
+            var people = [];
+            if (contacts != null) {
+                $.each(contacts, function (index, value) {
+                    people.push(value.FullName + "|" + value.Id);
+                });
+            }
+            return people;
+        }
+
+        function DeleteOpportunities() {
+            alertifyReset("Delete Opportunity", "Cancel");
+            var selectedOpportunities = GetSelectedOpportunities('chkopportunity');
+            var array = [];
+            $.each(selectedOpportunities, function (index, value) {
+                array.push(value.OpportunityID);
+            });
+
+            var confirmMessage = "";
+            if (array.length == 1) {
+                confirmMessage = "[|Are you sure you want to delete this Opportunity?|]"
+                commondelete(confirmMessage, array);
+            } else if (array.length > 1) {
+                confirmMessage = "[|Are you sure you want to delete|] " + array.length + " [|Opportunities|]?"
+                commondelete(confirmMessage, array);
+            } else {
+                notifyError("[|Please select at least one opportunity|]");
+            }
+        }
+
+        function EditOpportunity() {
+
+            var array = [];
+            var selectedOpportunities = GetSelectedOpportunities('chkopportunity');
+            $.each(selectedOpportunities, function (index, value) {
+                array.push(value.OpportunityID);
+            });
+
+            if (array.length == 1) {
+                window.location.href = "/editopportunity?opportunityID=" + array[0];
+            } else {
+                if (array.length == 0)
+                    notifyError("[|Please select at least one opportunity|]");
+                else
+                    notifyError("[|Please select only one opportunity|]");
+            }
+        }
+
+        function GetopportunityBasedonsearch(e) {
+            setTimeout(function () {
+
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtopportunitysearch").val() || (searchText === $("#txtopportunitysearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtopportunitysearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#gridOpportunity").data("kendoGrid"), searchBox = $("#txtopportunitysearch").val();
+                localStorage.removeItem("opportunitysearchtext");
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.setItem("opportunitysearchtext", searchBox);
+                    var psize = readCookie("pagesize");
+                    var grid = $("#gridOpportunity").data("kendoGrid")
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("opportunitysearchtext");
+                    $("#gridOpportunity").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+        $('#txtopportunitysearch').keypress(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+                window.location = "/opportunities";
+            }
+        });
+
+        function onDataBinding(arg) {
+            rowNumber = (arg.sender.dataSource.page() - 1) * arg.sender.dataSource.pageSize();
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chkopportunity');
+            }, 200)
+        }
+
+        @*function displayDate_n(date) {
+            if (date == null) {
+                return "";
+            }
+            return kendo.toString(kendo.parseDate(date, 'yyyy/MM/dd'), '@Model.DateFormat');
+        }*@
+
+
+
+        function displayContacts(opportunityId,contname,ContactType) {
+            if (contname)
+                return '<a href= "/opportunitycontacts?opportunityId=' + opportunityId + '&showingType=4&contactType=' + ContactType + '">' + contname + '</a>';
+            else
+                return "";
+        }
+
+        function dispalyType(type) {
+            if (type == null)
+                return "";
+            else
+                return type;
+        }
+
+        function onDataBound(e) {
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+        function GetOpportunityBuyers(oppid) {
+            $.ajax({
+                url: '/Opportunities/GetOpportunityBuyerNames',
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify({ opportunityId: oppid }),
+                contentType: 'application/json; charset=utf-8'
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                var str = '';
+                if (data.response.length > 0) {
+                    $.each(data.response, function (ind, value) {
+                        if (value.ContactType === 1)
+                            str = str + '<a href= "/person/' + value.ContactID + '">' + value.Name + '</a><br/>'
+                        else
+                            str = str + '<a href= "/company/' + value.ContactID + '">' + value.Name + '</a><br/>'
+                    })
+                    document.getElementById('buyer-names').innerHTML = str;
+                }
+                else
+                    document.getElementById('buyer-names').innerText = 'Buyers data not found for this Opportunity.';
+
+            }).fail(function (error) {
+                notifyError(error);
+            })
+        }
+
+        function DeleteOpportunity(id) {
+            alertifyReset("Delete Opportunity", "Cancel");
+            var array = [];
+            array.push(id);
+            var confirmMesaage = "[|Are you sure you want to delete this Opportunity|]?";
+            commondelete(confirmMesaage, array);
+        }
+
+        function commondelete(confirmationMessage, opportunityIds) {
+            alertify.confirm(confirmationMessage, function (e) {
+                if (e) {
+                    var BASE_URL = '@Url.Content("~/Opportunities/")';
+                    varDeleteURL = BASE_URL + "DeleteOpportunities";
+                    jQuery.ajaxSettings.traditional = true
+                    $.ajax({
+                        url: varDeleteURL,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify({ Id: opportunityIds }),
+                        contentType: 'application/json; charset=utf-8'
+                    }).then(function (response) {
+                        var filter = $.Deferred()
+                        if (response.success) {
+                            filter.resolve(response)
+                        } else {
+                            filter.reject(response.error)
+                        }
+                        return filter.promise()
+                    }).done(function (data) {
+                        if (data.success === true) {
+                            notifySuccess("[|Selected opportunity(ies) have been deleted|]");
+                            $("#gridOpportunity").data("kendoGrid").dataSource.read();
+                        } else {
+                            notifySuccess("[|Unable to delete the opportunity|]");
+                        }
+                    }).fail(function (error) {
+                        notifyError(error);
+                    })
+                }
+                else {
+                    notifyError("[|You've clicked Cancel|]");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            removepageloader();
+            tableMasterCheckBox('opportunities-grid');
+        });
+    </script>
+
+}
+
+

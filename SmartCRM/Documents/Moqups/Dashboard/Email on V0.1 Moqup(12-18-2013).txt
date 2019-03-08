@@ -1,0 +1,39 @@
+Hari,
+
+
+Here’s a link to an idea for the dashboard: https://moqups.com/grantctaylor/a1VuEKxL
+ 
+
+It’s based on the attached dashboard, which shows an integration between Pardot and GoodData. 
+
+The dashboard shows selected metrics that demonstrate results or indicate potential results.
+
+ 
+
+The metrics are:
+
+·         New contacts
+
+·         Engaged contacts
+
+·         Touched contacts
+
+·         Tours
+
+·         New opportunities
+
+ 
+
+When the User selects a metric, then we’ll reveal a list of data.
+
+ 
+
+Also included in the dashboard is a 2-week calendar view of scheduled campaigns, activities, and meetings.
+
+ 
+
+Please have the team review and provide feedback.
+
+ 
+
+Also, please have the team provide feedback on the report wireframes.

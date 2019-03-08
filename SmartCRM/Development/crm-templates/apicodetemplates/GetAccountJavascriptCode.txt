@@ -1,0 +1,15 @@
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://services.smarttouch.net/api/Accounts?accountName={ACCOUNTNAME}",
+  "method": "GET",
+  "headers": {
+    "authorization": "Bearer {ACCESS_TOKEN}",
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-cache"
+  }
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});

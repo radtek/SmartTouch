@@ -1,0 +1,246 @@
+﻿@using SmartTouch.CRM.Entities
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+
+@{
+    var ErrorMessage = ViewBag.ErrorMsg == null ? "" : ViewBag.ErrorMsg;
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.NeverBounce);
+    var permissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div id="import" class="sub-container">
+    <div class="main-header">
+        [|Import Data|]
+    </div>
+    <div class="clearfix step1-import">
+        <div class="form-horizontal-large">
+            <div class="formsubheading">
+                [|Step 1 of 2|] 
+                <span style="float:right"> 
+                    <a href="#viewtags" data-toggle="modal" data-original-title="" title=""> [|Help|] <i class="fui-question"></i></a>
+                </span>
+            </div>
+            <div class="form-group pln mbn">
+                <label class="control-label">[|Data to Import|]</label>
+                <input type="text" value="People & Companies" readonly class="form-control" />
+                @*<select name="mediumnm" class="select-block">
+                    <option value="0">[|People & Companies|]</option>
+                </select>*@
+                <span class="display-inline mtm">
+                    @Html.ActionLink("[| Download a Sample CSV File|]", "downloadCSVfile", "ImportData", null, new { @class = "icon st-icon-document" })
+                </span>
+                <span class="display-inline mtm mlm">
+                    @Html.ActionLink("[| Download a Sample Excel File|]", "downloadExcelfile", "ImportData", null, new { @class = "icon st-icon-document" })
+                </span>
+
+            </div>
+      
+        </div>
+        <div class="hr-border"></div>
+
+        <form method="post" id="importForm" enctype="multipart/form-data" action="/importdata/save"  style="width:45%">
+            <div class="demo-section">
+                @(Html.Kendo().Upload()
+                    .Name("files")
+                    .Multiple(false)
+                    .Async(a => a
+                    .AutoUpload(false)                   
+                    )
+                    .Events(events => events
+                    .Select("onSelect")
+                    .Remove("onRemove")
+                    )
+                )
+
+            </div>
+            @if (permissions.Select(w => w.HasPermission).SingleOrDefault()) 
+            {
+            <div class="clearfix hide" id="neverbouncepricing">
+                <div class="form-group mbn display-inline st-never-bounce">
+                    <div>
+                        <label class="display-inline checkbox" >
+                            <input type="checkbox" data-toggle="checkbox" id="NeverBounceValidation" name="NeverBounceValidation" value="true" checked />
+                        </label>
+                        <span>[|Validate Email Addresses|]</span>
+                    </div>
+                    <div id="nbprice">
+                        <table cellpadding="0" cellspacing="0" border="0" style="border:solid 1px #d9d9d9;">
+                            <thead>
+                                <tr>
+                                    <td align="left" width="300px" style="margin:0px;padding:10px;font-size:12px; font-weight:bold;color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;"># of Emails</td>
+                                    <td align="left" width="300px" style="margin:0px;padding:10px;font-size:12px; font-weight:bold;color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;">Price Per Email</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">up to 10,000</td>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.008</td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">up to 100,000</td>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.005</td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">up to 250,000</td>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.004</td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">up to 1,000,000</td>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.003</td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">up to 3,000,000</td>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.0025</td>
+                                </tr>
+                                <tr>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">up to 10,000,000</td>
+                                    <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.001</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            }
+            <div class="pull-left display-inline imp-nxt">
+                <input type="button" value="[|Next|]" class="btn btn-lg btn-primary" id="btnNext" />
+                @Html.ActionLink("[|Cancel|]", "ImportDataList", "ImportData", null, new { @class = "btn btn-lg" })
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade in" id="viewtags" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">[|Instructions|]</h4>
+                </div>
+                <div class="modal-body">                   
+                    <ul>
+                        <li>
+                            <span class="bold">[|Supporting File Formats|]</span>
+                            <span>.XLS; .XLSX; .CSV</span>
+                        </li>
+                        <li>
+                            <span class="bold">[|Boundary Conditions|]</span>
+                            <span>[|Column Limit|] - 100</span>
+                            <span>[|Row Limit|] - 100000</span>
+                        </li>
+                        <li>
+                            <span class="bold">[|Auto-Mapping|]</span>
+                            <span>
+                                [|Auto-mapping is handled based on 'contains'|]
+                                E.g.: [|If the column header starts with or contains 'Mobile' the system shall auto suggest 'Mobile*' under Application Fields|] 
+                            </span>
+                        </li>
+                        <li>
+                            <span class="bold">[|Phone Number|]</span>
+                            <span>[|Accepts numeric values|].[|Skips the record if invalid|].</span>
+                        </li>
+                        <li>
+                            <span class="bold">[|Date Format|]</span>
+                            <span>[|Accepts the format|] "MM/DD/YYYY". [|Skips the record if invalid|].</span>
+                        </li>
+                        <li>
+                            <span class="bold">
+                                [|Instructions to access Log Files|]                                
+                            </span>
+                            <span>
+                                [|On the contacts grid, post import, select the 'View History' option on the top navigation bar|].
+                                [|Click on the 'Error' option that is seen against 'Failed'|].
+                                [|The user shall be redirecte to the log files view|].
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var error = '@(ErrorMessage)';
+
+    if (error != "") {
+        setTimeout(
+          function () {
+              notifyError(error);
+          },
+        1500);
+    }
+
+    function callpageloader() {
+        return false;
+    }
+
+    var validation = false;
+
+    function onSelect(e) {
+        var varImageType = "";
+        $.each(e.files, function (index, value) {
+            var ok = value.extension.toLowerCase() == ".xls"
+                     || value.extension.toLowerCase() == ".csv"
+                     || value.extension.toLowerCase() == ".xlsx"
+            ;
+            if (!ok) {
+                e.preventDefault(); notifyError("[|Please upload Excel/CSV file|]");
+                validation = false;
+            }
+            else {
+                validation = true;
+                $("#neverbouncepricing").removeClass('hide');
+            }
+        });
+    }
+
+    function onRemove(e) {
+        validation = false;
+        $("#neverbouncepricing").addClass('hide');
+    }
+
+    $("#btnNext").click(function (event) {
+        var confirmationMessage = "List has been queued for Import and will be processed with new Email Addresses showing a status of Unverified upon completion. Fee for List Cleaning is based on number of Email Addresses on the list plus a USD$125.00 processing fee. List Cleaning will be processed upon receipt of payment and once complete, you will receive a Notification Email to check back to the Imports screen for the results. Clean Emails will have a status of Verified and Bad Emails will have a status of Hard Bounce. Click OK to proceed with Import and List Clean or click Cancel to Import list without cleaning.";
+        if (!validation) {
+                event.preventDefault();
+                notifyError("[|Please upload Excel/CSV file|]");
+                removepageloader();
+        }
+        else {
+            if ($("#NeverBounceValidation").is(':checked') == true) {
+                alertifyReset();
+                alertify.confirm(confirmationMessage, function (e) {
+                    if (!e)
+                        $("#NeverBounceValidation").val("false");
+
+                    $('form').submit();
+                });
+
+                if (!validation) {
+                    event.preventDefault();
+                    notifyError("[|Please upload Excel/CSV file|]");
+                    removepageloader();
+                }
+            }
+            else {
+                 $("#NeverBounceValidation").val("false");
+                 $('form').submit();
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        $("#files").closest(".k-upload-button")
+                    .find("span")
+                    .text("Select File");
+
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+    });
+
+</script>
+
+
+

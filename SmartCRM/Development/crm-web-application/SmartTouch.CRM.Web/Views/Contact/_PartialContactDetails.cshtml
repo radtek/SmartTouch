@@ -1,0 +1,125 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h4 class="panel-title"><span class="st-people-black"></span>Engagement</h4>
+        <div class="col-lg-4 pull-right pan">
+            <select name="smallnm" class="select-block">
+                <option value="0">All</option>
+                <option value="1">Last 30 Days</option>
+                <option value="2">Last 60 Days</option>
+                <option value="3">Last 90 Days</option>
+            </select>
+        </div>
+    </div>
+    <div class="panel-body st-reminder">
+        <ul class="engagement-st">
+            <li class="eng-st1"><div class="st-leadnum">-30</div><div class="st-leadtext">Lead Score</div></li>
+            <li class="eng-st2"><div class="st-leadnum">15</div><div class="st-leadtext">Emails Sent</div></li>
+            <li class="eng-st3"><div class="st-leadnum">55%</div><div class="st-leadtext">Emails Opened</div></li>
+            <li class="eng-st4"><div class="st-leadnum">35%</div><div class="st-leadtext">Emails Clicked</div></li>
+            <li class="eng-st5"><div class="st-leadnum">200</div><div class="st-leadtext">Web Visits</div></li>
+        </ul>
+    </div>
+
+</div>
+
+<div id="View">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h4 class="panel-title"><span class="icon st-icon-tick prs"></span>Actions</h4>
+            <div class="pull-right pan ctd-reminders">
+                <a href="#reminders" data-toggle="modal" data-target="#modal"
+                   data-bind="attr: { 'href': '@Url.Action("_AddActionModal", "Contact")'}">
+                    <span class="icon st-icon-add mrs"></span><span class="bold">Add</span>
+                </a>
+            </div>
+        </div>
+        <!-- ko if: Actions()-->
+        <div class="panel-body st-reminder">
+            <div class="actions-list actions-custom-caro">
+                <ul data-bind="foreach :Actions,attr: {'class': Actions().length > 2 ?'jcarousel jcarousel-skin-tango':'','id': Actions().length > 2 ?'actions-carousel':'' } ">
+                    <li>
+                        <div class="action">
+                            <div data-bind="attr: {'class': IsCompleted() ?'st-arrowleft':'st-arrowleft hide' }"><i class="fui-check"></i></div>
+                            <div class="bold display-inline mtm truncate" data-bind="text:ActionMessage"></div>
+                            <span class="editdel pull-right">
+                                <a data-toggle="modal" data-target="#modal"
+                                   data-bind="attr: { 'href': '@Url.Action("EditAction", "Contact")?actionId=' + ActionId() +'&contactId=' + $parent.ContactID() }">
+                                    <i class="icon st-icon-edit black mrm"></i>
+                                </a>
+                                <a href='javascript:void(0)' data-bind="click:$parent.DeleteAction"><i class="icon st-icon-bin-3 black mrm"></i></a>
+                            </span>
+                            <p class="mtm" data-bind="text:ActionMessage"></p>
+                            <div class="clearfix">
+                                <div class="list-mod-details">
+                                    <i class="icon st-icon-calendar mrs"></i>
+                                    <span data-bind="text:ReminderType() > 0 ? ConvertToDate(RemindOn()).ToUtcUtzDate():''"></span>
+                                </div>
+                                <div class="display-inline list-status">
+                                    <span>
+                                        @*<label class="checkbox pull-left mtn">*@
+                                        <input type="checkbox" @*data-toggle="checkbox"*@ data-bind="checked :IsCompleted,click:$parent.Completed" class="setcompleted" />
+                                        @*</label>*@
+                                    </span>
+                                    <span class="pull-left mls">Completed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--/ko-->
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h4 class="panel-title"><span class="icon st-icon-support-3 prs"></span>Relationships</h4>
+            <div class="pull-right pan ctd-reminders">
+                <a href="#addrelationship" data-toggle="modal" data-target="#modal"
+                   data-bind="attr: { 'href': '@Url.Action("AddEditRelationModal", "Contact")'}">
+                    <span class="icon st-icon-add mrs"></span><span class="bold">Add</span>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body st-reminder relationship-custom-caro pbn">
+            <ul class="list-relationship pln jcarousel jcarousel-skin-tango" id="relationships-carousel" data-bind="foreach :RelationshipViewModel.Relationshipentry,attr: {'class': RelationshipViewModel.Relationshipentry().length > 2 ?'jcarousel jcarousel-skin-tango':'','id': RelationshipViewModel.Relationshipentry().length > 2 ?'relation-carousel':'' }">
+            @*<ul class="list-relationship pln jcarousel jcarousel-skin-tango" id="relationships-carousel" data-bind="foreach :RelationshipViewModel.Relationshipentry">*@
+                <li>
+                    <div class="row relations">
+                        <span class="relation-contact mts display-inline">
+                            <!-- ko if: RelationshipTypeName()==="AccountExecutive" --><a href="javascript:void(0)"> <span data-bind="text:DisplayRelatedUser"></span></a>, <!--/ko-->
+                            <!-- ko if: RelationshipTypeName()!=="AccountExecutive" --><a href="javascript:void(0)"> <span data-bind="text:DisplayRelatedContact"></span></a>, <!--/ko-->
+                            <span data-bind="text:RelationshipTypeName"></span>
+                        </span>
+                        <span class="editdel pull-right">
+                            <a data-toggle="modal" data-target="#modal"
+                               data-bind="attr: { 'href': '@Url.Action("EditRelation", "Contact")?contactRelationshipMapID=' + ContactRelationshipMapID() + '&relatedcontactId=' + RelatedContactID() + '&relateduserId=' + RelatedUserID() + '&relationshipType=' + RelationshipType() + '&contactname=' +  encodeURI(DisplayRelatedContact())+ '&username=' +  encodeURI(DisplayRelatedUser()) }">
+
+                                <i class="icon st-icon-edit black mrm"></i>
+                            </a>
+                            <a href='javascript:void(0)' data-bind="click:$parent.DeleteRelation"><i class="icon st-icon-bin-3 black mrm"></i></a>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var person = @(Html.Raw(Json.Encode(Model)));
+        var viewModel = new personDetailsViewModel(person,BASE_URL);
+        ko.applyBindings(viewModel, document.getElementById("View"));
+        function veCarousel(vecarouselid){
+            jQuery('#'+ vecarouselid).jcarousel({
+                vertical: true,
+                scroll: 2
+            });
+        }
+        veCarousel('relationships-carousel');
+        veCarousel('actions-carousel');
+    });
+    
+</script>

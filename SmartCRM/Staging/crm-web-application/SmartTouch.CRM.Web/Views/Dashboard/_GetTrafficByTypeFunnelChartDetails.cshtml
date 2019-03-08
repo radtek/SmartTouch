@@ -1,0 +1,17 @@
+﻿<div class="da-lifecycle-pipeline">
+    <div class="title">
+        [|Opportunity Pipeline|]
+        <a id="view-potential" class="st-c-viewtour pull-right">VIEW POTENTIAL IN EACH STAGE</a>
+    </div>
+    <!-- ko if:TourbyTypeFunnelChartVisible()=="True" -->
+    <div id="pipeline" class="pipe-bg-chart" style="display:inline">
+        <div class="bg-chart" id="dalifecyclepipeline"></div>
+    </div>
+    <div id="potential" class="pipe-bg-chart" style="display:block">
+        <div class="bg-chart" id="potentialfunnel"></div>
+    </div>
+    <!--/ko-->
+    <!-- ko if:TourbyTypeFunnelChartVisible()=="False" -->
+    <div class="dash-nodata pipeline">[|No data found|]</div>
+    <!--/ko-->
+</div>

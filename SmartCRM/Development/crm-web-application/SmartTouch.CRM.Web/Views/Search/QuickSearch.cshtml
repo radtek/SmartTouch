@@ -1,0 +1,184 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+@{
+    var permission = (bool)ViewData["AdvancedSearch"];
+    var modulePermissions = (IEnumerable<TopMenuPermissions>)ViewData["Permissions"];
+}
+
+<div class="main-search" id="quickSearch">
+    <a href="javascript:void(0)" id="advancedsearch" onclick="searchOpen()"><i class="icon st-icon-search-2"></i></a>
+    <div class="advanced-search-inner">
+        <a href="javascript:void(0)" class="advancedsearch-close" onclick="searchOpen()"><i class="fui-cross"></i></a>
+        <div class="">
+            <div class="clearfix">
+                <input type="search" class="form-control advancedsearchinput" placeholder="[|Search|]" id="quickSearchInput" autofocus />
+                <span class="clear-text"><span class="fui-cross"></span></span>
+            </div>
+            <div class="search-unified clearfix">
+                <div class="clearfix">
+                    <div class="col-md-12 filter-search">
+                        <ul class="nav nav-pills ptl pbm">
+                            <li data-bind="attr: {'class': IncludeAll() == true ?'active':'' }"><a data-bind="click:function(){ ToggleFilter(0)}" href="#">[|All|]</a></li>
+                            @if (modulePermissions.Where(w => w.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <li data-bind="attr: {'class': IncludePeople() == true ?'active':'' }"><a href="javascript:void(0)" data-bind="click:function(){ToggleFilter(1)}">[|People|]</a></li>
+                                <li data-bind="attr: {'class': IncludeCompanies() == true ?'active':'' }"><a href="javascript:void(0)" data-bind="click:function(){ToggleFilter(2)}">[|Companies|]</a></li>
+                            }
+                            @if (modulePermissions.Where(w => w.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <li data-bind="attr: {'class': IncludeCampaigns() == true ?'active':'' }"><a href="javascript:void(0)" data-bind="click: function(){ToggleFilter(4)}">[|Campaigns|]</a></li>
+                            }
+                            @if (modulePermissions.Where(w => w.Module == AppModules.Opportunity).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <li data-bind="attr: {'class': IncludeOpportunities() ==true ?'active':'' }"><a href="javascript:void(0)" data-bind="click:function(){ToggleFilter(5)}">[|Opportunities|]</a></li>
+                            }
+                            @*<li><a href="javascript:void(0)" data-bind="click:ToggleFilter(5)">Reports</a></li>*@
+                            @*<li><a href="javascript:void(0)" data-bind="click:ToggleFilter(6)">Saved Searches</a></li>*@
+                            @if (modulePermissions.Where(w => w.Module == AppModules.Tags).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                 <li data-bind="attr: {'class': IncludeTags() == true?'active':'' }"><a href="javascript:void(0)" data-bind="click:function(){ToggleFilter(3)}">[|Tags|]</a></li>
+                            }
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- ko if: TotalHits() > 0 -->
+                    <div class="total-results">
+                        <span data-bind="text:TotalHits"></span>
+                        <span data-bind="visible:TotalHits() == 1"> [|result|] </span>
+                        <span data-bind="visible:TotalHits() > 1"> [|results|] </span>
+                    </div>
+                    <!-- /ko -->
+                    
+                    <!-- ko if: TotalHits() === 0 && SearchText() != '' -->
+                    <ul class="unified-result no-results pln">
+                        <li class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No data found|]</span></li>
+                    </ul>
+                    <!-- /ko -->
+
+                    <!-- ko if: TotalHits() > 0 && SearchText() != '' -->
+                    <ul class="unified-result pln" data-bind="foreach:SearchResults">
+                        
+                        <!-- ko if: Entity === 1 -->
+                        <li>
+                            <!-- ko if: Text === ' ' -->
+                            <a data-bind="attr:{ 'href': '/person/' + DocumentId}"><i class="icon st-icon-user-4"></i></a> <span data-bind="text:Email" class="email"></span>
+                            @if(modulePermissions.Where(w => w.Module == AppModules.LeadScore).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <span class="lead-score"> [|Lead Score|] : <span data-bind="text:LeadScore"></span></span>   
+                            }
+                            <!--/ko-->
+                            <!-- ko if: Text !== ' ' -->
+                            <!-- /ko -->
+                            <a data-bind="attr:{ 'href': '/person/' + DocumentId}"><i class="icon st-icon-user-4"></i> <span data-bind="text:Text" class="name"></span> <span data-bind="text:Email" class="mhm email"></span> 
+                            @if (modulePermissions.Where(w => w.Module == AppModules.LeadScore).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <span class="lead-score">[|Lead Score|] : <span data-bind="text:LeadScore"></span></span>
+                            }</a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko if: Entity === 2 -->
+                        <li>
+                            <!-- ko if: Text === ' ' -->
+                            <a data-bind="attr:{ 'href': '/company/' + DocumentId}"><i class="icon st-icon-company"></i> <span data-bind="text:Email" class="email"></span></a>
+                            <!--/ko-->
+                            <!-- ko if: Text !== ' ' -->
+                            <!-- /ko -->
+                            <a data-bind="attr:{ 'href': '/company/' + DocumentId}"><i class="icon st-icon-company"></i> <span data-bind="text:Text" class="name"></span><span data-bind="text:Email" class="email"></span></a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko if: Entity === 3 -->
+                        <li>
+                            <a data-bind="attr:{ 'href': '/taggedcontacts?TagID=' + DocumentId +'&Type=' + 1}"><i class="icon st-icon-tag"></i> <span data-bind="text:Text" class="name"></span></a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko if: Entity === 4 -->
+                        <li>
+                            <a data-bind="attr:{ 'href': '/quicksearchcampaignredirection?campaignId=' + DocumentId}"><i class="icon st-icon-bullhorn-2"></i> <span class="name" data-bind="text:Text"></span></a>
+                        </li>
+                        <!-- /ko -->
+                        <!-- ko if: Entity === 5 -->
+                        <li>
+                            <a data-bind="attr:{ 'href': '/viewopportunity?opportunityID=' + DocumentId}"><i class="icon st-icon-opputunities"></i> <span class="name" data-bind="text:Text"></span></a>
+                        </li>
+                        <!-- /ko -->
+                    </ul>
+                    <!-- /ko -->
+                    <!-- ko if: ShowMoreResults() === true -->
+                    <div class="more-results"><a href="javascript:void(0)" data-bind="click:MoreResults"><i class="icon st-icon-add mrm"></i> [|More results...|]</a></div>
+                    <!-- /ko -->
+                </div>
+                <div class="divider"></div>
+                <div class="">
+                    @if (permission)
+                    {
+                        <a href="/addsearch" class="mrm">[|Advanced Search|] </a>
+                        <a href="/advancedsearchlist" class="pull-right">[|Saved Searches|]</a>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+
+            var quickSearchViewModel = new QuickSearchViewModel(WEBSERVICE_URL);
+            var ALL = 0, PEOPLE = 1, COMPANIES = 2;
+            quickSearchViewModel.Search = function () {
+                $('.unified-result').append('<div class="loader-overlay"><figure><img src="../../img/loader.gif"  alt="loading" /></figure></div>');
+                    
+                var authToken = readCookie("accessToken");
+                var request = {
+                    'Query': quickSearchViewModel.SearchText(), 'SearchableEntities': quickSearchViewModel.SearchableEntities(),
+                    'PageNumber': quickSearchViewModel.PageNumber(), 'Limit': quickSearchViewModel.Limit()
+                };
+                var jsonData = JSON.stringify(request);
+                $.ajax({
+                    url: '@Url.Content("~/AdvancedSearch/QuickSearch")',
+                    type: 'post',
+                    dataType: 'json',
+                    data: jsonData,//JSON.stringify({ 'quickSearchViewModel': request })
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+                    },
+                    success: function (response) {
+                        quickSearchViewModel.SearchedText(quickSearchViewModel.SearchText());
+
+                        $('.unified-result .loader-overlay').fadeOut().remove('');
+                        if (response != null) {
+                            quickSearchViewModel.TotalHits(response.SearchResult.TotalHits);
+                            var results = [];
+                            $.each(response.SearchResult.Results, function (index, result) {
+                                if (result.Entity == PEOPLE || result.Entity == COMPANIES) {
+                                    var textSplit = result.Text.split("|");
+                                    var email = "";
+                                    if (textSplit.length > 2 && textSplit[1] != null)
+                                        email = textSplit[1];
+
+                                    var leadScore = 0;
+                                    if (textSplit.length > 2 && textSplit[2] != null)
+                                        leadScore = textSplit[2];
+                                    var contact = { Entity: result.Entity, Email: email, LeadScore: leadScore, Text: textSplit[0], DocumentId: result.DocumentId };
+                                    results.push(contact);
+                                }
+                                else
+                                    results.push(result);
+
+                            });
+                            ko.utils.arrayPushAll(quickSearchViewModel.SearchResults, results);
+                        }
+                    },
+                    error: function (response) {
+                        // removepageloader();
+                        // notifyError(response.responseText);
+                    }
+                });
+            };
+            ko.applyBindings(quickSearchViewModel, document.getElementById('quickSearch'));
+            
+        });
+    </script>

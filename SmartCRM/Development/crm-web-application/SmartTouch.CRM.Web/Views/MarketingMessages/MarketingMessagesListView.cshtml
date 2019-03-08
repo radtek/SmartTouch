@@ -1,0 +1,327 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using System.Linq
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.MarketingMessagesViewModel
+
+
+@{
+    ViewBag.Title = "MarketingMessagesListView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ 
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var id = ViewBag.MarketingMessageID;
+    var dateFormat = ViewBag.DateFormat;
+}
+<script>
+    var ItemsPerPage = '@(ItemsPerPage)'
+    var messageId = '@(id)'
+    console.log(messageId);
+    if (messageId == 0) {
+        localStorage.removeItem("messagesearchtext");
+        localStorage.removeItem("messagesearchcontent");
+        createCookie("messagepagesize", '@(ItemsPerPage)', 1);
+        createCookie("messagepagenumber", 1, 1);
+    }
+    function messagesearchtext() {
+        return {
+            name: localStorage.getItem("messagesearchtext")
+        }
+    }
+
+</script>
+
+@using (Ajax.BeginForm("MarketingMessagesListView", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="ApiKeyslist">
+        <div class="page-title">[|Message Center|]</div>
+        <div class="Messages-grid">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.MarketingMessagesViewModel>()
+    .Name("marketingmessagegrid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(true)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+        .ButtonCount(10).Messages(m => m
+            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Notifications|]")
+        .Empty("[|No notifications to display|]").ItemsPerPage("[|Notifications per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Template(e => "").Title("[|Title|]").HeaderHtmlAttributes(new { @class = "col-25" });
+        columns.Template(e => "").Title("[|Messages Count|]").HeaderHtmlAttributes(new { @class = "text-center" });
+        columns.Template(e => "").Title("[|Status|]").HeaderHtmlAttributes(new { @class = "col-15" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:80px;" });
+    })
+     .ToolBar(toolbar =>
+     {
+     toolbar.Template(@<text>
+                
+        </text>);
+     })
+
+     .ClientRowTemplate(
+                          @"<tr class='odd'>
+                            <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkmessage' data-name='#:MarketingMessageTitle#' data-id='#: MarketingMessageID #' data-status='#:Status#' data-toggle='checkbox'></label></td>
+                            <td>
+                                <span class='description grid-name'>
+                                <a href='/editmessage?messageId=#:MarketingMessageID#' title='#:MarketingMessageTitle#'>#:Title#</a>
+                                </span><br />
+                                #if (Status==MessageStatues.Active)
+                                {#
+                                    <span>[|Active On|] #:displayDate_sn(CreatedDate,ScheduleFrom)#</span>
+                                #}
+                                else if(Status==MessageStatues.Draft)
+                                    {#
+                                        <span>[|Draft On|] #:displayDate_n(CreatedDate)#</span>
+                                    #}
+                                else if(Status==MessageStatues.Publish)
+                                    {#
+                                        <span>[|Published On|] #:displayDate_sn(CreatedDate,ScheduleFrom)#</span>
+                                    #}
+                                else if(Status==MessageStatues.InActive)
+                                    {#
+                                        <span>[|InActive On|] #:displayDate_n(ScheduleTo)#</span>
+                                    #}#
+                            </td>
+                            <td class='text-center'>#:MessageCount#</td>
+                            <td>
+                                #if (Status==MessageStatues.Active)
+                                {#
+                                    <span class='at-active bold'>[|Active|]</span>
+                                #}
+                                else if(Status==MessageStatues.Draft)
+                                    {#
+                                        <span class='at-draft bold'>[|Draft|]</span>
+                                    #}
+                                else if(Status==MessageStatues.Publish)
+                                    {#
+                                        <span class='msg-sh-ic'><i class='icon icon-stc-clock'></i></span><span class='msg-sh-ic' style='position:relative;left:7px;'>[|Published|]</span>
+                                    #}
+                                else if(Status==MessageStatues.InActive)
+                                    {#
+                                        <span class='at-inactive bold'>[|InActive|]</span>
+                                    #}#
+                            </td>
+                                <td id='options' class='grid-row-controls'>
+                                <a href='/editmessage?messageId=#:MarketingMessageID#' title='Edit Message'><i class='icon st-icon-edit'></i></a>
+                                <a href='javascript:void(0)' onclick='DeleteNotificationMessage(this)' data-id='#:MarketingMessageID#' title='Delete message'><i class='icon st-icon-bin-3'></i></a></span> 
+                                </td>
+                              </tr>")
+                            .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .PageSize(ItemsPerPage)
+                            .Read(read => read.Action("MarketingMessagesListViewRead", "MarketingMessages").Data("messagesearchtext"))
+                            )
+            )
+        </div>
+    </div>
+}
+
+<script>
+
+    MessageStatues = {
+        Active: 1002,
+        Draft: 1000,
+        Publish: 1001,
+        InActive: 1003
+    };
+
+    function leadscoreTypeChange() {
+        var value = this.value();
+
+        $("#gridLeadScore").data("kendoGrid").dataSource.read();
+        var grid = $("#grid").data("kendoGrid");
+        var psize = readCookie("messagepagesize");
+        grid.dataSource.query({ page: 1, pageSize: psize });
+        appendCheckbox();
+    }
+
+    function onDataBinding(arg) {
+        setTimeout(function () {
+            appendCheckbox();
+            bindCheckboxchnage('chkmessage');
+            $(".st-icon-edit").parent('a').attr('data-target', '#modal');
+        }, 200)
+    }
+
+    function onDataBound(e) {
+
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+
+        $('#CheckBox').attr('checked', false);
+        $('#CheckBox').parent('label.checkbox').removeClass('checked');
+    }
+
+    function displayDate_n(date) {
+        if (date == null) {
+            return "";
+        }
+        var offset = new moment.tz(date, localStorage.getItem('utz')).utcOffset();
+        var value = new Date(date.getTime() + offset * 60 * 1000);
+        return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd hh:mm'), '@(dateFormat)' + ' hh:mm tt');
+    }
+
+    function displayDate_sn(ctdt, schdt) {
+        if (schdt) {
+            var offset = new moment.tz(schdt, localStorage.getItem('utz')).utcOffset();
+            var value = new Date(schdt.getTime() + offset * 60 * 1000);
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd hh:mm'), '@(dateFormat)' + ' hh:mm tt');
+        }
+        else {
+            var offset = new moment.tz(ctdt, localStorage.getItem('utz')).utcOffset();
+            var value = new Date(ctdt.getTime() + offset * 60 * 1000);
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd hh:mm'), '@(dateFormat)' + ' hh:mm tt');
+        }
+
+    }
+
+    function EditMessage() {
+        checkedvalues = fnGetChkMrkMsgvalGrid('chkmessage');
+        if (checkedvalues != "") {
+            if (checkedvalues.length == 1) {
+              window.location.href = "/editmessage?messageId=" + parseInt(checkedvalues[0]);
+            }
+            else {
+                notifyError("Please select only one message notification");
+            }
+        }
+        else {
+            notifyError("Please select at least one message notification");
+        }
+    }
+
+    function DeleteMessages() {
+        checkedvalues = fnGetChkMrkMsgvalGrid('chkmessage');
+        if(checkedvalues != "")
+        {
+            alertifyReset("Delete Message Notification(s)", "Cancel");
+            alertify.confirm("[|Are you sure you want to delete this message notification(s)|]?", function (e) {
+                if (e) {
+                    var messageIds = checkedvalues;
+                   // jsondata = JSON.stringify({ 'RuleID': lsid, 'Status':0 });
+                    var BASE_URL = '@Url.Content("~/MarketingMessages/")';
+                    varDeleteURL = BASE_URL + "DeleteMessages";
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: varDeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify({ 'Ids': messageIds })
+                    }).then(function (response) {
+                        var filter = $.Deferred()
+                        if (response.success) {
+                            filter.resolve(response)
+                        } else {
+                            filter.reject(response.error)
+                        }
+                        return filter.promise()
+                    }).done(function (data) {
+                        pageLoader();
+                        notifySuccess("[|Successfully deleted the message notifications|]");
+                        // $("#gridApiKey").data("kendoGrid").dataSource.read();
+
+                        setTimeout(
+                                    function () {
+                                        window.location.href = "/MarketingMessages";
+                                    }, setTimeOutTimer);
+
+                    }).fail(function (error) {
+                        notifyError(error);
+                    })
+
+                }
+                else {
+                    notifyError("[|You've clicked Cancel|]");
+                }
+            });
+        }
+        else {
+            notifyError("[|Please select at least one notification message|]");
+        }
+    }
+
+    function DeleteNotificationMessage(e) {
+        var id = $(e).attr("data-id");
+        console.log(id);;
+        alertifyReset("Delete Message Notification", "Cancel");
+        var array = [];
+        array.push(id);
+        var confirmMesaage = "[|Are you sure you want to delete this message notification|]?";
+        commondelete(confirmMesaage, array);
+    }
+
+
+    function commondelete(confirmMesaage, messageIds)
+    {
+
+        alertify.confirm(confirmMesaage, function (e) {
+            if (e)
+            {
+                var BASE_URL = '@Url.Content("~/MarketingMessages/")';
+                varDeleteURL = BASE_URL + "DeleteMessages";
+                jQuery.ajaxSettings.traditional = true
+               // jQuery.support.cors = true;
+                $.ajax({
+                    url: varDeleteURL,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ 'Ids': messageIds })
+                }).then(function (response) {           
+                    var filter = $.Deferred()            
+                    if (response.success) {                
+                        filter.resolve(response)            
+                    } else {                
+                        filter.reject(response.error)            
+                    }            
+                    return filter.promise()        
+                }).done(function (data) {
+                    pageLoader();
+                    notifySuccess("[|Successfully deleted the notification message|]");
+                   // $("#gridApiKey").data("kendoGrid").dataSource.read();
+
+                    setTimeout(
+                                function()
+                                {
+                                    window.location.href = "/MarketingMessages";
+                                },setTimeOutTimer);
+
+                }).fail(function (error) {                             
+                    notifyError(error);        
+                })
+            }
+            else
+            {
+                notifyError("[|You've clicked Cancel|]");
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        removepageloader();
+        var messageview =' @(Html.Raw(Json.Encode(Model)))';
+        console.log(messageview);
+        var BASE_URL = '@Url.Content("~/MarketingMessages/")';
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+
+        var grid = $('#marketingmessagegrid').data('kendoGrid');
+
+
+    });
+</script>
+

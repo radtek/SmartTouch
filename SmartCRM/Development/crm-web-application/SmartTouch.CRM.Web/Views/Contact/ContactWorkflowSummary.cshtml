@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = "ContactWorkflowSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var contactID = ViewBag.ContactId;
+}
+
+
+
+@using (Ajax.BeginForm("ContactWorkflowSummary", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div class="sub-container">
+        <div id="ApiKeyslist">
+            <div class="main-header">
+                <div class="page-title">
+                    [|Contact Workflow Engagement Summary|]
+                    <span style="cursor:pointer">
+                        <a class="back" href="javascript:void(0)" onclick="backEvent('@contactID')">
+                            <i class="icon st-icon-leftdropdownarrow"></i> [|Back|]
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="Messages-grid">
+                @(Html.Kendo().Grid<SmartTouch.CRM.Domain.Contacts.ContactWorkflowSummary>()
+                    .Name("contactworkflowsummarygrid")
+                    .HtmlAttributes(new { @class = "k-grid-content" })
+                    .AutoBind(true)
+                    .Pageable(pageable => pageable
+                            .Refresh(false)
+                            .PageSizes(true)
+                        .ButtonCount(10).Messages(m => m
+                            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Items|]")
+                        .Empty("[|No items to display|]").ItemsPerPage("[|Items per page|]")))
+                    .Columns(columns =>
+                    {
+                        //columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+                        columns.Template(e => "").Title("[|Workflow Name|]").HeaderHtmlAttributes(new { });
+                        columns.Template(e => "").Title("[|Contact Workflow Status|]").HeaderHtmlAttributes(new { });
+                        //columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:80px;" });
+                    })
+                     .ToolBar(toolbar =>
+                     {
+                     toolbar.Template(@<text>
+
+                    </text>);
+                     })
+
+                     .ClientRowTemplate(
+                                          @"<tr class='odd'>
+                                            <td>#:WorkflowName#</td>
+                                            <td>#:ContactStatus#</td>
+                                            </tr>")
+                                        .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                        .DataSource(dataSource => dataSource
+                                        .Ajax()
+                                        .PageSize(ItemsPerPage)
+                                        .Read(read => read.Action("GetContactWorkflowSummaryReadView", "Contact").Data("searchParameters"))
+                                                    )
+                                )
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts{
+
+    <script>
+        var ItemsPerPage = '@(ItemsPerPage)';
+        var contactId = '@(contactID)';
+
+        function searchParameters() {
+
+            var parameters = {
+                name: localStorage.getItem("searchParameters"),
+                filterdata: localStorage.getItem("filtercontent"),
+                contactId: contactId,
+            }
+            return parameters;
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        function backEvent(id) {
+            window.location.href = "/person/" + id + "/1";
+        }
+
+
+        localStorage.removeItem("searchParameters");
+        createCookie("contwfwsumpagenumber", 1, 1);
+        createCookie("contwfwsumpagesize", '@(ItemsPerPage)', 1);
+
+        function workflowSummaryTypeChange() {
+            $("#contactworkflowsummarygrid").data("kendoGrid").dataSource.read();
+            var grid = $("#grid").data("kendoGrid");
+            var psize = readCookie("contwfwsumpagesize");
+            grid.dataSource.query({ page: 1, pageSize: psize });
+        }
+
+        function onDataBinding(arg) {
+            
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+
+        $(document).ready(function () {
+            removepageloader();
+            var grid = $('#contactworkflowsummarygrid').data('kendoGrid');
+
+        });
+
+    </script>
+
+}
+

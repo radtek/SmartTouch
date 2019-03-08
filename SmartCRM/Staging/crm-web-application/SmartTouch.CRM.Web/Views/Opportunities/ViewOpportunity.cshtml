@@ -1,0 +1,1145 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using SmartTouch.CRM.Web.Utilities
+@using System.Web.Mvc
+@using SmartTouch.CRM.Entities
+@model OpportunityViewModel
+@{
+    ViewBag.Title = "ViewOpportunity";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var CurrencyFormat = ViewBag.Currency;
+    var OpportunityPage = ViewBag.OpportunityPage;
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.OpportunityActions);
+    appModules.Add(AppModules.OpportunityNotes);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+@Scripts.Render("~/bundles/Opportunityvm")
+
+<div class="ct-details" id="viewOpportunity" style="display:none" data-bind="visible:true">
+    <div class="ct-mainarea">
+        <div class="ct-top-details">
+            <ul class="breadcrumb border-bottom-none">
+                <li>@Html.ActionLink("[|Opportunities|]", "OpportunitiesSearchList")</li>
+                <li class="active"><a href="javascript:void(0)">[|View Opportunity|]</a></li>
+            </ul>
+            <div class="panel contact-detail">
+                <div class="user-body row">
+                    <div class="col-md-8 col-lg-8">
+                        <div class="clearfix">
+                            <div class="profile-pic-control">
+                                <div class="profile-pic">
+                                    <a href="#editprofilepic" class="change-picture" data-toggle="modal">Change Picture</a>
+                                    <figure>
+                                        <img data-bind="attr:{src: Image.ImageContent() != null ?Image.ImageContent:'/img/NoImage.png'}" id='contactProfileImage' alt="profile picture" />
+                                    </figure>
+                                </div>
+                                <div class="st-edit-profile"><a data-bind="attr: { 'href': '@Url.Action("EditOpportunity", "Opportunities")?opportunityID=' + OpportunityID() }">[|Edit Opportunity|]</a></div>
+                            </div>
+                            <div class="user-details">
+                                <div class="edit-field name-field">
+                                    <div class="edit-field-label" data-bind="click:function(){ InlineEditing(1)}">
+                                        <h6 class="mtn" data-bind="text:OpportunityName,attr: { title: OpportunityName }"></h6> <i class="icon st-icon-edit"></i>
+                                    </div>
+                                    <div class="edit-field-group opp-view-inlnedit">
+                                        <div class="form-group co-mmrb10">
+                                            <label class="control-label">[|Opportunity Name|]</label>
+                                            <input class="form-control" data-bind="value:OpportunityName" type="text" maxlength="75" />
+                                        </div>
+                                        <div class="form-group co-de-buttons">
+                                            <label class="control-label">&nbsp;</label>
+                                            <button data-bind="click:function(){ InlineSaving(1)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                                            <button data-bind="click:function(){ InlineCancel(1)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="opp-contacts">
+                                   <a href="#" data-bind="event:{click:getBuyers} "><span data-bind="text:ContactCount"></span>&nbsp;[|Buyer(s)|]</a>
+                                </div>
+                                <div class="edit-field decription-field" style="margin-top:5px;">
+                                    <div class="edit-field-label" data-bind="click:function(){ InlineEditing(2)}">
+                                       <i class="icon st-icon-book-lines prm"></i>
+                                           <!-- ko if: Description == null  -->
+                                           <span>[|Description Not Available|]</span>
+                                           <!-- /ko -->
+                                           <!-- ko ifnot: Description == null  -->
+                                           <span class="mtn" data-bind="text:Description,attr: { title: Description }"></span> <i class="icon st-icon-edit"></i>
+                                           <!-- /ko -->
+                                    </div>
+                                    <div class="edit-field-group opp-view-inlnedit">
+                                        <div class="form-group co-mmrb10 ">
+                                            <label class="control-label">[|Description|]</label>
+                                            <textarea data-bind="value:Description" class="form-control" rows="3"></textarea>
+                                            @*<input class="form-control" data-bind="value:Description" type="text" maxlength="75" />*@
+                                        </div>
+                                        <div class="form-group co-de-buttons">
+                                            <label class="control-label">&nbsp;</label>
+                                            <button data-bind="click:function(){ InlineSaving(2)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                                            <button data-bind="click:function(){ InlineCancel(2)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="edit-field address-field" style="margin-top:5px;">
+                                    <div class="edit-field-label" data-bind="click:function(){ InlineEditing(9)}">
+                                        <i class="icon st-icon-pin prm"></i>
+                                            <!-- ko if: Address == null  -->
+                                            <span>[|Address Not Available|]</span>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: Address == null  -->
+                                            <span class="mtn" data-bind="text:Address,attr: { title: Address }"></span> <i class="icon st-icon-edit"></i>
+                                            <!-- /ko -->
+                                    </div>
+                                    <div class="edit-field-group opp-view-inlnedit">
+                                        <div class="form-group co-mmrb10">
+                                            <label class="control-label">[|Address|]</label>
+                                            <input class="form-control" data-bind="value:Address" type="text" maxlength="75" />
+                                        </div>
+                                        <div class="form-group co-de-buttons">
+                                            <label class="control-label">&nbsp;</label>
+                                            <button data-bind="click:function(){ InlineSaving(9)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                                            <button data-bind="click:function(){ InlineCancel(9)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="edit-field owner-field Owner">
+                            <div class="label">[|Owner|]</div>
+                            <div class="status" data-bind="text:UserName,attr: { title: UserName }"></div>
+                        </div>*@
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="pull-right">
+                            <ul class="user-counts">
+                                <li class="score">
+                                    <div class="label">[|Potential$|]</div>
+                                    <div class="edit-field potential-field">
+                                        <div class="edit-field-label" data-bind="click:function(){ InlineEditing(5)}">
+                                            <div class="status" data-bind="text:PotentialwithCurrency"></div> <i class="icon st-icon-edit"></i>
+                                        </div>
+                                        <div class="edit-field-group opp-view-inlnedit">
+                                            <div class="form-group co-mmrb10">
+                                                <input class="form-control" data-bind="value:Potential" type="text" maxlength="75" />
+                                            </div>
+                                            <div class="form-group co-de-buttons">
+                                                <button data-bind="click:function(){ InlineSaving(5)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                                                <button data-bind="click:function(){ InlineCancel(5)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="score">
+                                    <div class="label">[|Opportunity Type|]</div>
+                                    <div class="edit-field type-field">
+                                        <div class="edit-field-label" data-bind="click:function(){ InlineEditing(7)}">
+                                            <!-- ko if: OpportunityType == null  -->
+                                            <span class="status">[|OpportunityType Not Available|]</span>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: OpportunityType == null  -->
+                                            <div class="status" data-bind="text:OpportunityType"></div> <i class="icon st-icon-edit"></i>
+                                            <!-- /ko -->
+                                            
+                                        </div>
+                                        <div class="edit-field-group opp-view-inlnedit">
+                                            <div class="form-group co-mmrb10">
+                                                <input type="text" placeholder="[|Opportunity Type|]" data-bind="value:OpportunityType,valueUpdate: 'afterkeydown'" maxlength="75" class="form-control">
+                                            </div>
+                                            <div class="form-group co-de-buttons">
+                                                <button data-bind="click:function(){ InlineSaving(7)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                                                <button data-bind="click:function(){ InlineCancel(7)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="score">
+                                    <div class="label">[|Product Type|]</div>
+                                    <div class="edit-field product-field">
+                                        <div class="edit-field-label" data-bind="click:function(){ InlineEditing(8)}">
+                                            <!-- ko if: ProductType == null  -->
+                                            <span class="status">[|ProductType Not Available|]</span>
+                                            <!-- /ko -->
+                                            <!-- ko ifnot: ProductType == null  -->
+                                            <div class="status" data-bind="text:ProductType"></div> <i class="icon st-icon-edit"></i>
+                                            <!-- /ko -->
+                                            
+                                        </div>
+                                        <div class="edit-field-group opp-view-inlnedit">
+                                            <div class="form-group co-mmrb10">
+                                                <input type="text" placeholder="[|Product Type|]" data-bind="value:ProductType,valueUpdate: 'afterkeydown'" maxlength="75" class="form-control">
+                                            </div>
+                                            <div class="form-group co-de-buttons">
+                                                <button data-bind="click:function(){ InlineSaving(8)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                                                <button data-bind="click:function(){ InlineCancel(8)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--end of col-md-6-->
+                <!--end of panelbody-->
+
+                <div class="user-panel-footer ptn">
+                    <div class="usertags pln">
+                        <span class="st-custag"><span class="icon st-icon-tag prs"></span>[|Tags|]</span>
+                        <input id="opportunityTags" class="tagsinput tags-input -info-round" data-bind="valueUpdate: 'afterkeydown'" />
+                    </div>
+                </div>
+                <div>
+                    @{
+                        Html.RenderPartial("~/Views/Contact/_RecentPopularTagModel.cshtml");
+                    }
+                </div>
+
+
+
+            </div>
+            <!--end of panel-->
+        </div>
+
+
+
+        <div class="tabbable new-tabs cdp-tabs">
+            <div class="timeline-tabs">
+                <div class="tab-heading">
+                    <ul class="nav nav-tabs">
+                        <li class="active" id="opp-time-line"><a href="#timelinetab"><span class="icon st-icon-timeline"></span>[|Timeline|]</a></li>
+                        <li id="opp-attachments"><a href="#attachments" data-bind="click:function(){ AttachmentViewModel().GetAttachments()}"><span class="icon st-icon-cloud-add"></span>[|Attachments|]</a></li>
+                        <li id="buyers-pane" data-bind="event:{click:getBuyers}"><a href="#buyerssummary"><span class="icon st-icon-user-3"></span>[|Buyer(s)|]</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <!-- /tabs -->
+            <div class="tab-content">
+
+                <div class="tab-pane active" data-bind="with:TimeLineViewModel" id="timelinetab">
+                    @{
+                        Html.RenderPartial("~/Views/Contact/_TimeLineInfo.cshtml");
+                    }
+                </div>
+                <div class="tab-pane" id="attachments" data-bind="with:AttachmentViewModel">
+                    @{
+                        Html.RenderPartial("~/Views/Contact/_Attachment.cshtml", new ViewDataDictionary { { "page", "opportunities" } });
+                    }
+                </div>
+                <div class="tab-pane" id="buyerssummary">
+                        @Html.Partial("_OpportunityBuyers")
+                </div>
+
+            </div>
+            <!-- /tab-content -->
+        </div>
+
+    </div>
+    <div class="ct-other-panels">
+        <!-- ko if: HideNavigation()===false-->
+        <ul class="previous-next mbl">
+            <li>
+                <!-- ko if: EnablePrevious()==true-->
+                <a href="/previousopportunity/"><i class="fui-arrow-left"></i> [|Previous|]</a>
+                <!--/ko-->
+                <!-- ko if: EnablePrevious()==false-->
+                <i class="fui-arrow-left"></i> [|Previous|]
+                <!--/ko-->
+            </li>
+            <li> - </li>
+            <li>
+                <!-- ko if: EnableNext()==true-->
+            <li>
+                <a href="/nextopportunity/">[|Next|] <i class="fui-arrow-right"></i></a>
+                <!--/ko-->
+                <!-- ko if: EnableNext()==false-->
+                [|Next|] <i class="fui-arrow-right"></i>
+                <!--/ko-->
+            </li>
+        </ul>
+        <!--/ko-->
+
+        <div class="panel panel-default">
+            <!-- ko stopBinding: true -->
+            @Html.Partial("OpportunityDetails")
+            <!--/ko-->
+        </div>
+    </div>
+
+</div>
+
+<!-- /.container -->
+<div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="editprofilepic" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">[|Edit Opportunity Image |]</h4>
+            </div>
+            <div class="modal-body">
+                <div class="profile-img-upload mbl clearfix">
+                    <figure>
+                        <img id='opportunityimage' data-bind="attr:{src: Image.ImageContent?Image.ImageContent:'/img/NoImage.png'}" alt="profile picture" />
+                    </figure>
+                    <div class="uploadcontrol pln">
+                        <div class="display-inline mtf">
+                            <label class="control-label">[|Choose picture from local drive|]</label>
+                            <input type="file" name="files" id="images" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a data-dismiss="" aria-hidden="" data-bind="click:function(){ InlineSaving(10)}" class="btn btn-lg btn-primary" id="btnSave"><span>Save</span></a>
+                    <a href="javascript:void(0)" onclick="CloseTopInner(this)" data-dismiss="modal" aria-hidden="true" class="btn btn-lg">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="buyercommentsmodal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Previous Comments</h4>
+            </div>
+            <div class="modal-body" id="buyer-comments">
+                @*<p>Some text in the modal.</p>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="reminders" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><span class="icon st-icon-tick prm"></span>Add Action</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Action <span class="required">*</span></label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="reminder-block">
+                    <div class="row mbm"><a href="javascript:void(0)" class="actionreminder-add"><i class="icon st-icon-add mrs"></i> Reminder</a></div>
+
+                    <div class="row hide actionsreminder-data">
+                        <div class="col-md-6 pln">
+                            <div class="form-group ">
+                                <label class="control-label">Reminder method</label>
+                                <select name="mediumnm" class="select-block" multiple="multiple">
+                                    <option>Pop-up</option>
+                                    <option>Email</option>
+                                    <option>Text to</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 prn">
+                            <div class="form-group ">
+                                <label class="control-label">Reminder Timeframe</label>
+                                <select name="mediumnm" class="select-block" id="actionremindertimeframe">
+                                    <option value="1">Today</option>
+                                    <option value="2">Tomorrow</option>
+                                    <option value="3">2 Weeks</option>
+                                    <option value="4">Next Week</option>
+                                    <option value="5">On a Date</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pln">
+                            <div class="form-group ">
+                                <label class="control-label">Reminder Date & Time</label>
+                                <input type="text" class="" id="datetimepicker4" />
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <label class="control-label bold additional pbs">Additional Options</label>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label">People</label>
+                    <div>
+                        <input name="people" class="tagsinput-info-round mbn form-control" id="people01" value="Grant,Tom" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Tags</label>
+                    <div>
+                        <input name="tagsinput" class="mbn form-control" id="search14" value="Account Executive,Sales User" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a href="javascript:void(0)" class="btn btn-lg btn-primary" onclick="CloseTopInner(this)">Save</a>
+                    <a href="javascript:void(0)" class="btn btn-lg mln" onclick="CloseTopInner(this)" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editaction" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><span class="icon st-icon-tick prm"></span>Edit Action</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Action <span class="required">*</span></label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="reminder-block">
+                    <div class="row mbm"><a href="javascript:void(0)" class="actionreminder-add"><i class="icon st-icon-add mrs"></i> Reminder</a></div>
+
+                    <div class="row hide actionsreminder-data">
+                        <div class="col-md-6 pln">
+                            <div class="form-group ">
+                                <label class="control-label">Reminder method</label>
+                                <select name="mediumnm" class="select-block" multiple="multiple">
+                                    <option>Pop-up</option>
+                                    <option>Email</option>
+                                    <option>Text to</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 prn">
+                            <div class="form-group ">
+                                <label class="control-label">Reminder Timeframe</label>
+                                <select name="mediumnm" class="select-block" id="actionremindertimeframe">
+                                    <option value="1">Today</option>
+                                    <option value="2">Tomorrow</option>
+                                    <option value="3">2 Weeks</option>
+                                    <option value="4">Next Week</option>
+                                    <option value="5">On a Date</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pln">
+                            <div class="form-group ">
+                                <label class="control-label">Date & Time</label>
+                                <input type="text" class="" id="datetimepicker5" />
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <label class="control-label bold additional pbs">Additional Options</label>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label">People</label>
+                    <div>
+                        <input name="people" class="tagsinput-info-round mbn form-control" id="people12" value="Grant,Tom" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Tags</label>
+                    <div>
+                        <input name="tagsinput" class="mbn form-control" id="search16" value="Account Executive,Sales User" />
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a href="javascript:void(0)" class="btn btn-lg btn-primary" onclick="CloseTopInner(this)">Save</a>
+                    <a href="javascript:void(0)" class="btn btn-lg mln" onclick="CloseTopInner(this)" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addrelationship" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><span class="icon st-icon-support-3 prm"></span>Add Relationship to SmartTouch</h4>
+            </div>
+            <div class="modal-body pbn">
+
+
+                <div class="row">
+                    <div class="col-md-6 pln">
+                        <div class="form-group">
+                            <label>Relationship Type</label>
+                            <select name="mediumnm" class="select-block" id="addrelationshiptype2">
+                                <option value="1">Account Executive</option>
+                                <option value="2">Spouse</option>
+                                <option value="3">Agent</option>
+                                <option value="4">Lawyer</option>
+                                <option value="5">Co-buyer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pln">
+                        <div class="form-group">
+                            <label class="control-label" id="addrelationshiptypelabel2">Account Executive</label>
+                            <div>
+                                <input name="tagsinput" placeholder="Account Executive" class=" mbn form-control" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <ul class="boxscroll relationship">
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Anne</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">Tom Lee</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Mathews</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Anne</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Anne</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editrelationship" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><span class="icon st-icon-support-3 prm"></span>Edit Relationship to SmartTouch</h4>
+            </div>
+            <div class="modal-body pbn">
+
+
+                <div class="row">
+                    <div class="col-md-6 pln">
+                        <div class="form-group">
+                            <label>Relationship Type</label>
+                            <select name="mediumnm" class="select-block" id="addrelationshiptype2">
+                                <option value="1">Account Executive</option>
+                                <option value="2">Spouse</option>
+                                <option value="3">Agent</option>
+                                <option value="4">Lawyer</option>
+                                <option value="5">Co-buyer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pln">
+                        <div class="form-group">
+                            <label class="control-label" id="addrelationshiptypelabel2">Account Executive</label>
+                            <div>
+                                <input name="tagsinput" placeholder="Account Executive" class=" mbn form-control" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <ul class="boxscroll relationship">
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Anne</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">Tom Lee</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Mathews</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Anne</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                        <li class="row add-relation">
+                            <div class="col-md-11 pln">
+                                <div class="loadedcontacts">
+                                    <span class="mtl mrm">Grant's</span><span class="mtl mrm bold">Account Executive</span><span class="mtl mrm">is</span><span class="mtl">James Anne</span>
+                                </div>
+                            </div>
+                            <div class="col-md-1 pln prn delete-st">
+                                <a href="javascript:void(0)"><span class="icon st-icon-bin-3 black"></span></a>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="attach" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Attach Files</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="draganddrop-image-uploder" id="drguploder">
+
+                    <div class="title"><i class="st-upload-large-gray"></i> Drag and drop files here</div>
+                    <div class="text">
+                        We recommend pdf,xls,doc,text. You can
+                        <input type="file" class="browse" style="display:inline-block;" />
+                    </div>
+                    <!--<input type="file" multiple="multiple" />-->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="oppModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:1050;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span data-bind="text:ActionCompletedMessage"></span>
+                <div class="row">
+                    <div class="col-sm-4" style="margin-top:10px;" data-bind="visible: ActionCompleted() == false">
+                        <label class="checkbox">
+                            <input type="checkbox" data-toggle="checkbox" data-bind="checked :AddNoteSummary" /> [|Add to Contact Summary|]
+                        </label>
+                    </div>
+                    @*<div class="col-sm-3" style="margin-top:10px" data-bind="visible: (ActionCompleted() == false && ActionTypeValue() == 'Email' && ActionDateOn().getTime() > utc_now().getTime()) ">
+                        <label class="checkbox">
+                            <input type="checkbox" data-toggle="checkbox" data-bind="checked :ToSend" /> [|Send Email|]
+                        </label>
+                    </div>
+                    <div class="col-sm-4" style="margin-top:10px" data-bind="visible: (ActionCompleted() == true && ActionTypeValue() == 'Email' && ActionDateOn().getTime() > utc_now().getTime()) ">
+                        <label class="checkbox">
+                            <input type="checkbox" data-toggle="checkbox" data-bind="checked :ToSend" /> [|Schedule Email|]
+                        </label>
+                    </div>*@
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){OpportunityActionCompleted('All')}"><span data-bind="text:CompletedActionOption"></span></a>
+                    <a class="btn btn-lg" aria-hidden="true"
+                       data-dismiss="modal" data-bind="click:function(event,data){CloseWindowFunction('A')}" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    localStorage.setItem("OpportunityView", "OppView");
+    function displayDate_n(date){
+        if(date == null){
+            return "";
+        }else
+            return kendo.toString(kendo.parseDate(date, 'yyyy/MM/dd'), '@Model.DateFormat')
+    }
+
+    var Activities = [];
+    if ("@Permissions.Where(s => s.Module == AppModules.OpportunityActions).Select(s => s.HasPermission).SingleOrDefault()" == "True") Activities.push({ ActivityID: 'Action', ActivityValue: "[|Actions|]" });
+    if ("@Permissions.Where(s => s.Module == AppModules.OpportunityNotes).Select(s => s.HasPermission).SingleOrDefault()" == "True")Activities.push({ ActivityID: 'Note', ActivityValue: "[|Notes|]" });
+    Activities.push({ ActivityID: 'Opportunity', ActivityValue: "[|Profile Updates|]" });
+
+
+    $(document).ready(function () {
+        localStorage.removeItem("OpportunityName");
+        localStorage.removeItem("OpportunityID");
+        var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+        var Contact_Base_Url = '@Url.Content("~/Contact/")';
+        var Communication_Url = '@Url.Content("~/Communication/")';
+        var opportunity = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        viewModel1 = new opportunityViewModel(opportunity,Opportunity_BASE_URL,WEBSERVICE_URL,Contact_Base_Url,'@(OpportunityPage)',null,null,Activities);   //viewModel1 should be accessible to _GooglePicker.cshtml
+        viewModel1.TimeLineViewModel = ko.observable(new TimeLineViewModel(Contact_Base_Url, Opportunity_BASE_URL, "opportunities",viewModel1.dateFormat(),Activities,null,viewModel1.OpportunityID()));
+        viewModel1.AttachmentViewModel = ko.observable(new AttachmentViewModel(Communication_Url,"opportunities",viewModel1.dateFormat(),null,viewModel1.OpportunityID()));
+        localStorage.setItem("OpportunityName", viewModel1.OpportunityName());
+        localStorage.setItem("OpportunityID", viewModel1.OpportunityID());
+
+        if(viewModel1.Contacts()){
+            $.each(viewModel1.Contacts(), function (index, value) {
+                value.Id = ko.observable(value.Id);
+            });
+        }
+
+
+        var opportunityIndex = @(Session["opportunityindex"]);
+        var totalHits = '@(Session["OpportunityTotalHits"])'||0;
+        viewModel1.OpportunityIndex(opportunityIndex);
+        viewModel1.OpportunityTotalHits(totalHits);
+        ko.applyBindings(viewModel1);
+
+        function onSelect(e) {
+            $('.k-file').hide();
+            var varImageType="";
+            $.each(e.files, function (index, value) {
+                var ok = value.extension.toLowerCase() == ".jpg"
+                         || value.extension.toLowerCase() == ".jpeg"
+                         || value.extension.toLowerCase() == ".png"
+                         || value.extension.toLowerCase() == ".bmp";
+
+                if (!ok) {
+                    e.preventDefault();
+                    notifyError("Please upload jpg, jpeg, png, bmp files"); return false;
+                }
+                else if(bytesToSize(e.files[0].size)>3) {
+                    e.preventDefault();
+                    notifyError("Image size should not be more than 3 MB");
+                    return false;
+                }
+                else {
+                    $("#txtUploadProfileImage").val('');
+                    viewModel1.ContactImageUrl='';
+                }
+
+                var fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                    //  self.imagePath(event.target.result);
+                    var image = document.getElementById("opportunityimage");
+                    image.src = event.target.result;
+                    viewModel1.Image().ImageContent=event.target.result;
+                }
+                fileReader.readAsDataURL(e.files[0].rawFile);
+                viewModel1.Image().ImageType= value.extension.toLowerCase();
+                viewModel1.Image().OriginalName= e.files[0].name;
+            });
+        }
+        function onComplete(e) {
+            $('.k-filename').hide();
+        }
+        function onProgress(e) { getFileInfo(e);$('.k-file').hide();}
+        function getFileInfo(e) {
+
+            return $.map(e.files, function (file) {
+                var info = file.name;
+
+                var varFullPath = file.rawFile.mozFullPath;
+                // File size is not available in all browsers
+                if (file.size > 0) {
+                    info += " (" + Math.ceil(file.size / 1024) + " KB)";
+                }
+                return info;
+            }).join(", ");
+        }
+        function onUpload(e) {
+            $('.k-filename').hide();
+        }
+        function bytesToSize(bytes) {
+            return (bytes/(1024*1024)).toFixed(2);
+        }
+
+        $('#opportunityTags').tagsInput({
+            width:'auto',
+            onAddTag: function (value,uid) {
+                var tag = $(viewModel1.TagsList()).filter(function (index, tagItem) {
+                    if((typeof tagItem.LeadScoreTag == 'function' ? tagItem.LeadScoreTag():tagItem.LeadScoreTag) == true){
+                        return ((typeof tagItem.TagName == 'function'?tagItem.TagName():tagItem.TagName).toString().toLowerCase().replace("*","")) == (value.toString().toLowerCase().replace(" *",""));
+                    }
+                    else{
+                        return (typeof tagItem.TagName == 'function'?tagItem.TagName():tagItem.TagName).toString().toLowerCase() == value.toString().toLowerCase();
+                    }
+                })[0];
+
+                if(tag == undefined){
+                    $.ajax({
+                        url: Opportunity_BASE_URL + 'AddOpportunityTag',
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ 'tagName': value, 'opportunityID': viewModel1.OpportunityID() ,'tagId':uid })
+                    }).then(function (response) {            
+                        var filter = $.Deferred()            
+                        if (response.success) {                
+                            filter.resolve(response)            
+                        } else {               
+                            filter.reject(response.error)            
+                        }            
+                        return filter.promise()        
+                    }).done(function (data) {
+                        if (data.success === false)
+                        {
+                            notifyError(data.response);
+                        }
+                       viewModel1.TagsList.push(data.response);  //() after TagsList
+                        $("#opportunityTags_tag").val('');       
+                    }).fail(function (error) {                                   
+                        notifyError(error);        
+                    })
+                }
+
+            },
+            onRemoveTag: function (value,uid) {
+                var tag = $(viewModel1.TagsList()).filter(function (index, tagItem) {
+                    if((typeof tagItem.LeadScoreTag == 'function' ? tagItem.LeadScoreTag():tagItem.LeadScoreTag) == true){
+                        return ((typeof tagItem.TagName == 'function'?tagItem.TagName():tagItem.TagName).toString().toLowerCase().replace("*","")) == (value.toString().toLowerCase().replace(" *",""));
+                    }
+                    else{
+                        return (typeof tagItem.TagName == 'function'?tagItem.TagName():tagItem.TagName).toString().toLowerCase() == value.toString().toLowerCase();
+                    }
+                })[0];
+
+                var result = RemoveTagFunction(value,(typeof tag.Id == 'function'?tag.Id():tag.Id),viewModel1.ContactID());
+                if(result == true){
+
+                    viewModel1.TagsList.remove(function (tag) {
+                        return (typeof tag.TagName == 'function' ? tag.TagName() : tag.TagName) === value;
+                    });
+
+                    if (viewModel1.hasOwnProperty('PopularTags') && viewModel1.PopularTags() != null) {
+                        var popularTagfilter = ko.utils.arrayFilter(viewModel1.PopularTags(), function (Tag, index) {
+                            if (Tag.TagName() === value) {
+                                Tag.IsSelected = false;
+                                $('#populartag' + (index + 1)).parent('.checked').removeClass('checked');
+                            }
+                            return Tag.TagName() === value;
+                        });
+                        var recentTagfilter = ko.utils.arrayFilter(viewModel1.RecentTags(), function (Tag, index) {
+                            if (Tag.TagName() === value) {
+                                Tag.IsSelected = false;
+                                $('#recenttag' + (index + 1)).parent('.checked').removeClass('checked');
+                            }
+                            return Tag.TagName() === value;
+                        });
+                    }
+                }
+
+
+
+            }
+        });
+
+        var typewatch = (function(){
+            var timer = 0;
+            return function(callback, ms){
+                clearTimeout (timer);
+                timer = setTimeout(callback, ms);
+            }
+        })();
+
+        $("#opportunityTags_tag").kendoAutoComplete({
+            minLength: 1,
+            placeholder: "Type a tag name",
+            dataTextField: "TagName",
+            select: autocomplete_select
+        });
+
+        var tagNames = $("#opportunityTags_tag");
+        tagNames.bind('keydown keypress', function() {
+            typewatch(function() {
+                var authToken = readCookie("accessToken");
+                if (tagNames.val() === null || tagNames.val() === "")
+                    return;
+                $.ajax({
+                    url:  WEBSERVICE_URL + "/Tag/Names",
+                    type: 'get',
+                    dataType: 'json',
+                    data:{ 'query': tagNames.val() },
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+                    },
+                    success: function(tagsData){
+                        if (tagsData.Tags.length > 0) {
+                            tags = tagsData.Tags;
+                        }
+                        var autocomplete = $("#opportunityTags_tag").data("kendoAutoComplete");
+                        autocomplete.dataSource.data(tagsData.Tags);
+                    },
+                    error: function (response){
+                        notifyError(response.responseText);
+                    }
+                });
+            }, 500);
+        });
+
+
+        function RemoveTagFunction(value,uid,contactid){
+        $.ajax({
+            url: Opportunity_BASE_URL + 'RemoveOpportunityTag',
+            type: 'post',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({ 'tagName': value,'tagId':uid==undefined?0:uid, 'opportunityID': viewModel1.OpportunityID() })
+        }).then(function (response) {            
+            var filter = $.Deferred()            
+            if (response.success) {                
+                filter.resolve(response)            
+            } else {                
+                filter.reject(response.error)            
+            }            
+            return filter.promise()        
+        }).done(function (data) {
+            if (data.success === false)
+            {
+                notifyError(data.response);
+            }     
+        }).fail(function (error) {                              
+            //notifyError(error);        
+        })
+        return true;
+      }
+
+       var recentJs = new RecentPopular(viewModel1,"opportunityTags");
+
+        if (viewModel1.TagsList() != null) {
+            var Tags = (viewModel1.TagsList());
+            $.each(viewModel1.TagsList(), function (index, tagItem) {
+                var tagname = tagItem.LeadScoreTag() == true? tagItem.TagName()+" *":tagItem.TagName();
+                $("#opportunityTags").addTag(tagname,{ UID: tagItem.Id()});
+            });
+        }
+
+        function autocomplete_select(e) {
+            var item = e.item;
+            var text = item.text();
+            var dataItem = this.dataItem(e.item);
+
+            var tagviewmodel = $(tagsViewModel).filter(function () {
+                return this.TagId.toString().toLowerCase() === dataItem.TagID.toString().toLowerCase();
+            })[0];
+
+
+            var tag = $(viewModel1.TagsList()).filter(function (index, tagItem) {
+                if(tagItem.LeadScoreTag() == true){
+                    return ((tagItem.TagName()).toString().toLowerCase().replace("*","")) == (text.toString().toLowerCase());
+                }
+                else
+                    return tagItem.Id() == dataItem.TagID;
+            })[0];
+
+
+            if (!$("#opportunityTags").tagExist(text) && tagviewmodel == undefined && tag == undefined) {
+                $("#opportunityTags").addTag(text,{ UID: dataItem.TagID });
+            }
+            e.preventDefault();
+        }
+    });
+
+    function dispalyPotential(potential) {
+        var currencyFormat = readCookie('currency');
+        if (currencyFormat == "$X,XXX.XX") {
+            kendo.culture("en-US");
+            return "$" + kendo.toString(potential, 'n');
+        } else if (currencyFormat == "X XXX,XX $") {
+            kendo.culture("fr-FR");
+            return kendo.toString(potential, 'n') + " $";
+        } else if (currencyFormat == "B/.X,XXX.XX") {
+            kendo.culture("en-US");
+            return "B/." + kendo.toString(potential, 'n');
+        } else if (currencyFormat == "₹X,XXX.XX") {
+            kendo.culture("en-US");
+            return "₹" + kendo.toString(potential, 'n');
+        } else {
+            kendo.culture("en-US");
+            return "$" + kendo.toString(potential, 'n');
+        }
+       
+    }
+
+    function dispalyprecomments(prevComments){
+        if(prevComments == null)
+            return "";
+        else
+            return prevComments;
+    }
+
+    function dispalycomments(curComments){
+        if(curComments == null)
+            return "";
+        else
+            return curComments;
+    }
+
+    function PrveComments(e) {
+       var comments =  $(e).attr("data-content");
+       document.getElementById('buyer-comments').innerText = comments;
+    }
+
+    function displayCloseDate(date) {
+        var dateFormat = readCookie("dateformat").toUpperCase();
+        var requestFormat = date.toString().indexOf('/');
+        var dateFormat = readCookie("dateformat").toUpperCase();
+        if (requestFormat != -1) {
+            var millSeconds = date.replace('/Date(', '').replace(')/', '');
+            var value = new Date(parseFloat(millSeconds)).ToUtcUtzDate();
+        }
+        else {
+            var value = new Date(date).ToUtcUtzDate();;
+        }
+        return moment(value).format(dateFormat);
+    }
+
+    function DeleteOpportunityBuyer(buyerId) {
+        alertifyReset("Delete Buyer", "Cancel");
+        var confirmMesaage = "[|Are you sure you want to delete this buyer|]?";
+        commonbuyerdelete(confirmMesaage, buyerId);
+
+    }
+
+    function commonbuyerdelete(message, buyerId) {
+        alertify.confirm(message, function (e) {
+            if (e) {
+                jQuery.ajaxSettings.traditional = true;
+                $.ajax({
+                    url: '/Opportunities/DeleteOpportunityBuyer',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify({ 'buyerId': buyerId }),
+                    contentType: 'application/json; charset=utf-8'
+                }).then(function (response) {
+                    var filter = $.Deferred()
+                    if (response.success) {
+                        filter.resolve(response)
+                    }
+                    else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    notifySuccess("[|Successfully deleted the buyer|]");
+                    viewModel1.buyerActivated(false);
+                    viewModel1.getBuyers();
+
+                }).fail(function (error) {
+                    notifyError(error);
+                })
+            }
+            else {
+                notifyError("[|You've clicked Cancel|]");
+            }
+        });
+    }
+
+</script>
+
+}
+

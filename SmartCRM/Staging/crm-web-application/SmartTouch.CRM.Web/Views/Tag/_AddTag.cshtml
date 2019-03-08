@@ -1,0 +1,56 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model TagViewModel
+
+@*<script src="~/Scripts/ViewModels/TagViewModel.js"></script>*@
+
+@{
+   
+}
+
+@Scripts.Render("~/bundles/tagviewmodel")
+
+<div id="Note">
+    <div id="addTag" class=" ">
+        <div class="">
+          
+         
+                <div class="drop-heading">
+                    <span class="icon st-icon-tag display-inline"></span> <h4 class="panel-title display-inline plm">[|Add Tag|]</h4>
+                </div>
+         
+            <div class="">
+                <div class="dp-topnav-inner-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">[|Tag|] <span class="required">*</span></label>
+                        <input class="form-control" id="txtTagName" type="text" data-bind="value:TagName,valueUpdate: 'afterkeydown'" placeholder="[|Name|]" maxlength="75" />
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" id="addBtn" data-bind="click:addTag" aria-hidden="true"><span>[|Save|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="false"
+                       data-dismiss="" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Tag/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagview = @(Html.Raw(Json.Encode(Model)));
+
+        var tagviewModel = new TagsViewModel(tagview, BASE_URL, WEBSERVICE_URL,accountId);
+
+  
+       
+        ko.applyBindings(tagviewModel,document.getElementById("addTag"));
+      
+       
+    });
+</script>

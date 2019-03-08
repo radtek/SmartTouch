@@ -1,0 +1,76 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using SmartTouch.CRM.Web.Utilities
+@model ChangeOwnerViewModel
+@{
+    var isModal = false;
+}
+@*<script src="~/Scripts/ViewModels/ChangeOwnerViewModel.js"></script>*@
+@*@Scripts.Render("~/bundles/changeownervm")*@
+<div id="changeowner" class="moreinner">
+    <div class="more-heading">
+        <span class="icon st-icon-user display-inline"></span> <h4 class="panel-title display-inline plm">[|Change Owner|]</h4>
+    </div>
+    <div class="moreinner-body">
+        <div class="form-group">
+            <label class="control-label">[|New Owner|]</label>
+            <div>
+                <input data-bind="kendoDropDownList: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users ,value:OwnerId, optionLabel: '[|Select|]..' }" />
+                <span class="validationMessage" data-bind="validationMessage:ownerValidation"></span>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="panel-footer">
+        <div>
+            <div class="pull-left">
+                <a href="javascript:void(0)" class="btn btn-lg btn-primary" data-bind="click:changeowner">[|Save|]</a>
+                <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                   data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var ChangeOwner = @(Html.Raw(Json.Encode(Model)));
+        var changeOwnerViewModel ;
+
+        var fromContactDetails = typeof selfDetails != "undefined" ? true :false;
+        var fromOpportunityDetails = typeof selfOpportunity != "undefined" ? true : false;
+
+        var notselectall;
+        if(fromContactDetails == true)
+            notselectall = true;
+        else if(fromOpportunityDetails == true)
+            notselectall = true;
+        else
+            notselectall = readCookie("selectallsearchstring") == "" ? true : false ;
+
+        var users;
+        $.ajax({
+            url: '/GetUsersList',
+            type: 'get',
+            dataType: 'json',
+            data:{ 'id': 0},
+            contentType: "application/json; charset=utf-8",
+        }).then(function (response) {
+            var filter = $.Deferred();
+            if (response.success) {
+                filter.resolve(response)
+            } else {
+                filter.reject(response.error)
+            }
+            return filter.promise()
+        }).done(function (data) {
+                users = data.response;               
+                changeOwnerViewModel = new ChangeOwnerViewModel(ChangeOwner,BASE_URL,users,notselectall);
+                ko.applyBindings(changeOwnerViewModel,document.getElementById("changeowner"));          
+        }).fail(function (error) {         
+            notifyError(error);
+        });
+    });
+
+</script>

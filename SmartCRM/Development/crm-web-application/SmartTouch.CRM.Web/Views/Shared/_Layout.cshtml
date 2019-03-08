@@ -1,0 +1,2472 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+<!DOCTYPE html>
+@{
+    var Title = ViewBag.Title != null ? ViewBag.Title : "";
+    var IsAdvanceGrid = ViewBag.IsAdvancedGrid == null ? false : true;
+    var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+
+    var leftMenuCategoryValue = (TempData[Keys.MENU_TYPE] != null) ? TempData[Keys.LEFT_MENU_TYPE].ToString() : string.Empty;
+    var leftMenuCategory = default(MenuCategory);
+    if (TempData[Keys.MENU_TYPE] != null) { Enum.TryParse<MenuCategory>(leftMenuCategoryValue, out leftMenuCategory); }
+
+
+    var topMenuCategoryValue = (TempData[Keys.MENU_TYPE] != null) ? TempData[Keys.MENU_TYPE].ToString() : string.Empty;
+    var topMenuCategory = default(MenuCategory);
+    if (TempData[Keys.MENU_TYPE] != null) { Enum.TryParse<MenuCategory>(topMenuCategoryValue, out topMenuCategory); }
+
+    var viewModel = MenuHelper.GetMenuItemsByMenuCategory(topMenuCategory, leftMenuCategory, IsAdvanceGrid);
+    ViewDataDictionary MenuDictionary = new ViewDataDictionary();
+    MenuDictionary.Add("controller", controller);
+    MenuDictionary.Add("leftMenuCategory", leftMenuCategory);
+    MenuDictionary.Add("topMenuCategory", topMenuCategory);
+    MenuDictionary.Add("viewmodel", viewModel);
+
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Contacts);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.ContactNotes);
+    appModules.Add(AppModules.ContactTours);
+    appModules.Add(AppModules.AccountSettings);
+    appModules.Add(AppModules.AdvancedSearch);
+    appModules.Add(AppModules.ContactRelationships);
+    appModules.Add(AppModules.Opportunity);
+    appModules.Add(AppModules.Tags);
+    appModules.Add(AppModules.Campaigns);
+    appModules.Add(AppModules.WebAnalytics);
+    appModules.Add(AppModules.LeadScore);
+    appModules.Add(AppModules.LitmusTest);
+    var permissions = MenuHelper.CheckPermission(appModules);
+
+    ViewDataDictionary advancedSearchDictionary = new ViewDataDictionary();
+    advancedSearchDictionary.Add("AdvancedSearch", permissions.Where(s => s.Module == AppModules.AdvancedSearch).Select(s => s.HasPermission).SingleOrDefault());
+    advancedSearchDictionary.Add("Permissions", permissions);
+
+    var accountConfigPermission = MenuHelper.AccountConfigPermission();
+}
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@Thread.CurrentPrincipal.Identity.ToAccountName() - @controller</title>
+    <meta http-equiv='cache-control' content='no-store'>
+    <meta http-equiv='pragma' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    @Styles.Render("~/Content/layoutstyles")
+    <link rel="shortcut icon" href="~/img/favicon.ico">
+    <!--[if lt IE 9]>
+      <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+    @*uncomment below code to enable google analytics code*@
+    @*<script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-62234190-1', 'auto');
+        ga('send', 'pageview');
+
+        </script>*@
+    @*uncomment below code for appinsights to work*@
+    
+    @*<script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', includedLanguages: 'es', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>*@
+
+    <script type="text/javascript">
+            var appInsights = window.appInsights || function (config) {
+                function r(config) {
+                    t[config] = function () {
+                        var i = arguments;
+                        t.queue.push(function () {
+                            t[config].apply(t, i)
+                        })
+                    }
+                }
+                var t = {
+                    config: config
+                },
+                    u = document,
+                    e = window,
+                    o = "script",
+                    s = u.createElement(o),
+                    i, f;
+                s.src = config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js";
+                u.getElementsByTagName(o)[0].parentNode.appendChild(s);
+                try {
+                    t.cookie = u.cookie
+                } catch (h) { }
+                for (t.queue = [], i = ["Event", "Exception", "Metric", "PageView", "Trace", "Dependency"]; i.length;) r("track" + i.pop());
+                return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"), config.disableExceptionTracking || (i = "onerror", r("_" + i), f = e[i], e[i] = function (config, r, u, e, o) {
+                    var s = f && f(config, r, u, e, o);
+                    return s !== !0 && t["_" + i](config, r, u, e, o), s
+                }), t
+            }({
+                instrumentationKey: "@Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration.Active.InstrumentationKey"
+            });
+            window.appInsights = appInsights;
+            appInsights.trackPageView();
+        </script>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/kendoui")
+    @Scripts.Render("~/bundles/kendouiaspnetmvc")
+    @Scripts.Render("~/bundles/knockoutjs")
+
+
+</head>
+<body>
+    <div id="blur">
+        <div id="idletimeout">
+            <i class="icon st-icon-stopwatch mrm"></i>
+            [|You will be logged off in|] <span><!-- countdown place holder --></span>&nbsp;[|seconds due to inactivity.|]
+            <a id="idletimeout-resume" href="#">[|Click here to continue using this web page|]</a>.
+        </div>
+
+        <header class="row man">
+            <div class="logo">
+                <a href="/" title="@Thread.CurrentPrincipal.Identity.ToAccountName()" data-placement="bottom" class="tooltiptoggle">
+                    @if (@Thread.CurrentPrincipal.Identity.ToAccountURL() != "false")
+                    {
+                        <figure><img id="AccountImage" src="@Url.Content(Thread.CurrentPrincipal.Identity.ToAccountURL())" alt="@Thread.CurrentPrincipal.Identity.ToAccountName()" /></figure>
+                    }
+                    @if (@Thread.CurrentPrincipal.Identity.ToAccountURL() == "false")
+                    {
+                        <label id="AccountName" class="account-name">@Thread.CurrentPrincipal.Identity.ToAccountName()</label>
+                    }
+                </a>
+            </div>
+            @Html.Partial("_TopMenu", null, MenuDictionary)
+            
+            <div class="utilities pull-right">
+                @*<a class="utilities-navbar" data-toggle="collapse" data-target="#nav-utilities-collapse" href="javascript:void(0)"><i class="icon st-icon-menu-2"></i></a>*@
+                <div class="collapse in" id="nav-utilities-collapse">
+                    <div class="iconbar iconbar-horizontal btn-group">
+                        <!-- ko stopBinding : true -->
+                        <ul id="Layout">
+                            @*@if (@Thread.CurrentPrincipal.Identity.ToAccountID() == 4218 ||
+                                @Thread.CurrentPrincipal.Identity.ToAccountID() == 339)
+                            {
+                                <li id="google_translate_element" class="btn-group"></li>
+                            }*@
+                            @if (@controller == "Contact" || @controller == "Dashboard")
+                            {
+                                <li class="btn-group"><a title="Demo" class="icon st-icon-play" href="javascript:void(0)" onclick="runAppTour()"></a></li>
+                            }
+                            @if (@Thread.CurrentPrincipal.Identity.ToAccountID() != 1)
+                            {
+                                <li class="btn-group">
+                                    <i class="dropdown-arrow"></i>
+                                    <a href="javascript:void(o)" class="dropdown-toggle" data-toggle="dropdown"><i class="icon st-icon-universaldropdown" id="quickadd" title="Quick Add"></i></a>
+                                    <ul class="dropdown-menu mtn pull-right" id="righttabs">
+                                        @if (permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                                        {
+                                            <li>@Html.ActionLink("[|Add Person|]", "AddPerson", "Contact")</li>
+                                            <li>@Html.ActionLink("[|Add Company|]", "AddCompany", "Contact")</li>
+                                        }
+                                        @if (permissions.Where(s => s.Module == AppModules.ContactActions).Select(s => s.HasPermission).SingleOrDefault())
+                                        {
+                                            <li>@Html.ActionLink("[|Add Action|]", "_AddActionModal", "Contact", null, new { data_toggle = "modal", data_target = "#modal", onclick = "menuclick()" })</li>
+                                        }
+                                        @if (permissions.Where(s => s.Module == AppModules.ContactNotes).Select(s => s.HasPermission).SingleOrDefault())
+                                        {
+                                            <li>@Html.ActionLink("[|Add Note|]", "_AddNoteModal", "Contact", null, new { data_toggle = "modal", data_target = "#modal", onclick = "menuclick()" })</li>
+                                        }
+                                        @if (permissions.Where(s => s.Module == AppModules.ContactTours).Select(s => s.HasPermission).SingleOrDefault())
+                                        {
+                                            <li>@Html.ActionLink("[|Add Tour|]", "_AddTourModal", "Contact", null, new { data_toggle = "modal", data_target = "#modal", onclick = "menuclick()" })</li>
+                                        }
+                                        @if (permissions.Where(s => s.Module == AppModules.Opportunity).Select(s => s.HasPermission).SingleOrDefault())
+                                        {
+                                            <li>@Html.ActionLink("[|Add Opportunity|]", "AddOpportunity", "Opportunities", null, new { onclick = "menuclick()" })</li>
+                                        }
+
+                                    </ul>
+                                </li>
+                            }
+
+                            <li class="btn-group ">
+                                <i class="dropdown-arrow"></i>
+                                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" data-bind="click:LoadRecentActivities">
+                                    <i class="icon st-icon-clock" id="recentActivitiesView" title="Recent Activities"></i>
+                                </a>
+                                <div class="dropdown-menu activities mtn pull-right" id="UserRecentActivities">
+                                    <div class="activity-heading">
+                                        <span class="icon st-icon-clock"></span><span class="mls">[|Recent Activities|]</span>
+                                        <a class="filter-btn in-active" href="javascript:void(0)">Filters</a>
+                                    </div>
+                                    <div class="filter-block" style="display:none;">
+                                        <span data-bind="foreach:UserPermissionModules">
+                                            <label data-bind="attr:{'class': ko.toJSON(selected) == 'true' ? 'active filter' : 'filter'}">
+                                                <input type="checkbox" data-bind="checked:selected,click:$parent.LoadModule">
+                                                <span data-bind="text:Name"></span>
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <ul class="activity" id="useractscroll" style="overflow: scroll;">
+                                        <!-- ko if : RecentActivities().length > 0-->
+                                        <!-- ko foreach : RecentActivities-->
+                                        <li>
+                                            <div>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==4">
+                                                    <i class="icon st-icon-bullhorn-2 mrs"></i>
+                                                    <span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==3">
+                                                    <i class="icon st-icon-users mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==5">
+                                                    <i class="icon st-icon-tick display-inline"></i> <span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==6">
+                                                    <i class="icon st-icon-book-lines display-inline"></i> <span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==7">
+                                                    <i class="icon st-icon-pin-2 display-inline"></i> <span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==8">
+                                                    <i class="icon st-icon-support-3 display-inline"></i> <span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==16">
+                                                    <i class="icon st-icon-opputunities mrs"></i> <span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==10">
+                                                    <i class="icon st-icon-paragraph-justify-2 tooltiptoggle mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==17">
+                                                    <i class="icon st-icon-tick display-inline"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==18">
+                                                    <i class="icon st-icon-book-lines display-inline"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==19">
+                                                    <i class="icon st-icon-polaroid-2 tooltiptoggle mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==20">
+                                                    <i class="icon st-icon-menu-pull-down mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==23">
+                                                    <i class="icon st-icon-inbox tooltiptoggle mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==24">
+                                                    <i class="icon st-icon-clipboard-2 mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==9">
+                                                    <i class="icon st-icon-tag mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==31">
+                                                    <i class="icon st-icon-search-2 mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==2">
+                                                    <i class="icon st-icon-user-4 mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==1">
+                                                    <i class="icon st-icon-polaroid mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==32">
+                                                    <i class="icon st-icon-tag mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==33">
+                                                    <i class="icon st-icon-split mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==34">
+                                                    <i class="icon st-icon-dashboard mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <label class="activity-content" data-bind="visible:ModuleID ==35">
+                                                    <i class="icon st-icon-browser-download mrs"></i><span data-bind="text:Message"></span>
+                                                </label>
+                                                <span>
+                                                    <span data-bind="text:TimeInText"></span>
+                                                    <a href="#activityModal" data-toggle="modal"
+                                                       data-original-title="" title="View Activity" data-bind="click:$parent.ViewUserActivity">
+                                                        <i class="icon st-icon-eye notifiy-view"></i>
+                                                    </a>
+                                                </span>
+                                            </div>
+                                        </li>
+                                        <!-- /ko -->
+                                        <!-- /ko -->
+                                        <!-- ko if : RecentActivities().length == '0'-->
+                                        <li class="no-activites">
+                                            <div>
+                                                <span class="icon st-icon-clock"></span>
+                                            </div>
+                                            <div>
+                                                [|No Activites|]
+                                            </div>
+                                        </li>
+                                        <!-- /ko -->
+                                    </ul>
+                                    @*<div class="previously-read"><a href="javascript:void(0)">Previous Activities &nbsp; <i class="icon st-icon-clock"></i></a></div>*@
+                                </div>
+                                <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="activityModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content" data-bind="with:CurrentUserActivity">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title">[|Recent Activities|]</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="alert alert-warning" data-bind="visible:$parent.Deletenotemessage"> <i class="icon st-icon-spam"></i> [|*Items marked in RED are deleted and no longer exist in the system.|]</div>
+                                                <div data-bind="text:Message"></div>
+
+                                                <!-- ko if: ModuleID == 3 -->
+                                                <div class="bold mtm">[|Contacts|]:</div>
+                                                <div class="notify_contact" data-bind="foreach: EntityDetails">
+                                                    <!-- ko if: EntityId != null-->
+                                                    <a data-bind="visible:ContactType == 1 , attr: { 'href':'/person/' + EntityId}, text:EntityName"></a>
+                                                    <a data-bind="visible:ContactType == 2 , attr: { 'href':'/company/' + EntityId}, text:EntityName"></a>
+                                                    <!-- /ko -->
+                                                    <span data-bind="visible:EntityId == 0, text:EntityName" class="st_delete"></span>
+                                                    <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID == 16 -->
+                                                <div class="bold mtm">[|Opportunities|]:</div>
+                                                <div class="notify_contact" data-bind="foreach: EntityDetails">
+                                                    <!-- ko if : EntityId != 0 -->
+                                                    <a data-bind="attr: { 'href':'/viewopportunity/'+ '?opportunityID= ' + EntityId}, text:EntityName"></a>
+                                                    <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                    <!-- /ko -->
+                                                    <span data-bind="visible:EntityId == 0, text:EntityName" class="st_delete"><span data-bind="visible:$parent.EntityDetails">,</span></span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID == 4 -->
+                                                <div class="bold mtm">[|Campaigns|]:</div>
+                                                <div class="notify_contact" data-bind="foreach: EntityDetails">
+                                                    <!-- ko if : EntityId != 0 -->
+                                                    <a data-bind="attr: { 'href':'/editcampaign/'+ '?campaignId= ' + EntityId}, text:EntityName"></a>
+                                                    <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                    <!-- /ko -->
+                                                    <span data-bind="visible:EntityId == 0, text:EntityName" class="st_delete"></span><span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID == 10 -->
+                                                <div class="bold mtm">[|Forms|]:</div>
+                                                <div class="notify_contact" data-bind="foreach: EntityDetails">
+                                                    <!-- ko if : EntityId != 0 -->
+                                                    <a data-bind="attr: { 'href':'/editform?formId=' + EntityId}, text:EntityName"></a>
+                                                    <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                    <!-- /ko -->
+                                                    <span data-bind="visible:EntityId == 0, text:EntityName" class="st_delete"></span><span data-bind="visible:$parent.EntityDetails">,</span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID == 2 -->
+                                                <div class="bold mtm">[|Users|]:</div>
+                                                <div class="notify_contact" data-bind="foreach: EntityDetails">
+                                                    <a data-bind="visible : EntityId != 0, attr: { 'href':'/edituser?userId=' + EntityId}, text:EntityName"></a>
+                                                    <span data-bind="visible:EntityId == 0, text:EntityName" class="st_delete"></span>
+                                                    <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID == 1 -->
+                                                <div class="bold mtm">[|Accounts|]:</div>
+                                                <div class="notify_contact" data-bind="foreach: EntityDetails">
+                                                    @if (@Thread.CurrentPrincipal.Identity.ToAccountID() == 1)
+                                                    { 
+                                                        <a data-bind="visible : EntityId != 0, attr: { 'href':'/editaccount?accountId=' + EntityId}, text:EntityName"></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span data-bind="visible:EntityId != 0,text:EntityName"></span>
+                                                    }
+                                                    <span data-bind="visible:EntityId == 0, text:EntityName" class="st_delete"></span>
+                                                    <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID == 33 -->
+                                                <div class="bold mtm">[|Workflows|]:</div>
+                                                <div class="notify_contact" data-bind="foreach: EntityDetails">
+                                                    <a data-bind="visible : EntityId != 0, attr: { 'href':'/workflowreport?workflowID=' + EntityId}, text:EntityName"></a>
+                                                    <span data-bind="visible:EntityId == 0, text:EntityName" class="st_delete"></span>
+                                                    <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if : ModuleID == 9 -->
+                                                <div class="bold mtm">[|Tags|]:</div>
+                                                <!-- ko foreach : EntityDetails-->
+                                                <label data-bind="text:EntityName"></label>
+                                                <!-- /ko -->
+                                                <!-- /ko -->
+                                                <!-- ko if : ModuleID == 5 -->
+                                                <div class="bold mtm">[|Action Details|]:</div>
+                                                <!-- ko foreach : EntityDetails-->
+                                                <label data-bind="text:EntityName"></label>
+                                                <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                <!-- /ko -->
+                                                <!-- /ko -->
+                                                <!-- ko if : ModuleID == 6 -->
+                                                <div class="bold mtm">[|Notes|]:</div>
+                                                <!-- ko foreach : EntityDetails-->
+                                                <label data-bind="text:EntityName"></label>
+                                                <!-- /ko -->
+                                                <!-- /ko -->
+                                                <!-- ko if : ModuleID == 7 -->
+                                                <div class="bold mtm">[|Tours|]:</div>
+                                                <!-- ko foreach : EntityDetails-->
+                                                <label data-bind="text:EntityName"></label>
+                                                <!-- /ko -->
+                                                <!-- /ko -->
+                                                <!-- ko if : ModuleID == 24 -->
+                                                <div class="bold mtm">[|Reports|]:</div>
+                                                <!-- ko foreach : EntityDetails-->
+                                                <!-- ko if : (EntityId != 0 && ReportType != 0)-->
+                                                <a data-bind="attr: { 'href':'/editreport/?reportType=' + ReportType + '&reportId='+ EntityId + '&runReportResults=False' }, text:EntityName"></a>
+                                                <!-- /ko -->
+                                                <!-- ko if : EntityId == 0-->
+                                                <span data-bind="text:EntityName" class="st_delete"></span>
+                                                <!-- /ko -->
+                                                <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                <!-- /ko -->
+                                                <!-- /ko -->
+                                                <!-- ko if : ModuleID == 31-->
+                                                <div class="bold mtm">[|Saved Searches|]:</div>
+                                                <!-- ko foreach : EntityDetails-->
+                                                <!-- ko if : EntityId != 0 -->
+                                                <a data-bind="attr:{'href':'viewsearch?SearchDefinitionID=' + EntityId},text:EntityName"></a>
+                                                <span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                <!-- /ko -->
+                                                <!--ko if: EntityId === 0-->
+                                                <span data-bind="text:EntityName" class="st_delete"></span><span data-bind="visible:$index() != ($parent.EntityDetails.length - 1)">,</span>
+                                                <!-- /ko -->
+                                                <!-- /ko -->
+                                                <!-- /ko -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            @if (permissions.Where(s => s.Module == AppModules.WebAnalytics).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <li class="btn-group">
+                                    <i class="dropdown-arrow"></i>
+                                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" data-bind="click:LoadRecentWebVisits.bind($data,false,false)">
+                                        <i class="icon sti-web-visit" id="webvisitnotifications" title="Web Visit Notifications"></i>
+                                        <i class="iconbar-unread" data-bind="visible:NewWebVisitNotificationIds().length > 0, text: NewWebVisitNotificationIds().length"></i>
+                                    </a>
+                                    <div class="dropdown-menu activities mtn pull-right" tabindex="-1" id="RecentWebVisits">
+                                        <div class="activity-heading">
+                                            <span class="icon sti-web-visit"></span><span class="mls">[|Recent Web Visits|]</span>
+                                            <div id="includeviewed" class="pull-right">
+
+                                                <div class="in-left-text">Include Viewed</div>
+
+                                                <!-- .slideThree -->
+                                                <div class="slideThree st-cu-toggle">
+                                                    <input type="checkbox" class="st-cu-check" value="None" id="slideThree" name="check" checked="" data-bind="checked:IncludePreviouslyReadWebVisits">
+                                                    <label class="cu-ch-lable"></label>
+                                                </div>
+                                                <!-- end .slideThree -->
+                                            </div>
+                                        </div>
+                                        <!-- ko if : WebVisitNotifications().length > '0'-->
+                                        <ul id="webvisitsnotifications" class="activity" data-bind="foreach:WebVisitNotifications">
+                                            <li>
+                                                <div>
+                                                    <label class="">
+                                                        <i class="icon sti-web-visit mrs"></i>
+                                                        <span data-bind="text:Subject"></span>
+                                                    </label>
+                                                </div>
+                                                <span>
+                                                    <span data-bind="text:TimeInText"></span>
+
+                                                    <a data-target="#bigmodal" data-toggle="modal"
+                                                       class="st-leadnum" data-bind=" attr:{href: '/webnotificationdetails?webVisitReference=' + Details },event:{click:$root.markAsViewed.bind($data)}">
+                                                        <i data-bind="css: { 'st-icon-watch-2': Status==1,'st-icon-unwatch-1': Status==2 }" class="notifiy-view"></i>
+                                                    </a>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                        <!-- /ko -->
+                                        <!-- ko if : WebVisitNotifications().length == '0'-->
+                                        <ul style="padding:0px">
+                                            <li class="no-activites">
+                                                <div>
+                                                    <span class="icon sti-web-visit"></span>
+                                                </div>
+                                                <div>
+                                                    [|No Web Visit Notifications|]
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <!-- /ko -->
+                                        <div id="loadmorewebvisits" class="previously-read"><a href="javascript:void(0)" data-bind="click: LoadRecentWebVisits.bind($data,true,false)">Load more <i class="icon st-icon-clock"></i></a></div>
+                                        <!-- ko if : WebVisitNotifications().length > '0'-->
+                                        <div id="nowebvists" class="hide previously-read" style=" border-top: 1px solid #e2e2e2">
+                                            <div>
+                                                <span class="icon sti-web-visit"></span>
+
+                                                [|No more web visits|]
+                                            </div>
+                                        </div>
+                                        <!-- /ko -->
+                                    </div>
+                                </li>
+                            }
+                            <li class="btn-group" id="notificationsView">
+                                <i class="dropdown-arrow"></i>
+                                <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" data-bind="click:GetCountByDate">
+                                    <i class="icon st-icon-bell-2" title="System Notifications"></i>
+                                    <i class="iconbar-unread" data-bind="visible:NewNotifications() > 0, text: NewNotifications"></i>
+                                </a>
+                                <div class="dropdown-menu activities mtn pull-right" id="ut-Notifications">
+                                    <div class="activity-heading">
+                                        <span class="icon st-icon-bell-2"></span><span class="mls">[|Notifications|]</span>
+                                        <a class="filter-btn in-active" href="javascript:void(0)" data-bind="click: notificationfilterclickevent">Filters</a>
+                                    </div>
+                                    <div class="filter-block" style="display:none;">
+                                        <span data-bind="foreach:NotificationPermissionModules">
+                                            <label data-bind="attr:{'class': ko.toJSON(selected) == 'true' ? 'active filter' : 'filter'}">
+                                                <input type="checkbox" data-bind="checked:selected,click:$parent.FilterSelection">
+                                                <span data-bind="html:Name"></span>
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <div role="tabpanel" class="tabpanel nts-tabs">
+                                        <div class="nav-tabs-main">
+                                            <ul class="nav nav-tabs" role="tablist" id="tabsByDate">
+                                                <li role="presentation" class="active">
+                                                    <a href="#today" aria-controls="Today" role="tab" data-toggle="tab" id="tab1" class="tabIdentify" data-bind="click:TabSelection">
+                                                        Today
+                                                        <span data-bind="visible:NotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:NotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:NotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:NotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteBulkNotifications(false) }">
+                                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                    </div>
+                                                </li>
+                                                <li role="presentation">
+                                                    <a href="#previous" aria-controls="Notifications" role="tab" data-toggle="tab" id="tab2" class="tabIdentify" data-bind="click:TabSelection">
+                                                        Previous
+                                                        <span data-bind="visible:NotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:NotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:NotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:NotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteBulkNotifications(true) }">
+                                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane active" id="today">
+                                                <div class="accordion-container" id="1-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Accounts <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.AccountNotifications, '', false, false) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-polaroid mrs"></i>
+                                                        Accounts
+                                                        <span data-bind="visible:AccountNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:AccountNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:AccountNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:AccountNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, AccountNotifications, '', 1, false, AccountNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove accountnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'account-template', foreach: AccountNotifications }"></ul>
+                                                            <ul>
+                                                                <li class="no-activites" data-bind="visible:AccountNotifications().length == '0'">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Account Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="7-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                      Tours <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.TourNotifications, '', false, true) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-pin-2 display-inline"></i>
+                                                        Tours
+                                                        <span data-bind="visible:ToursNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:ToursNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ToursNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:ToursNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, TourNotifications, '', 7, false, ToursNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove tournotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'tour-template', foreach: TourNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : TourNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Tour Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="5-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Actions <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.ActionNotifications, '', true, false) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-tick display-inline"></i>
+                                                        Actions
+                                                        <span data-bind="visible:ActionsNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:ActionsNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ActionsNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:ActionsNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, ActionNotifications, '', 5, false, ActionsNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove actionnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'action-template', foreach: ActionNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.ActionNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Action Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="23-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Imports <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.ImportNotifications, '', false, false) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-inbox tooltiptoggle mrs"></i>
+                                                        Imports
+                                                        <span data-bind="visible:ImportsNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:ImportsNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ImportsNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:ImportsNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, ImportNotifications, '', 23, false, ImportsNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove importnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'import-template', foreach: ImportNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.ImportNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Import Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="4-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Campaign <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.CampaignNotifications, '', false, false) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-bullhorn-2 mrs"></i>
+                                                        Campaigns
+                                                        <span data-bind="visible:CampaignNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:CampaignNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:CampaignNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:CampaignNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, CampaignNotifications, '', 4, false, CampaignNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove campaignnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'campaign-template', foreach: CampaignNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.CampaignNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Campaign Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="19-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Lead Adapter <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.LeadAdapterNotifications, '', false, false) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-support-3 display-inline"></i>
+                                                        Lead Adapters
+                                                        <span data-bind="visible:LeadAdapterNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:LeadAdapterNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:LeadAdapterNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:LeadAdapterNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, LeadAdapterNotifications, '', 19, false, LeadAdapterNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove leadadapternotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'leadadapter-template', foreach: LeadAdapterNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.LeadAdapterNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Lead-Adapter Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="16-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Opportunities <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.OpportunityNotifications, '', false, false) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-opputunities mrs"></i>
+                                                        Opportunities
+                                                        <span data-bind="visible:OpportunitiesNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:OpportunitiesNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:OpportunitiesNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:OpportunitiesNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, OpportunityNotifications, '', 16, false, OpportunitiesNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove opportunitynotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'opportunity-template', foreach: OpportunityNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.OpportunityNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Opportunity Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="3-today">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Contacts <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.ContactNotifications, '', false, false) }"></span>
+                                    </a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-users mrs"></i>
+                                                        Contacts
+                                                        <span data-bind="visible:ContactsNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:ContactsNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ContactsNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:ContactsNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, ContactNotifications, '', 3, false, ContactsNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove contactsnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'contact-template', foreach: ContactNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.ContactNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Contact Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="accordion-container" id="72-today">
+
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-users mrs"></i>
+                                                        Downloads
+                                                        <span data-bind="visible:DownloadNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:DownloadNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:DownloadNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:DownloadNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, DownloadNotifications, '', 72, false, DownloadNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove downloadnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'download-template', foreach: DownloadNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.DownloadNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Download Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="77-today">
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <img src="/img/litmus-test-icon.png" />
+                                                        Litmus&#x00AE; Results
+                                                        <span data-bind="visible:CampaignLitmusNotificationsCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:CampaignLitmusNotificationsCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:CampaignLitmusNotificationsCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:CampaignLitmusNotificationsCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, CampaignLitmusNotifications, '', 77, false, CampaignLitmusNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove litmusnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'litmus-template', foreach: CampaignLitmusNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.CampaignLitmusNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Litmus&#x00AE; Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="79-today">
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <img src="/img/leaf.png" />
+                                                        Mail Tester Results
+                                                        <span data-bind="visible:MailTesterCount()[0] == '0'">
+                                                            <span class="badge hide" data-bind="text:MailTesterCount()[0]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:MailTesterCount()[0] > '0'">
+                                                            <span class="badge" data-bind="text:MailTesterCount()[0]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, MailTesterNotifications, '', 79, false, MailTesterCount) }">
+                                                        <span class="glyphicon glyphicon-remove mailtesternotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'mailtester-template', foreach: MailTesterNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.MailTesterNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Mail-Tester Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div role="tabpanel" class="tab-pane" id="previous">
+                                                <div class="accordion-container" id="1-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Accounts <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.AccountNotifications, '', false, false) }"></span>
+                                    </a>*@
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-polaroid mrs"></i>
+                                                        Accounts
+                                                        <span data-bind="visible:AccountNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:AccountNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:AccountNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:AccountNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, AccountNotifications, '', 1, true, AccountNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove accountnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" id="notify-loader" data-bind="template: { name: 'account-template', foreach: AccountNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : AccountNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Account Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="7-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">Tours <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true"></span></a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection">
+                                                        <i class="icon st-icon-pin-2 display-inline"></i>
+                                                        Tours
+                                                        <span data-bind="visible:ToursNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:ToursNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ToursNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:ToursNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, TourNotifications, '', 7, true, ToursNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove tournotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'tour-template', foreach: TourNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : TourNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Tour Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="5-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">Actions <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true"></span></a>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection">
+                                                        <i class="icon st-icon-tick display-inline"></i>
+                                                        Actions
+                                                        <span data-bind="visible:ActionsNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:ActionsNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ActionsNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:ActionsNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, ActionNotifications, '', 5, true, ActionsNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove actionnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'action-template', foreach: ActionNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.ActionNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Action Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="23-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Imports <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.ImportNotifications, '', false, false) }"></span>
+                                    </a>*@
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection">
+                                                        <i class="icon st-icon-inbox tooltiptoggle mrs"></i>
+                                                        Imports
+                                                        <span data-bind="visible:ImportsNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:ImportsNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ImportsNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:ImportsNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, ImportNotifications, '', 23, true, ImportsNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove importnotifications" aria-hidden="true"></span>
+                                                    </div>
+
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'import-template', foreach: ImportNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.ImportNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Import Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="4-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection"> Campaign</a>
+                                    <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ DeleteNotification(true, CampaignNotifications, '', false, false) }"></span>*@
+
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection">
+                                                        <i class="icon st-icon-bullhorn-2 mrs"></i>
+                                                        Campaigns
+                                                        <span data-bind="visible:CampaignNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:CampaignNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:CampaignNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:CampaignNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, CampaignNotifications, '', 4, true, CampaignNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove campaignnotifications" aria-hidden="true"></span>
+                                                    </div>
+
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'campaign-template', foreach: CampaignNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.CampaignNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Campaign Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="19-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Lead Adapter <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.LeadAdapterNotifications, '', false, false) }"></span>
+                                    </a>*@
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection">
+                                                        <i class="icon st-icon-support-3 display-inline"></i>
+                                                        Lead Adapters
+                                                        <span data-bind="visible:LeadAdapterNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:LeadAdapterNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:LeadAdapterNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:LeadAdapterNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, LeadAdapterNotifications, '', 19, true, LeadAdapterNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove leadadapternotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'leadadapter-template', foreach: LeadAdapterNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.LeadAdapterNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Lead-Adapter Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="16-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Opportunities <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.OpportunityNotifications, '', false, false) }"></span>
+                                    </a>*@
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection">
+                                                        <i class="icon st-icon-opputunities mrs"></i>
+                                                        Opportunities
+                                                        <span data-bind="visible:OpportunitiesNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:OpportunitiesNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:OpportunitiesNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:OpportunitiesNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, OpportunityNotifications, '', 16, true, OpportunitiesNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove opportunitynotifications" aria-hidden="true"></span>
+                                                    </div>
+
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'opportunity-template', foreach: OpportunityNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.OpportunityNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Opportunity Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="3-previous">
+                                                    @*<a href="javascript:void(0)" class="accordion-toggle" data-bind="click:AccordionSelection">
+                                    Contacts <span class="glyphicon glyphicon glyphicon-remove pull-right" aria-hidden="true" data-bind="click: function(data, event){ $parent.DeleteNotification(true, $parent.ContactNotifications, '', false, false) }"></span>
+                                    </a>*@
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection">
+                                                        <i class="icon st-icon-users mrs"></i>
+                                                        Contacts
+                                                        <span data-bind="visible:ContactsNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:ContactsNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:ContactsNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:ContactsNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, ContactNotifications, '', 3, true, ContactsNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove contactsnotifications" aria-hidden="true"></span>
+                                                    </div>
+
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'contact-template', foreach: ContactNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.ContactNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Contact Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="accordion-container" id="72-previous">
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <i class="icon st-icon-users mrs"></i>
+                                                        Downloads
+                                                        <span data-bind="visible:DownloadNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:DownloadNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:DownloadNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:DownloadNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, DownloadNotifications, '', 72, false, DownloadNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove downloadnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'download-template', foreach: DownloadNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.DownloadNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Download Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="accordion-container" id="77-previous">
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <img src="/img/litmus-test-icon.png" />
+                                                        Litmus&#x00AE; Results
+                                                        <span data-bind="visible:CampaignLitmusNotificationsCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:CampaignLitmusNotificationsCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:CampaignLitmusNotificationsCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:CampaignLitmusNotificationsCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, CampaignLitmusNotifications, '', 77, false, CampaignLitmusNotificationsCount) }">
+                                                        <span class="glyphicon glyphicon-remove litmusnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'litmus-template', foreach: CampaignLitmusNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.CampaignLitmusNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Litmus Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="accordion-container" id="79-previous">
+                                                    <a href="javascript:void(o)" class="accordion-toggle st-left-ac" data-bind="click:AccordionSelection" id="accounts">
+                                                        <img src="/img/leaf.png" />
+                                                        Mail Tester Results
+                                                        <span data-bind="visible:MailTesterCount()[1] == '0'">
+                                                            <span class="badge hide" data-bind="text:MailTesterCount()[1]"></span>
+                                                        </span>
+                                                        <span data-bind="visible:MailTesterCount()[1] > '0'">
+                                                            <span class="badge" data-bind="text:MailTesterCount()[1]"></span>
+                                                        </span>
+                                                    </a>
+                                                    <div class="st-right-remove" data-bind="click: function(data, event){ DeleteNotification(true, MailTesterNotifications, '', 79, false, MailTesterCount) }">
+                                                        <span class="glyphicon glyphicon-remove litmusnotifications" aria-hidden="true"></span>
+                                                    </div>
+                                                    <div class="accordion-content">
+                                                        <div class="clearfix">
+                                                            <ul class="activity" data-bind="template: { name: 'mailtester-template', foreach: MailTesterNotifications }"></ul>
+                                                            <ul>
+                                                                <!-- ko if : $root.MailTesterNotifications().length == '0'-->
+                                                                <li class="no-activites">
+                                                                    <div>
+                                                                        <span class="icon st-icon-bell-2"></span>
+                                                                    </div>
+                                                                    <div>
+                                                                        [|No Mail-Tester Notifications|]
+                                                                    </div>
+                                                                </li>
+                                                                <!-- /ko -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="previously-read"><a href="javascript:void(0)" data-bind="click: LoadNotifications">Include previously read <i class="icon st-icon-clock"></i></a></div>
+                                </div>
+                                <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="notifyModal" class="modal fade">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content" data-bind="with:CurrentNotification">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" data-bind="html:$parent.CurrentNotificationSubject"></h4>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="alert alert-warning" data-bind="visible:$parent.Deletenotemessage"> <i class="icon st-icon-spam"></i> [|*Items marked in RED are deleted and no longer exist in the system.|]</div>
+                                                <div data-bind="text:Details"></div>
+                                                <!-- ko if: ContactEntries != null && ContactEntries.length > 0 && ModuleID != 79 -->
+                                                <div class="bold mtm">[|Contacts|]:</div>
+                                                <div class="notify_contact">
+                                                    <!-- ko foreach : ContactEntries -->
+                                                    <!-- ko if: $data != null-->
+                                                    <!-- ko if: ContactType == 1 -->
+                                                    <!-- ko if: IsDeleted == true -->
+                                                    <span data-bind="text:FullName" class="st_delete"></span>
+                                                    <!-- /ko -->
+                                                    <!-- ko if: IsDeleted == false -->
+                                                    <a data-bind="attr: { 'href':'/person/' + ContactID}, text:FullName"></a>
+                                                    <!-- /ko -->
+                                                    <!--/ko-->
+                                                    <!-- ko if: ContactType == 2 -->
+                                                    <!--ko if:IsDeleted == true-->
+                                                    <span data-bind="text:FullName" class=" st_delete"></span>
+                                                    <!--/ko-->
+                                                    <!--ko if:IsDeleted == false-->
+                                                    <a data-bind="attr: { 'href':'/company/' + ContactID}, text:FullName"></a>
+                                                    <!--/ko-->
+                                                    <!--/ko-->
+                                                    <span data-bind="visible:$index() != ($parent.ContactEntries.length - 1)">,</span>
+                                                    <!--/ko-->
+                                                    <!--/ko-->
+
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: OpportunityEntries != null && OpportunityEntries.length > 0 -->
+                                                <div class="bold mtm">[|Opportunity|]:</div>
+                                                <div class="notify_contact">
+                                                    <!-- ko foreach : OpportunityEntries -->
+                                                    <!-- ko if: $data != null -->
+                                                    <a data-bind="attr: { 'href':'/viewopportunity/'+ '?opportunityID= ' + OpportunityId}, text:OpportunityName"></a>
+                                                    <span data-bind="visible:$index() != ($parent.OpportunityEntries.length - 1)">,</span>
+                                                    <!-- /ko -->
+                                                    <!-- /ko -->
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID==4 -->
+                                                <div class="bold mtm">[|Campaign|]:</div>
+                                                <div class="notify_contact">
+                                                    <a data-bind="attr: { 'href':'/CampaignStatistics/'+ '?campaignId= ' + EntityId}, text:'View dashboard'"></a>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID==35 -->
+                                                <div class="notify_contact">
+                                                    <a data-bind="attr: { 'href':'/person/'+ EntityId}, text:'View contact'"></a>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!-- ko if: ModuleID==72 -->
+                                                <div class="notify_contact">
+                                                    <a data-bind="attr: { 'href':'/Contact/DownloadFileFromPath'+ '?fileKey='+DownloadFile }, text:'Click here to download'"></a>
+                                                </div>
+                                                <!-- /ko -->
+                                                <!--ko if: ModuleID==77 -->
+                                                <div class="mtl show" id="ftemplate">
+                                                    <ul class="campaigns-layouts st-litmus-results" data-bind="foreach: EmailClients">
+                                                        <li>
+                                                            <div class="layout animation5">
+                                                                <img style="cursor:pointer;" data-bind="attr:{'src':'https://instant-api.litmus.com/v1/emails/' + LitmusId + '/previews/' + Client +'/thumb450','data-client':Client,'data-clientValue':Value},click: function(data, event){ $root.ActualImagePreview(Client,Value,LitmusId) }" />
+                                                            </div>
+                                                            <div class="layout-title-lm" data-bind="attr: { 'title':Client}, text:Value"></div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <!--/ko-->
+                                                <!-- ko if: ModuleID == 79-->
+                                                <div class="notify_contact">
+                                                    <a target="_blank" data-bind="attr: { 'href':'https://www.mail-tester.com/smarttouch-' + DownloadFile }, text:'Click here to view your results'"></a>
+                                                </div>
+                                                <!-- /ko -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            @*<li class="active btn-group">
+                <i class="dropdown-arrow"></i>
+                <a href="javascript:void(o)" class="dropdown-toggle" data-toggle="dropdown"><span class="icon st-icon-settings-2" id="facebook" title="Facebook"></span></a>
+                <ul class="dropdown-menu mtn pull-right">
+                    <text onclick="myFacebookLogin()">Login with Facebook</text>
+                </ul>
+                <ul id="fb_page_list"></ul>
+            </li>*@
+                            <li class="active btn-group">
+                                <i class="dropdown-arrow"></i>
+                                <a href="javascript:void(o)" class="dropdown-toggle" data-toggle="dropdown"><span class="icon st-icon-settings-2" id="systemsettings" title="Settings"></span></a>
+                                <ul class="dropdown-menu mtn pull-right">
+                                    @*@if (!@Thread.CurrentPrincipal.Identity.IsSTAdmin())
+                    {*@
+                                    <li>@Html.ActionLink("[|My Profile|]", "MyProfile", "User")</li>
+                                    @*}*@
+                                    @if (@Thread.CurrentPrincipal.Identity.ToAccountID() != 1)
+                                    {
+                                        if (leftMenuCategoryValue == "LeftMenuCRM")
+                                        {
+                                            if (accountConfigPermission.HasModule)
+                                            {
+                                                <li>@Html.ActionLink("[|Account Configuration|]", @accountConfigPermission.ActionMethod, @accountConfigPermission.Controller)</li>
+                                            }
+                                        }
+                                        else if (leftMenuCategoryValue == "LeftMenuAccountConfiguration")
+                                        {
+                                            <li>@Html.ActionLink("[|Switch to CRM|]", "DashboardList", "Dashboard")</li>
+                                        }
+                                        else if (leftMenuCategoryValue == "LeftMenuAccountSettings")
+                                        {
+                                            <li>@Html.ActionLink("[|Switch to CRM|]", "DashboardList", "Dashboard")</li>
+                                            if (accountConfigPermission.HasModule)
+                                            {
+                                                <li>@Html.ActionLink("[|Account Configuration|]", @accountConfigPermission.ActionMethod, @accountConfigPermission.Controller)</li>
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (leftMenuCategoryValue == "LeftMenuAccountSettings")
+                                        {
+                                            if (accountConfigPermission.HasModule)
+                                            {
+                                                <li>@Html.ActionLink("[|Account Configuration|]", @accountConfigPermission.ActionMethod, @accountConfigPermission.Controller)</li>
+                                            }
+                                        }
+                                    }
+                                    @if (permissions.Where(s => s.Module == AppModules.AccountSettings).Select(s => s.HasPermission).SingleOrDefault() && leftMenuCategoryValue != "LeftMenuAccountSettings")
+                                    {
+                                        <li>@Html.ActionLink("[|Account Settings|]", "AccountSettings", "Account")</li>
+                                    }
+                                    <li><a data-bind="attr:{href:HelpURL}" target="_blank">Help</a></li>
+                                    <li>@Html.ActionLink("[|Logout|]", "LogOff", "Login", null, null)</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+
+
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+        </header>
+        <article class="body-container">
+            <section class="left-bar">
+
+                @if (Thread.CurrentPrincipal.Identity.ToAccountID() != 1)
+                {
+                <!-- ko stopBinding: true -->
+                    @Html.Partial("~/Views/Search/QuickSearch.cshtml", null, advancedSearchDictionary)
+                <!-- /ko -->
+                }
+
+                <nav class="navbar">
+                    <div class="navbar-inner">
+                        <div class="nav-collapse collapse in">
+                            @Html.Partial("_LeftMenu", null, MenuDictionary)
+                        </div>
+                    </div>
+                </nav>
+                <div class="powered-by">
+                    <p>Powered By</p>
+                    <figure>
+                        <img src="@Url.Content("~/img/login/logo.png")" alt="Smarttouch" />
+                    </figure>
+                </div>
+            </section>
+
+            <section class="main-container" id="content-area">
+                @RenderBody()
+            </section>
+        </article>
+    </div>
+    <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="bigmodal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content modal-lg">
+            </div>
+        </div>
+    </div>
+    <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="workflowactionmodal" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content modal-lg">
+            </div>
+        </div>
+    </div>
+    <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="sendemailmodal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+
+    <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="googledrivemodal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" id="termsandcond" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Terms and conditions</h4>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary" onclick="firstLogin()">Accept</button>
+                        <button type="button" class="btn btn-default" onclick="logout()">Cancel</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="litmus-preview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <a class="pull-right prw-cls" onclick="imgpopclose()">[|Back|] </a>
+                    <h4 class="modal-title" id="mdl-hdr"></h4>
+                </div>
+                <div class="modal-body" id="lmt-img-prw">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="imgpopclose()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*@Scripts.Render("~/bundles/smarttouchframework")
+        @Scripts.Render("~/bundles/application")
+        @Scripts.Render("~/bundles/viewmodels")*@
+
+
+    <script type="text/html" id="account-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.AccountNotifications, $data, 1, false, $parent.AccountNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+    <script type="text/html" id="opportunity-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.OpportunityNotifications, $data, 16, false, $parent.OpportunitiesNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+    <script type="text/html" id="contact-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.ContactNotifications, $data, 3, false, $parent.ContactsNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+
+    <script type="text/html" id="download-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal" data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.DownloadNotifications, $data, 3, false, $parent.DownloadNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+    <script type="text/html" id="campaign-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.CampaignNotifications, $data, 4, false, $parent.CampaignNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+    <script type="text/html" id="import-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.ImportNotifications, $data, 23, false, $parent.ImportsNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+    <script type="text/html" id="leadadapter-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.LeadAdapterNotifications, $data, 19, false, $parent.LeadAdapterNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+    <script type="text/html" id="tour-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.TourNotifications, $data, 7, false, $parent.ToursNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+    </script>
+
+    <script type="text/html" id="action-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="text:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.ActionNotifications, $data, 5, false, $parent.ActionsNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+
+    </script>
+
+    <script type="text/html" id="litmus-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="html:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.CampaignLitmusNotifications, $data, 77, false, $parent.CampaignLitmusNotificationsCount) }"></i>
+                </a>
+            </span>
+        </li>
+
+    </script>
+
+    <script type="text/html" id="mailtester-template">
+        <li data-bind="attr: { 'class' : Status === 1?'unread':'' }">
+            <div>
+                <label class="activity-content">
+                    <i class="icon st-icon-polaroid"></i> <span data-bind="html:Details"></span>
+                </label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#notifyModal" data-toggle="modal"
+                       data-original-title="" title="View notification" data-bind="click: $parent.ViewNotification">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+            <span class="controls">
+                <a href="javascript:void(0)" class="notifications">
+                    <i class="fui-cross"
+                       data-bind="click: function(data, event){ $parent.DeleteNotification(false, $parent.MailTesterNotifications, $data, 79, false, $parent.MailTesterCount) }"></i>
+                </a>
+            </span>
+        </li>
+
+    </script>
+
+
+
+    @Scripts.Render("~/bundles/layoutbottom")
+    <script src="~/signalr/hubs"></script>
+
+
+    <script type="text/javascript">
+        var xhrPool = [];
+        $(document).ajaxSend(function (e, jqXHR, options) {
+            xhrPool.push(jqXHR);
+        });
+        $(document).ajaxComplete(function (e, jqXHR, options) {
+            xhrPool = $.grep(xhrPool, function (x) { return x != jqXHR });
+        });
+        var abort = function () {
+            $.each(xhrPool, function (idx, jqXHR) {
+                jqXHR.abort();
+            });
+        };
+
+        var oldbeforeunload = window.onbeforeunload;
+        window.onbeforeunload = function () {
+            var r = oldbeforeunload ? oldbeforeunload() : undefined;
+            if (r == undefined) {
+                // only cancel requests if there is no prompt to stay on the page
+                // if there is a prompt, it will likely give the requests enough time to finish
+                abort();
+            }
+            return r;
+        }
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+            }
+            return "";
+        }
+        var isFirstLogin = getCookie("IsFirstLogin");
+        var showTC = getCookie("ShowTC");
+        if (isFirstLogin == "0" && showTC == "1")
+            $("#blur").ready(function () {
+                $("#blur").addClass("blurbody");
+            });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.accordion-toggle').on('click', function (event) {
+                //event.preventDefault();
+                // create accordion variables
+                var accordion = $(this);
+                var accordionContiner = accordion.closest('.accordion-container');
+                var accordionDiv = accordionContiner.find('.accordion-content');
+                $('.accordion-content').removeClass('active');
+                accordionDiv.addClass('active');
+                $('.accordion-content').not('.active').slideUp();
+                accordionDiv.slideToggle();
+                // toggle accordion link open class
+                // accordion.toggleClass("open");
+                // toggle accordion content
+                // accordionContent.slideToggle(250);
+
+                // change plus/minus icon
+                // if (accordion.hasClass("open")) {
+                //    accordionToggleIcon.html("<i class='fa fa-minus-circle'></i>");
+                //  } else {
+                //     accordionToggleIcon.html("<i class='fa fa-plus-circle'></i>");
+                // }
+                
+                
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var hostname = '@System.Configuration.ConfigurationManager.AppSettings["MASTER_ACCOUNT_DNS"]';
+        var port = '@System.Configuration.ConfigurationManager.AppSettings["WEBSOCKET_PORT"]';
+        var signalRUrl = '@System.Configuration.ConfigurationManager.AppSettings["SIGNALR_URL"]';
+        var isFirstLogin = getCookie("IsFirstLogin");
+        var showTC = getCookie("ShowTC");
+        var isTourCompleted = getCookie("IsTourCompleted");
+        var userId = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var roleId = '@Thread.CurrentPrincipal.Identity.ToRoleID()';
+        var ImagePath = '@Url.Content("~/img/logo.png")';
+
+        var controller = '@(controller)';
+
+        //var hostname = document.location.hostname;
+
+        var dateformat = "@Thread.CurrentPrincipal.Identity.ToDateFormat()";
+
+        function imgpopclose() {
+            $("#litmus-preview").modal('toggle');
+            $("#lmt-img-ctn img").remove();
+        }
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+        function createDomainCookie(name, value, days, domain) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + ";domain=" + domain + ";path=/";
+        }
+        createCookie("dateformat", dateformat, 1);
+
+        function menuclick() {
+            checkedContactValues = fnGetCheckedValues();
+            checkedContactEmailValues = fnGetCheckedContactEmails();
+            checkedContactPhoneNumbers = fnGetCheckedContactPhones();
+            checkedContactIds = fnGetCheckedContactIDs();
+        }
+
+        var runAppTour = function () {
+            if (controller == "Dashboard")
+                getAppTourByDivision(1);
+            else if (controller == "Contact") {
+                if (document.getElementById("personView") != null)
+                    getAppTourByDivision(2);
+                else
+                    getAppTourByDivision(3);
+            }
+        };
+
+        if (isFirstLogin == "0" && showTC == "1") {
+            $.ajax({
+                url: '@Url.Content("~/Account/GetTC")',
+                type: 'get',
+                dataType: 'json',
+                data: { 'accountId': accountId },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data != null && data != "") {
+                        $('#termsandcond > div > div > div.modal-body > p')[0].innerHTML = data;
+                        $('#termsandcond').modal({ backdrop: 'static', keyboard: false, show: true });
+                        createCookie("TC", '', 1);
+                    }
+                    else
+                        $("#blur").removeClass('blurbody');
+                },
+                error: function (error) { console.log(error); }
+            });
+
+        }
+
+        var timeZone = '@Thread.CurrentPrincipal.Identity.ToIanaTimeZone()';
+        localStorage.setItem("utz", timeZone);
+
+        //createCookie('ctzos', (new Date().getTimezoneOffset()));
+        createDomainCookie('ctzos', (new Date().getTimezoneOffset()), 1, window.location.hostname.split('.').slice(-2).join('.'));
+
+
+
+        var isCookiePersistent = getCookie("IsPersistent");
+
+        createCookie("log", true, 1);
+        localStorage.removeItem('IsActive');
+        localStorage.setItem('IsActive', true);
+
+        $(this).keydown(function () {
+            localStorage.removeItem('IsActive');
+            localStorage.setItem('IsActive', true);
+        });
+
+        $(this).click(function () {
+            localStorage.removeItem('IsActive');
+            localStorage.setItem('IsActive', true);
+        });
+
+        $.idleTimeout('#idletimeout', '#idletimeout a', {
+            idleAfter: 3570,
+            pollingInterval: 110,
+            keepAliveURL: "@Url.Action("KeepAlive","Home")",
+            serverResponseEquals: 'Success',
+            onTimeout: function () {
+                var IsActive = null;
+                $(this).slideUp();
+                if (localStorage.getItem('IsActive')) {
+                    IsActive = localStorage.getItem('IsActive');
+                }
+                if (isCookiePersistent == 'False' && IsActive == 'false') {
+                    window.location = "@Url.Action("LogOff", "Login", new { logoffmessage = "session-logout" })";
+                }
+            },
+            onIdle: function () {
+                localStorage.removeItem('IsActive');
+                localStorage.setItem('IsActive', false);
+                if (isCookiePersistent == 'False') {
+                    $(this).slideDown();
+                }
+                else {
+                    resetIdleTimeout();
+                };
+            },
+            onCountdown: function (counter) {
+                var IsActive = null;
+                if (localStorage.getItem('IsActive')) {
+                    IsActive = localStorage.getItem('IsActive');
+                }
+                if (isCookiePersistent == 'False' && IsActive == 'false')
+                    $(this).find("span").html(counter); // update the counter
+                else if (IsActive == 'true') {
+                    $(this).slideUp();
+                    resetIdleTimeout();
+                }
+            },
+            onResume: function () {
+                $(this).slideUp(); // hide the warning bar
+            },
+            titleMessage: "STCRM - " + controller + "    "
+        });
+
+        var resetIdleTimeout = function () {
+            window.clearInterval($(this).countdown); // stop the countdown
+            $(this).countdownOpen = false; // stop countdown
+            $.data($('#idletimeout')[0], "idletimeout")._startTimer(); //// start up the timer again
+            $.data($('#idletimeout')[0], "idletimeout")._keepAlive(false); // ping server
+            //options.onResume.call($(this).warning);
+        };
+
+        // Notification no filtes
+        function notifinofilter() {
+            var hh = "";
+            $('.accordion-container').each(function () {
+                hh = $('.accordion-container:visible').length;
+            });
+            if (hh == "0") {
+                if ($(".st-no-filters").length == "0") {
+                    $('.tab-pane').append('<div class="st-no-filters"><div class="st-no-icon icon st-icon-bell-2"></div><div class="st-no-text"> No Items Selected</div></div>');
+                }
+            } else {
+                $('.st-no-filters').remove();
+            }
+
+        }
+
+        var appTour = new AppTourViewModel(isFirstLogin, isTourCompleted, userId, '@Url.Content("~/TourCMS")');
+        if (isFirstLogin == "0" && showTC == "0")
+            runAppTour();
+        //Uncomment the below lines when the notifications is re-enabled.
+        $(function () {
+            var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+            var VM = new LayoutViewModel(null, WEBSERVICE_URL, userId, ImagePath, isFirstLogin, isTourCompleted, userId);
+
+            VM.GetCountByDate = function () {
+                notifinofilter();
+                var authToken = readCookie("accessToken");
+                $.ajax({
+                    url: '@Url.Content("~/Home/NotificationsCountByDate")',
+                    type: 'get',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    success: function (response) {
+                        if (response != null && response.Count != null) {
+                            var data = response.Count;
+                            VM.NotificationsCount([]);
+                            VM.AccountNotificationsCount([]);
+                            VM.ToursNotificationsCount([]);
+                            VM.ActionsNotificationsCount([]);
+                            VM.OpportunitiesNotificationsCount([]);
+                            VM.ContactsNotificationsCount([]);
+                            VM.DownloadNotificationsCount([]);
+
+                            VM.ImportsNotificationsCount([]);
+                            VM.CampaignNotificationsCount([]);
+                            VM.LeadAdapterNotificationsCount([]);
+                            VM.CampaignLitmusNotificationsCount([]);
+                            VM.MailTesterCount([]);
+
+                            VM.NotificationsCount.push(data.NotificationsByDate != null ? data.NotificationsByDate[0] : 0);
+                            VM.NotificationsCount.push(data.NotificationsByDate != null ? data.NotificationsByDate[1] : 0);
+                            VM.AccountNotificationsCount.push(data.AccountNotifications != null ? data.AccountNotifications[0] : 0);
+                            VM.AccountNotificationsCount.push(data.AccountNotifications != null ? data.AccountNotifications[1] : 0);
+                            VM.ToursNotificationsCount.push(data.TourNotifications != null ? data.TourNotifications[0] : 0);
+                            VM.ToursNotificationsCount.push(data.TourNotifications != null ? data.TourNotifications[1] : 0);
+                            VM.ActionsNotificationsCount.push(data.ActionNotifications != null ? data.ActionNotifications[0] : 0);
+                            VM.ActionsNotificationsCount.push(data.ActionNotifications != null ? data.ActionNotifications[1] : 0);
+                            VM.OpportunitiesNotificationsCount.push(data.OpportunityNotifications != null ? data.OpportunityNotifications[0] : 0);
+                            VM.OpportunitiesNotificationsCount.push(data.OpportunityNotifications != null ? data.OpportunityNotifications[1] : 0);
+                            VM.ContactsNotificationsCount.push(data.ContactNotifications != null ? data.ContactNotifications[0] : 0);
+                            VM.ContactsNotificationsCount.push(data.ContactNotifications != null ? data.ContactNotifications[1] : 0);
+                            VM.DownloadNotificationsCount.push(data.DownloadNotifications != null ? data.DownloadNotifications[0] : 0);
+                            VM.DownloadNotificationsCount.push(data.DownloadNotifications != null ? data.DownloadNotifications[1] : 0);
+
+                            VM.ImportsNotificationsCount.push(data.ImportNotifications != null ? data.ImportNotifications[0] : 0);
+                            VM.ImportsNotificationsCount.push(data.ImportNotifications != null ? data.ImportNotifications[1] : 0);
+                            VM.CampaignNotificationsCount.push(data.CampaignNotifications != null ? data.CampaignNotifications[0] : 0);
+                            VM.CampaignNotificationsCount.push(data.CampaignNotifications != null ? data.CampaignNotifications[1] : 0);
+                            VM.LeadAdapterNotificationsCount.push(data.LeadAdapterNotifications != null ? data.LeadAdapterNotifications[0] : 0);
+                            VM.LeadAdapterNotificationsCount.push(data.LeadAdapterNotifications != null ? data.LeadAdapterNotifications[1] : 0);
+                            VM.CampaignLitmusNotificationsCount.push(data.CampaignLitmusNotifications != null ? data.CampaignLitmusNotifications[0] : 0);
+                            VM.CampaignLitmusNotificationsCount.push(data.CampaignLitmusNotifications != null ? data.CampaignLitmusNotifications[1] : 0)
+                            VM.MailTesterCount.push(data.MailTesterNotifications != null ? data.MailTesterNotifications[0] : 0);
+                            VM.MailTesterCount.push(data.MailTesterNotifications != null ? data.MailTesterNotifications[1] : 0);
+
+
+                            array = [];
+                            var distinctModules = function () {
+                                ko.utils.arrayForEach(VM.NotificationModules(), function (notificationModule) {
+                                    if (response.PermissionModuleIds.indexOf(notificationModule.ModuleId) > -1){
+                                        if (accountId == 1 && notificationModule.ModuleId == 3) {
+                                            $('#' + 3 + '-today').css('display', 'none');
+                                            $('#' + 3 + '-previous').css('display', 'none');
+                                        }
+                                        else
+                                            array.push(notificationModule);
+                                    }
+                                    else {
+                                        $('#' + notificationModule.ModuleId + '-today').css('display', 'none');
+                                        $('#' + notificationModule.ModuleId + '-previous').css('display', 'none');
+                                    }
+                                });
+                            }();
+                            VM.NotificationPermissionModules(array);
+                        }
+                    }
+                });
+            }
+
+            VM.DeleteBulkNotifications = function (arePreviousNotifications) {
+                var authToken = readCookie("accessToken");
+
+                $.ajax({
+                    url: '@Url.Content("~/Home/DeleteBulkNotifications")',
+                    type: 'get',
+                    dataType: 'json',
+                    data: { 'arePreviousNotifications': arePreviousNotifications },
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    success: function (response) {
+                        if (response != null) {
+                            var decreasableCount = 0;
+                            if (arePreviousNotifications) {
+                                decreasableCount = VM.NotificationsCount()[1];
+                                VM.NotificationsCount.pop();
+                                VM.NotificationsCount.push(0);
+                                VM.AccountNotificationsCount.pop();
+                                VM.AccountNotificationsCount.push(0);
+                                VM.ToursNotificationsCount.pop();
+                                VM.ToursNotificationsCount.push(0);
+                                VM.ActionsNotificationsCount.pop();
+                                VM.ActionsNotificationsCount.push(0);
+                                VM.OpportunitiesNotificationsCount.pop();
+                                VM.OpportunitiesNotificationsCount.push(0);
+                                VM.ContactsNotificationsCount.pop();
+                                VM.ContactsNotificationsCount.push(0);
+                                VM.DownloadNotificationsCount.pop();
+                                VM.DownloadNotificationsCount.push(0);
+
+                                VM.ImportsNotificationsCount.pop();
+                                VM.ImportsNotificationsCount.push(0);
+                                VM.CampaignNotificationsCount.pop();
+                                VM.CampaignNotificationsCount.push(0);
+                                VM.LeadAdapterNotificationsCount.pop();
+                                VM.LeadAdapterNotificationsCount.push(0);
+
+                            }
+                            else {
+                                decreasableCount = VM.NotificationsCount()[0];
+                                VM.NotificationsCount.splice(0, 1);
+                                VM.NotificationsCount.unshift(0);
+                                VM.AccountNotificationsCount.splice(0, 1);
+                                VM.AccountNotificationsCount.unshift(0);
+                                VM.ToursNotificationsCount.splice(0, 1);
+                                VM.ToursNotificationsCount.unshift(0);
+                                VM.ActionsNotificationsCount.splice(0, 1);
+                                VM.ActionsNotificationsCount.unshift(0);
+                                VM.OpportunitiesNotificationsCount.splice(0, 1);
+                                VM.OpportunitiesNotificationsCount.unshift(0);
+                                VM.ContactsNotificationsCount.splice(0, 1);
+                                VM.ContactsNotificationsCount.unshift(0);
+                                VM.DownloadNotificationsCount.splice(0, 1);
+                                VM.DownloadNotificationsCount.unshift(0);
+
+                                VM.ImportsNotificationsCount.splice(0, 1);
+                                VM.ImportsNotificationsCount.unshift(0);
+                                VM.CampaignNotificationsCount.splice(0, 1);
+                                VM.CampaignNotificationsCount.unshift(0);
+                                VM.LeadAdapterNotificationsCount.splice(0, 1);
+                                VM.LeadAdapterNotificationsCount.unshift(0);
+                            }
+                            // We will receive deleted count greater than the shown number.
+                            if (response > 0) {
+                                var deletedCount = parseInt(VM.NewNotifications()) - parseInt(decreasableCount);
+                                if (deletedCount >= 0)
+                                    VM.NewNotifications(deletedCount);
+                            }
+
+                            $('.accordion-content .k-loading-mask').fadeOut().remove('');
+                        }
+                    }
+                });
+            }
+
+            ko.applyBindings(VM, document.getElementById('Layout'));
+
+
+            //Notification Hub
+            $.connection.hub.qs = { 'userid': userId, 'accountid': accountId, 'roleid': roleId };
+            $.connection.hub.url = signalRUrl;
+
+            var notifier = $.connection.notifierEngine;
+
+            //new client side function to be called from server.
+            notifier.client.notifyUser = function (notification) {
+                var notificationExists = ko.utils.arrayFilter(VM.Notifications(), function (item) {
+                    if (notification.EntityId === item.EntityId() && (item.ModuleID() === 5 || item.ModuleID() === 7)) {
+                        return true;
+                    }
+                    else if (notification.NotificationID == item.NotificationID() && notification.Source === 10) {
+                        return true;
+                    }
+                    else
+                        return false;
+                });
+
+                if (notificationExists !== null && notificationExists.length === 0) {
+                    var n = ko.mapping.fromJS(notification);
+                    VM.Notifications.unshift(n);
+                    VM.NewNotifications(parseInt(VM.NewNotifications()) + 1);
+                }
+            }
+
+            notifier.client.notifyWebVisit = function (notification) {
+                notif = notification;
+                notified = VM.NewWebVisitNotificationIds().map(function (e) {
+                    return e == notification.NotificationID;
+                }).indexOf(true);
+
+                if (notified == -1) {
+                    notifySuccess(notification.Details);
+                    VM.NewWebVisitNotificationIds.push(notification.NotificationID);
+                }
+            }
+
+            $.connection.hub.logging = false;
+
+            $.connection.hub.start()
+                .then(function () {
+                    notifier.server.getUnreadNotificationCount().done(function (unreadCount) {
+                        VM.NewNotificationsCount(unreadCount);
+                    });
+                    notifier.server.getUnreadWebVisitNotificationCount().done(function (unreadCount) {
+                        VM.NewWebVisitNotificationIds(unreadCount);
+                    });
+                })
+            .done(function () {
+
+            });
+
+            $.connection.hub.disconnected(function () {
+                setTimeout(function () {
+                    $.connection.hub.start();
+                }, 5000); // Restart connection after 5 seconds.
+            });
+
+            $('.st-cu-toggle').click(function () {
+                var stp = $('.st-cu-check').prop("checked");
+                if (stp == true) {
+                    $('.st-cu-check').prop("checked", false);
+                    VM.IncludePreviouslyReadWebVisits(false);
+                } else {
+                    $('.st-cu-check').prop("checked", true);
+                    VM.IncludePreviouslyReadWebVisits(true);
+                }
+            });
+        });
+
+
+
+        var logout = function () {
+            window.location = "@Url.Action("LogOff", "Login")";
+        };
+
+        var firstLogin = function () {
+            createCookie("IsFirstLogin", 1, 1);         //Updating cookie
+            $('#termsandcond').modal('hide');
+            $("#blur").removeClass('blurbody');
+            $.ajax({
+                url: '@Url.Content("~/Account/UpdateTCAcceptance")',
+                type: 'get',
+                dataType: 'json',
+                data: { 'userId': userId },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    console.log("Acknowledged");
+                },
+                error: function (error) { console.log(error); }
+            });
+            appTour = new AppTourViewModel(isFirstLogin, isTourCompleted, userId, '@Url.Content("~/TourCMS")');
+            setTimeout(function () {
+                runAppTour();
+            }, 2000);
+
+        };
+
+
+        if (document.referrer != document.location.href) {
+            window.name = document.referrer;
+        }
+
+
+    </script>
+    <script>
+        //window.fbAsyncInit = function () {
+        //    FB.init({
+        //        appId: '212470989202752', //'212470989202752',
+        //        xfbml: true,
+        //        version: 'v2.7'
+        //    });
+        //};
+
+        //(function (d, s, id) {
+        //    var js, fjs = d.getElementsByTagName(s)[0];
+        //    if (d.getElementById(id)) { return; }
+        //    js = d.createElement(s); js.id = id;
+        //    js.src = "//connect.facebook.net/en_US/sdk.js";
+        //    fjs.parentNode.insertBefore(js, fjs);
+        //}(document, 'script', 'facebook-jssdk'));
+
+        //function subscribeApp(page_id, page_access_token) {
+        //    console.log("subscribing app to page!");
+        //    FB.api('/' + page_id + '/subscribed_apps', 'post', { access_token: page_access_token }, function (response) {
+        //        console.log("Successfully subscribed page", response);
+        //    });
+        //};
+
+        //function myFacebookLogin() {
+        //    FB.login(function (response)
+        //    {
+        //        console.log('successfully logged in', response);
+        //        FB.api('me/accounts', function (response) {
+        //            console.log("successfully retrieved pages : ", response);
+        //            var pages = response.data;
+        //            var ul = document.getElementById("fb_page_list");
+        //            for (i = 0; i < pages.length; i++)
+        //            {
+        //                var page = pages[i];
+        //                var li = document.createElement("li");
+        //                var a = document.createElement("a");
+        //                a.href = "#";
+        //                a.onclick = subscribeApp.bind(this, page.id, page.access_token);
+        //                a.innerHTML = page.name;
+        //                li.appendChild(a);
+        //                ul.appendChild(li);
+        //            }
+        //        })
+        //    }, { scope: 'manage_pages' });
+        //}
+
+
+    </script>
+    <script type="text/javascript">
+    $('.contact-add').closest('li').addClass('add-newrecord');
+    $(document).ready(function () {
+        $(".menuitemclicked").click(function (event) {
+            var action = this.getAttribute("data-action");
+            var controller = this.getAttribute("data-controller");
+            var menuItemId = this.getAttribute("data-openid");
+
+            var URL = '@Url.Content("~/")';
+            $("#menuItemContent" + menuItemId).html('');
+            OpenTopInner("menuItem" + menuItemId, "menuItemContent" + menuItemId);
+            $.ajax({
+                url: URL + controller + "/" + action,
+                type: 'get',
+                contentType: "application/html; charset=utf-8",
+                success: function (data) {
+                    checkedContactValues = fnGetCheckedValues();
+                    checkedContactEmailValues = fnGetCheckedContactEmails();
+                    checkedContactPhoneNumbers = fnGetCheckedContactPhones();
+                    checkedContactIds = fnGetCheckedContactIDs();
+
+                    $("#menuItemContent" + menuItemId).html(data);
+                },
+                error: function (data) {
+                }
+            });
+        });
+
+        //setTimeout(function () {
+        //    var iframe = document.getElementById(":2.container");
+        //    if (iframe != null && iframe != 'undefined')
+        //        iframe.style.visibility = "hidden";
+        //    console.log("Iframe load event");
+        //}, 500);
+        
+    });
+    </script>
+
+    @RenderSection("scripts", false)
+</body>
+
+
+</html>

@@ -1,0 +1,57 @@
+﻿<div class="main-template">
+    <div class="clearfix brdr-btm">
+        <div class="pull-left" id="templatechange">
+            <a class="btn btn-default active  btn_default-new-active" href="javascript:void(0)" data-tcview="ftemplate" data-bind="click:showAllTemplates">[|All|]</a>
+            <a class="btn btn-default btn_default-new" href="javascript:void(0)" data-tcview="flayout" data-bind="click:showOnlyLayouts">[|Layouts|]</a>
+            <a class="btn btn-default btn_default-new" href="javascript:void(0)" data-tcview="fpredesign" data-bind="click:showOnlyPredesigned">[|Pre Designed|]</a>
+            <a class="btn btn-default btn_default-new" href="javascript:void(0)" data-tcview="fsaved" data-bind="click:SavedTemplates">[|Saved Templates|]</a>
+        </div>
+        <div class="pull-right">
+            <div class="layout-search layout-search-n">
+                <input type="search" class=" form-control" placeholder="[|Search|]" id="templatesearch">
+                <i class="icon st-icon-search-2"></i>
+            </div>
+        </div>
+    </div>
+
+    <div role="alert" class="alert alert-danger mtl fade hide" id="campaigntemplatealert">
+        @*<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>*@
+        <p data-bind="validationMessage:templateValidation"><p>
+    </div>
+    <div class="mtl show" id="ftemplate">
+
+        <ul class="campaigns-layouts" data-bind="foreach:FilteredTemplates">
+            <li>
+                <div class="layout animation5" data-bind="css: {selected: TemplateId == $parent.SelectedTemplateId()},attr:{'id':'template-'+TemplateId}">
+                    <div class="selected-check"><i class="fui-check"></i></div>
+                    <div class="overlay">
+                        <a href="#" class="btn btn-default overlay-btn select" data-bind="visible:TemplateId != $parent.SelectedTemplateId(),click: $parent.selectTemplate">[|Select|]</a>
+                        <a href="#previewcamp" class="btn btn-default overlay-btn preview" data-toggle="modal" data-bind="visible:TemplateId !=1,click: $parent.previewTemplate">[|Preview|]</a>
+                    </div>
+                    <a href="javascript:void(0)"><img data-bind="attr:{src: ThumbnailImageUrl}" alt="layout" /></a>
+                </div>
+                <div data-bind="text:Name, attr:{class:TemplateId == $parent.SelectedTemplateId() ?'layout-title-n active':'layout-title-n ', title: Name}"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="modal fade" id="previewcamp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-bind="with:PreviewTemplate">
+    <div class="modal-dialog modal-lg camp-prw-vw">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" data-bind="text:Name"></h4>
+            </div>
+            <div class="modal-body" data-bind="html: HTMLContent, style:{'max-width':$parent.previewTemplateMaxWidth()+'px'}">
+
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a href="campaigns.html" class="btn btn-lg btn-primary" data-bind="click: $parent.selectTemplate" data-dismiss="modal">[|Select|]</a>
+                    <a href="javascript:void(0)" class="btn btn-lg mln" onclick="CloseTopInner(this)" data-dismiss="modal">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div class="da-new-leads">
+    <!-- ko if:UnTouchedLeadsAreaChartVisible()=="True" -->
+    <div class="bg-chart" id="dauntouchedleads"></div>
+    <!--/ko-->
+    <!-- ko if:UnTouchedLeadsAreaChartVisible()=="False" -->
+    <div class="dash-nodata new-contacts">[|No data found|]</div>
+    <!--/ko-->
+
+    <div class="left-part mll">
+        <div class="title"><a href="javascript:void(0)">[|Untouched Contacts|]</a> </div>
+        @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+        {
+            <div class="total"><a data-bind="attr: { href: unTouchedContactsLink() },text:UntouchedLeadsTotalCount "></a></div>
+        }
+        else
+        {
+            <div class="total"><span data-bind="text:UntouchedLeadsTotalCount" /></div>
+        }
+    </div>
+    <div class="right-part st-untouched">
+        <!-- ko if: UntouchedLeadsPreviousCount() <  UntouchedLeadsTotalCount()  -->
+        <div class="total-percent high"><span id="newleadpercent" data-bind="text:UntouchedLeadsPreviousCountPercentage"></span><span class="">%</span> </div>
+        <!--/ko-->
+        <!-- ko if: UntouchedLeadsPreviousCount() >  UntouchedLeadsTotalCount() -->
+        <div class="total-percent low"><span id="newleadpercent" data-bind="text:UntouchedLeadsPreviousCountPercentage"></span><span class="">%</span> </div>
+        <!--/ko-->
+        <!-- ko if: UntouchedLeadsPreviousCount() ==  UntouchedLeadsTotalCount() -->
+        <div class="total-percent"><span id="newleadpercent" data-bind="text:UntouchedLeadsPreviousCountPercentage"></span><span class="">%</span> </div>
+        <!--/ko-->
+        <div class="percent-label">[|Previous 30 days|]</div>
+    </div>
+</div>
+
+

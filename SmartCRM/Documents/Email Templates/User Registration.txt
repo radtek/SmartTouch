@@ -1,0 +1,130 @@
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="700">
+	<tbody>
+		<tr>
+			<td align="center" bgcolor="#757575" height="80" valign="middle"><img height="34" src="http://smarttouchcrm.com/dgp/images/ST-Logo-template-11122014.png" style="border:0px; display:block;" width="259" /></td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+				<tbody>
+					<tr>
+						<td align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:20px; color:#757575; padding-top:10px; padding-bottom:10px; border-bottom:1px solid #edecec;" valign="middle" width="600"><strong>Welcome! You now have access to your <account name=""> CRM account on SmartTouch.</account></strong></td>
+					</tr>
+					<tr>
+						<td align="left" valign="top">&nbsp;</td>
+					</tr>
+					<tr>
+						<td align="center" valign="middle">
+						<table align="center" border="0" cellpadding="0" cellspacing="0" width="150">
+							<tbody>
+								<tr>
+									<td align="center" bgcolor="#88b864" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#ffffff; padding:20px;" valign="top">Get Started<welcome for="" intro="" st="" to="" users="" video=""></welcome></td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="left" style="border-bottom:1px solid #edecec;" valign="top">&nbsp;</td>
+					</tr>
+					<tr>
+						<td align="left" style="border-bottom:1px solid #edecec;" valign="top">
+						<table align="center" border="0" cellpadding="2" cellspacing="2" width="600">
+							<tbody>
+								<tr>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#757575;" valign="top"><strong>Your Account Information: </strong></td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">Name: <fname lname=""></fname></td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">Account Login URL: <login url=""></login></td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">Email Id: <email id=""></email></td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">Temporary Passcode: <temporary password=""></temporary></td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">&nbsp;</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="left" valign="top">
+						<table align="center" border="0" cellpadding="2" cellspacing="2" width="600">
+							<tbody>
+								<tr>
+									<td align="left" valign="top">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#757575;" valign="top"><strong>Questions?</strong></td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">For assistance, contact us at:</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">
+									<table border="0" cellpadding="2" cellspacing="2" width="580">
+										<tbody>
+											<tr>
+												<td align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" width="28">1</td>
+												<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" width="552"><quickstart faq="" reference="" training="" videos="" wiki=""></quickstart></td>
+											</tr>
+											<tr>
+												<td align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;">2</td>
+												<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;"><help desk="" form="" support=""></help></td>
+											</tr>
+											<tr>
+												<td align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;">3</td>
+												<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;"><support phone=""></support></td>
+											</tr>
+											<tr>
+												<td align="center" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;">4</td>
+												<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;"><support email="helpdesk@smarttouchinteractive.com">helpdesk@smarttouchinteractive.com</support></td>
+											</tr>
+										</tbody>
+									</table>
+									</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" valign="top">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#757575;" valign="top">Sincerely,<br />
+									<strong>SmartTouch Interactive Team</strong></td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="left" style="font-family:Arial, Helvetica, sans-serif; font-size:14px; color:#757575;" valign="top">&nbsp;</td>
+								</tr>
+							</tbody>
+						</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			</td>
+		</tr>
+		<tr>
+			<td align="left" bgcolor="#757575" height="60" style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#ffffff; padding-left:15px; padding-right:15px;" valign="middle"><span style="color: rgb(255, 255, 255); font-family: Arial, Helvetica, sans-serif; font-size: 11.8181819915771px; line-height: 20.8000011444092px; background-color: rgb(117, 117, 117);">&copy; 2014 SmartTouch Interactive. 4833 Spicewood Springs Road, Suite 102, Austin TX 78759. (480) 980-9882</span></td>
+		</tr>
+		<tr>
+			<td align="left" valign="top">&nbsp;</td>
+		</tr>
+	</tbody>
+</table>

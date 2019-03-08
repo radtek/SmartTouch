@@ -1,0 +1,393 @@
+﻿@{
+    var model = @Model;
+}
+
+
+    <div id="partial-POST-login" data-bind="">
+        <div data-bind="text:MethodDescription().Documentation"></div>
+        <div data-bind="with:Script">
+            <div style="padding:10px">
+                <button type="submit" class="btn btn-primary" style="display:block" id="testClientButton" data-bind="click:function(){ showForm()}">Get Access Token</button>
+            </div>
+            <div id="test-api" style="display:none;padding-top :10px" class="sample-content">
+                <div class="form-group">
+                    <label class="control-label">[|Username|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|Username|]" class="form-control" maxlength="75" id="username">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Password|] <span class="required">*</span></label>
+                    <input type="password" placeholder="[|Password|]" class="form-control" maxlength="75" id="password">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|API Key|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|API Key|]" class="form-control" maxlength="75" id="apikey">
+                </div>
+
+                <div class="sample-content" id="api-response" style="display:none">
+                    <span><b>Response:</b></span>
+                    <pre></pre>
+                </div>
+                <div class="hr-border"></div>
+                <div>
+                    <button class="btn btn-primary" data-bind="click:function(){getAPIKey()}"><span>Get Token</span></button>
+                    <button class="btn" data-bind="click: function(){closeForm()}"><span>Cancel</span></button>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_RequestParameters")
+
+        <h3>Request Formats</h3>
+
+        <div>
+            <h4 class="sample-header">application/json, text/json</h4>
+            <div class="sample-content">
+                <span><b>Sample:</b></span>
+                <pre>{
+    "UserName": "test@smarttouchinteractive.com",
+    "Password": "Test@123",
+    "ApiKey": "29FCB7AF-219B-433F-A721-FDF07FCE2FDC"
+}
+</pre>
+
+            </div>
+        </div>
+        <h2>Response Information</h2>
+
+        <h3>Resource Description</h3>
+
+        <p></p>
+
+        <a target="_blank" href="/Help/ResourceModel?modelName=HttpResponseMessage">HttpResponseMessage</a>
+        <table class="table">
+            <thead>
+                <tr><th>Name</th><th>Type</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="parameter-name">Version</td>
+
+                    <td class="parameter-type">
+                        <a target="_blank" href="/Help/ResourceModel?modelName=Version">Version</a>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="parameter-name">Content</td>
+
+                    <td class="parameter-type">
+                        <a target="_blank" href="/Help/ResourceModel?modelName=HttpContent">HttpContent</a>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="parameter-name">StatusCode</td>
+
+                    <td class="parameter-type">
+                        <a target="_blank" href="/Help/ResourceModel?modelName=HttpStatusCode">HttpStatusCode</a>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="parameter-name">ReasonPhrase</td>
+
+                    <td class="parameter-type">
+                        string
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="parameter-name">Headers</td>
+
+                    <td class="parameter-type">
+                        Collection of             Object
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">RequestMessage</td>
+
+                    <td class="parameter-type">
+                        <a target="_blank" href="/Help/ResourceModel?modelName=HttpRequestMessage">HttpRequestMessage</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="parameter-name">IsSuccessStatusCode</td>
+
+                    <td class="parameter-type">
+                        boolean
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <h3>Response Formats</h3>
+
+            <h4 class="sample-header">application/json, text/json</h4>
+            <div class="sample-content">
+                <span><b>Sample:</b></span>
+                <pre>{
+    "access_token": "RAj7kz7Y71SBmqpBMiBQjrrsB4bfeFVecigSfaMLDVcuGjPFl1bi_leyfJyWoAyTEfK8trdJC-W67QwlEiWYvxoaO-8GT3NJ-e4Q3_k0ID3sekAzOn-opKGzGay6F7V9z-Ibtk-IKjAcFoKGPx3nPDswnMV2kNTC_wg-NoOfYR96U1d6H5Srfj9VZYyjq_DrRppXMtdL0vFUs0If1559k6V4QK6t5V3tfrrc8ZkvoF7IWsJvLdz-tOR8A66ByiOyV5C9A00cc3pQmkyCBUzDMIT75Ovp4hDaeiNa9BSp0_jmdxfbATQNFMDJ43s-yAkoIsDscATIXQOTG_NnGfzQVep-arVvkPh79BKR20ckJeyyplupRuGaSZOYW0jDRBsxB9qofPmFmQrn2TPIUZesT7r31XVE0R6s3jnUbgQvSDoJcGi8-XilGItMR00jD8K_RIjOKAuYhyeuqObVbksuaA",
+    "token_type": "bearer",
+    "expires_in": 259199,
+    "refresh_token": "31d85df49a7a45fc83a1d5880db8ac7d",
+    "as:client_id": "EED96AC6-65E0-4B61-AF87-49B2D3CBB743",
+    "userName": "test@smarttouchinteractive.com",
+    ".issued": "Tue, 26 Jul 2016 09:54:27 GMT",
+    ".expires": "Fri, 29 Jul 2016 09:54:27 GMT"
+}
+</pre>
+
+            </div>
+        </div>
+        <div>
+            <h3>API examples</h3>
+             <p>
+                 SmartTouch CRM Enterprise customers should make sure to change the API endpoint domain in all the example calls to the domain for their specific environment.
+            </p>       
+                
+        </div>
+        <div>
+            <h3>Using Postman</h3>
+            <p>
+                If you use <a target="_blank" href="https://www.getpostman.com/collections/7ce57d38cadedb90df19">Postman</a> you can click the following button to import the SmartTouch CRM API as a collection:
+            </p>
+             <p>
+                 <a id="ptmnlnk" href="javascript:void(0)"><img src="~/img/postrunbutton.png" /></a>
+            </p>
+            <div class="alert alert-info"><strong>Note</strong>: SmartTouch CRM Enterprise customers will need to change the Account and  endpoint in the URL field for each call</div>
+        </div>
+       <div>
+           <h3>Errors</h3>
+           <p>When you make an API call you may receive an error message in response. Either there is something wrong with your request or something went wrong on our end. Errors respond with an error code and JSON that contains a more precise message, description and API code.</p>
+       </div>
+        <div>
+            <h3>Example Error</h3>
+            <pre><code><span class="hljs-number"></span>invalid_apikey</code></pre>
+            <pre><code>{
+    "<span class="hljs-attribute">errors</span>": <span class="hljs-value">[
+        {
+            "<span class="hljs-attribute">invalid_apikey</span>": <span class="hljs-value"><span class="hljs-string">"5D9BD948-E1CF-444A-A852-AB8E7D127676"</span></span>,
+            "<span class="hljs-attribute">description</span>": <span class="hljs-value"><span class="hljs-string">"Invalid API Key"</span></span>,
+        </span>
+        }
+    ]
+</span>}</code></pre>
+        </div>
+        <div>
+            <h3>
+                Error Table
+            </h3>
+            <table cellpadding="0" cellspacing="0" border="0" style="border:solid 1px #d9d9d9;">
+                <thead>
+                    <tr>
+                        <td align="left" width="200px" style="margin:0px;padding:10px;font-size:13px; font-weight:bold;color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;">Status Name</td>
+                        <td align="left" width="500px" style="margin:0px;padding:10px;font-size:13px; font-weight:bold;color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;">Description</td>
+                        <td align="left" width="500px" style="margin:0px;padding:10px;font-size:13px; font-weight:bold;color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;">Suggested Action</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="left" style="margin:0px;padding:10px;font-size:13px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">
+                            invalid_client
+                        </td>
+                        <td align="left" style="margin:0px;padding:10px;font-size:13px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">
+                           User name or password is in correct
+                        </td>
+                        <td align="left" style="margin:0px;padding:10px;font-size:13px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">
+                            You need pass proper valid username and password
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" style="margin:0px;padding:10px;font-size:13px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">
+                            invalid_apikey
+                        </td>
+                        <td align="left" style="margin:0px;padding:10px;font-size:13px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">
+                            API Key is Invalid
+                        </td>
+                        <td align="left" style="margin:0px;padding:10px;font-size:13px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">
+                            You need to pass account specific API Key
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:30px;height:auto;">
+            <h3 style="overflow:hidden;margin: 0px auto 24px;">
+                <span class="pull-left">Sample Code</span> 
+
+            </h3>
+
+            <div class="tabbable new-tabs sct-tabs" id="sample-code-tabs">
+                <ul role="tablist" class="nav nav-pills" style="margin: 0px;">
+                    <li id="javascptcode">
+                        <a href="javascript:void(0)" onclick="myCodeFunction('JavaScript', 0)">JavaScript</a>
+                    </li>
+                    <li id="phpcode">
+                        <a href="javascript:void(0)" onclick="myCodeFunction('PHP', 0)">PHP</a>
+                    </li>
+                    <li id="dotnetcode">
+                        <a href="javascript:void(0)" onclick="myCodeFunction('C#', 0)">C#</a>
+                    </li>
+                    <li class="pull-right">
+                        <a href="javascript:void(0)" id="copy-button" data-clipboard-target="htmlPrettifier" onclick="checkShocwaveStatus()" style="cursor:pointer;font-size:12px;">
+                            <img src="~/img/copyiconimg.png" style="margin-top:-3px;"  />
+                            Copy to clipboard
+                        </a>
+                    </li>
+                    <li class="pull-right">
+                            <a href="javascript:void(0)" id="download-code" onclick="downloadcode()" style="font-size:12px;">
+                                <img src="~/img/downloadiconimg.png" style="margin-top:-3px;" />
+                                Download
+                            </a>
+                    </li>
+                 
+                </ul>
+                <div class="tab-content" id="htmlPrettifier">
+                    <div class="tab-pane" id="javascptcode-1">
+                        <pre class="brush: js; gutter: false;" id="jssc">
+                           
+                        </pre>
+                    </div>
+                    <div class="tab-pane " id="phpcode-2">
+                        <pre class="brush: php; gutter: false;" id="phpsc" >
+                            
+                        </pre>
+                    </div>
+                    <div class="tab-pane" id="dotnetcode-3">
+                        <pre class="brush: csharp; gutter: false;" id="csc">
+                           
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+    var PostManURL = '@System.Web.Configuration.WebConfigurationManager.AppSettings["Post_Man_URL"]';
+
+    $("#ptmnlnk").attr("href",PostManURL);
+
+    function myCodeFunction(code, isAjaxNeeded){
+        if(code == "JavaScript")
+        {
+            $("#dotnetcode").removeClass("active");
+            $("#phpcode").removeClass("active");
+            $("#javascptcode").addClass("active");
+            $("#dotnetcode-3").removeClass("active");
+            $("#phpcode-2").removeClass("active");
+            $("#javascptcode-1").addClass("active");
+            $("#copy-button").attr('data-clipboard-target','jssc');
+
+            if (isAjaxNeeded == 1)
+            $.ajax({
+                url: WEBSERVICE_URL +"/api/DropdownValues",
+                type: 'get',
+                data:{"filename":"accesstokenjavascriptcode.txt"},
+                success: function (response) {
+                    $('#jssc').html("");
+                    $('#jssc').html(response.FileCode);
+                    //SyntaxHighlighter.all();
+                },
+                error: function(data){
+                    alert(data.responseText);
+                }
+            });
+
+
+        }
+        else if(code == "PHP"){
+            $("#dotnetcode").removeClass("active");
+            $("#javascptcode").removeClass("active");
+            $("#phpcode").addClass("active");
+            $("#dotnetcode-3").removeClass("active");
+            $("#javascptcode-1").removeClass("active");
+            $("#phpcode-2").addClass("active");
+            $("#copy-button").attr('data-clipboard-target','phpsc');
+            if (isAjaxNeeded == 1)
+            $.ajax({
+                url: WEBSERVICE_URL +"/api/DropdownValues",
+                type: 'get',
+                data:{"filename":"accesstokenphpcode.txt"},
+                success: function (response) {
+                    $('#phpsc').html("");
+                    $('#phpsc').html(response.FileCode);
+                    //SyntaxHighlighter.all();
+                },
+                error: function(data){
+                    alert(data.responseText);
+                }
+            });
+        }
+        else if(code == "C#"){
+
+            $("#javascptcode").removeClass("active");
+            $("#phpcode").removeClass("active");
+            $("#dotnetcode").addClass("active");
+            $("#phpcode-2").removeClass("active");
+            $("#javascptcode-1").removeClass("active");
+            $("#dotnetcode-3").addClass("active");
+            $("#copy-button").attr('data-clipboard-target','csc');
+            if (isAjaxNeeded == 1)
+            $.ajax({
+                url: WEBSERVICE_URL +"/api/DropdownValues",
+                type: 'get',
+                data:{"filename":"accesstokendotnetcode.txt"},
+                success: function (response) {
+                    $('#csc').html("");
+                    $('#csc').html(response.FileCode);
+                    //SyntaxHighlighter.all();
+                },
+                error: function(data){
+                    alert(data.responseText);
+                }
+            });
+
+        }
+    }
+
+    zclipPath = location.protocol + "//" + location.host+ "/Scripts/ZeroClipboard.swf";
+    var client = new ZeroClipboard( document.getElementById("copy-button"), {
+        moviePath: zclipPath
+    } );
+    client.on( "load", function(client) {
+        client.on( "complete", function(client, args) {
+            alert("Copied HTML to clipboard"  );
+        } );
+    } );
+
+    var checkShocwaveStatus = function () {
+        if (navigator.mimeTypes ["application/x-shockwave-flash"] == undefined)
+        {
+            alert('Please enable Shockwave-Flash plugin in your browser to use this feature.');
+        }
+    };
+
+    function downloadInnerHtml(filename){
+        var elHtml = $('.tab-content .active').text();
+        var link = document.createElement('a');
+        mimeType = 'text/plain';
+
+        link.setAttribute('download', filename);
+        link.setAttribute('href', 'data:' + mimeType  +  ';charset=utf-8,' + encodeURIComponent(elHtml));
+        link.click();
+    }
+
+    function downloadcode(){
+        downloadInnerHtml('SampleCode.txt');
+    }
+
+    $(document).ready(function () {
+        myCodeFunction('JavaScript', 1);
+        myCodeFunction('PHP', 1);
+        myCodeFunction('C#', 1);
+        //setTimeout(function(){
+        //    SyntaxHighlighter.all()
+        //}, 1500);
+        var data = @(Html.Raw(Json.Encode(Model)));
+        selfAPI.CurrentModal().Parameters(data);
+
+
+    });
+</script>

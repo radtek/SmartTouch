@@ -1,0 +1,106 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using System.Linq;
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.ThirdPartyClientViewModel
+
+@{
+    ViewBag.Title = "addAPIKey";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+}
+
+@{
+    var userGuid = ViewBag.guid;
+    var mode = ViewBag.mode;
+}
+
+<script src="~/Scripts/ViewModels/ApiKeysViewModel.js"></script>
+
+@using (Html.BeginForm("addapikey", "APIKeys", FormMethod.Post,
+     new { name = "form-data", id = "form" }))
+{
+    <div class="sub-container form-horizontal-large" style="display:none" data-bind="visible:true" id="apiKeyPage">
+        <ul class="breadcrumb">
+            <li><a href="/apikeys">Api Keys</a></li>
+            <li class="active">
+                <a href="javascript:void(0)">
+                    <span data-bind="visible: '@mode' === 'add'" style="display:none">[|Add Api Key|]</span>
+                    <span data-bind="visible: '@mode' === 'edit'" style=" display:none">[|Edit Api Key|]</span>
+                </a>
+            </li>
+        </ul>
+        <div class="main-header">
+            <span data-bind="visible: '@mode' === 'add'" style="display:none">[|Add Api Key|]</span>
+            <span data-bind="visible: '@mode' === 'edit'" style="display:none">[|Edit Api Key|]</span>
+           
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Api Key|] <span class="required">*</span></label>
+                <input type="text" placeholder="[|Api Key|]" class="form-control" data-bind="value: ID, valueUpdate: 'afterkeydown'" readonly="readonly" >
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|App Name|] <span class="required">*</span></label>
+                <input type="text" placeholder="[|Application Name|]" class="form-control" data-bind="value: Name, valueUpdate: 'afterkeydown'" >
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Refresh Token Life Time (in minutes)|] <span class="required">*</span></label>
+                <input type="text" placeholder="[|Refresh Token Life Time|]" class="form-control" data-bind="value: RefreshTokenLifeTime, valueUpdate: 'afterkeydown'" >
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class=" form-group">
+                <label class="control-label">[|Allow Origin|] <span class="required">*</span></label>
+                <input type="text" placeholder="[|Allow Origin|]" class="form-control" data-bind="value: AllowedOrigin, valueUpdate: 'afterkeydown'" maxlength="75">
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Account|]<span class="required">*</span></label>
+                <span data-bind="visible:  '@mode' === 'add'" style="display:none">
+                    <input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'Id', data: Accounts ,value:AccountID, optionLabel: 'Select...' }" />
+                </span>
+                <span data-bind="visible: '@mode' === 'edit'" style="display:none">
+                    <input type="text" data-bind="value:AccountName" readonly="readonly" class="form-control" />
+                </span>
+                <span class="validationMessage" data-bind="validationMessage:AccountValidation"></span>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Status|] <span class="required">*</span></label>
+                <div>
+                    <input type="radio" name="apikeysstatus" data-bind="checked: IsActive, value:'true'">
+                    <span>[|Active|]</span>&nbsp;&nbsp;
+                    <input type="radio" name="apikeysstatus" data-bind="checked: IsActive, value: 'false'" />
+                    <span>[|Inactive|]</span>
+                </div>
+            </div>
+        </div>
+        <div class="hr-border"></div>
+        <div>
+            <input type="button" class="btn btn-lg btn-primary" data-bind="click: saveApiKey" value="Save" />
+            <input type="button" class="btn btn-lg btn-default" data-bind="click: cancel" value="Cancel" />
+        </div>
+    </div>
+}
+
+
+<script>
+    $(document).ready(function () {
+        var viewModel;
+        var ApiKey = @(Html.Raw(Json.Encode(Model)));
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var userId ='@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var BASE_URL = '@Url.Content("~/APIKeys/")';
+        var guid='@userGuid';
+
+        viewModel = new apiKeysViewModel(ApiKey,BASE_URL,accountId,userId,guid);
+        ko.applyBindings(viewModel);
+    });
+</script>

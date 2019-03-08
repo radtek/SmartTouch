@@ -1,0 +1,439 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.WorkFlowViewModel
+@{
+    string dateFormat = ViewBag.DateFormat;
+    var CurrentWorkflowId = ViewBag.CurrentWfId;
+}
+
+@Scripts.Render("~/bundles/automationreportvm")
+
+<div class="sub-container st-subcampaign mbxxl">
+    <div>
+        <ul class="breadcrumb">
+            <li><a href="/workflows">[|Automation|]</a></li>
+            <li class="active"><a href="javascript:void(0)">[|Automation Dashboard|]</a></li>
+            <li class="active pull-right" data-bind="visible: WorkflowGroup()[0].workflowViewModel().StatusID() != '404'"><a href="javascript:void(0)" data-bind="attr:{href: '@CurrentWorkflowId' != '0' ? '/editworkflow?workflowid=' + '@CurrentWorkflowId' : '/fulleditworkflow?WorkflowID='+ WorkflowGroup()[0].workflowViewModel().workflowID() }">[|Edit Workflow |]<i class="icon st-icon-edit wf-edt"></i></a></li>
+        </ul>
+    </div>
+    <div class="sub-container">
+
+        <div class="accordion" data-bind="foreach:WorkflowGroup()">
+            <div class="workflow-history-heading" data-bind="visible:$index() == 1">Workflow History</div>
+            <div class="accordion-group" data-bind="attr:{id:'worflow_history_' + WorkflowID, class : $root.WorkflowGroup().length > 1 ? 'workflow-child-accordion' : '' }">
+                <div class="accordion-toggle workflow-child-heading" data-bind="click: $root.WorkflowGroup().length > 1 ? $root.getDashboard.bind($data,$index()) : function(){}">
+                    <span class="" data-bind="text:WorkflowName"></span>
+                    <span class="workflow-child-status" data-bind="text:'('+ Status() + ')'"></span>
+
+                    <span data-bind="if:$root.WorkflowGroup().length > 1">
+                        <a href="javascript.void(0)" data-bind="text: IsExpanded() == true ? 'Collapse' : 'Expand'" class="pull-right"></a>
+                    </span>
+                </div>
+                <div data-bind="if:workflowViewModel() && IsExpanded()==true">
+                    <div data-bind="template: {name:'workflow-report', data:workflowViewModel()}" class="workflow-child">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/html" id="workflow-report">
+        <div class="">
+            <div data-bind="visible : $parentContext.$index()==0">
+                <div class="main-header">
+                    <div id="wf-nm">
+                        <span id="pagename" data-bind="text:WorkflowName"></span>
+                        <span id="" data-toggle="modal" data-bind="visible:StatusID() == '401', click:editWorkflowName"><a href="javascript:void(0)"><i class="icon st-icon-edit wf-nm-edt"></i></a></span>
+                    </div>
+                    <div id="editWorkflowName" style="display:none">
+                        <div class="form-group">
+                            <label class="control-label wf-nm-lbe">[|Workflow Name|]</label>
+                            <input type="text" id="workflownewname" class="display-inline form-control wf-nm-in" maxlength="150">
+                            <span>
+                                <button data-bind="click:saveWorkflowName" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                                <button data-bind="click:cancelWorkflowNameEdit" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="workflow-report mtl">
+                <div data-bind="if:$index()==0">
+                    <div class="workflow-block-bg">
+                        <div class="mainpart">
+                            <span class="select-option">
+                                <span class="display-inline">[|Select|] </span>
+                                <!-- ko if : relatedCampaigns().length > '1' -->
+                                <span class="display-inline camp-list">
+                                    <input data-bind="attr:{id:'campaigns-'+$index()}, kendoDropDownList: { dataTextField: 'Name', dataValueField: 'CampaignID', data: relatedCampaigns, value: selectedCampaignId, select:selectedCampaign, optionLabel:' All ' }" />
+                                </span>
+                                <!--/ko-->
+                                <!-- ko if : relatedCampaigns().length == '1' -->
+                                <span class="display-inline camp-list">
+                                    <input data-bind="attr:{id:'campaigns-'+$index()}, kendoDropDownList: { dataTextField: 'Name', dataValueField: 'CampaignID', data: relatedCampaigns, value: selectedCampaignId}" />
+                                </span>
+                                <!--/ko-->
+                                <!-- ko if : relatedCampaigns().length == '0' -->
+                                <span class="display-inline camp-list">
+                                    <input data-bind="attr:{id:'campaigns-'+$index()}, kendoDropDownList: { dataTextField: 'Name', dataValueField: 'CampaignID', data: relatedCampaigns, value: selectedCampaignId, select:selectedCampaign }" />
+                                </span>
+                                <!--/ko-->
+                            </span>
+
+                            <span class="select-option">
+                                <span class="display-inline">[|Sort By|] </span>
+                                <span class="display-inline input-block">
+                                    <input name="mediumnm" id="daterangecustom" data-bind=" kendoDropDownList: { dataTextField: 'Range', dataValueField: 'Value', data: $root.dateRanges, value: selectedDays }" />
+                                </span>
+                                <div class="custom-date mhm display-inline" data-bind="visible:selectedDays() == 5" id="daterange5">
+                                    <span class="">[|View From|]</span>
+                                    <span class="input-block display-inline form-group mbn">
+                                        <span class="input-group">
+                                            <input data-bind="kendoDatePicker: { value: emailStatFromDate, format: '@dateFormat'}" />
+                                        </span>
+                                    </span>
+
+                                    <span class="mll">[|To|]  </span>
+                                    <span class="input-block display-inline form-group mbn">
+                                        <span class="input-group">
+                                            <input data-bind="kendoDatePicker: { value: emailStatToDate, format: '@dateFormat' }" />
+                                        </span>
+                                    </span>
+
+                                </div>
+
+                            </span>
+                            <a href="javascript:void(0)" class="btn btn-primary" data-bind="click: getEmailStats">[|Search|]</a>
+
+                            <div class="setting display-inline pull-right mll">
+                                <a href="javascript:void(0)" class="btn drguploderbtn" id="workflow-settings" data-bind="click:function(){showSettings(this.WorkflowID())}"><i class="icon st-icon-settings-2"></i> [|Settings|]</a>
+                                <div class="setting-st text-left header-specific" id="workflow-settings-popup" style="display:none;">
+                                    <div class="legend mbn"><span class="icon st-icon-settings-2"></span><span class="pls">[|Automation Settings|]</span></div>
+
+                                    <div class="setting-inner">
+                                        <div class="clearfix">
+                                            <div class="form-group mbn">
+                                                <label class="setting-heading">[|Workflow Status|]</label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="workflowStatus" value="401" data-bind="checked:StatusID,enable:!IsInactiveInitially()">
+                                                    [|Active|]
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="workflowStatus" value="404" data-bind="checked:StatusID,enable:!IsInactiveInitially()">
+                                                    [|Inactive|]
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="workflowStatus" value="403" data-bind="checked:StatusID,enable:!IsInactiveInitially()">
+                                                    [|Paused|]
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix">
+                                            <div class="form-group mbn">
+                                                <label class="setting-heading">[|Is this Workflow time sensitive ?|]</label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="TimeSensitive" value="1" data-bind="checked:IsTimeSensitive,enable:false" />
+                                                    [|Yes, deactivate this Workflow on|]
+                                                </label>
+
+                                                <div class="input-group display-inline validation-form-control">
+                                                    <input data-bind="kendoDatePicker:{value: DeactivatedOn, enabled: false }" />
+                                                </div>
+
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="TimeSensitive" value="0" data-bind="checked:IsTimeSensitive,enable:false" />
+                                                    [|No|]
+                                                </label>
+
+                                            </div>
+                                        </div>
+                                        <div class="clearfix">
+                                            <div class="form-group mbn">
+                                                <label class="setting-heading">[|Can a Contact complete this Workflow more than once ?|]</label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" data-bind="checked:IsWorkflowAllowedMoreThanOnce,enable:false" name="group1" value="true" />
+                                                    [|Yes, anytime conditions are met|]
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" data-bind="checked:IsWorkflowAllowedMoreThanOnce,enable:false" name="group1" value="false" />
+                                                    [|No, just one time|]
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix">
+                                            <div class="form-group mbn">
+                                                <label class="setting-heading">[|Can a Contact be enrolled in this Workflow and others at the same time ?|]</label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="1" data-bind="checked:AllowParallelWorkflows,enable:false" name="enrolledworkflow" id="enrolledworkflowYes">
+                                                    [|Yes, the Contact can be in other Workflows |]
+                                                </label>
+
+                                            </div>
+                                            <div class="form-group mbn">
+                                                <label class="radio-inline">
+                                                    <input type="radio" value="2" data-bind="checked:AllowParallelWorkflows,enable:false" name="enrolledworkflow" id="enrolledworkflowNo">
+                                                    [|No, remove the Contact from all Workflows|]
+                                                </label>
+                                            </div>
+                                            <div class="form-group mbn">
+                                                <span class="pull-left">
+                                                    <label class="radio-inline">
+                                                        <input type="radio" value="3" data-bind="checked:AllowParallelWorkflows,enable:false" name="enrolledworkflow" id="enrolledworkflowRemove">
+                                                        [|No, remove Contact from these Workflows|]
+                                                    </label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!--ko if:AllowParallelWorkflows() == '3'-->
+                                        <div class="form-group">
+                                            <label class="setting-heading">[|Excluded Workflow(s)|]</label>
+                                            <div class="validation-form-control">
+                                                <select class="exclude-workflow" data-bind="kendoMultiSelect: { data: ActiveWorkflows, value: RemoveFromWorkflows,dataValueField:'WorkflowID',dataTextField:'WorkflowName',enabled:false }"></select>
+                                            </div>
+                                        </div>
+                                        <!--/ko-->
+                                        <span class="validationMessage" style="top: 5px" data-bind="visible:NoWorkflows()">No Active Workflows to display</span>
+                                    </div>
+                                    <div class="hr-border mbn"></div>
+                                    <div class="mbl">
+                                        <a href="javascript:void(0)" class="btn btn-lg btn-primary closesettings" data-bind="click:changeStatus">[|Save|]</a>
+                                        <a href="javascript:void(0)" class="btn btn-lg closesettings" data-bind="click:cancelSettings">[|Cancel|]</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="legend"><span class="icon st-icon-clipboard"></span><span class="mlm">[|Workflow Summary|]</span></div>
+                <div class="workflow-report-block mtl">
+                    <ul class="workflow-view jcarousel-skin-tango" data-bind="template: {name:'activity-template', foreach: activities} , attr:{id:'workflowreportview-'+WorkflowID()}"></ul>
+                </div>
+
+                <div class="legend"><span class="icon st-icon-paper-ripped"></span><span class="mlm">[|Workflow Analytics|]</span></div>
+                <ul class="workflow-summary analytics">
+                    <li class="dash-option-value" data-reportid="delivered" style="width:25%;">
+                        <div class="text">[|Contacts for Workflow|]</div>
+                        <!--ko ifnot: contactsStarted() == 0-->
+                        <a data-bind="text:contactsStarted,attr:{ href: 'workflowcontacts?WorkflowID='+ WorkflowID() + '&WorkflowContactState=' + WorkflowContactStage.ContactsStarted }"></a>
+                        <!--/ko-->
+                        <!--ko if: contactsStarted() == 0-->
+                        <span data-bind="text:contactsStarted"></span>
+                        <!--/ko-->
+                    </li>
+                    <li class="dash-option-value" data-reportid="opened" style="width:25%;">
+                        <div class="text">[|In Progress|]</div>
+                        <!--ko ifnot: contactsInProcess() == 0-->
+                        <a data-bind="text:contactsInProcess,attr:{ href: 'workflowcontacts?WorkflowID='+ WorkflowID() + '&WorkflowContactState=' + WorkflowContactStage.ContactsInProgress }"></a>
+                        <!--/ko-->
+                        <!--ko if: contactsInProcess() == 0-->
+                        <span data-bind="text:contactsInProcess"></span>
+                        <!--/ko-->
+                    </li>
+                    <li class="dash-option-value" data-reportid="clicked" style="width:25%;">
+                        <div class="text">[|Opted Out|]</div>
+                        <!--ko ifnot: contactsLost() == 0-->
+                        <a data-bind="text:contactsLost,attr:{ href: 'workflowcontacts?WorkflowID='+ WorkflowID() + '&WorkflowContactState=' + WorkflowContactStage.ContactsOptedOut }"></a>
+                        <!--/ko-->
+                        <!--ko if: contactsLost() == 0-->
+                        <span data-bind="text:contactsLost"></span>
+                        <!--/ko-->
+                    </li>
+                    <li class="dash-option-value" data-reportid="unsubscribe" style="width:25%;">
+                        <div class="text">[|Completed|]</div>
+                        <!--ko ifnot: contactsFinished() == 0-->
+                        <a data-bind="text:contactsFinished,attr:{ href: 'workflowcontacts?WorkflowID='+ WorkflowID() + '&WorkflowContactState=' + WorkflowContactStage.ContactsCompleted }"></a>
+                        <!--/ko-->
+                        <!--ko if: contactsFinished() == 0-->
+                        <span data-bind="text:contactsFinished"></span>
+                        <!--/ko-->
+
+                    </li>
+
+                </ul>
+
+                <div class="legend"><span class="icon st-icon-mail-outgoing"></span><span class="mlm">[|Email Engagement|]</span></div>
+                <div>
+
+                </div>
+
+                <!--ko if: emailEngagementData().length > 0-->
+                <div>
+                    <div id="chart"></div>
+                </div>
+                <div class="k-grid k-widget k-secondary">
+                    <div class="k-grid-content">
+                        <table>
+                            <thead class="k-grid-header">
+                                <tr>
+                                    <th class="k-header text-center">[|Campaign Name|]</th>
+                                    <th class="k-header text-center">[|Delivered|]</th>
+                                    <th class="k-header text-center">[|Opened|]</th>
+                                    <th class="k-header text-center">[|Clicked|]</th>
+                                    <th class="k-header text-center">[|Complained|]</th>
+                                    <th class="k-header text-center">[|Unsubscribed|]</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: emailEngagementData">
+                                <tr>
+                                    <td class="text-center" data-bind="text: name"></td>
+                                    <!--ko foreach: data-->
+                                    <td class="text-center">
+                                        <!--ko if:$data == 0-->
+                                        <span data-bind="text:$data"></span>
+                                        <!--/ko-->
+                                        <!--ko ifnot:$data == 0-->
+                                        <!--ko if:$index() == 0-->
+                                        <a data-bind="text:$data,attr:{href:'workflowcontactlist?WorkflowID=' + $parentContext.$parent.WorkflowID() + '&CampaignID='+ $parent.CampaignID + '&CampaignDrillDownActivity='+ CampaignDrillDownActivity.Delivered + '&FromDate='+ $parentContext.$parent.FromDate() + '&ToDate='+ $parentContext.$parent.ToDate() }"></a>
+                                        <!--/ko-->
+                                        <!--ko if:$index() == 1-->
+                                        <a data-bind="text:$data,attr:{href:'workflowcontactlist?WorkflowID=' + $parentContext.$parent.WorkflowID() + '&CampaignID='+ $parent.CampaignID + '&CampaignDrillDownActivity='+ CampaignDrillDownActivity.Opened + '&FromDate='+ $parentContext.$parent.FromDate() + '&ToDate='+ $parentContext.$parent.ToDate() }"></a>
+                                        <!--/ko-->
+                                        <!--ko if:$index() == 2-->
+                                        <a data-bind="text:$data,attr:{href:'workflowcontactlist?WorkflowID=' + $parentContext.$parent.WorkflowID() + '&CampaignID='+ $parent.CampaignID + '&CampaignDrillDownActivity='+ CampaignDrillDownActivity.Clicked + '&FromDate='+ $parentContext.$parent.FromDate() + '&ToDate='+ $parentContext.$parent.ToDate() }"></a>
+                                        <!--/ko-->
+                                        <!--ko if:$index() == 3-->
+                                        <a data-bind="text:$data,attr:{href:'workflowcontactlist?WorkflowID=' + $parentContext.$parent.WorkflowID() + '&CampaignID='+ $parent.CampaignID + '&CampaignDrillDownActivity='+ CampaignDrillDownActivity.Complained + '&FromDate='+ $parentContext.$parent.FromDate() + '&ToDate='+ $parentContext.$parent.ToDate() }"></a>
+                                        <!--/ko-->
+                                        <!--ko if:$index() == 4-->
+                                        <a data-bind="text:$data,attr:{href:'workflowcontactlist?WorkflowID=' + $parentContext.$parent.WorkflowID() + '&CampaignID='+ $parent.CampaignID + '&CampaignDrillDownActivity='+ CampaignDrillDownActivity.Unsubscribed + '&FromDate='+ $parentContext.$parent.FromDate() + '&ToDate='+ $parentContext.$parent.ToDate() }"></a>
+                                        <!--/ko-->
+                                        <!--/ko-->
+                                    </td>
+                                    <!--/ko-->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!--/ko-->
+                <!--ko if: emailEngagementData().length == 0-->
+                <div><span>[|No records to display|].</span></div>
+                <!--/ko-->
+
+
+            </div>
+        </div>
+
+    </script>
+    <!-- /.container -->
+    <script type="text/html" id="activity-template">
+        <li data-bind="attr:{class:(icon == 'st-icon-alarm-clock')? 'flow-block timerflow-block':'flow-block'}">
+            <div class="flow-row">
+                <span data-bind="text: name"></span>
+                <span data-bind="visible: (CampaignID() != 0 && CampaignID() != null && name != 'Campaign Sent' && name != 'Link Clicked' && name != 'Link Actions' &&  $parentContext.$parentContext.$index()==0 && WorkflowStatus == '401') ">
+                    <i class="icon st-icon-edit wf-cm-edt" data-bind="click:function(data, event){ $parent.editWorkflowCampaign(CampaignID())}"></i>
+                </span>
+                <span data-bind="visible: (ActionTypeID == 10 && WorkflowStatus == '401' && $parentContext.$parentContext.$index()==0) ">
+                    <i class="icon st-icon-edit wf-cm-edt" data-target="#workflowactionmodal" data-toggle="modal" data-bind="attr:{href: '/editnotifyuseraction?actionId=' + WorkflowActionId +'&workflowId=' + workflowId }"></i>
+                </span>
+                <span data-bind="visible: (ActionTypeID == 9 && WorkflowStatus == '401' && $parentContext.$parentContext.$index()==0) ">
+                    <i class="icon st-icon-edit wf-cm-edt" data-target="#workflowactionmodal" data-toggle="modal" data-bind="attr:{href: '/edituserassignmentaction?actionId=' + WorkflowActionId +'&workflowId=' + workflowId }"></i>
+                </span>
+            </div>
+            <div class="flow-icon"><span class="icon" data-bind="css: icon"></span></div>
+            <!--ko if: isDataOnModal-->
+            <div class="flow-overlay animation4">
+                <a href="#" data-bind="kendoTooltip: { content: data }" data-toggle="modal" class="black">[|View|]</a>
+                @*<a href="#viewtags" data-bind="attr:{href: '#viewtag' + ($index() + 1)}" data-toggle="modal" class="black">View</a>*@
+            </div>
+
+
+            <!--/ko-->
+            <!--ko if: !isDataOnModal-->
+            <div class="flow-overlay animation4"><span data-bind="text: data"></span></div>
+            <!--/ko-->
+            <!--ko if: isDataOnModal-->
+
+            <div data-bind="kendoWindow:{isOpen: isOpen, visible: false,title: name, width: 400, height: 200, modal: true, widget: myWidget }" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <span data-bind="html:data"></span>
+            </div>
+
+            <!--/ko-->
+            <div class="st-aw-campaign-icon1" data-bind="visible: (CampaignID() != 0 && CampaignID() != null && name != 'Link Actions' && name != 'Link Clicked')">
+                <i class="icon st-icon-eye notifiy-view mll" data-bind="visible: (CampaignID() != 0 && CampaignID() != null), attr:{'data-id': CampaignID()} " onclick="ViewCampaign(this)"></i>
+            </div>
+        </li>
+        <!--ko if: isTrigger-->
+        <li class="flow"><span class="st-workflow-process"></span></li>
+        <!--/ko-->
+        <!--ko ifnot: isTrigger-->
+        <li class="flow"><span class="st-workflow-action"></span></li>
+        <!--/ko-->
+
+    </script>
+    <script>
+        function ViewCampaign(e){
+            var campaignID = $(e).attr("data-id");
+            window.open('/campaignview?campaignId=' + campaignID, '_blank','left=500,top=100,width=920,height=720,toolbar=1,resizable=0');
+        }
+
+        $(document).ready(function(){
+            var Workflow_BASE_URL = '@Url.Content("~/Workflow/")';
+            var AdvancedSearch_BASE_URL = '@Url.Content("~/AdvancedSearch/")';
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+            var data = @(Html.Raw(Json.Encode(Model)));
+            var reportsData = @Html.Raw(Json.Encode(ViewData["Parentwfs"]));
+
+            WorkflowContactStage = {
+                ContactsStarted : 1,
+                ContactsInProgress : 2,
+                ContactsCompleted : 3,
+                ContactsOptedOut : 4
+            }
+            CampaignDrillDownActivity = {
+                Opened : 1,
+                Clicked : 2,
+                Delivered : 3,
+                Unsubscribed : 4,
+                Complained : 5,
+                Sent : 6,
+                Bounced : 7
+            }
+
+
+            var viewModel = new WorkflowReportDataViewModel(data,Workflow_BASE_URL,WEBSERVICE_URL,reportsData);
+
+         
+
+            function getRelatedCampagins(){
+                return $.ajax({
+                    url:  WEBSERVICE_URL + '/getrelatedcampaigns',
+                    type: 'get',
+                    dataType: 'json',
+                    data : {'workflowID': viewModel.WorkflowGroup()[0].workflowViewModel().workflowID() },
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+                    }
+                });
+            }
+            getRelatedCampagins().done(function (campaigns) {
+                viewModel.WorkflowGroup()[0].workflowViewModel().relatedCampaigns(campaigns);
+                if(campaigns.length == 1)
+                    viewModel.WorkflowGroup()[0].workflowViewModel().selectedCampaignId(campaigns.length>0?campaigns[0].CampaignID:0);
+
+                viewModel.WorkflowGroup()[0].workflowViewModel().getEmailStats();
+                var ddl = $("#campaigns-0").data("kendoDropDownList");
+                if($(campaigns).length > 0 && ddl){
+                    ddl.trigger("select",{ item: $("li.k-state-selected"),value: $("#campaign-list") });
+                }
+            }).fail(function(err){
+                removepageloader();
+                notifyError(err.responseText);
+            });
+
+            ko.applyBindings(viewModel);
+
+        });
+        function displayDateTime(date) {
+            if (date == null) {
+                return "";
+            }
+            var offset = new moment.tz(date, localStorage.getItem('utz')).utcOffset();
+            var value = new Date(date.getTime() + offset * 60 * 1000);
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd hh:mm'), '@(dateFormat)'+' hh:mm tt');
+        }
+    </script>
+
+}

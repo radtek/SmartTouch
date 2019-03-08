@@ -1,0 +1,375 @@
+﻿@{
+    ViewBag.Title = "Campaigns";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var Details = ViewBag.campaignId;
+    var dateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var userIdS = ViewBag.UserIds != null ? (IEnumerable<int>)ViewBag.UserIds : null;
+    var startDate = ViewBag.StartDate;
+    var endDate = ViewBag.EndDate;
+
+}
+
+@Scripts.Render("~/bundles/campaignsvm")
+
+
+@using (Ajax.BeginForm("CampaignList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="UserList">
+        <ul class="breadcrumb border-bottom-none">
+            @if (startDate != null && startDate != "")
+            {
+                <li><a href="/Reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)">[|Campaigns List|]</a></li>
+            }
+        </ul>
+        <div class="page-title">[|Campaigns|]</div>
+        <div>
+
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.CampaignViewModel>()
+                    .Name("Grid")
+                    .Columns(columns =>
+                    {
+                        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+                        columns.Bound(e => e.Name).Title("[|Campaign Name|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20" });
+                        columns.Bound(e => e.CampaignStatus).Title("[|Status|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-5 text-center" });
+                        columns.Bound(e => e.RecipientCount).Title("[|Recipients|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center col-5" });
+                        columns.Bound(e => e.SentCount).Title("[|Sent|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+                        columns.Bound(e => e.DeliveredCount).Title("[|Delivered|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+                        columns.Bound(e => e.OpenCount).Title("[|Opens|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+                        columns.Bound(e => e.ClickCount).Title("[|Clicks|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+                        columns.Bound(e => e.ComplaintCount).Title("[|Complaints|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+                    })
+                    .HtmlAttributes(new { style = "height: 550px;" })
+                    .Pageable(pageable => pageable
+                       .Input(true)
+                       .Numeric(false)
+                     )
+                    .Sortable()
+                    .Scrollable(scr => scr.Height(430))
+                    .Filterable()
+                     .DataSource(dataSource => dataSource
+                                                                                                   .Ajax()
+                                                                                                   .PageSize(ItemsPerPage)
+                                                                                                   .Read(read => read.Action("CampaignsListView", "Campaign").Data("additionalInfo"))//, new { name = "#=''#" }
+                                                                                                   )
+            )
+           
+        </div>
+    </div>
+}
+
+<!-- Modal -->
+<div class="modal campaign-select fade " id="addNewCampaign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content campaign-type-pop">
+            <div class="modal-header campaign-type-pop-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h6 class="modal-title" id="myModalLabel">Choose your Campaign Type</h6>
+            </div>
+            <div class="modal-body campaign-type-pop-body">
+                <div class="campaigns">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>Campaign Name <span class="required">*</span></label>
+                            <div class="form-group validation-form-control">
+                                <input type="text" class="form-control" placeholder="Campaign Name" data-bind="value:NewCampaign.Name"><span class="validationMessage" style="display: none;"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <span class="st-custag">[|Tags|]</span>
+                            <input id="campaignTags" class="display-inline form-control tagsinput-info-round" placeholder="[|Search or Type a tag name|]" />
+                        </div>
+                    </div>
+
+                </div>
+                <div>
+                    <div class="campaign-type">
+                        <div class="campaign-type-select" id="131">
+                            <div data-bind="attr:{class: NewCampaign.CampaignTypeId()=='131' ? 'row active':'row'}">
+                                <div class="box">
+                                    <div class="campaign_img">
+                                        <img src="~/img/regular-campaign-img.png" />
+                                    </div>
+                                    <div class="campaign_text">
+                                        <h6>Regular Campaign</h6>
+                                        <span>Send HTML content using pre-designed Layouts and Templates</span>
+                                    </div>
+                                    <div class="campaign_select">
+                                        <i class="icon st-icon-checkmark" data-bind="visible: NewCampaign.CampaignTypeId()=='131'"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="campaign-type-select" id="132">
+                            <div data-bind="attr:{class: NewCampaign.CampaignTypeId()=='132' ? 'row active':'row'}">
+                                <div class="box">
+                                    <div class="campaign_img">
+                                        <img src="~/img/plain-text-campaign-img.png" />
+                                    </div>
+                                    <div class="campaign_text">
+                                        <h6>Plain-Text Campaign</h6>
+                                        <span>Send a simple plain-text email with no pictures or formatting</span>
+                                    </div>
+                                    <div class="campaign_select">
+                                        <i class="icon st-icon-checkmark" data-bind="visible: NewCampaign.CampaignTypeId()=='132'"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="campaign-type-select" id="133">
+                            <div data-bind="attr:{class: NewCampaign.CampaignTypeId()=='133' ? 'row active':'row'}">
+                                <div class="box">
+                                    <div class="campaign_img">
+                                        <img src="~/img/code-own-campaign-icon.png" />
+                                    </div>
+                                    <div class="campaign_text">
+                                        <h6>Code your own</h6>
+                                        <span>Paste your own HTML code from another source</span>
+                                    </div>
+                                    <div class="campaign_select">
+                                        <i class="icon st-icon-checkmark" data-bind="visible: NewCampaign.CampaignTypeId()=='133'"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer campaign-select-pop-footer">
+                <span data-bind="value:'Save'">
+                    <a class="btn btn-lg btn-primary" data-posturl="campaingslist" href="#" data-bind="click:NewCampaign.Proceed.bind($data)">[|Proceed|]</a>
+                </span>
+
+                <span>
+                    <button type="button" class="btn btn-lg" data-dismiss="modal" data-bind="click:ResetNewCampaign">[|Cancel|]</button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts{
+    <script>
+
+        var userIDs =  '@Html.Raw(Json.Encode(ViewBag.UserIds))';
+        var Startdate='@startDate';
+        var Enddate='@endDate';
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        var contactDtls = '@(Details)';
+        if (contactDtls == 0) {
+            localStorage.removeItem("campaignsearchtext");
+            localStorage.removeItem("campaignsearchcontent");
+            createCookie("campaignpagenumber", 1, 1); createCookie("campaignpagesize", '@ViewBag.ItemsPerPage', 1);
+        }
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("campaignsearchtext"),
+                status: localStorage.getItem("campaignsearchcontent"),
+                userIds: userIDs,
+                StartDate: Startdate,
+                EndDate: Enddate
+            }
+        }
+    </script>
+    <script>
+        var searchText;
+        var BASE_URL = '@Url.Content("~/Campaign/")';
+
+
+        function ReturnContent(rate){
+            if(rate == null){
+                return 0;
+            }else{
+                return rate;
+            }
+        }
+        CampaignDrillDownActivity = {
+            Opened : 1,
+            Clicked : 2,
+            Delivered : 3,
+            Unsubscribed : 4,
+            Complained : 5,
+            Sent : 6,
+            Bounced : 7
+        }
+
+        function campaignTypeChange() {
+            $("#txtcampaignSearch").val(''); var value = this.value();
+            localStorage.removeItem("campaignsearchtext"); localStorage.removeItem("campaignsearchcontent"); localStorage.setItem("campaignsearchcontent", value);
+            var grid = $("#gridCampaign").data("kendoGrid");
+            var psize = readCookie("campaignpagesize");
+            grid.dataSource.query({ page: 1, pageSize: psize });
+            appendCheckbox();
+        }
+
+        function GetCampaignBasedonsearch(e) {
+            setTimeout(function () {
+
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtcampaignSearch").val() || (searchText === $("#txtcampaignSearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtcampaignSearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#gridCampaign").data("kendoGrid"),
+                    searchBox = $("#txtcampaignSearch").val(),
+                    campaignType = $("#campaignTypes").val(),
+                    psize = readCookie("campaignpagesize");;
+                localStorage.removeItem("campaignsearchtext");
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.setItem("campaignsearchtext", searchBox);
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chkcampaign');
+            }, 200)
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            //console.log($("select[data-role='dropdownlist']").data('kendoDropDownList').dataSource);
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+        function PercentageCalculation(count1,count2)
+        {
+            if(count2 == 0)
+                count2 = 1
+            var result = Math.round((count1.toFixed(2)/count2.toFixed(2))*100) + "%" + " | "  + count1 ;
+            return result;
+        }
+
+        function displayDate(date) {
+            if (date == null) {
+                return "";
+            }
+            var value = date.ToUtcUtzDate();
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd hh:mm'), '@(dateFormat)');
+        }
+
+        function displayDateTime(date) {
+            if (date == null) {
+                return "";
+            }
+            var offset = new moment.tz(date, localStorage.getItem('utz')).utcOffset();
+            var value = new Date(date.getTime() + offset * 60 * 1000);
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd hh:mm'), '@(dateFormat)'+' hh:mm tt');
+        }
+
+        function displayTime(date) {
+            if (date == null) {
+                return "";
+            }
+            var value = date.ToUtcUtzDate();
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd hh:mm'), 'hh:mm tt');
+        }
+
+        function toTitleCase(str)
+        {
+            return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        }
+
+        function DeleteCampaign(id)
+        {
+            alertifyReset("Delete Campaign","Cancel");
+            alertify.confirm("[|Are you sure you want to delete this Campaign|]?", function (e) {
+                if (e)
+                {
+                    var cid = [id];
+                    jsondata = JSON.stringify({ 'CampaignID': cid });
+                    varDeleteURL = BASE_URL + "DeleteCampaign?campaignIDs="+jsondata+"";
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: varDeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8"
+                    }).then(function (response) {
+                        var filter = $.Deferred();
+                        if (response.success) {
+                            filter.resolve(response)
+                        }
+                        else {
+                            filter.reject(response.error)
+                        }
+                        return filter.promise()
+                    }).done(function (data) {
+                        notifySuccess("[|Successfully deleted the campaign(s)|].");
+                        $("#gridCampaign").data("kendoGrid").dataSource.read();
+                    }).fail(function (error) {
+                        notifyError("[|The campaign(s) could not be deleted|].");
+                    });
+                }
+                else
+                {
+                    notifyError("[|You've clicked Cancel|]");
+                }
+            });
+        }
+
+        function ViewCampaign(e){
+            var campaignID = $(e).attr("data-id");
+            window.open('/campaignview?campaignId=' + campaignID, '_blank','left=500,top=100,width=920,height=720,toolbar=1,resizable=0');
+        }
+
+        $(document).ready(function () {
+            $('[data-openid=125]').parent().attr({'data-target':'#addNewCampaign','data-toggle':'modal'})
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+            var accountId  = readCookie("accountID");
+            var tagCreatedBy = readCookie("userId");
+            removepageloader();
+            var campaignview = @(Html.Raw(Json.Encode(Model)));
+            var viewModel = new campaignlistViewModel(campaignview, BASE_URL);
+            ko.applyBindings(viewModel);
+            var grid = $('#gridCampaign').data('kendoGrid');
+            var pno = readCookie("campaignpagenumber");
+            var psize = readCookie("campaignpagesize");
+
+            tableMasterCheckBox('campaigns-grid');
+            var tagify = new Tagify(WEBSERVICE_URL, viewModel.NewCampaign, accountId, tagCreatedBy);
+            tagify.Tagify("campaignTags");
+        });
+    </script>
+
+}
+
+

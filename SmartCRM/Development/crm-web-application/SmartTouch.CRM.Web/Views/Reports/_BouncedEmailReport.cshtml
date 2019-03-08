@@ -1,0 +1,51 @@
+﻿@(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.BouncedEmailReportViewModel>()
+    .Name("bouncedEmailGrid")
+                    .HtmlAttributes(new { @class = "k-grid-content" })
+                    .TableHtmlAttributes(new { @class = "nightlyreport" })
+           .AutoBind(false)
+                   .ToolBar(toolbar =>
+                         {
+                             toolbar.Template(@<text>
+                                @*<div class="toolbar grid-ct-header">
+                                    <a class="k-button k-button-icontext cu-grid-excel" id="excelexport">[|Export to Excel|]</a>
+                                </div>*@
+                            </text>);
+                         }).Excel(e => e.AllPages(true).FileName("Bounced_Email_Report.xlsx"))
+                             .Pageable(pageable => pageable
+                                                    .PageSizes(new List<int>() { 10, 25, 50, 100, 250 })
+                                                    .ButtonCount(10)
+                                                    .Messages(m => m
+                                                    .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Campaigns(s)|]")
+                                                                    .Empty("[|No Campaigns(s) to display|]")
+                                                                    .ItemsPerPage("[|Campaigns(s) Per Page|]")
+                                                    )
+                                                )
+                             .Reorderable(reorder => reorder.Columns(true))
+                             .Sortable()
+                             .Resizable(r => r.Columns(true))
+                             .Columns(columns =>
+                             {
+                                 columns.Bound(p => p.Email).Title("[|Email Id|]");
+                                 columns.Bound(p => p.Account).Title("[|Account Name|]");
+                                 columns.Bound(p => p.BounceType).Title("[|Bounce Type|]");
+                                 columns.Bound(p => p.Date).Title("[|Date|]");
+                                 columns.Bound(p => p.BouncedReason).Title("[|Bounced Reason|]");                                 
+                             })
+                                     .ClientRowTemplate(@"<tr class='odd'><td title='#:Email#'>#:Email#</td>
+<td>#:Account#</td><td>#if(BounceType == 'SoftBounce'){# <span>Soft Bounce</span> #} else{# <span>Hard Bounce</span> #}#</td><td>#=formatDate(Date)#</td>
+<td>
+#if(BouncedReason == 'BadDomain'){# <span>Bad Domain</span>#} else if (BouncedReason == 'PolicyRelated'){# <span>Policy Related</span>#} else if (BouncedReason == 'Complained') {# <span>Complained</span>#} 
+else if (BouncedReason == 'RoutingErrors') {# <span>Routing Errors</span>#} else if (BouncedReason == 'InactiveMailbox') {# <span>Inactive Mailbox</span>#} else if (BouncedReason == 'RelayingIssues') {# <span>Relaying Issues</span>#} 
+else if (BouncedReason == 'NoAnswerFromHost') {# <span>No Answer From Host</span>#}
+else if (BouncedReason == 'QuotaIssues') {# <span>Quota Issues</span>#} else if (BouncedReason == 'BadMailbox') {# <span>Bad Mailbox</span>#}
+else if (BouncedReason == 'Other'){# <span> Other</span>#} else if (BouncedReason == 'None'){# <span> None</span>#}#</td>
+</tr>")
+                                                                                           .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                                                                .DataSource(dataSource => dataSource
+                                                                                    .Ajax()
+
+                                                                                                .Read(read => read.Action("GetNightlyStatusReport", "Reports"))
+                                                                                        )
+)
+
+

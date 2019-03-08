@@ -1,0 +1,167 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    ViewBag.Title = "Add Opportunities";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    var OpportunityPage = ViewBag.OpportunityPage;
+}
+
+@*@Scripts.Render("~/bundles/Opportunityvm")*@
+<script src="~/Scripts/ViewModels/OpportunityViewModel.js"></script>
+<div class="sub-container" style="display:none" data-bind="visible:true">
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("[|Opportunities|]", "OpportunitiesList")</li>
+        <li class="active">
+            <a href="javascript:void(0)">
+                <span data-bind="text:Module"></span>
+            </a>
+        </li>
+    </ul>
+    <div class="main-header">
+        <span data-bind="text:Module"></span>
+    </div>
+    <div class="form-horizontal-large">
+        <div class="clearfix">
+            <div class="form-group ">
+                <label class="control-label">[|Opportunity Name|]<span class="required">*</span></label>
+                <input type="text" placeholder="[|Opportunity|]" data-bind="value:OpportunityName,valueUpdate: 'afterkeydown'" class="form-control" />
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Opportunity Type|] </label>
+                <input type="text" placeholder="[|Opportunity Type|]" data-bind="value:OpportunityType,valueUpdate: 'afterkeydown'" maxlength="75" class="form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Product Type|] </label>
+                <input type="text" placeholder="[|Product Type|]" data-bind="value:ProductType,valueUpdate: 'afterkeydown'" maxlength="75" class="form-control">
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group ">
+                <label class="control-label">[|Potential $|] <span class="required">*</span></label>
+                <input type="text" placeholder="[|Potential|]" data-bind="value:Potential,valueUpdate: 'afterkeydown'" class="form-control">
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Address|]</label>
+                <input type="text" placeholder="[|Address|]" data-bind="value:Address,valueUpdate: 'afterkeydown'" class="form-control" />
+            </div>
+            @*<div class="form-group">
+                <label class="control-label">[|Owner|]<span class="required">*</span></label>
+                <input data-bind="kendoAutoComplete: { dataTextField: 'Name', dataValueField:'UserID', data: Users, value: SelectedOwnerText ,valueUpdate: 'afterkeydown',optionLabel: '[|Select Owner..|]'}" class="form-control" />
+                <span class="validationMessage" data-bind="validationMessage:ownerValidation"></span>
+            </div>*@
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Description|]</label>
+                <textarea data-bind="value:Description" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="formsubheading">[|Opportunity Image|]</div>
+            <div class="profile-img-upload mbl clearfix">
+                <figure><img id="opportunityimage" data-bind="attr:{src:Image().ImageContent}" /> </figure>
+                <div class="uploadcontrol pln">
+                    <div class="display-inline mtf">
+                        <label class="control-label">[|Choose picture from local drive|]</label>
+                        @(Html.Kendo().Upload()
+                                    .Name("file")
+                                    .Multiple(false)
+                                    .Async(a => a
+                                    .AutoUpload(false)
+                                    )
+                                    .Events(events => events
+                                    .Complete("onComplete")
+                                    .Progress("onProgress")
+                                    .Select("onSelect")
+                                    .Upload("onUpload")
+                                    )
+                        )
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hr-border"></div>
+        <div class="pull-left">
+            <a data-bind="click:saveOpportunity" href="#" class="btn btn-lg btn-primary">[|Save|]</a>
+            <a data-bind="click:cancelopportunity" class="btn btn-lg">[|Cancel|]</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var viewModel;
+    jQuery(document).ready(function () {
+        var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+        var Contact_Base_Url = '@Url.Content("~/Contact/")';
+        var opportunity = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var ImagePath ='@Url.Content("~/img/NoImage.png")';
+
+        viewModel = new opportunityViewModel1(opportunity,Opportunity_BASE_URL,WEBSERVICE_URL,ImagePath);
+
+        ko.applyBindings(viewModel,document.getElementById("opportunities"));
+    });
+
+    function  onSelect (e) {
+
+        $('.k-file').hide();
+        var varImageType="";
+        $.each(e.files, function (index, value) {
+            var ok = value.extension.toLowerCase() == ".jpg"
+                     || value.extension.toLowerCase() == ".jpeg"
+                     || value.extension.toLowerCase() == ".png"
+                     || value.extension.toLowerCase() == ".bmp";
+
+            if (!ok) {
+                e.preventDefault();
+                notifyError("Please upload jpg, jpeg, png, bmp files"); return false;
+            }
+            else if(bytesToSize(e.files[0].size)>3) {
+                e.preventDefault();
+                notifyError("Image size should not be more than 3 MB");
+                return false;
+            }
+            var fileReader = new FileReader();
+            fileReader.onload = function (event) {
+                var image = document.getElementById("opportunityimage");
+                image.src = event.target.result;
+                viewModel.Image().ImageContent=event.target.result;
+            }
+            fileReader.readAsDataURL(e.files[0].rawFile);
+            viewModel.Image().ImageType= value.extension.toLowerCase();
+            viewModel.Image().OriginalName= e.files[0].name;
+        });
+    }
+
+    function onComplete(e) {
+        $('.k-filename').hide();
+    }
+    function onProgress(e) { getFileInfo(e);$('.k-file').hide();}
+
+    function getFileInfo(e) {
+
+        return $.map(e.files, function (file) {
+            var info = file.name;
+
+            var varFullPath = file.rawFile.mozFullPath;
+            // File size is not available in all browsers
+            if (file.size > 0) {
+                info += " (" + Math.ceil(file.size / 1024) + " KB)";
+            }
+            return info;
+        }).join(", ");
+    }
+    function onUpload(e) {
+        $('.k-filename').hide();
+    }
+    function bytesToSize(bytes) {
+        return (bytes/(1024*1024)).toFixed(2);
+    }
+</script>
+

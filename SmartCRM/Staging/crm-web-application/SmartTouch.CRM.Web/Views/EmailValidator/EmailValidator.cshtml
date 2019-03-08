@@ -1,0 +1,109 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using System.Linq;
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.EmailValidatorViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/emailvalidatorvm")
+
+<div class="col-lg-12">
+    <div class="page-title pg-tle">
+        <h4>Validate Email Addresses</h4>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
+            <div class="display-inline em-val-sel">
+                <input type="radio" name="apikeysstatus" data-bind="checked: IsTags, value:'true'" style="position: relative;top: 2px;">
+                <span style="margin-left:5px;">[|Tags|]</span>
+                <input type="radio" name="apikeysstatus" data-bind="checked: IsTags, value: 'false'"  style="position: relative;top: 2px;margin-left:5px;"/>
+                <span style="margin-left:5px;">[|Saved Searches|]</span>
+            </div>
+           
+        </div>
+        <div class="form-group" id="email-tag-selection">
+            <label class="control-label">
+                [|Tags|]
+                <span class="hide tag-loader-cmp" id="add-tag-loader" />
+            </label>
+            <input id="EmailTags" class="display-inline form-control tagsinput-info-round" placeholder="[|Add contacts by tags|]" />
+        </div>
+        <div class="form-group hide" id="email-search-selection">
+            <label class="control-label">
+                [|Saved Searches|]
+                <span class="hide tag-loader" id="add-definition-loader" />
+            </label>
+            <input id="Email-search-definitions" class="display-inline form-control tagsinput-info-round" placeholder="[|Add contacts by saved searches|]" data-bind="valueUpdate: 'afterkeydown'" />
+        </div>
+        <div class="form-group">
+            <div class="display-inline">
+                <span>Total Count:</span>
+                <span style="margin-left:5px;" data-bind="text:TotalContactsCount"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div id="nbprice">
+                <table cellpadding="0" cellspacing="0" border="0" style="border:solid 1px #d9d9d9;">
+                    <thead>
+                        <tr>
+                            <td align="left" width="300px"  style="margin:0px;padding:10px;font-size:12px; font-weight:bold; background-color:#fff; color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;"># of Emails</td>
+                            <td align="left" width="300px"  style="margin:0px;padding:10px;font-size:12px; font-weight:bold; background-color:#fff; color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;">Price Per Email</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >up to 10,000</td>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.008</td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >up to 100,000</td>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.005</td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >up to 250,000</td>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >$0.004</td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >up to 1,000,000</td>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >$0.003</td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >up to 3,000,000</td>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.0025</td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;" >up to 10,000,000</td>
+                            <td align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:normal;color:#555555;font-family:arial,sans-serif;border-bottom:solid 1px #d9d9d9;">$0.001</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="button" class="btn btn-lg btn-primary" data-bind="click: validateEmails" value="Validate" />
+            <input type="button" class="btn btn-lg btn-default" data-bind="click: cancel" value="Cancel" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var viewModel;
+        var EmailModel = @(Html.Raw(Json.Encode(Model)));
+        var BASE_URL = '@Url.Content("~/EmailValidator/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+
+        viewModel = new EmailValidatorViewModel(EmailModel,BASE_URL);
+        ko.applyBindings(viewModel);
+
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId,tagCreatedBy);
+        tagify.TagifyEmailTags("EmailTags", accountId,viewModel.Tags());
+        tagify.TagifyEmailSearchDefinitions("Email-search-definitions",accountId,viewModel.SearchDefinitions());
+    })
+</script>
+

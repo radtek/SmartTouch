@@ -1,0 +1,208 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+@using Microsoft.AspNet.Identity
+@using System.Web.Mvc
+@{
+    var topMenu = (MenuCategory)ViewData["topMenuCategory"];
+    var model = (MenuItemViewModel)ViewData["viewmodel"];
+    var accountId = @Thread.CurrentPrincipal.Identity.ToAccountID();
+    <div class="top-nav">
+        <ul>
+            @foreach (var menuItem in model.TopMenuItems)
+            {
+                <li class="btn-group">
+
+                    @if (!menuItem.OpenAsMenuView.HasValue || menuItem.OpenAsMenuView.Value == false) //open in main container
+                    {
+                        if (@menuItem.Controller != null && menuItem.Controller != "")
+                        {
+                            <a href="@((accountId == 1 && menuItem.ModuleId == 81) ?"":@Url.Action(@menuItem.Action, @menuItem.Controller))" >@Html.Raw((accountId == 1 && menuItem.ModuleId == 81) ? "" : menuItem.Title)</a>
+                        }
+                        else if (@menuItem.Action != null && menuItem.Action != "")   // Need to remove these hardcode . Check applyBindings in respective page and remove Id.
+                        {
+                            if (@menuItem.Title == "Edit User")
+                            {
+                                <a href="javascript:void(0)" onclick="editUser()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.Title == "Delete Rule")
+                            {
+                                <a href="javascript:void(0)" onclick="DeleteRule()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.Title == "Delete Users")
+                            {
+                                <a href="javascript:void(0)" onclick="DeleteUsers()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.MenuId == 183)
+                            {
+                                <a href="javascript:void(0)" onclick="EditOpportunity()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.MenuId == 184)
+                            {
+                                <a href="javascript:void(0)" onclick="DeleteOpportunities()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.MenuId == 245)
+                            {
+                                <a href="javascript:void(0)" onclick="ViewImportHistory()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.MenuId == 265)
+                            {
+                                <a href="javascript:void(0)" onclick="EditReport()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.MenuId == 268)
+                            {
+                                <a href="javascript:void(0)" onclick="DeleteReport()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.MenuId == 282)
+                            {
+                                <a href="javascript:void(0)" onclick="MarkAsCompletedAction()">@menuItem.Title</a>
+                            }
+                            else if (@menuItem.MenuId == 283)
+                            {
+                                <a href="javascript:void(0)" onclick="DeleteAction()">@menuItem.Title</a>
+                            }
+                             else if (@menuItem.MenuId == 288)
+                            {
+                                <a href="javascript:void(0)" onclick="MarkAsInCompletedAction()">@menuItem.Title</a>
+                            }
+                            else if (menuItem.MenuId == 314)
+                            {
+                                <a href="javascript:void(0)" onclick="EditMessage()">@menuItem.Title</a>
+                            }
+                            else if (menuItem.MenuId == 315)
+                            {
+                                <a href="javascript:void(0)" onclick="DeleteMessages()">@menuItem.Title</a>
+                            }
+                            else
+                            {
+                                if (menuItem.MenuId != 175)
+                                {
+                                    <a href="javascript:void(0)" id="@("menuItem" + @menuItem.MenuId)" data-bind="click:@menuItem.Action" data-openid="@menuItem.MenuId">@Html.Raw(menuItem.Title)</a>
+                                    <div class="hide dp-topnav-inner loader" id="@("menuPartialItemContent"+ menuItem.MenuId)"></div>
+                                }
+                            }
+                        }
+                        else if (@menuItem.Children.Count > 0)
+                        {
+                                <a id="@("menuItem" + @menuItem.MenuId)" href="@Url.Action(@menuItem.Action, @menuItem.Controller)"
+                                   data-toggle="dropdown" class="dropdown-toggle top-dp-arrow">@Html.Raw(menuItem.Title)<i class="icon st-icon-dropdownarrow mlm"></i></a>
+                        }
+                        else
+                        {
+                            //<a id="@("menuItem" + @menuItem.MenuId)" href="javascript:void(0)" data-bind="click:@menuItem.Action">@menuItem.Title</a>
+                        }
+                    }
+                    else //open view in the menu drop.
+                    {
+                        if (!(@Thread.CurrentPrincipal.Identity.ToAccountID() == 1 && @menuItem.MenuId == 116))   // MenuId-116 is Change Role (We need to skip this menu-item for ST-Admin account)
+                        {
+                            <a href="javascript:void(0)" class="menuitemclicked" id="@("menuItem" + @menuItem.MenuId)"
+                               data-openid="@menuItem.MenuId"
+                               data-action="@(menuItem.Content!=null?menuItem.Content:"")"
+                               data-controller="@(menuItem.Controller != null ? menuItem.Controller : "")">@Html.Raw(menuItem.Title)</a>
+                            <div class="hide dp-topnav-inner loader" id="@("menuItemContent"+ menuItem.MenuId)"></div>
+                        }
+                    }
+
+                    @*@if (@menuItem.Children.Count > 0)   //EX : more in contacts where Action and Controller are null;
+                        {
+                            <a href="@Url.Action(@menuItem.Action, @menuItem.Controller)"
+                               class="dropdown-toggle top-dp-arrow" data-toggle="dropdown"><i class="icon st-icon-dropdownarrow"></i></a>
+                        }*@
+
+
+                    @if (@menuItem.Children.Count > 0)
+                    {
+                        <ul class="dropdown-menu mtn add-st">
+                            @foreach (var child in menuItem.Children)
+                            {
+                                if (!child.OpenAsMenuView.HasValue || child.OpenAsMenuView.Value == false) //open in main container
+                                {
+                                    if (@child.Controller != null && child.Controller != "")
+                                    {
+                                        <li>
+                                            <a href="@Url.Action(@child.Action, @child.Controller)">@child.Title</a>
+                                        </li>
+
+                                    }
+                                    else if (@child.Action != null && child.Action != "")
+                                    {
+                                        if (@child.Action == "deleteContacts")
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="deleteContacts()">@child.Title</a>
+                                            </li>
+                                        }
+                                        else if (@child.Action == "copyContact")
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="copyContact()">@child.Title</a>
+                                            </li>
+                                        }
+                                        else if (@child.Action == "advancedView")
+                                        {
+                                            <li>
+                                                <a id="325" href="javascript:void(0)" onclick="advancedView()">@child.Title</a>
+                                            </li>
+                                        }
+                                        @*else if (@child.Action == "AddOpportunity")
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)" onclick="AddOpportunity()">@child.Title</a>
+                                            </li>
+                                        }*@
+                                        else if (@child.Action == "SyncContact")
+                                        {
+                                            <li>
+                                                <a id="306" href="javascript:void(0)" onclick="SyncContact()">@child.Title</a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a href="javascript:void(0)" data-bind="click:@child.Action">@child.Title</a>
+                                            </li>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a href="javascript:void(0)" class="menuitemclicked" id="@("menuItem" + @child.MenuId)"
+                                           data-openid="@child.MenuId"
+                                           data-action="@(child.Content!=null?child.Content:"")"
+                                           data-controller="@(child.Controller != null ? child.Controller : "")">@child.Title</a>
+                                        @*<a href="javascript:void(0)" onclick="OpenTopInner(this);" data-openid="@child.MenuId">@child.Title</a>*@
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        foreach (var child in menuItem.Children)
+                        {
+                            if (!child.OpenAsMenuView.HasValue || child.OpenAsMenuView.Value == false) //open in main container
+                            {
+                                if (@menuItem.Controller != null && menuItem.Controller != "")
+                                {
+                                }
+                                else if (@child.Action != null && child.Action != "")
+                                {
+                                }
+                            }
+                            else
+                            {
+                                <div class="hide more-inner" id="@("menuItemContent"+ child.MenuId)"></div>
+                                @*<div class="hide moreinner" id="@child.MenuId">
+                                        @if (@child.Content != null && @child.Content != "")
+                                        {
+                                            @Html.Action(@child.Content, "Contact")
+                                        }
+                                    </div>*@
+                            }
+                        }
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
+

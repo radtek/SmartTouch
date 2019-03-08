@@ -1,0 +1,196 @@
+﻿@{
+    var errormsg = ViewBag.Error;
+    var ImgUrl = ViewBag.ImgURL;
+    var linkURL = ViewBag.LinkUrl;
+}
+
+<div>
+    <h4>Enter Account Id :</h4>
+    <input type="text" id="accid" class="form-control" />
+    <input type="button" class="btn btn-success" value="Process Campaigns" id="InsertCampaign"  />
+</div>
+<br />
+<br />
+<label class="Start" style="display:none">Processing.....</label>
+<label class="Stop" style="display:none">Completed...</label>
+<label>@errormsg</label>
+<table class="table" style="margin-top:5px;width:50%" border="1">
+    <thead>
+        <tr>
+            <th style="border-bottom:1px solid #000">
+               Downloaded Images
+            </th>
+            <th style="border-bottom:1px solid #000">
+                Classic CampaignId
+            </th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $("#InsertCampaign").click(function () {
+            $(".Stop").hide();
+            $(".Start").show();
+            $("#InsertCampaign").attr('disabled', 'disabled');
+
+            var AccountID = $("#accid").val();
+            var isProcessessing = false;
+            campaignToProcess = null;
+  
+            var processCampaign = function () {
+                console.log("in process campaign");
+                console.log(campaignToProcess);
+                var ClassicCampaignid = campaignToProcess.ClassicCampaignID;
+                var htmlContent = campaignToProcess.HTML;
+                var CampaignId = campaignToProcess.CampaignID;
+                var InvalidImages = campaignToProcess.InvalidImages;
+                var date = new Date();
+
+                if (htmlContent != "") {
+                    var newHtml = $("<div>" + htmlContent + "</div>");
+                    var Imgcount = $(htmlContent).find("img").length;
+                    var imgsArray = [];
+                    if (Imgcount > 0) {
+
+                        for (var j = 0; j < Imgcount; j++) {
+
+                            var img = $(newHtml).find("img:eq(" + j + ")").attr("src");
+
+                            var splitImg = img.split("/images/");
+
+                            if (splitImg.length == 2 && splitImg[1] != "" && splitImg[0] != "") {
+
+                                splitImg[1] = splitImg[1].replace(/\s/g, '_');
+
+                                var newsrc = '@ImgUrl' + AccountID + "/ci/" + splitImg[1];
+
+                                newHtml.find("img:eq(" + j + ")").attr("src", newsrc);
+                                htmlContent = newHtml.html();
+
+                                if ($.inArray(splitImg[1], InvalidImages) == -1) {
+
+                                    var frndlyname = splitImg[1].split('.');
+
+                                    var obj = {
+                                        friendlyname: frndlyname[0],
+                                        storagename: splitImg[1],
+                                        originalname: splitImg[1],
+                                        createdDate: date,
+                                        ImageCategoryID: "2",
+                                        accountid: AccountID
+                                    }
+                                    imgsArray.push(obj);
+                                }
+                            }
+                        }
+                    }
+                    
+                    var Linkcount = $(htmlContent).find("a").length;
+
+                    var Linksarr = [];
+
+                    if (Linkcount > 0) {
+
+                        var k = 0;
+
+                        for (var j = 0; j < Linkcount; j++) {
+
+                            var z = $(newHtml).find("a:eq(" + j + ")").attr("href").trim();
+                            link = z.replace(/\s/g, '%20');
+
+                            var newhref = '@linkURL' + '/campaignimage?crid=*|CRID|*&linkid=' + k;
+
+                            if ((link.indexOf("http") != -1) || (link.indexOf("https") != -1) || (link.indexOf("www") != -1)) {
+
+                                newHtml.find("a:eq(" + j + ")").attr("href", newhref);
+
+                                htmlContent = newHtml.html();
+
+                                var Links = {
+                                    URL: link,
+                                    LinkIndex: k,
+                                    CampaignId: CampaignId
+                                }
+                                Linksarr.push(Links);
+                                k++;
+                            }
+                        }
+                    }
+
+                    var ClassicCampaignObj = {
+                        ClassicCampaignID: ClassicCampaignid
+                    }
+
+                    var CampaignObj = {
+                        Campaignid: CampaignId,
+                        HTMLContent: htmlContent,
+                        AccountID: AccountID,
+                        CampaignLinks: Linksarr
+                    }
+
+                    $.ajax({
+                        url: "/Campaign/UpdateCampaign",
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ campaigns: CampaignObj, images: imgsArray }),
+                        success: (function (data) {
+                            if (data.success == false) {
+                                tr.append("<td>No images found for campaign : " + campaignToProcess.CampaignID + "</td>");
+                            }
+                            else {
+                                for (var i = 0; i < data.length; i++) {
+                                    tr = $('<tr/>');
+                                    tr.append("<td>" + data[i].OriginalName + " </td> <td> classic campaign id: " + campaignToProcess.ClassicCampaignID + "</td>");
+                                    $('table').append(tr);
+                                }
+                                console.log("Now in insert campaign ajax success");
+                            }
+                            getNextCampaign();
+                        }),
+                        error: (function (e) {
+                            console.log("Now in insert campaign ajax ERROR");
+                            getNextCampaign();
+                        })
+                    });
+                }
+            }
+
+            var getNextCampaign = function () {
+                //ajax call;
+                $.ajax({
+                    url: "/Campaign/GetCampaigns/" + AccountID,
+                    type: "post",
+                    data: { AccountID: AccountID },
+                    dataType: "json",
+                    success: (function (data) {
+                        if (data.success) {
+                            campaignToProcess = data.response;
+                        }
+                    }),
+                    error: (function (error) {
+                        temp = error;
+                        console.log("in error");
+                        console.log(temp);
+                    })
+                }).done(function () {
+                    if (campaignToProcess != null) 
+                        processCampaign();
+                    else {
+                        $("#InsertCampaign").removeAttr('disabled');
+                        $(".Start").hide();
+                        $(".Stop").show();
+                    }
+                }).fail(function (data) {
+                    temp1 = data;
+                    console.log(temp1);
+                })
+            };
+            getNextCampaign();
+        });
+    });
+</script>

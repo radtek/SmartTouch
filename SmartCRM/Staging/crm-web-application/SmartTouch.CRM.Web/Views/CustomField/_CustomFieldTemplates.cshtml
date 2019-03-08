@@ -1,0 +1,219 @@
+﻿@using SmartTouch.CRM.Entities
+<script type="text/html" id="control-editname">
+    <span class="input-group">
+        <input type="text" class="form-control customTabnameinputval" data-bind="value:$root.temporaryStorage, event: { keyup: $root.tabkeyup.bind($data) }" />
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-opt="save" data-bind="click:$root.optSave.bind($data,$index())">
+                <span class="fui-check"></span>
+            </button>
+        </span>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-default" data-opt="cancel" data-bind="click:$root.optCancel.bind($data,$index())">
+                <span class="fui-cross"></span>
+            </button>
+        </span>
+    </span>
+</script>
+
+<script type="text/html" id="edit-custom-field">
+    <div class="new-custom-field slid-in animation1" data-bind="attr:{id:'newcustomfield-'+$index()}">
+        <div class="row">
+            <div class="col-md-6">
+            <div class="legend" data-bind="text:FieldId()>0?'Edit Custom Field': 'Add Custom Field'"> </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Type of Field|]</label>
+                    <input name="mediumnm" data-bind="enable: FieldId()==0, kendoDropDownList: { dataTextField: 'Type', dataValueField:'Id',data: $root.FieldTypes,value:FieldInputTypeId}">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Field Status|]</label>
+                    <input data-bind="kendoDropDownList: { dataTextField: 'Status', dataValueField:'Id',data: $root.FieldStatuses,value:StatusId}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Field Name|]</label>
+                <input type="text" class="form-control" data-bind="value:Title,valueUpdate:'afterkeydown'" />
+            </div>
+
+            <div data-bind="if:FieldInputTypeId()=='1' || FieldInputTypeId() =='6' ||FieldInputTypeId()=='11' || FieldInputTypeId() =='12' ">
+                <label>[|Option Values|]</label>
+                <div data-bind="sortable:ValueOptions">
+                    <div class="form-group">
+                        <div class="input-group" data-bind="if:IsDeleted()==false">
+                            <span data-bind="value:Order($index())"></span>
+                            <input type="text" placeholder="[|Option Value|]" data-bind="value:Value,valueUpdate:'afterkeydown'" class="form-control">
+                            <span class="input-group-btn" data-bind="click:$root.deleteValueOption.bind($data,$root.CurrentView(),$parentContext.$parentContext.$index(),$parentContext.$index(),$index())">
+                                <button class="btn btn-default close-optionvalue"><span class="fui-cross"></span></button>
+                            </span>
+                            <span id="cusfld-srt" class="edit-custom-fields sort">
+                                <i class="icon st-icon-move"></i>
+                            </span>
+                            @*<span class="edit-custom-fields sort"><i class="icon st-icon-move"></i></span>*@
+                        </div>
+                        @*<input type="text" class="hide" data-bind="value:SortId=$index()">*@
+
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="adddropdownvalue" data-bind="click:$root.addValueOption.bind($data,$root.CurrentView(),$parentContext.$index(),$index())">
+                    <span class="icon st-icon-add mrs"></span>[|Add Option|]
+                </a>
+            </div>
+
+            @*<div class="form-group" data-bind="if:FieldInputTypeId()=='1' || FieldInputTypeId() =='6' ||FieldInputTypeId()=='11' || FieldInputTypeId() =='12' ">
+                    <label class="">&nbsp;</label>
+                    <label class="" for="checkbox1">
+                        <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox">
+                        <span class="mlm">Use the first entry as the default value</span>
+                    </label>
+                </div>*@
+            </div>
+            <div class="col-md-6">
+                <div class="legend">[|Preview|]</div>
+            <div class="form-group">
+                @*<label data-bind="text:$root.FieldTypes()[$root.FieldTypes().map(function(e){return e.Id;}).indexOf(parseInt(FieldInputTypeId()))].Type"></label>*@
+                <label class="control-label" data-bind="text:Title"></label>
+                <div data-bind="template: { name: 'control-'+FieldInputTypeId() },attr:{id:'control-content-'+FieldId() }">
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="hr-border">
+        </div>
+        <div>
+            <a href="javascript:void(0)" class="btn btn-lg btn-primary savevalue" data-bind="text:'[|OK|]',click:$root.optSaveField.bind($data,$root.CurrentView(),$parentContext.$index(),$index())"></a>
+            <a href="javascript:void(0)" class="btn btn-lg savevalue" data-bind="click:$root.cancelAddingTheField.bind($data,$root.CurrentView(),$parentContext.$index(),$index())">[|Cancel|]</a>
+        </div>
+    </div>
+    <input type="text" class="hide" data-bind="value:SortId=$index()">
+
+</script>
+
+<script type="text/html" id="control-tab">
+    <li data-bind="attr:{class: $parent.CurrentView() == $index() ? 'active':''}, click:$parent.changeView(CustomFieldTabId()), id:'tab-'+TabId">
+        <span class="tab-controls" data-bind="visible:$parent.CurrentView() == $index() ">
+            <span class="edit-custom-fields"><i class="icon st-icon-edit"></i></span>
+            <span class="edit-custom-fields"><i class="icon st-icon-bin-3"></i></span>
+            <span class="edit-custom-fields sort"><i class="icon st-icon-move"></i></span>
+        </span>
+        <a href="#contactinfo" class="custom-tab"><span data-bind="text:Name"></span></a>
+    </li>
+</script>
+
+
+<script type="text/html" id="control-template">
+    <li class="" data-bind="attr:{id:'control-'+FieldId()},if:StatusId()!= @((byte)FieldStatus.Deleted)">
+        <div class="form-group" data-bind="attr:{id:'control-form-group-'+$parentContext.$index()+'-'+$index()}">
+            <label class="display-inline">
+                <span data-bind="text:Title"></span>
+                <span class="field-status"
+                      data-bind="text:StatusId()==@((byte)FieldStatus.Active)?'(Active)':StatusId()==@((byte)FieldStatus.Closed)?'(Closed)':'(Paused)'"></span>
+            </label>
+            <span class="controls">
+                <!--ko ifnot:selfCustomFields.CustomFieldTabs()[selfCustomFields.CurrentView()].IsLeadAdapterTab() -->
+                <a href="javascript:void(0)" data-bind="click:$root.editCustomField.bind($data,$root.CurrentView(),$parentContext.$index(),$index())">
+                    <i class="icon st-icon-edit"></i>
+                </a>
+                <a href="javascript:void(0)" data-bind="click:$root.deleteField.bind($data,$root.CurrentView(),$parentContext.$index(),$index(), FieldId())">
+                    <i class="icon st-icon-bin-3"></i>
+                </a>
+                <!--/ko-->
+                <a class="sort" href="javascript:void(0)"><span class="icon st-icon-move"></span></a>
+            </span>
+            <div data-bind="template: { name: 'control-'+FieldInputTypeId() },attr:{id:'control-content-'+FieldId() }"></div>
+        </div>
+        <div class="hide" data-bind="template: { name: 'edit-custom-field' },attr:{id:'control-edit-'+$parentContext.$index()+'-'+$index() }"></div>
+        <input type="text" class="hide" data-bind="value:SortId=$index()">
+    </li>
+</script>
+
+
+
+<script type="text/html" id="control-1">
+    <div id="control-template" data-bind="template:{name: 'checkbox',foreach:ValueOptions()},attr:{id:FieldId()}"></div>
+</script>
+<script type="text/html" id="checkbox">
+    <label class="checkbox-inline">
+        <input type="checkbox" data-bind="attr:{id:CustomFieldValueOptionId(),name:'checkbox'+$parent.FieldId()}, checked:$parent.Value(),value:CustomFieldValueOptionId().toString()">
+        <span data-bind="text:Value()"></span>
+    </label>
+</script>
+<script type="text/html" id="control-2">
+    <div id="control-template">
+        <input name="datetime" data-bind="kendoDatePicker:Value,attr:{id:FieldId()}">
+    </div>
+</script>
+<script type="text/html" id="control-3">
+    <div id="control-template">
+        <input name="email" type="email" data-bind="attr:{id:FieldId(),class:'form-control'},value:Value" maxlength="75">
+    </div>
+</script>
+<script type="text/html" id="control-5">
+    <div id="control-template">
+        <input name="number" type="number"  onkeypress="return Onlynumbers()" data-bind="attr:{id:FieldId(),class:'form-control'},value:Value">
+    </div>
+</script>
+<script type="text/html" id="control-6">
+    <div id="control-template" data-bind="foreach:ValueOptions,attr:{id:FieldId()}">
+        <label class="radio-inline">
+            <input name="radio" type="radio" data-bind="attr:{id:$parent.FieldId(),name:$parent.FieldId()},checked:$parent.Value,value:CustomFieldValueOptionId().toString()">
+            <span data-bind="text:Value"></span>
+        </label>
+    </div>
+</script>
+
+<script type="text/html" id="control-8">
+    <div id="control-template">
+        <input name="text" type="text" data-bind="attr:{id:FieldId(),class:'form-control'},value:Value" maxlength="75">
+    </div>
+</script>
+
+<script type="text/html" id="control-9">
+    <div id="control-template">
+        <input name="time" type="time" data-bind="kendoTimePicker:{value :Value, interval:1 },attr:{id:FieldId()}">
+        @*<span data-bind="text:Value"></span>*@
+    </div>
+</script>
+<script type="text/html" id="control-10">
+    <div id="control-template">
+        <input name="url" type="url" data-bind="attr:{id:FieldId(),class:'form-control'},value:Value" maxlength="75">
+    </div>
+</script>
+<script type="text/html" id="control-11">
+    <div id="control-template">
+        <input name="dropdown" data-bind="attr:{id:FieldId()}, kendoDropDownList: { dataTextField: 'Value', dataValueField:'CustomFieldValueOptionId',data: ValueOptions,value: Value,optionLabel: '[|Select|]...'}">
+    </div>
+</script>
+<script type="text/html" id="control-12">
+    <div id="control-template"  class="st-select-full k-multiselect">
+        <select name="dropdown" data-bind="attr:{id:FieldId()}, kendoMultiSelect: { dataTextField: 'Value', dataValueField:'CustomFieldValueOptionId',data: ValueOptions,value: Value,optionLabel: '[|Select|]...'}"></select>
+    </div>
+</script>
+<script type="text/html" id="control-13">
+    <div id="control-template">
+        <input name="date"  data-bind="kendoDatePicker:{value:Value,format:$root.Dateformat()},attr:{id:FieldId()}">
+    </div>
+</script>
+
+<script type="text/html" id="control-14">
+    <div id="control-template">
+        <textarea name="text" data-bind="attr:{id:FieldId(),class:'form-control'},value:Value" maxlength="1000"></textarea>
+    </div>
+</script>
+@* // -- Custom fields templates -- //*@
+
+                    <script type="text/html" id="customfieldtype-1">
+                        <div id="control-template">
+                            <input name="datetime" data-bind="kendoDatePicker:Value,attr:{id:FieldId()}">
+                        </div>
+                    </script>
+
+<script language="JavaScript">
+    function Onlynumbers()
+    {
+        var e = event || evt;
+        var charCode = e.which || e.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+</script>

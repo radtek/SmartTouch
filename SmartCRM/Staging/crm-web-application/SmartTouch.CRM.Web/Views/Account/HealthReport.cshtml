@@ -1,0 +1,203 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+
+@model Tuple<List<ContactGroup>, List<ReportDataViewModel>>
+
+@{
+
+
+    var sendcamp = ViewBag.sendingCampaigns;
+    var failedcamp = ViewBag.Failedcampaigns;
+    var forms = ViewBag.Forms;
+    var emails = ViewBag.Emails;
+    var campsent = ViewBag.CampaignSent;
+    var failedimports = ViewBag.FailedImports;
+    var succeededimport = ViewBag.SucceededImports;
+    var inprogressimport = ViewBag.InProgressImport;
+    var failedLA = ViewBag.FailedLeadAdapter;
+    var SucceededLA = ViewBag.SucceededLeadAdapters;
+    var leadScore = ViewBag.ContactLeadScore;
+    var workflow = ViewBag.WorkFlow;
+    
+    var apiResponce = @ViewBag.ApiResponce;
+    var websiteResponce = @ViewBag.WebsiteResponce;
+    var contacts = ViewBag.Contacts;
+    var campaigns = ViewBag.Campaigns;
+}
+
+
+<div id="applicatiohealthreport">
+    <div>
+        <div class="dp-topnav-inner-body">
+            <div class="k-grid">
+                <div>
+                    <div><h5>Service And Website Status</h5></div>
+                    <table style="width:75%">
+                        <tr>
+                            <td>The API Response Status</td><td>@apiResponce</td>                                                       
+                        </tr> 
+                        <tr><td>The Web Site Response Status</td><td>@websiteResponce</td></tr>                       
+                    </table>                    
+                    <div><h5>Contacts</h5></div>
+                    <table style="width:75%">
+                        <tr>
+                            <td><b>Account Name</b></td>
+                            <td><b>Contacts Count</b></td>
+                            <td><b>Elastic Contacts Count</b></td>
+                        </tr>
+                        @foreach (var item in contacts)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.ContactsCount</td>
+                                <td>@item.ElasticCount</td>
+                            </tr>
+                        }
+                    </table>                    
+                    <div><h5>campaigns</h5></div>
+                    <table style="width:75%">
+                        <tr>
+                            <td><b>Account Name</b></td>
+                            <td><b>Sending Campaigns</b></td>
+                            <td><b>Failed Campaigns</b></td>
+                        </tr>
+                        @foreach (var item in campaigns)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Sending</td>
+                                <td>@item.Failed</td>
+                            </tr>
+                        }
+                    </table>                    
+                    <div><h5>Form Submissions</h5></div>
+                    <table style="width:75%">
+                        <tr>
+                            <td><b>Account Name</b></td>
+                            <td><b>Last Submitted On</b></td>
+                        </tr>
+                        @foreach (var item in forms)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                            </tr>
+                        }
+                    </table>                    
+                    <div><h5>Email Notification</h5></div>
+                    <table style="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Last Email Sent On</td></b>
+                        @foreach (var item in emails)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                                </tr>
+                        }
+                    </table>                    
+                    <div><h5>Campaign Sent</h5></div>
+                    <table style="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Last Campaign Sent On</b></td>
+                        @foreach (var item in campsent)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                            </tr>
+                        }
+                    </table>                    
+                    <div><h5>Failed Import</h5></div>
+                    <table style="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Last Failed On</b></td>
+                        @foreach (var item in failedimports)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                            </tr>
+                        }
+                    </table>                   
+                    <div><h5>Succeeded Imports</h5></div>
+                    <table style ="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Last Succeeded On</b></td>
+                        @foreach (var item in succeededimport)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                            </tr>
+                        }
+                    </table>                    
+                    <div><h5>The Inprogress Imports</h5></div>
+                        <table style="width:75%">
+                            <td><b>Account Name</b></td>
+                            <td><b>Start Date</b></td>
+                            @foreach (var item in inprogressimport)
+                            {
+                                <tr>
+                                    <td>@item.AccountName</td>
+                                    <td>@item.Date</td>
+                                </tr>
+                            }
+                        </table>
+                    <div><h5>Failed Lead Adapters</h5></div>
+                    <table style="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Last Failed On</b></td>
+                        @foreach (var item in failedLA)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                            </tr>
+                        }
+                    </table>                    
+                    <div><h5>Succeeded Lead Adapters</h5></div>
+                    <table style="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Last Succeeded On</b></td>
+                        @foreach (var item in SucceededLA)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                            </tr>
+                        }
+                    </table>
+                    <div><h5>Lead Score Applied to contacts</h5></div>
+                    <table style="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Last Applied On</b></td>
+                        @foreach (var item in leadScore)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.Data</td>
+                            </tr>
+                        }
+                    </table>
+                    <div><h5>Work Flow</h5></div>
+                    <table style="width:75%">
+                        <td><b>Account Name</b></td>
+                        <td><b>Count</b></td>
+                        @foreach (var item in workflow)
+                        {
+                            <tr>
+                                <td>@item.AccountName</td>
+                                <td>@item.ContactsCount</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

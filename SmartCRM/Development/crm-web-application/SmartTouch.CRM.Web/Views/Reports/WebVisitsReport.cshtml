@@ -1,0 +1,246 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+@{
+    ViewBag.Title = "WebVisitsReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    bool runReportResults = ViewBag.RunReportResults;
+}
+<div style="display:none" data-bind="visible:true">
+    <div class="sub-container">
+
+        <ul class="breadcrumb mbl">
+            <li><a href="/reports">[|Reports|]</a></li>
+            <li class="active"><a href="javascript:void(0)" data-bind="text:ReportName()"></a></li>
+        </ul>
+
+        <div class="main-header mbl">
+            <span id="pagename" data-bind="text:ReportName()"></span>
+        </div>
+
+        <div class="form-horizontal-large">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="display-inline bold">[|Date Range|]</label>
+                    <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Period',dataValueField:'PeriodId', data: Periods ,value:PeriodId,change:periodChange}" />
+                </div>
+            </div>
+
+            <div class="clearfix">
+                <div class="form-group" data-bind="visible:CustomDateDisplay">
+                    <label class="bold">[|Custom Range|] :</label>
+                    <div class="select-medium display-inline">
+                        <input data-bind="kendoDatePicker: { value: CustomStartDate, max: fromMaxDate,format:DateFormat,change: fromDateChangeEvent }" />
+                    </div>
+                    <label class="display-inline mts mhl">[|To|]</label>
+                    <div class="select-medium display-inline">
+                        <input data-bind="kendoDatePicker: { value: CustomEndDate, max: toMaxDate,format:DateFormat,change: toDateChangeEvent }" />
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="display-inline bold">[|Account Executive|]</label>
+                    <select data-bind="kendoMultiSelect: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users, value: OwnerId ,itemTemplate: templ,optionLabel: '[|Select...|]',placeholder:'[|All|]'}" class="multiselectwidth"></select>
+                    <span class="help-block">Note: Red color represents deleted users.</span>
+                </div>
+            </div>
+
+            <div class="hr-border"></div>
+            <div>
+                <a href="#" id="run-report" data-bind="click:Runlist" class="btn btn-lg btn-primary">[|Run Report|]</a>
+
+
+            </div>
+
+        </div>
+        <br /><br />
+        <div data-bind="visible: gridvisible() =='True'">
+            @*<div class="clearfix mbl" data-bind="visible:TotalHits()>0">
+                    <span class="pull-right ">
+                        <a data-posturl="savedserches" href="#" onclick="advanceView();" class="btn btn-lg btn-primary">[|Advanced View|]</a>
+                    </span>
+                </div>*@
+            @*<div class="k-grid-content" id="HotListGrid"></div>*@
+            <div class="cu-table-responsive">
+                @(Html.Kendo().Grid<SmartTouch.CRM.Domain.Reports.WebVisitReport>()
+                    .Name("webvisitsreport")
+                      .AutoBind(false)
+                      .Pageable(pageable => pageable
+                      .Refresh(false)
+                      .PageSizes(true)
+                      .ButtonCount(10).Messages(m => m
+                      .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Web visits|]")
+                      .Empty("[|No web visits to display|]")
+                      .ItemsPerPage("[|Web visits per page|]")
+                      )
+                      )
+                        .ToolBar(toolbar =>
+                         {
+                             toolbar.Template(@<text>
+                                <div class="toolbar grid-ct-header">
+                                    <a class="k-button k-button-icontext cu-grid-excel" id="excelexport">[|Export to Excel|]</a>
+                                </div>
+                            </text>);
+                         })
+                        .Sortable()
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.FirstName).Title("[|First Name|]");
+                                columns.Bound(p => p.LastName).Title("[|Last Name|]");
+                                columns.Bound(p => p.Email).Title("[|Email|]");
+                                columns.Bound(p => p.Phone).Title("[|Phone|]");
+                                columns.Bound(p => p.Zip).Title("[|Zip|]").HeaderHtmlAttributes(new { @class = "text-center" });
+                                columns.Bound(p => p.LifecycleStage).Title("[|Lifecycle Stage|]").HeaderHtmlAttributes(new { @class = "text-center" });
+                                columns.Bound(p => p.PageViews).Title("[|Page Views|]").HeaderHtmlAttributes(new { @class = "text-center" });
+                                columns.Bound(p => p.VisitedOn).Title("[|Visited On|]").HeaderHtmlAttributes(new { @class = "text-center" });
+                                columns.Bound(p => p.Duration).Title("[|Duration|]").HeaderHtmlAttributes(new { @class = "text-center" });
+                                columns.Bound(p => p.Page1).Title("[|Top Page1|]").HeaderHtmlAttributes(new { @class = "st-web-hlinks" });
+                                columns.Bound(p => p.Page2).Title("[|Top Page2|]").HeaderHtmlAttributes(new { @class = "st-web-hlinks" });
+                                columns.Bound(p => p.Page3).Title("[|Top Page3|]").HeaderHtmlAttributes(new { @class = "st-web-hlinks" });
+                                columns.Bound(p => p.Source).Title("[|Source|]");
+                                columns.Bound(p => p.Location).Title("[|Location|]");
+                                columns.Bound(p => p.FirstName).Title("[|Details|]").HeaderHtmlAttributes(new { @class = "text-center" });
+                            })
+                        //.Resizable(resize => resize.Columns(true))
+                                   .ClientRowTemplate(@"<tr ><td >#:FirstName#</td><td >#:LastName#</td><td >#:Email#</td><td class = 'text-center'>#:Phone#</td><td class = 'text-center'>#:Zip#</td>
+<td class = 'text-center'>#:LifecycleStage#</td><td class = 'text-center' >#:PageViews#</td><td class = 'text-center'>#=convertDate(VisitedOn)#</td>
+<td class = 'text-center'>#:Duration#</td><td title='#:Page1#' class='st-web-hlinks'>#:Page1#</td><td class='st-web-hlinks'>#:Page2#</td><td class='st-web-hlinks'>#:Page3#</td>
+<td >#:Source#</td><td >#:Location#</td><td class = 'text-center'><span><a href='/person/#:ContactId#'><i class='icon st-icon-eye'></i></a> </span></td></tr>")
+                                  .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+
+                            .DataSource(dataSource => dataSource
+                                .Ajax()
+                                         .PageSize(ItemsPerPage)
+                                     .Read(read => read.Action("WebVisitReport", "Reports"))
+                                       )
+                )
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/webvisitreportviewmodel")
+<script type="text/javascript">
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    var webVisitsReportData = @(Html.Raw(Json.Encode(Model)));
+    var ContactUrl =  '@Url.Content("~/Contact/")';
+    var users = [];
+    var dateformat = '@(DateFormat)';
+    var defaultowner = {"OwnerId":0,"OwnerName" : "All"};
+    var runReport='@(runReportResults)';
+    var itemsPerPage = '@(ItemsPerPage)';
+    var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+    var key = '@System.Configuration.ConfigurationManager.AppSettings["Excluded_Accounts"].ToString()';
+    var ids =key.split(',');
+    var enableExport = true;
+
+    $.each(ids,function(ind,val){
+        if(val == accountId)
+            enableExport=false;
+        else
+            enableExport=true;
+    });
+
+    var viewModel;
+
+    function onDataBinding(arg) {
+
+    }
+    function getName(name)
+    {
+        var tempName="";
+        if(name!=null)
+            tempName= name;
+
+        return tempName;
+    }
+    function getEmail(name)
+    {
+        var tempName="Email Not Available";
+        if(name!=null)
+            tempName= name;
+
+        return tempName;
+    }
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+        $("#webvisitsreport").wrap("<div class='st-responsive-grid'></div>");
+    }
+    $(document).ready(function () {
+        $.ajax({
+            url: '/GetUsersList',
+            type: 'get',
+            dataType: 'json',
+            data:{ 'id': 0},
+            contentType: "application/json; charset=utf-8"
+        }).then(function (response) {
+            var filter = $.Deferred();
+            if (response.success) {
+                filter.resolve(response)
+            } else {
+                filter.reject(response.error)
+            }
+            return filter.promise()
+        }).done(function (data) {
+            var owner = data.response;
+            for(var own=0;own< owner.length;own++){
+                users.push(owner[own]);
+            }
+            viewModel = new webVisitReportViewModel(BASE_URL,webVisitsReportData,users,dateformat,runReport, parseInt(itemsPerPage));
+            ko.applyBindings(viewModel);
+        }).fail(function (error) {
+            notifyError(error);
+        });
+    });
+    function RunReport(){
+        selfWebVisits.Runlist();
+    }
+
+    $("#excelexport").click(function(){
+        if(enableExport)
+        {
+            viewModel.ExcelExport();
+        }else{
+            notifyError("[|You do not have permission to perform this operation.|]")
+        }
+    });
+
+
+    function advanceView()
+    {
+        var contactIds_Guid=$.cookie("ContactsGuid");
+        console.log(contactIds_Guid);
+        localStorage.setItem("ContactsGuid",contactIds_Guid );
+        window.location.href = '../reportcontacts?guid=' + contactIds_Guid + '&reportType=' + viewModel.ReportType() + '&reportId='+viewModel.ReportId();
+    }
+
+    function convertDate(date )
+    {
+        if (date == null) {
+            return "";
+        }
+        var dateFormat = readCookie("dateformat").toUpperCase();
+        var millSeconds = date.replace('/Date(', '').replace(')/', '');
+        var value = new Date(parseFloat(millSeconds)).ToUtcUtzDate();
+        return moment(value).format(dateFormat + " hh:mm A");
+    }
+
+</script>

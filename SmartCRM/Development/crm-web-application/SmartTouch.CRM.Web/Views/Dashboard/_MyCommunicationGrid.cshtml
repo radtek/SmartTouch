@@ -1,0 +1,46 @@
+﻿<div class="da-campaign-list myacgrd">
+    <div class="list-inner">
+        <div class="title" id="grdttl">
+            [|My Communications|]
+            <div class="pull-right mycmtle">
+                <a id="vwbytype" class="vwct">View Chart</a>
+                <a id="vwbyperiod" class="vwdys">Last Week</a>
+            </div>
+        </div>
+        <!-- ko if: MyCommunicationGridVisible()=="True" -->
+        <div class="k-grid k-widget k-secondary in no-grid-resize">
+            <div class="k-grid-content">
+                <table id="grid" data-role="grid" role="grid">
+                    <!-- ko if: MyCommunicationGridVisible()=="True" -->
+                    <tbody data-bind="foreach:MyCommunication">
+                        <tr>
+                            <td data-bind="text:Name"></td>
+                            <td data-bind="visible:TotalCount >0" class="text-center">
+                                <a data-bind="attr:{ 'href': '@Url.Action("mycommunicationcontacts", "Contact")?activity=' + ActivityType +'&period=' + $parent.Period() +'&entity=' + ID }"> <span data-bind="text:TotalCount"></span></a>
+                            </td>
+                            <td data-bind="visible:TotalCount==0" class="text-center">
+                                <span data-bind="text:TotalCount"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <!-- /ko -->
+                    <!-- ko if: MyCommunicationGridVisible()=="False" -->
+                    <tbody>
+                        <tr><td colspan="3" class="no-data"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>
+                    </tbody>
+                    <!-- /ko -->
+                </table>
+            </div>
+        </div>
+        <!-- /ko -->
+        <div class="my-comunication-chart" style="display:none;">
+            <!-- ko if:MyCommunicationChartVisible()=="True" -->
+            <div class="bg-chart" id="mycommunicationda"></div>
+            <!--/ko-->
+            <!-- ko if:MyCommunicationChartVisible()=="False" -->
+            <div class="dash-nodata tour-types">[|No data found|]</div>
+            <!--/ko-->
+        </div>
+    </div>
+</div>
+    

@@ -1,0 +1,31 @@
+﻿@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div class="da-traffic-types">
+    <!-- ko if:TourbyTypeBarChartVisible()=="True" -->
+    <div class="bg-chart" id="datrafficatypes"></div>
+    <!--/ko-->
+    <!-- ko if:TourbyTypeBarChartVisible()=="False" -->
+    <div class="dash-nodata tour-types">[|No data found|]</div>
+    <!--/ko-->
+    <div class="left-part">       
+        <div class="title">
+            @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+            {
+                <a data-bind="attr: { href:ToursByTypeLink()}">[|Tour Types|]</a>
+            }
+            else
+            {
+                <a href="javascript:void(0)">[|Tour Types|]</a>
+            }
+        </div>
+    </div>    
+</div>
+

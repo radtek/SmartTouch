@@ -1,0 +1,50 @@
+﻿<div class="formsubheading">[|General|]</div>
+<div class="clearfix">
+    <div class="form-horizontal-large">
+        <div class="form-group">
+            <label class="control-label">[|Kickfire Key|]</label>
+            <input type="text" placeholder="[|API Key|]" class="form-control" data-bind="value:WebAnalyticsProvider.APIKey,valueUpdate:'afterkeydown'" maxlength="75">
+        </div>
+        <div class="form-group">
+            <label class="control-label">[|Tracking Domain|]</label>
+            <input type="text" placeholder="www.example.com" class="form-control" data-bind="value:WebAnalyticsProvider.TrackingDomain,valueUpdate:'afterkeydown'" maxlength="75">
+        </div>
+    </div>
+    <div class="form-horizontal-large">
+        <div class="form-group">
+            <label class="control-label">[|Status|]</label>
+            <input data-bind="kendoDropDownList: { dataTextField: 'Status', dataValueField:'Id',data:$root.visiStatStatuses,value:WebAnalyticsProvider.StatusID}">
+        </div>
+    </div>
+</div>
+<div data-bind="visible:WebAnalyticsProvider.StatusID">
+    <div class="formsubheading">[|Real-Time Alerts|]</div>
+    <div class="clearfix">
+        <div class="form-group">
+            <input type="checkbox" data-bind="checked:WebAnalyticsProvider.NotificationStatus" /><span class="plm">[|Notify the contact owner when contact visits the website|]</span>
+        </div>
+        <div class="clearfix">
+            <div class="form-group group-by0" data-bind="if:ActiveUsers().length>0">
+                <label class="display-inline bold">[|Send a copy to these Account Executives|]</label>
+                <select data-bind="kendoMultiSelect: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: ActiveUsers, value: WebAnalyticsProvider.InstantNotificationGroup }" class="multiselectwidth" ></select>
+            </div>
+        </div>
+    </div>
+    <div class="formsubheading">[|Daily Summary Alerts|]</div>
+    <div class="clearfix">
+        <div class="form-group">
+            <input type="checkbox" data-bind="checked:WebAnalyticsProvider.DailyStatusEmailOpted" /><span class="plm">[|Send daily summary email to contact owner|]</span>
+        </div>
+        <div class="clearfix">
+            <div class="form-group group-by0" data-bind="if:ActiveUsers().length>0">
+                <label class="display-inline bold">[|Send a copy to these Account Executives|]</label>
+                <select data-bind="kendoMultiSelect: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: ActiveUsers, value: WebAnalyticsProvider.DailySummaryNotificationGroup}" class="multiselectwidth" ></select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="hr-border"></div>
+<div>
+    <a class="btn btn-lg btn-primary" data-bind="click:$root.saveAccountSettings"><span data-bind="text:$root.saveText"></span></a>
+    @Html.ActionLink("[|Cancel|]", "UserList", "User", null, new { @class = "btn btn-lg" })
+</div>

@@ -1,0 +1,2014 @@
+﻿@using SmartTouch.CRM.Entities;
+@{
+    var DateFormat = ViewBag.DateFormat;
+    int parentId = ViewBag.ParentID;
+    var senderName = ViewBag.SenderName;
+}
+@*<script src="~/Scripts/ViewModels/WorkflowViewModel.js"></script>
+    <script src="~/Scripts/ViewModels/WorkflowActionsViewModel.js"></script>*@
+<script>
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+   createCookie("SenderName", '@(senderName)', 1);
+    
+</script>
+<section class="sub-container">
+    <div class="au-details">
+        <ul class="breadcrumb">
+            <li><a href="/workflows">[|Automation|]</a></li>
+            <li class="active">
+                <a data-bind="text:WorkflowID() > 0 ? '[|Edit Workflow|]':'[|Add Workflow|]'"></a>
+            </li>
+        </ul>
+        <div class="main-header">
+
+            <div class="display-inline form-inline">
+                <div class="form-group">
+                    <label>[|Workflow Name|]</label>
+                    <span class="required">*</span>
+                </div>
+                <div class="form-group validation-form-control">
+                    <input type="text" class="form-control" data-bind="value:WorkflowName,attr:{placeholder:'[|Workflow Name|]'},valueUpdate:'afterkeydown'" />
+                </div>
+            </div>
+
+            <div class="pull-right mll">
+                <button class="initiate btn" data-bind="click:InitiateWorkflow"><span class="icon st-icon-flag-2 mrs" data-bind="text:IntiateLabel"></span></button>
+            </div>
+            <div class="setting display-inline pull-right">
+                <a href="javascript:void(0)" class="btn drguploderbtn"><i class="icon st-icon-settings-2"></i> [|Settings|]</a>
+                <div class="setting-st header-specific" style="display:none;">
+                    <div class="legend mbn row"><span class="icon st-icon-settings-2 mll"></span><span class="pls">[|Automation Settings|]</span></div>
+
+                    <div class="setting-inner">
+                        <div class="clearfix">
+                            <div class="form-group mbn">
+                                <label class="setting-heading">[|Workflow Status|]</label>
+                                <div class="col-lg-5 pln">
+                                    @*<select name="mediumnm" class="select-block"><option>Inactive </option> <option>Active </option></select>*@
+                                    <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'StatusName', dataValueField: 'StatusID', data: Statuses, value: StatusID },valueUpdate: 'afterkeydown'" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="form-group mbn">
+                                <label class="setting-heading">[|Is this Workflow time sensitive ?|]</label>
+
+                                <label class="radio-inline">
+                                    <input type="radio" name="TimeSensitive" value="1" data-bind="checked:IsTimeSensitive,click:ChangeTimeSensitive,enabled:false" /> [|Yes, deactivate this Workflow on|]
+                                </label>
+
+                                <div class="input-group display-inline validation-form-control mrm">
+                                    <input data-bind="kendoDatePicker:{value: DeactivatedOn, enabled: IsDateEnabled, min: $root.CurrentDate,format:'@DateFormat' }" />
+                                    <span class="validationMessage" data-bind="validationMessage:DeactivatedOnValidation"></span>
+                                </div>
+
+                                <label class="radio-inline">
+                                    <input type="radio" name="TimeSensitive" value="0" data-bind="checked:IsTimeSensitive,click:ChangeTimeSensitive" /> [|No|]
+                                </label>
+
+
+
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="form-group mbn">
+                                <label class="setting-heading">[|Can a Contact complete this Workflow more than once ?|]</label>
+
+                                <label class="radio-inline">
+                                    <input type="radio" class="wf-ent-onc" name="group1" value="true" data-bind="checked:IsWorkflowAllowedMoreThanOnce, enable:!(Triggers()[0].IsStartTrigger() == 'true' && Triggers()[0].TriggerTypeID() == 1)">
+                                    [|Yes, anytime conditions are met|]
+                                </label>
+
+                                <label class="radio-inline mlm">
+                                    <input type="radio" name="group1" value="false" data-bind="checked:IsWorkflowAllowedMoreThanOnce, enable:!(Triggers()[0].IsStartTrigger() == 'true' && Triggers()[0].TriggerTypeID() == 1)">
+                                    [|No, just one time|]
+                                </label>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="form-group">
+                                <label class="setting-heading">[|Can a Contact be enrolled in this Workflow and others at the same time ?|]</label>
+                            </div>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" name="enrolledworkflow" value="1" data-bind="checked:AllowParallelWorkflows"> [|Yes, the Contact can be in other Workflows|]
+                                </label>
+                            </div>
+                            <div>
+
+                                <label class="radio-inline">
+                                    <input type="radio" name="enrolledworkflow" value="2" data-bind="checked:AllowParallelWorkflows"> [|No, remove the Contact from all Workflows|]
+                                </label>
+                            </div>
+                            <div>
+                                <label class="radio-inline">
+                                    <input type="radio" name="enrolledworkflow" value="3" data-bind="checked:AllowParallelWorkflows"> [|No, remove Contact from these Workflows|]
+                                </label>
+                            </div>
+
+                            <!--ko if:AllowParallelWorkflows() == '3'-->
+                            <div class="form-group">
+                                <label class="setting-heading">[|Exclude from Workflow(s)|]</label>
+                                <div class="validation-form-control">
+                                    <select class="exclude-workflow" data-bind="kendoMultiSelect: { data: ActiveWorkflows, value: RemoveFromWorkflows,dataValueField:'WorkflowID',dataTextField:'WorkflowName',placeholder:'[|Select Workflows|]',enabled:IsRemvoefromWorkflowsEnabled }"></select>
+                                    <span class="validationMessage" data-bind="validationMessage:RemoveFromWorkflowValidation"></span>
+                                </div>
+                            </div>
+                            <!--/ko-->
+                            <span class="validationMessage" style="top: 5px" data-bind="visible:NoWorkflows()">No Active Workflows to display</span>
+                        </div>
+                        <div class="hr-border mbn row"></div>
+                        <div class="mbl">
+                            <a href="javascript:void(0)" data-bind="click:saveSettings" class="btn btn-lg btn-primary drguploderbtn">[|Save|]</a>
+                            <a href="javascript:void(0)" data-bind="click:cancelSettings" class="btn btn-lg closesettings">[|Cancel|]</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="au-mainarea">
+            <div class="au-workflow form-horizontal-large" data-bind="foreach:Triggers">
+                <div class="spine"></div>
+                <div class="workflow-panel-box">
+                    <div class="panel panel-default workflow-panel mbl">
+                        <div class="panel-heading clearfix" >
+                            <h4 class="panel-title">
+                                <!--ko if: IsStartTrigger() == 'true' -->
+                                <span class="start-workflow"><i class="icon st-icon-play"></i></span> <i data-bind="attr:{class:iconclass}"></i> [|Start this Workflow when|] : <span class="triggertext"></span>
+                                <!--/ko-->
+                                <!--ko if: IsStartTrigger() == 'false' -->
+                                <span class="stop-workflow"><i class="icon st-icon-stop"></i></span> <i data-bind="attr:{class:iconclass}"></i> [|Goal|] : <span class="triggertext"></span>
+                                <!--/ko-->
+                            </h4>
+
+                            <div class="form-group validation-form-control" data-bind="attr:{id:'trigger-'+$index()}">
+                                <span class="select-medium">
+                                    <input class="select-block"
+                                           data-bind="kendoDropDownList: { dataTextField: 'TriggerName', dataValueField: 'TriggerTypeID',optionLabel:'[|Select Trigger|]', data: (IsStartTrigger() == 'true')?$root.WorkflowStartTriggers:$root.WorkflowStopTriggers, value: TriggerTypeID,select:TriggerChange,optionLabel:(IsStartTrigger() == 'false')?'[|Select End Goal|]' : '[|Select Trigger...|]' },valueUpdate: 'afterkeydown'" />
+                                    <span class="validationMessage" data-bind="validationMessage:triggertypeValidation"></span>
+                                </span>
+                            </div>
+
+                            @*<!--ko ifnot: TriggerTypeID() == 0 -->
+                                <h4 class="panel-title"><span data-bind="text:TriggerCategoryName" class="triggertext"></span></h4>
+                                <!--/ko-->*@
+
+
+                        </div>
+
+                        <!--ko if:  TriggerTypeID() == 0 -->
+                        <div class="trigger6">
+                            <!--ko if:  IsStartTrigger() == 'true' -->
+                            <div class="panel-body collapse in">
+                                [|Select any Trigger to Start this Workflow|]
+                            </div>
+                            <!--/ko-->
+                            <!--ko if:  IsStartTrigger() == 'false' -->
+                            <div class="panel-body collapse in">
+                                [|Select any Goal to Stop this Workflow|]
+                            </div>
+                            <!--/ko-->
+                        </div>
+                        <!--/ko-->
+                        <!--ko ifnot:  TriggerTypeID() == 0 -->
+                        <div class="trigger1" data-bind="template: { name: TriggerTemplateName, data:$data }">
+
+                        </div>
+                        <!--/ko-->
+
+                    </div>
+                </div>
+                <!--ko if:  IsStartTrigger() == 'true' -->
+                <ul id="wf-actions-list" class="ui-sortable" data-bind="sortable:{data:$parent.WorkflowActions, options: { handle: '.st-icon-move', axis: 'y' }}">
+                    <li class="workflow-panel-box">
+                        <label data-bind="visible:false,text:OrderNumber = ($index()+1)"></label>
+
+                        <div class="panel panel-default workflow-sub-panel mbm" data-bind="attr:{id: 'Action' + ($index()+1) },visible:!IsDeleted()">
+                            <div class="workflow-panel-connector"></div>
+                            <div class="panel-heading clearfix">
+                                <h4 class="panel-title">
+
+                                    <!--ko if: IsVisible-->
+                                    <span class="workflow-icon">
+                                        <i data-bind="attr:{class:iconclass}"></i>
+                                    </span>
+                                    <span class="acttiontext">[|Select Action|] :</span>
+                                    <!--/ko-->
+                                    <!--ko ifnot: IsVisible-->
+                                    <!--ko ifnot: IsDeleted-->
+                                    <span class="workflow-icon">
+                                        <i data-bind="attr:{class:iconclass}"></i>
+                                    </span>
+                                    <span class="acttiontext" data-bind="text:WorkflowActionTypeName"></span>
+                                    <!--/ko-->
+                                    <!--/ko-->
+                                </h4>
+                                <!--ko if: IsVisible-->
+                                <span class="select-medium validation-form-control">
+                                    <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'WorkflowActionTypeName', dataValueField: 'WorkflowActionTypeID',optionLabel:'[|Select Actions...|]', data: $root.VisibleWorkflowActionTypes,select:WorkflowActionSelect, value: WorkflowActionTypeID },valueUpdate: 'afterkeydown'" />
+                                    <span class="validationMessage" data-bind="validationMessage:ActionTypeValidation"></span>
+                                </span>
+                                <!--/ko-->
+                                <!--ko ifnot: WorkflowActionTypeID()==14-->
+                                <span class="pull-right workflow-header-controls">
+                                    <a href="javascript:void(0)" data-bind="click:$root.removeAction" class="wf-delaction"><i class="icon st-icon-bin-3"></i></a>
+                                    <a href="javascript:void(0)" class="wf-copyaction" data-bind="click:$root.copyAction"><i class="icon st-icon-windows"></i></a>
+                                    <a href="javascript:void(0)" class="wf-sortaction workFlow-actions-list"><i class="icon st-icon-move"></i></a>
+                                    <a href="javascript:void(0)" class="workflow-mn" data-bind="click:$root.displayAction"><span class="icon st-icon-dropdownarrow"></span></a>
+                                </span>
+                                <!--/ko-->
+                            </div>
+                            <!-- ko if: IsVisible-->
+                            <div data-bind="visible:!IsCollapsed()" class="panel-body collapse in actionbody">
+                                <span class="help-text">[|Select an Action to Perform|]</span>
+                            </div>
+                            <!--/ko-->
+                            <!--ko ifnot: IsVisible-->
+                            <!--ko ifnot: IsDeleted-->
+                            <div class="panel-body collapse in actionbody" data-bind="template: { name: ActionTemplateName, data: $data },visible:!IsCollapsed()">
+
+                            </div>
+                            <!--/ko-->
+                            <!--/ko-->
+                        </div>
+
+                    </li>
+                </ul>
+                <!--/ko-->
+                <!--ko if: ( IsStartTrigger() == 'true' && TriggerTypeID() != 0)  -->
+                <div class="addnewaction"><a href="javascript:void(0)" data-bind="click:$parent.addAction" class="addaction"><span class="icon st-icon-add mrs"></span>[|Add Action|]</a></div>
+                <!--/ko-->
+
+
+
+            </div>
+        </div>
+
+
+        <div class="hr-border"></div>
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click: saveWorkflow"><span data-bind="text:'[|Save|]'"></span></a>
+            <a class="btn btn-lg" data-bind="attr:{href:'/workflows'}"><span data-bind="text:'[|Cancel|]'"></span></a>
+        </div>
+    </div>
+
+
+</section>
+<div id="dialogALert" title="Alert">
+    <div id="messageAlert"></div>
+</div>
+
+@* Saved Search Trigger template *@
+<script type="text/html" id="TriggerTemplate1">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|Select Smart Search|]</label>
+            <select data-bind="kendoMultiSelect:{ value: SearchDefinitionIDs,placeholder:'[|Select Smart Searches|]',data:$root.SmartSearches,dataTextField:'SearchDefinitionName', dataValueField:'SearchDefinitionID' }"></select>
+            <span class="validationMessage" data-bind="validationMessage:smartSearchValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Form Submitted Trigger template *@
+<script type="text/html" id="TriggerTemplate2">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|Select Form|]</label>
+            <select data-bind="kendoMultiSelect:{ value: FormIDs,placeholder:'[|Select Forms...|]',data:$root.Forms,dataTextField:'Name', dataValueField: 'FormId' }"></select>
+            <span class="validationMessage" data-bind="validationMessage:formValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Lifecycle Changes Trigger template *@
+<script type="text/html" id="TriggerTemplate3">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|Life Cycle|]</label>
+            <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField: 'DropdownValueID', data:$root.LifeCycleDropdownValues, value: LifecycleDropdownValueID,optionLabel:'[|Select Life Cycle...|]' },valueUpdate: 'afterkeydown'" />
+            <span class="validationMessage" data-bind="validationMessage:lifecycleValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Action Type Trigger template *@
+<script type="text/html" id="TriggerTemplate12">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|Action Completed|]</label>
+            <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField: 'DropdownValueID', data:$root.ActionTypes, value: ActionType,optionLabel:'[|Select Action Type...|]' },valueUpdate: 'afterkeydown'" />
+            <span class="validationMessage" data-bind="validationMessage:actionTypeValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Tags are applied Trigger template *@
+<script type="text/html" id="TriggerTemplate4">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|Tags|]</label>
+            <select type="text" data-bind="kendoMultiSelect:{ value: TagIDs, placeholder:'[|Select Tags|]', data: $root.Tags, dataTextField:'TagName', dataValueField: 'TagID',optionLabel:'[|Select Tags..|]'}"></select>
+            <span class="validationMessage" data-bind="validationMessage:tagValidation"></span>
+            @*</div>
+                <div>*@
+            <div class="filters st-tags">
+                <a href="javascript:void(0)" data-bind="click:function() { $root.PopularClicked(IsStartTrigger(),'T')} ,attr:{class:'PopularClicked'+ IsStartTrigger()}" onchange="OnChange()">[|Popular|]</a>
+                <a href="javascript:void(0)" data-bind="click:function() {$root.RecentClicked(IsStartTrigger(),'T')},attr:{class:'RecentClicked'+ IsStartTrigger()}">[|Recent|]</a>
+            </div>
+            <div class="tags-search cu-popup">
+
+                <ul class="search-results hide" data-bind="foreach:$root.PopularTags,attr:{id:'poptags'+ IsStartTrigger()}">
+
+                    <li class="popularTagsLi">
+                        <label>
+                            <label class="checkbox-inline" data-bind="attr:{for:'populartags'+($index() + 1)}">
+                                <input type="checkbox" value="($index() + 1)" data-bind="checked:IsSelected, attr:{id:'populartag'+($index() + 1)},click:function (data, event) { return   $root.TagSelected(TagID,TagName,IsSelected,'recenttag'+($index() + 1),$parent.IsStartTrigger(),'T')}">
+                            </label>
+                            <span data-bind="text:TagName"></span>
+                        </label>
+
+                    </li>
+
+                </ul>
+
+                <!-- ko if:$root.PopularTags().length == 0-->
+                <ul class="search-results hide" id="poptags_norecords">
+                    <li class="no-records">
+                        <div class="icon st-icon-tag"></div>
+                        <div>[|No PopularTags|]</div>
+                    </li>
+                </ul>
+                <!--/ko-->
+
+                <ul class="search-results hide" data-bind="foreach:$root.RecentTags,attr:{id:'recenttags'+ IsStartTrigger()}">
+                    <li class="recentTagsLi">
+                        <label>
+                            <label class="checkbox-inline" data-bind="attr:{for:'recenttags'+($index() + 1)}">
+                                <input type="checkbox" value="" data-bind="checked:IsSelected,attr:{id:'recenttag'+($index() + 1)},click:function (data, event) {  return   $root.TagSelected(TagID,TagName,IsSelected,'recenttag'+($index() + 1),$parent.IsStartTrigger(),'T') }">
+                            </label>
+                            <span data-bind="text:TagName"></span>
+                        </label>
+                    </li>
+                </ul>
+
+                <!-- ko if:$root.RecentTags().length == 0-->
+                <ul class="search-results hide" id="recenttags_norecords">
+                    <li class="no-records">
+                        <div class="icon st-icon-tag"></div>
+                        <div>[|No RecentTags|]</div>
+                    </li>
+                </ul>
+                <!--/ko-->
+            </div>
+        </div>
+
+    </div>
+</script>
+
+@* Campaign Sent Trigger template *@
+<script type="text/html" id="TriggerTemplate5">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <div class="st-aw-campaign-dropdown">
+                <label>[|Campaigns|]</label>
+                <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'Name', dataValueField: 'CampaignID', data:$root.Campaigns,optionLabel:'[|Select Campaigns..|]', value: CampaignID },valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="st-aw-campaign-icon">
+                <i class="icon st-icon-eye notifiy-view mll" data-bind="visible:CampaignID() != null && CampaignID() != '', attr:{'data-id': CampaignID() }" onclick="ViewCampaign(this)"></i>
+            </div>
+            <span class="validationMessage" data-bind="validationMessage:RegularCampaignValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Opportunity Stage Changes Trigger template *@
+<script type="text/html" id="TriggerTemplate6">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|Opportunity Stage|]</label>
+            <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField: 'DropdownValueID',optionLabel:'[|Select Opportunity Stages...|]', data:$root.OpportunityStageDropdownValues, value: OpportunityStageID },valueUpdate: 'afterkeydown'" />
+            <span class="validationMessage" data-bind="validationMessage:opportunitystatusValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Link clicked Trigger template *@
+<script type="text/html" id="TriggerTemplate7">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <div class="st-aw-campaign-dropdown">
+                <label>[|Campaigns|]</label>
+                <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'Name', dataValueField: 'CampaignID', data:$root.Campaigns, value: CampaignID,optionLabel:'[|Select Campaign...|]',select:ChangeCampaign },valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="st-aw-campaign-icon">
+                <i class="icon st-icon-eye notifiy-view mll"  data-bind="visible:CampaignID() != null && CampaignID() != '', attr:{'data-id': CampaignID() }" onclick="ViewCampaign(this)"></i>
+            </div>
+            <span class="validationMessage" data-bind="validationMessage:LinkCampaignValidation"></span>
+        </div>
+        <!--ko if:IsStartTrigger() =='true'-->
+        <label>[|Links|] <span class="num-characters" data-bind="visible:CampaignID() != null, text: CampaignLinks().length == 0 ? '[|No Links in Campaign|]': CampaignLinks().length + '[| Links in Campaign|]',attr:{class:CampaignLinks().length == 0?'red':'green'}"></span></label>
+        <!--/ko-->
+        <!--ko ifnot:IsStartTrigger() =='true'-->
+        <div class="form-group">
+            <label>[|Links|] <span class="num-characters" data-bind="visible:CampaignID() != null, text: CampaignLinks().length == 0 ? '[|No Links in Campaign|]': CampaignLinks().length + '[| Links in Campaign|]',attr:{class:CampaignLinks().length == 0?'red':'green'}"></span></label>
+            <select class="select-block" data-bind="kendoMultiSelect: { dataTextField: 'URL.URL', dataValueField: 'CampaignLinkId', data:CampaignLinks, value: SelectedLinks,enabled:EnableMultiselect, optionLabel: '[|Select Links...|]' },valueUpdate: 'afterkeydown'"></select>
+            <span class="validationMessage" data-bind="validationMessage:campaignLinkValidation"></span>
+        </div>
+        <!--/ko-->
+    </div>
+</script>
+
+@* Saved Search Trigger template *@
+<script type="text/html" id="TriggerTemplate9">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|A Lead Adapter is Submitted|] <span class="red num-characters" data-bind="text:'[|No Lead Adapters Configured|]',visible:$root.LeadAdapters().length == 0"></span></label>
+            <select data-bind="kendoMultiSelect:{ value: LeadAdapterIDs,placeholder:'[|Select Lead Adapters|]',data:$root.LeadAdapters,dataTextField:'Name', dataValueField:'LeadAdapterAndAccountMapId' }"></select>
+            <span class="validationMessage" data-bind="validationMessage:leadadapterValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Lead Score reached Trigger template *@
+<script type="text/html" id="TriggerTemplate10">
+    <div class="panel-body collapse in">
+        <div class="form-group">
+            <label class="bold">[|Lead Score|]</label>
+            <input type="text" data-bind="kendoNumericTextBox:{ value:LeadScore,decimals:0,format:'#',min:1 }, valueUpdate:'afterkeydown'" placeholder="200" />
+            <span class="validationMessage" data-bind="validationMessage:leadscoreValidation"></span>
+        </div>
+    </div>
+</script>
+
+@* Web Page visited trigger*@
+<script type="text/html" id="TriggerTemplate11">
+    <div class="panel-body collapse in">
+        <div class="form-group cu-large-group cu-fullwidth">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>[|Web Page Visited|]</label>
+                    <input type="text" class="form-control" data-bind="value:WebPage, disable: IsAnyWebPage" />
+                </div>
+                <div class="col-lg-1 cu-widthauto">
+                    <label class="control-label">[|Any Page|]</label>
+                    <input type="checkbox" data-bind="checked:IsAnyWebPage" />
+                </div>
+                <div class="col-md-2">
+                    <label>[|Operator|]</label>
+                    <input type="text" data-bind="kendoDropDownList:{ value: Operator,dataTextField: 'Value', dataValueField: 'Id', data:$root.Qualifiers}, valueUpdate:'afterkeydown', optionLabel:'[|Select Operator...|]'" />
+                    <span class="validationMessage" data-bind="validationMessage: operatorValidation"></span>
+                </div>
+                <div class="col-lg-4 col-md-5 wo-min-sec">
+                    <label class="control-label">Minutes and Seconds</label>
+                    <div class="col-cu-6">
+                        <div class="ed-label">Min</div>
+                        <div class="ed-select">
+                            <input id="minutes" type="text" data-bind="kendoNumericTextBox:{ value:Minutes,decimals:0,format:'#',min:0, max:59 }, valueUpdate:'afterkeydown'" placeholder="00" />
+                            <span class="validationMessage" data-bind="validationMessage: minutesValidation"></span>
+                        </div>
+                    </div>
+                    <div class="col-cu-6 pdr0">
+                        <div class="ed-label">Sec</div>
+                        <div class="ed-select">
+                            <input id="seconds" type="text" data-bind="kendoNumericTextBox:{ value:Seconds,decimals:0,format:'#',min:0, max:59 }, valueUpdate:'afterkeydown'" placeholder="00" />
+                            <span class="validationMessage" data-bind="validationMessage: secondsValidation"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <span class="help-block">Note: Please use page name instead of full URL. Example : give '/contact-us' instead of 'www.smarttouchinteractive.com/contactus'.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+@* Link clicked Trigger template *@
+<script type="text/html" id="empty">
+    <div class="panel-body collapse in">
+    </div>
+</script>
+
+
+
+@* Campaign Action template *@
+<script type="text/html" id="SendCampaign">
+    <div data-bind="with:Action">
+        <div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <div class="st-aw-campaign-dropdown">
+                        <label class="bold">[|Select Campaign|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'Name', dataValueField: 'CampaignID', data: $root.AutomationCampaigns, value: CampaignID,optionLabel:'[|Select Campaign|]' }, event : { change:function(data, event) { CampaignSelect($parent) } } ,valueUpdate: 'afterkeydown'" />
+                    </div>
+                    <div class="st-aw-campaign-icon">
+                        <i class="icon st-icon-eye notifiy-view mll" data-bind="visible:CampaignID() != null && CampaignID() != '', attr:{'data-id': CampaignID() }" onclick="ViewCampaign(this)"></i>
+                    </div>
+                    <span class="validationMessage" data-bind="validationMessage:campaignValidation"></span>
+                </div>
+            </div>
+            <div data-bind="visible: CampaignLinks().length > 0">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="bold">[|Links |]<span data-bind="text:TotalLinks,visible:!CampaignID()=='' ,attr:{class:CampaignLinks().length == 0 ? 'red num-characters':'green num-characters'}"></span></label>
+                    </div>
+                </div>
+                <div class="cu-grid">
+                    <table cellpadding="0" cellspacing="0">
+                        <tr>
+                            <th align="left" valign="middle" width="250">Link</th>
+                            <th align="left" valign="middle">
+                                <div class="st-cu-actionshead">
+                                    Action
+                                </div>
+                                <div class="st-cu-actionsdetails">
+                                    Details
+                                </div>
+
+                            </th>
+                        </tr>
+                        <tbody data-bind="template: { name: 'LinkSubAction', foreach : CampaignLinks }" />
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="LinkSubAction">
+    <tr>
+        <td align="left" valign="middle" class="cu-addworklink">
+            <label data-bind="text:URL.URL"></label>
+
+        </td>
+        <td colspan="2">
+            <div data-bind="foreach:Actions">
+                <!--ko ifnot:IsDeleted()-->
+                <div class="st-cu-actionwrapper">
+                    <div class="st-cu-actionwork">
+                        <input class="select-block"
+                               data-bind="kendoDropDownList: { dataTextField: 'WorkflowActionTypeName', dataValueField: 'WorkflowActionTypeID', data: $root.LinkWorkflowActionTypes, optionLabel:'[|Select Actions...|]',value: WorkflowActionTypeID, valueUpdate: 'afterkeydown',change: function(data,event){ LinkWorkflowActionSelect(this.dataItem(data.sender.selectedIndex), 'change')}}" />
+                    </div>
+                    <!--ko ifnot:ActionTemplateName() == '' -->
+                    <div class="st-cu-actionsib st-subactions-asu">
+                        <div class="clearfix" data-bind="template:{ name: ActionTemplateName }"></div>
+                    </div>
+                    <div class="st-cu-actiondelete">
+                        <a href="javascript:void(0)" data-bind="click:function(data, event) {RemoveLinkAction($parent, $data)}" class="wf-delaction"><i class="icon st-icon-bin-3"></i></a>
+                    </div>
+                    <!--/ko-->
+                </div>
+                <!--/ko-->
+            </div>
+            <div class="clear-fix su-add-section">
+                <a href="javascript:void(0)" data-bind="click:AddLinkAction" class="addaction"><span class="icon st-icon-add mrs"></span>[|Add Action|]</a>
+            </div>
+        </td>
+    </tr>
+
+</script>
+
+@* Send Text template *@
+<script type="text/html" id="SendText">
+    <div class="trigger1" data-bind="with: Action">
+        <div class="form-group">
+            <label class="bold">[|Send From|]</label>
+            <input class="select-block" data-bind="kendoDropDownList: { data: $root.PhoneNumbers, value:FromMobileID,optionLabel:'[|Select Phone Number...|]' },valueUpdate: 'afterkeydown'" />
+            <span class="validationMessage" data-bind="validationMessage:phoneNumberValidation"></span>
+        </div>
+        <div class="form-group">
+            <label class="bold">
+                [|Send a Text|]
+                <span data-bind="text:(160 - Message().length) < 0?(160 - Message().length) +' Too Many Characters': (160 - Message().length) + ' Characters Remaining',attr:{class:Message().length > 160 ? 'red num-characters':'green num-characters'}"></span>
+            </label>
+            <textarea class="form-control" rows="2" data-bind="value:Message,valueUpdate:'afterkeydown'"></textarea>
+        </div>
+    </div>
+</script>
+
+@* AddOrRemoveTags template *@
+<script type="text/html" id="Tags">
+    <div data-bind="with: Action">
+        <div class="form-group">
+            <label class="bold" data-bind="text: WorkflowActionTypeID == 4 ?'[|Add Tag|]':'[|Remove Tag|]'"></label>
+            <input type="text" data-bind="kendoDropDownList:{ value: TagID, data: $root.Tags, dataTextField:'TagName', dataValueField: 'TagID',optionLabel:'[|Select Tag...|]' }" />
+            <span class="validationMessage" data-bind="validationMessage:tagValidation"></span>
+            <div class="filters st-tags">
+                <a href="javascript:void(0)" data-bind="click:function() {$root.PopularClicked(Order,'A')} ,attr:{class:'PopularClicked'+ Order}" onchange="OnChange()">[|Popular|]</a>
+                <a href="javascript:void(0)" data-bind="click:function() {$root.RecentClicked(Order,'A')},attr:{class:'RecentClicked'+ Order}">[|Recent|]</a>
+            </div>
+            <div class="tags-search cu-popup">
+
+                <ul class="search-results hide" data-bind="foreach:$root.PopularTags,attr:{id:'poptags'+ Order}">
+
+                    <li class="popularTagsLi">
+                        <label>
+                            <label class="checkbox-inline" data-bind="attr:{for:'populartag'+($index() + 1)}">
+                                <input type="radio" name="tag" value="($index() + 1)" data-bind="checked:IsSelected,attr:{id:'populartag'+($index() + 1)}, click:function(){return  $root.TagSelected(TagID,TagName,IsSelected,'recenttag'+($index() + 1),$parent.Order,'A')}">
+                            </label>
+                            <span data-bind="text:TagName"></span>
+                        </label>
+                    </li>
+                </ul>
+                <!-- ko if:$root.PopularTags().length == 0-->
+                <ul class="search-results hide" id="poptags_norecords">
+                    <li class="no-records">
+                        <div class="icon st-icon-tag"></div>
+                        <div>[|No PopularTags|]</div>
+                    </li>
+                </ul>
+                <!--/ko-->
+
+                <ul class="search-results hide" data-bind="foreach:$root.RecentTags,attr:{id:'recenttags'+ Order}">
+                    <li class="recentTagsLi">
+                        <label>
+                            <label class="checkbox-inline" data-bind="attr:{for:'recenttag'+($index() + 1)}">
+                                <input type="radio" name="tag" value="" data-bind="checked:IsSelected,attr:{id:'recenttag'+($index() + 1)},click:function (){return   $root.TagSelected(TagID,TagName,IsSelected,'recenttag'+($index() + 1),$parent.Order,'A') }">
+                            </label>
+                            <span data-bind="text:TagName"></span>
+                        </label>
+                    </li>
+                </ul>
+
+                <!-- ko if:$root.RecentTags().length == 0-->
+                <ul class="search-results hide" id="recenttags_norecords">
+                    <li class="no-records">
+                        <div class="icon st-icon-tag"></div>
+                        <div>[|No RecentTags|]</div>
+                    </li>
+                </ul>
+                <!--/ko-->
+            </div>
+
+        </div>
+    </div>
+</script>
+
+@*Adjust Leadscore template*@
+<script type="text/html" id="LeadScore">
+    <div data-bind="with: Action">
+        <div class="form-group">
+            <label class="bold">[|Lead Score Points|]</label>
+            <input type="text" data-bind="kendoNumericTextBox:{ value:LeadScoreValue,decimals:0,format:'#',min:1 }, valueUpdate:'afterkeydown'" placeholder="200" />
+            <span class="validationMessage" data-bind="validationMessage:LeadScoreValueValidation,valueUpdate:'afterkeydown'"></span>
+        </div>
+    </div>
+</script>
+
+@*Change life cycle template*@
+<script type="text/html" id="Lifecycle">
+    <div data-bind="with: Action">
+        <div class="form-group">
+            <label class="bold">[|Life Cycle|]</label>
+            <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField: 'DropdownValueID', data: $root.LifeCycleDropdownValues, value: LifeCycleDropdownValueID,optionLabel:'[|Select Lifecycle...|]' },valueUpdate: 'afterkeydown'" />
+            <span class="validationMessage" data-bind="validationMessage:LifeCycleValidation"></span>
+        </div>
+    </div>
+</script>
+
+@*Update a field template*@
+<script type="text/html" id="UpdateField">
+    <div data-bind="with: Action">
+        <div class="form-group">
+            <label class="bold">[|Contact Fields|]</label>
+            <input class="select-block" data-bind="kendoDropDownList: { dataTextField: 'Title', dataValueField: 'ComputedFieldId', data:$root.Fields, value: ComputedFieldId,optionLabel:'[|Select Field...|]',select:fieldSelect },valueUpdate: 'afterkeydown'" />
+            <span class="validationMessage" data-bind="validationMessage:fieldValidation"></span>
+        </div>
+        <div class="form-group">
+            <!-- ko ifnot : (FieldID() == undefined || FieldID() == '')   -->
+            <label class="bold">[|Field Value|]</label>
+            <!--/ko-->
+            <!-- ko if : FieldInputTypeId() == 8 || FieldInputTypeId() == 10 -->
+            <input data-bind="value:FieldValue,valueUpdate: 'afterkeydown'" class="form-control">
+            <!--/ko-->
+            <!-- ko if : FieldInputTypeId() == 5 -->
+            <input type="number" data-bind="value:FieldValue,valueUpdate: 'afterkeydown'" class="form-control">
+            <!-- /ko -->
+            <!-- ko if : FieldInputTypeId() == 3 -->
+            <input data-bind="value:FieldValue,valueUpdate: 'afterkeydown'" class="form-control" />
+            <!-- /ko -->
+            <!-- ko if : FieldInputTypeId() == 14 -->
+            <textarea data-bind="value:FieldValue,valueUpdate: 'afterkeydown'" class="form-control"></textarea>
+            <!-- /ko -->
+            <!-- ko if : (FieldInputTypeId() == 6 || FieldInputTypeId() == 11) && FieldID() != 18 && FieldID() != 20  -->
+            <div id="control-template">
+                <input name="dropdown" data-bind="kendoDropDownList: { dataTextField: 'Value', dataValueField:'Id',data: ValueOptions,value: FieldValue,optionLabel: '[|Select...|]'},valueUpdate: 'afterkeydown'">
+            </div>
+            <span class="validationMessage" data-bind="validationMessage:fieldValueValidation,valueUpdate: 'afterkeydown'"></span>
+            <!--/ko-->
+            <!-- ko if : FieldInputTypeId() == 1 || FieldInputTypeId() == 12 -->
+            <div id="control-template">
+                <select data-bind="kendoMultiSelect: {dataTextField:'Value',dataValueField:'Id', data: ValueOptions, value: FieldValue,optionLabel: '[|Select...|]'},valueUpdate: 'afterkeydown'" class="multiselectwidth"></select>
+            </div>
+            <span class="validationMessage" data-bind="validationMessage:fieldValueValidation,valueUpdate: 'afterkeydown'"></span>
+            <!-- /ko-->
+            <!-- ko if : FieldInputTypeId() == 2 || FieldInputTypeId() == 13-->
+            <input data-bind="kendoDateTimePicker: { value: FieldValue},valueUpdate: 'afterkeydown'" />
+            <span class="validationMessage" data-bind="validationMessage:fieldValueValidation,valueUpdate: 'afterkeydown'"></span>
+            <!-- /ko -->
+            <!-- ko if : FieldInputTypeId() == 9 -->
+            <input id="kendotimepicker" data-bind="kendoTimePicker: { value: FieldValue, interval: 1,valueUpdate: 'afterkeydown'}" />
+            <span class="validationMessage" data-bind="validationMessage:fieldValueValidation,valueUpdate: 'afterkeydown'"></span>
+            <!-- /ko -->
+            @*<span class="validationMessage" data-bind="validationMessage:fieldValueValidation,valueUpdate: 'afterkeydown'"></span>*@
+        </div>
+    </div>
+</script>
+
+@*Assign to a user template*@
+<script type="text/html" id="AssignUser">
+    <div data-bind="with: Action">
+        <div class="form-group st-assignuser">
+            <label class="bold">[|Users|]</label>
+            <div class="st-assignuser-options">
+                <span><input type="radio" value="1" data-bind="checked: ScheduledID, attr:{ name : ($parent[1] != null && $parent[1] != 'undefined') ? 'daysoption' + Order : 'daysoptionP' + Order }" /> All Days</span>
+                <span><input type="radio" value="2" data-bind="checked: ScheduledID, attr:{ name : ($parent[1] != null && $parent[1] != 'undefined') ? 'daysoption' + Order : 'daysoptionP' + Order }" /> Weekdays & Weekends</span>
+                <span><input type="radio" value="3" data-bind="checked: ScheduledID, attr:{ name : ($parent[1] != null && $parent[1] != 'undefined') ? 'daysoption' + Order : 'daysoptionP' + Order }" /> Specific Days</span>
+            </div>
+            <div>
+                <div data-bind="foreach: RoundRobinContactAssignments">
+                    <label class="bold" data-bind="visible: DayOfWeek() == 10">[|Daily|]</label>
+                    <!-- ko if : $parent.ScheduledID() == "1" -->
+                    <div>
+                        <div class="st-singleusr">
+                            <input type="radio" value="0" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder }" />
+                            <label>Single User Contact Assignment</label>
+                            <!-- ko if : IsRoundRobinAssignment() == "0" -->
+                            <input data-bind="kendoDropDownList: { dataTextField: 'FirstName', dataValueField:'UserID',  data:$root.Users, value: UserID,optionLabel:'[|Select User...|]' },valueUpdate: 'afterkeydown'" />
+                            <!-- /ko -->
+                        </div>
+                        <div class="st-singleusr">
+                            <input type="radio" value="1" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder}" />
+                            <label>Round Robin Contact Assignment</label>
+                            <!-- ko if : IsRoundRobinAssignment() == "1" -->
+                            <select data-bind="kendoMultiSelect: {dataTextField:'FirstName', dataValueField: 'UserID', data:$root.Users, value: UserIds, optionLabel:'[|Select User...|]',  valueUpdate: 'afterkeydown'}"></select>
+                            <!-- /ko -->
+                        </div>
+                        @*<span class="validationMessage" data-bind="validationMessage:userIdValidation"></span>
+                        <span class="validationMessage" data-bind="validationMessage:userIdsValidation"></span>*@
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if : $parent.ScheduledID() == "2" || $parent.ScheduledID() == "3"-->
+                    <div data-bind="attr: { 'class' : 'st-weekday-options st-subaction-au'}">
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 1">[|Monday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 2">[|Tuesday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 3">[|Wednesday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 4">[|Thursday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 5">[|Friday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 6">[|Saturday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 7">[|Sunday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 8">[|Weekday|]</label>
+                        <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 9">[|Weekend|]</label>
+                        <input type="radio" value="0" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder }" />
+                        <label>Single User Contact Assignment</label>
+                        <input class="st-rrc" type="radio" value="1" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder }" />
+                        <label>Round Robin Contact Assignment</label>
+                        <!-- ko if : IsRoundRobinAssignment() == "0" -->
+                        <input data-bind="kendoDropDownList: { dataTextField: 'FirstName', dataValueField:'UserID',  data:$root.Users, value: UserID,optionLabel:'[|Select User...|]' },valueUpdate: 'afterkeydown'" />
+                        <!-- /ko -->
+                        <!-- ko if : IsRoundRobinAssignment() == "1" -->
+                        <select data-bind="kendoMultiSelect: {dataTextField:'FirstName', dataValueField: 'UserID', data:$root.Users, value: UserIds, optionLabel:'[|Select User...|]',  valueUpdate: 'afterkeydown'}"></select>
+                        <!-- /ko -->
+                        @*<span class="validationMessage" data-bind="validationMessage:userIdValidation"></span>
+                        <span class="validationMessage" data-bind="validationMessage:userIdsValidation"></span>*@
+                    </div>
+                    <!-- /ko -->
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</script>
+
+@*Enter another workflow*@
+<script type="text/html" id="EnterWorkflow">
+    <div data-bind="with: Action">
+        <div class="form-group">
+            <label class="bold">[|Workflows|]</label>
+            <input data-bind="kendoDropDownList: { data: $root.ActiveWorkflows, value: SiblingWorkflowID,dataValueField:'WorkflowID',dataTextField:'WorkflowName',optionLabel:'[|Select Workflows|]'}" />
+            <span class="validationMessage" data-bind="validationMessage:SiblingWorkflowIDValidation"></span>
+        </div>
+    </div>
+</script>
+
+@*Notify user template*@
+<script type="text/html" id="NotifyUser">
+    <div data-bind="with: Action">
+        <div class="form-group">
+            <label class="bold">[|Users|]</label>
+            <select data-bind="kendoMultiSelect: { dataTextField: 'FirstName',dataValueField:'UserID',  data: $root.Users, value: UserIds,optionLabel:'[|Select User...|]' },valueUpdate: 'afterkeydown'"></select>
+            <span class="validationMessage" data-bind="validationMessage:userValidation"></span>
+        </div>
+        <div class="form-group">
+            <label class="bold">[|Notify By|] <span class="required">*</span></label>
+            <div class="mbm">
+                <span data-bind="text:charactersremaining,attr:{class: classname}"></span>
+                <label class="radio-inline">
+                    <input type="radio" value="1" data-bind="checked:NotifyType,attr:{name: ($parent[1] != null && $parent[1] != 'undefined') ? 'campaignenrolled' + Order : 'enrolled' + Order }" /> [|Email|]
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" value="2" data-bind="checked:NotifyType,attr:{name: ($parent[1] != null && $parent[1] != 'undefined') ? 'campaignenrolled' + Order : 'enrolled' + Order }" /> [|Text Message|]
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" value="3" data-bind="checked:NotifyType,attr:{name: ($parent[1] != null && $parent[1] != 'undefined') ? 'campaignenrolled' + Order : 'enrolled' + Order }" /> [|Both Email & Text|]
+                </label>
+                <span class="validationMessage" data-bind="validationMessage:NotifyTypeValidation"></span>
+            </div>
+
+            <textarea class="form-control" rows="2" data-bind="value:MessageBody,valueUpdate:'afterkeydown'"></textarea>
+
+        </div>
+        <div class="form-group">
+            <label class="bold">[|Selected Fields|]<span class="required">*</span></label>
+            <div>
+                <select data-bind="kendoMultiSelect :{ data: $root.NotificationFields,dataValueField:'FieldId',dataTextField:'Title', value: NotificationFieldIds }" class="col-100"></select>
+                <span class="validationMessage" data-bind="validationMessage:fieldValidation"></span>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+@*Set a timer template*@
+<script type="text/html" id="SetTimer">
+    <div data-bind="with: Action">
+        <div class="form-group mbn">
+            <label class="bold mbm">[|Set Timer Based On |]</label>
+            <!-- ko if: (TimerType() == '1')-->
+            <label class="radio-inline">
+                <input type="radio" value="1" data-bind="checked:TimerType,attr:{name:$index}" checked /> [|Time Delay|]
+            </label>
+            <!--/ko -->
+            <label class="radio-inline">
+                <input type="radio" value="2" data-bind="checked:TimerType,attr:{name:$index}" /> [|Date|]
+            </label>
+            <label class="radio-inline">
+                <input type="radio" value="3" data-bind="checked:TimerType,attr:{name:$index}" /> [|Week|]
+            </label>
+            <span class="validationMessage" data-bind="validationMessage:TimerTypeValidation"></span>
+        </div>
+        <div id="settimertimedelaydata" data-bind="visible:TimerType() == TimerTypes.timeDelay">
+            <div class="divider"></div>
+            <div class="form-group small mbn mrn">
+                <label class="bold">[|Wait at Least|]</label>
+                <input type="text" placeholder="10" data-bind="value:DelayPeriod,valueUpdate:'afterkeydown'" class="form-control">
+            </div>
+            <div class="form-group small mbn">
+                <label class="bold">[|Period|]</label>
+                <input data-bind="kendoDropDownList: { dataTextField: 'PeriodValue',dataValueField:'PeriodID',  data:$root.PeriodValues,optionLabel:'[|Select Periods...|]', value: DelayUnit },valueUpdate: 'afterkeydown'" />
+                <span class="validationMessage" data-bind="validationMessage:PeriodValidation"></span>
+            </div>
+            <div class="form-group medium mbn">
+                <label class="bold mbm">[|Run On|]</label>
+                <label class="radio-inline">
+                    <input type="radio" value="1" data-bind="checked:RunOn,attr:{name: 'RunOn' + $index() }" checked /> [|Any Day|]
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" value="2" data-bind="checked:RunOn,attr:{name: 'RunOn' + $index() }" /> [|Weekdays|]
+                </label>
+                <span class="validationMessage" data-bind="validationMessage:RunOnValidation"></span>
+            </div>
+            <div class="form-group medium mbn mrn">
+                <label class="bold">[|Run At|]</label>
+                <input placeholder="9:30 AM" data-bind=" kendoTimePicker:{ value:RunAt,valueUpdate:'afterkeydown'}" />
+                <span class="validationMessage" data-bind="validationMessage:RunAtValidation"></span>
+            </div>
+        </div>
+        <div id="settimertimedatedata" data-bind="visible:TimerType() == TimerTypes.date.toString()">
+            <div class="divider"></div>
+            <div class="clearfix">
+                <div class="form-group mbn large">
+                    <label class="bold mbm">[|Run On|]</label>
+                    <span class="pull-left mts mbl">
+                        <label class="radio-inline">
+                            <input type="radio" value="1" data-bind="checked:RunType,attr:{name:'group' + $index() }"> [|A Date |]
+                        </label>
+                        <span class="validationMessage" data-bind="validationMessage:RunTypeValidation"></span>
+                    </span>
+
+                    <div class="select-medium plm">
+                        <div class="input-group">
+                            <input type="text" data-bind="kendoDatePicker:{value:RunOnDate, min: $root.CurrentDate,format:'@DateFormat' }">
+                            <span class="validationMessage" data-bind="validationMessage:RunOnDateValidation,valueUpdate:'afterkeydown'"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group medium mbn mrn">
+                    <label class="bold">[|Run At|]</label>
+                    <input placeholder="9:30" data-bind="kendoTimePicker:{ value:RunAtTime,valueUpdate:'afterkeydown'}" />
+                    <span class="validationMessage" data-bind="validationMessage:RunAtTimeValidation"></span>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group mbn xlarge">
+                    <span class="pull-left mts">
+                        <label class="radio-inline">
+                            <input type="radio" value="2" data-bind="checked:RunType,attr:{ name:'group' + $index() }"> [|Between Dates|]
+                        </label>
+                    </span>
+                    <div class="select-medium plm">
+                        <div class="input-group">
+                            <input type="text" data-bind="kendoDatePicker:{value:StartDate, min: $root.CurrentDate,format:'@DateFormat' }" />
+                            <span class="validationMessage" data-bind="validationMessage:StartDateValidation"></span>
+                        </div>
+                    </div>
+                    <label class="display-inline mts prl">[|to|]</label>
+                    <div class="select-medium">
+                        <div class="input-group">
+                            <input type="text" data-bind="kendoDatePicker:{value:EndDate, min:StartDate,format:'@DateFormat' }" />
+                            <span class="validationMessage" data-bind="validationMessage:EndDateValidation"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div data-bind="visible:TimerType() == TimerTypes.week.toString()">
+            <div class="divider"></div>
+            <div class="clearfix">
+                <div class="select-xlarge">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="0" data-bind="checked: DaysOfWeek" /> [|Sunday|]
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="1" data-bind="checked: DaysOfWeek" /> [|Monday|]
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="2" data-bind="checked: DaysOfWeek" /> [|Tuesday|]
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="3" data-bind="checked: DaysOfWeek" /> [|Wednesday|]
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="4" data-bind="checked: DaysOfWeek" /> [|Thursday|]
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="5" data-bind="checked: DaysOfWeek" /> [|Friday|]
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" value="6" data-bind="checked: DaysOfWeek" /> [|Saturday|]
+                    </label>
+                </div>
+                <span class="validationMessage" data-bind="validationMessage:DayofWeekValidation"></span>
+            </div>
+        </div>
+    </div>
+</script>
+
+@* Campaign Action template *@
+<script type="text/html" id="SendEmail">
+    <div data-bind="with:Action">
+        <div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="bold">[|Select From Email|]</label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'DisplayEmail',dataValueField:'EmailID', data: $root.FromUserEmails, value: FromEmailID,optionLabel: 'Select From Email...'}" />
+                    <span class="validationMessage" data-bind="validationMessage:fromemailValidation"></span>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <span data-bind="text:charactersremaining,attr:{class: classname}"></span>
+                    <label class="bold">[|Subject|]</label>
+                    <input class="form-control" data-bind="value:Subject,valueUpdate: 'afterkeydown'" />
+                </div>
+                <div class="form-group">
+                    <label class="bold">[|Body|]</label>
+                    <textarea class="form-control" rows="2" data-bind="value: Body,valueUpdate: 'afterkeydown'"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+@* Link Actions*@
+<script type="text/html" id="LinkActions">
+    <div data-bind="with:Action">
+        <div class="form-group">
+            <label>Campaign </label><label class="bold" data-bind="text:CampaignName"></label>
+        </div>
+        <div data-bind="visible: CampaignLinks().length > 0">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="bold">[|Links |]<span data-bind="text:TotalLinks,visible:!CampaignID()=='' ,attr:{class:CampaignLinks().length == 0 ? 'red num-characters':'green num-characters'}"></span></label>
+                </div>
+            </div>
+            <div class="cu-grid">
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th align="left" valign="middle" width="250">Link</th>
+                        <th align="left" valign="middle">
+                            <div class="st-cu-actionshead">
+                                Action
+                            </div>
+                            <div class="st-cu-actionsdetails">
+                                Details
+                            </div>
+
+                        </th>
+                    </tr>
+                    <tbody data-bind="template: { name: 'LinkSubAction', foreach : CampaignLinks }" />
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+</script>
+
+@Scripts.Render("~/bundles/automationvm")
+
+<script type="text/javascript">
+
+    var Workflow_BASE_URL = '@Url.Content("~/Workflow/")';
+    doNotEmailValueOptions = [{ Id: 1, Value: '[|Yes|]' }, { Id: 0, Value: '[|No|]' }];
+    PARTNER_TYPE_FIELD = 21;
+    LIFECYCLE_STAGE_FIELD = 22;
+    LEAD_SOURCE_FIELD = 24;
+    LEAD_SCORE_FIELD = 26;
+    DO_NOT_EMAIL_FIELDID = 23;
+    PRIMARYEMAIL_FIELDID = 7;
+    FIRSTNAME_FIELDID = 1;
+    LASTNAME_FIELDID = 2;
+
+    TimerTypes = {
+        timeDelay : 1,
+        date:2,
+        week: 3
+    }
+
+    WorkflowStatus = {
+        Active : 401,
+        Draft : 402,
+        Paused : 403,
+        InActive : 404
+    }
+
+    RunTypes = {
+        OnADate : 1,
+        BetweenDates: 2
+    }
+
+    function ViewCampaign(e){
+        var campaignID = $(e).attr("data-id");
+        window.open('/campaignview?campaignId=' + campaignID, '_blank','left=500,top=100,width=920,height=720,toolbar=1,resizable=0');
+    };
+
+    function getPhoneNumbers(){
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getphonenumbers',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getLeadAdapters(){
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getallleadadapters',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getWorkflows(workflowid){
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getworkflows',
+            type: 'get',
+            data: {WorkflowID: workflowid},
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getFields(){
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getupdatablefields',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getUsers() {
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getallusers',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getNotificationFields(){
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getnotificationfields',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getAllTags() {
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getalltags',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getRecentPopularTags() {
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getrecentpopulartags',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getDropdownValues(dropDownID) {
+        return $.ajax({
+            url: Workflow_BASE_URL + 'GetDropdownValues',
+            data: { DropDownID : dropDownID },
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8"
+        });
+    };
+
+    function getAllCampaigns(isWorklflowCampaign) {
+
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getallcampaigns',
+            data: { IsWorklfowCampaigns : isWorklflowCampaign},
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getFromUserEmails(){
+        return $.ajax({
+            url: '/User/GetEmails',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8"
+        });
+    };
+
+    function getCampaignUrls(campaignID){
+
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getcampaignlinks',
+            data: { CampaignID : campaignID },
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            }
+        });
+    };
+
+    function getActionTypes(){
+        return $.ajax({
+            url:  WEBSERVICE_URL + '/getactiontypes',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+    }
+        });
+    };
+
+    $(document).ready(function(){
+
+        pageLoader();
+
+        $(':radio').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+
+        fieldInputTypes = {
+            Checkbox : 1,
+            DateTime : 2,
+            Email : 3,
+            Number : 5,
+            Radio : 6,
+            Text : 8,
+            Time : 9,
+            Url : 10,
+            DropDown : 11,
+            MultiSelect : 12,
+            Date : 13,
+            TextArea : 14
+        }
+
+        nofityBy = {
+            Email : 1,
+            Text: 2,
+            BothEmailNText:3
+        }
+
+        triggerCategory = {
+            StartTrigger: 1,
+            StopTrigger: 2
+        };
+
+        dropDownTypes = {
+            LifeCycle : 3,
+            OpportunityStage : 6,
+            LeadSource : 5,
+            PartnerType:4
+        }
+
+        periods = {
+            Minutes : 1,
+            Hours:2,
+            Days:3,
+            Weeks:4,
+            Months:5
+        }
+
+        timeMeridians = {
+            AM : 1,
+            PM : 2
+        }
+
+        runOn = {
+            AnyDay : 1,
+            WeekDays : 2
+        }
+
+        actionTypes = {
+            SendCampaign: 1,
+            SendText: 2,
+            SetTimer: 3,
+            AddTag: 4,
+            RemoveTag: 5,
+            AdjustLeadScore: 6,
+            ChangeLifeCycle: 7,
+            UpdateField: 8,
+            AssigntoUser: 9,
+            NotifyUser: 10,
+            SendEmail : 12,
+            EnterWorkflow : 13,
+            LinkActions: 14
+        }
+
+        triggerTypes = {
+            SmartSearch : 1,
+            FormSubmitted:2,
+            LifeCycleChange:3,
+            TagsApplied:4,
+            CampaignSent:5,
+            OpportunityStageChange:6,
+            Linkclicked:7,
+            LeadAdapterSubmitted:9,
+            LeadScoreReached:10,
+            WebPageVisited:11,
+            ActionCompleted: 12
+        }
+
+        AdvancedSearch_BASE_URL = '@Url.Content("~/AdvancedSearch/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var ParentId= '@parentId';
+        var SenderName = readCookie("SenderName");
+
+        viewModel = new WorkflowViewModel(data,Workflow_BASE_URL, WEBSERVICE_URL,AdvancedSearch_BASE_URL,ParentId,SenderName);
+
+        var getAllForms = function () {
+            $('#add-definition-loader').removeClass('hide');
+            return $.ajax({
+                url:  WEBSERVICE_URL + '/getallforms',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+                },
+                success: function(response){
+                    $("#add-definition-loader").addClass("hide");
+                }
+
+            });
+        };
+
+        var getAllSmartsearches = function () {
+
+            return $.ajax({
+                url:  WEBSERVICE_URL + '/GetAllSmartSearches',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+                }
+            });
+        };
+
+        var actions = viewModel.WorkflowActions();
+        var actions_temp = [];
+        var actionslength = actions.length;
+        viewModel.WorkflowActions([]);
+
+        getRecentPopularTags().done(function(data){
+            viewModel.PopularTags(data.PopularTags);
+            viewModel.RecentTags(data.RecentTags);
+
+        }).fail(function(err){
+            notifyError(err.responseText);
+        });
+
+        $.each(viewModel.Triggers(), function (index, value) {
+            value.WorkflowTriggerID = ko.observable(value.WorkflowTriggerID);
+            value.TriggerTypeID = ko.observable(value.TriggerTypeID == 0?"":value.TriggerTypeID);
+            value.WorkflowID = ko.observable(value.WorkflowID);
+            value.LifecycleDropdownValueID = ko.observable(value.LifecycleDropdownValueID);
+            value.CampaignID = ko.observable(value.CampaignID);
+            value.IsStartTrigger = ko.observable(value.IsStartTrigger.toString()),
+            value.TriggerCategoryName = ko.observable('');
+            value.TriggerTemplateName = ko.observable("empty");
+            value.SearchDefinitionID = ko.observable(value.SearchDefinitionID);
+            value.FormID = ko.observable(value.FormID);
+            value.FormIDs = ko.observable(value.FormIDs);
+            value.iconclass = ko.observable('');
+            value.SearchDefinitionIDs = ko.observable(value.SearchDefinitionIDs);
+            value.LeadAdapterIDs = ko.observable(value.LeadAdapterIDs);
+            value.LeadScore = ko.observable(value.LeadScore);
+            value.WebPage = ko.observable(value.WebPage);
+            value.ActionType = ko.observable(value.ActionType);
+            var minutes = 0;
+            var seconds = 0;
+            if(value.Duration != null){
+                minutes = Math.floor(value.Duration / 60,2);
+                seconds = value.Duration % 60;
+            }
+            value.Minutes = ko.observable(minutes);
+            value.Seconds = ko.observable(seconds);
+            value.Duration = ko.observable(value.Duration);
+            value.Operator = ko.observable(value.Operator);
+            value.IsAnyWebPage = ko.observable(value.IsAnyWebPage);
+            value.formValidation = value.FormIDs.extend({
+                required: {
+                    message:"[|Form is required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.FormSubmitted;
+                    }
+                }
+            });
+            value.leadadapterValidation = value.LeadAdapterIDs.extend({
+                required:{
+                    message: "[|Lead Adapter is required|]",
+                    onlyIf: function(){
+                        return value.TriggerTypeID() == triggerTypes.LeadAdapterSubmitted;
+                    }
+                }
+            });
+            value.smartSearchValidation = value.SearchDefinitionIDs.extend({
+                required: {
+                    message:"[|Saved Search is required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.SmartSearch;
+                    }
+                }
+            });
+            value.lifecycleValidation = value.LifecycleDropdownValueID.extend({
+                required: {
+                    message:"[|Life Cycle is required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.LifeCycleChange;
+                    }
+                }
+            });
+            value.leadscoreValidation = value.LeadScore.extend({
+                required: {
+                    message: "[|Lead Score is required|]",
+                    onlyIf: function() {
+                        return value.TriggerTypeID() == triggerTypes.LeadScoreReached;
+                    }
+                }
+            });
+            value.minutesValidation = value.Minutes.extend({
+                required: {
+                    message: "[|Minutes are required|]",
+                    onlyIf: function(){
+                        return value.TriggerTypeID() == triggerTypes.WebPageVisited;
+                    }
+                },
+                max: 59,
+                min: 0
+            });
+            value.secondsValidation = value.Seconds.extend({
+                required: {
+                    message: "[|Seconds are required|]",
+                    onlyIf: function(){
+                        return value.TriggerTypeID() == triggerTypes.WebPageVisited;
+                    }
+                },
+                max: 59,
+                min: 0
+            });
+            value.operatorValidation = value.Operator.extend({
+                required: {
+                    message: "[|Operation is required|]",
+                    onlyIf: function(){
+                        return value.TriggerTypeID() == triggerTypes.WebPageVisited;
+                    }
+                }
+            });
+            value.actionTypeValidation = value.ActionType.extend({
+                required: {
+                    message: "[|Action Type is required|]",
+                    onlyIf: function(){
+                        return value.TriggerTypeID() == triggerTypes.ActionCompleted;
+                    }
+                }
+            });
+            value.OpportunityStageID = ko.observable(value.OpportunityStageID);
+            value.SelectedLinks = ko.observable(value.SelectedLinks);
+
+            value.campaignLinkValidation =  value.SelectedLinks.extend({
+                required: {
+                    message:"[|Campaign link(s) are required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.Linkclicked && value.IsStartTrigger() == 'false';
+                    }
+                }
+            });
+            value.triggertypeValidation = value.TriggerTypeID.extend({ required: {message: value.IsStartTrigger() == 'true' ? '[|Trigger is required|]' : '[|Goal is required|]' } });
+
+            value.TagID = ko.observable(value.TagID);
+            value.TagIDs = ko.observable(value.TagIDs);
+
+            value.tagValidation = value.TagIDs.extend({
+                required: {
+                    message:"[|Tag is required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.TagsApplied;
+                    }
+                }
+            });
+            value.opportunitystatusValidation = value.OpportunityStageID.extend({
+                required: {
+                    message:"[|Opportunity stage is required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.OpportunityStageChange;
+                    }
+                }
+            });
+            value.RegularCampaignValidation = value.CampaignID.extend({
+                required: {
+                    message:"[|Campaign is required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.CampaignSent;
+                    }
+                }
+            });
+
+            value.LinkCampaignValidation = value.CampaignID.extend({
+                required: {
+                    message:"[|Campaign is required|]",
+                    onlyIf: function () {
+                        return value.TriggerTypeID() == triggerTypes.Linkclicked;
+                    }
+                }
+            });
+
+            value.CamapignSelect = function(e){
+                var dataItem = this.dataItem(e.item);
+                getCampaignUrls(dataItem.CampaignID).done(function(campaignlinks){
+                    value.CampaignLinks(campaignlinks);
+                    if(dataItem.CampaignID == "")
+                        value.EnableMultiselect(false);
+                    else
+                        value.EnableMultiselect(true);
+
+                    value.SelectedLinks([]);
+                }).fail(function(err){
+                    notifyerror(err.responseText);
+                });
+            },
+            value.CampaignLinks = ko.observableArray([]);
+            if(value.TriggerTypeID() == 7)
+            {
+                if(value.CampaignID() != null)
+                {
+                    getCampaignUrls(value.CampaignID()).done(function(campaignlinks){
+                        value.CampaignLinks(campaignlinks);
+
+                    }).fail(function(){
+
+                    });
+                }
+            }
+            value.SelectedURLs = ko.observable('');
+            value.EnableMultiselect = ko.observable(false);
+            value.removeLinkActions = function(){
+                var oldAction;
+                $.grep(viewModel.WorkflowActions(), function(action, index){
+                    if(action.WorkflowActionTypeID() == actionTypes.LinkActions){
+                        viewModel.removeAction(action);
+                        $.grep(action.Action().CampaignLinks(),function(link,i){
+                            $.grep(link.Actions(), function(a,k){
+                                a.IsVisible = ko.observable();
+                                viewModel.removeAction(a);
+                            })
+                        })
+                    }
+                });
+            }
+            value.TriggerChange = function(e) {
+                var dataItem = this.dataItem(e.item);
+                if(dataItem.TriggerTypeID != "")
+                    ChangeTrigger(dataItem,true);
+                if(value.IsStartTrigger()=='true'){
+                    //remove linkactions if available already
+                    if(viewModel.WorkflowActions().length > 0){
+                        if (dataItem.TriggerTypeID != triggerTypes.Linkclicked) {
+                            value.removeLinkActions();
+                        }
+                    }
+                }
+
+            }
+
+            value.ChangeCampaign = function(e){
+                var dataItem = this.dataItem(e.item);
+                getCampaignUrls(dataItem.CampaignID).done(function(campaignlinks){
+                    value.CampaignLinks(campaignlinks);
+                    if(value.IsStartTrigger()=='true'){
+                        value.removeLinkActions();
+                        if(campaignlinks.length > 0){
+
+                            var action = new WorkflowActionViewModel();
+                            $.grep(viewModel.WorkflowActionTypes(), function(v,i){
+                                if(v.WorkflowActionTypeID == actionTypes.LinkActions){
+                                    action.WorkflowActionTypeID = actionTypes.LinkActions;
+                                    action.WorkflowActionTypeName = v.WorkflowActionTypeName;
+                                    action.ActionTemplateName = v.ActionTempalteName;
+                                }
+                            })
+                            var innerAction = new WorkflowCampaignActionViewModel();
+                            innerAction.CampaignID(dataItem.CampaignID);
+                            innerAction.CampaignName(dataItem.Name);
+                            action.Action(innerAction);
+                            value.EnableMultiselect(false);
+                            value.SelectedLinks([]);
+                            viewModel.addAction(action)
+                        }
+                    }
+                    else{
+                        if(dataItem.CampaignID == "")
+                            value.EnableMultiselect(false);
+                        else
+                            value.EnableMultiselect(true);
+                        value.SelectedLinks([]);
+                    }
+                }).fail(function(err){
+                    notifyerror(err.responseText);
+                });
+
+            }
+
+            function ChangeTrigger(dataItem,isSelected)
+            {
+
+                if(isSelected) {
+                    value.TagIDs([]);
+                    value.LeadAdapterIDs([]);
+                    value.FormIDs([]);
+                    value.LifecycleDropdownValueID("");
+                    value.SelectedLinks([]);
+                    value.CampaignLinks([]);
+                    value.CampaignID("");
+                    value.SearchDefinitionIDs([]);
+                    value.LeadScore("");
+                    value.WebPage("");
+                    value.IsAnyWebPage(false);
+                    value.Minutes(00);
+                    value.Seconds(00);
+                    value.Operator(1);
+                    value.ActionType("");
+                    value.errors.showAllMessages(false);
+                }
+
+                var setTrigger = function(data){
+                    var triggerTemplateName = "TriggerTemplate" + data.TriggerTypeID.toString();
+                    value.TriggerTemplateName(triggerTemplateName);
+                    value.TriggerCategoryName(data.TriggerName);
+                    value.TriggerTypeID(data.TriggerTypeID);
+                    value.iconclass(data.iconclass);
+                }
+                if(dataItem.TriggerTypeID == triggerTypes.LifeCycleChange) {
+                    getDropdownValues(dropDownTypes.LifeCycle).done(function(dropdowndata){
+                        viewModel.LifeCycleDropdownValues(dropdowndata.response);
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    });
+                }
+                else if(dataItem.TriggerTypeID == triggerTypes.CampaignSent || dataItem.TriggerTypeID == triggerTypes.Linkclicked){
+                    getAllCampaigns(false).done(function(campaignsdata){
+                        viewModel.Campaigns(campaignsdata);
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    });
+                }
+                else if(dataItem.TriggerTypeID == triggerTypes.FormSubmitted){
+                    getAllForms().done(function(formsdata){
+                        viewModel.Forms(formsdata);
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    });
+                }
+                else if(dataItem.TriggerTypeID == triggerTypes.SmartSearch){
+                    getAllSmartsearches().done(function(searchdata){
+                        viewModel.SmartSearches(searchdata);
+                        viewModel.IsWorkflowAllowedMoreThanOnce("false");
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    });
+                }
+                else if(dataItem.TriggerTypeID == triggerTypes.OpportunityStageChange){
+                    getDropdownValues(dropDownTypes.OpportunityStage).done(function(dropdowndata){
+                        viewModel.OpportunityStageDropdownValues(dropdowndata.response);
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    });
+                }
+                else if(dataItem.TriggerTypeID == triggerTypes.TagsApplied){
+                    getAllTags().done(function(tagsdata){
+                        viewModel.Tags(tagsdata);
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    });
+
+                    // code for Recent and poular tags
+                    $.each(viewModel.PopularTags(), function (index, tagItem) {
+                        var d = document.getElementById("populartag1");
+                        $(d).checkbox();
+                    });
+                }
+                else if(dataItem.TriggerTypeID == triggerTypes.LeadAdapterSubmitted){
+                    getLeadAdapters().done(function(leadadaptersdata){
+                        viewModel.LeadAdapters(leadadaptersdata);
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    })
+                }
+                else if (dataItem.TriggerTypeID == triggerTypes.ActionCompleted){
+                    getActionTypes().done(function(data){
+                        viewModel.ActionTypes(data);
+                        setTrigger(dataItem);
+                    }).fail(function(err){
+                        notifyError(err.responseText);
+                    });
+                }
+                else if(dataItem.TriggerTypeID == triggerTypes.LeadScoreReached || dataItem.TriggerTypeID == triggerTypes.WebPageVisited){
+                    setTrigger(dataItem);
+                }
+            };
+            value.errors = ko.validation.group(value);
+
+            var template = $.grep(viewModel.WorkflowTriggers(), function(e){ return e.TriggerTypeID == value.TriggerTypeID(); });
+            if(template.length > 0)
+                ChangeTrigger(template[0],false);
+
+            // value.TagIDs = ko.observable(value.TagIDs);
+
+            // actionsLoadEvent();
+
+        });
+
+        $.each(actions, function(index, action) {
+            var template = $.grep(viewModel.WorkflowActionTypes(), function(e){ return e.WorkflowActionTypeID == action.WorkflowActionTypeID; })[0];
+            var newAction = new WorkflowActionViewModel(action);
+            newAction.WorkflowActionTypeName(template.WorkflowActionTypeName);
+            newAction.ActionTemplateName(template.ActionTempalteName);
+            newAction.iconclass(template.iconclass);
+            var id = "Action" + (index + 1);
+
+            var setNewAction = function (model) {
+                newAction.Action(model);
+                newAction.IsVisible(false);
+                removeinnerLoader(id);
+                var on =0;
+                if(typeof newAction.OrderNumber == 'function')
+                    on = newAction.OrderNumber();
+                else
+                    on = newAction.OrderNumber;
+
+                actions_temp.push(newAction);
+                actions_temp = actions_temp.sort(function(a,b){
+                    var on1 = 0; var on2 = 0;
+                    if(typeof a.OrderNumber == 'function')
+                        on1 = a.OrderNumber();
+                    else
+                        on1 = a.OrderNumber;
+                    if(typeof b.OrderNumber == 'function')
+                        on2 = b.OrderNumber();
+                    else
+                        on2 = b.OrderNumber;
+
+                    if(on1 < on2)
+                        return -1;
+                    else
+                        return 1;
+                });
+                //viewModel.WorkflowActions.splice(on, 0, newAction);
+                if(actions.length == actions_temp.length){
+                    viewModel.WorkflowActions(actions_temp);
+                }
+            }
+            innerLoader(id);
+            if (template.WorkflowActionTypeID == actionTypes.AddTag || template.WorkflowActionTypeID == actionTypes.RemoveTag) {
+                if(viewModel.Tags().length > 0){
+                    var model = new WorkflowTagActionViewModel(action.Action);
+                    model.ActionType = (template.WorkflowActionTypeID == actionTypes.AddTag) ? 1 : 0;
+                    model.Order = index +1;
+                    setNewAction(model);
+                }else{
+                    getAllTags().done(function (tagsdata) {
+                        viewModel.Tags(tagsdata);
+                        var model = new WorkflowTagActionViewModel(action.Action);
+                        model.ActionType = (template.WorkflowActionTypeID == actionTypes.AddTag) ? 1 : 0;
+                        model.Order = index+1;
+
+                        setNewAction(model);
+                    }).fail(function (err) {
+                        notifyError(err.responseText);
+                    });
+                }
+            }
+            else if(template.WorkflowActionTypeID == actionTypes.EnterWorkflow){
+                if(viewModel.ActiveWorkflows().length > 0){
+                    var model = new EnterWorkflowActionViewModel(action.Action);
+                    setNewAction(model);
+                }else {
+                    getWorkflows(viewModel.WorkflowID).done(function(workflowData){
+                        viewModel.ActiveWorkflows(workflowData);
+                        var model = new EnterWorkflowActionViewModel(action.Action);
+                        setNewAction(model);
+                    }).fail(function (err) {
+                        notifyError(err.responseText);
+                    });
+                }
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.ChangeLifeCycle) {
+                if(viewModel.LifeCycleDropdownValues().length > 0){
+                    var model = new WorkflowLifeCycleActionViewModel(action.Action);
+                    setNewAction(model)
+                }else{
+                    getDropdownValues(dropDownTypes.LifeCycle).done(function (dropdowndata) {
+                        viewModel.LifeCycleDropdownValues(dropdowndata.response);
+                        var model = new WorkflowLifeCycleActionViewModel(action.Action);
+                        setNewAction(model);
+                    });
+                }
+
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.AdjustLeadScore) {
+                setNewAction(new WorkflowLeadScoreActionViewModel(action.Action))
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.AssigntoUser) {
+                if(viewModel.Users().length > 0){
+                    var model = new WorkflowUserAssignmentActionViewModel(action.Action);
+                    model.Order = index +1;
+                    setNewAction(model);
+                }else{
+                    getUsers().done(function (usersdata) {
+                        var model = new WorkflowUserAssignmentActionViewModel(action.Action);
+                        model.Order = index +1;
+                        viewModel.Users(usersdata);
+                        setNewAction(model);
+                    }).fail(function (err) {
+                        notifyError(err.responseText);
+                    });
+                }
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.NotifyUser) {
+                if(viewModel.Users().length > 0 && viewModel.NotificationFields().length > 0 ){
+                    var model = new WorkflowNotifyUserActionViewModel(action.Action);
+                    model.Order = index +1;
+                    setNewAction(model)
+                }else{
+                    getUsers().done(function (usersdata) {
+                        var model = new WorkflowNotifyUserActionViewModel(action.Action);
+                        model.Order = index +1;
+                        var ids=[];
+                        $.each(usersdata,function(ind,val){
+                            ids.push(val.UserID);
+                        });
+                        if(action.Action.UserIds)
+                        {
+                            $.each(action.Action.UserIds,function(index,value){
+                                if(jQuery.inArray(value, ids) == -1) 
+                                {
+                                    var ind= action.Action.UserIds.indexOf(value)
+                                    action.Action.UserIds.splice(ind, 1);
+                                }
+                            });
+                        }
+                        viewModel.Users(usersdata);
+                        getNotificationFields().done(function (notificationFieldsData) {
+                            viewModel.NotificationFields(notificationFieldsData);
+                            setNewAction(model)
+                        });
+
+                    }).fail(function (err) {
+                        notifyError(err.responseText);
+                    });
+
+                }
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.UpdateField) {
+                var setValueOptions = function() {
+                    var field =  $.grep(viewModel.Fields(), function (e) { return e.FieldId == action.Action.FieldID })[0];
+                    var contactDropdown = null;
+                    action.Action.FieldInputTypeId = field.FieldInputTypeId;
+                    var valueOptions = [];
+
+                    if (action.Action.FieldID == DO_NOT_EMAIL_FIELDID) {
+                        valueOptions = doNotEmailValueOptions;
+                    }
+
+                    if (field.FieldId == PARTNER_TYPE_FIELD)
+                        contactDropdown = dropDownTypes.PartnerType;
+                    else if (field.FieldId == LIFECYCLE_STAGE_FIELD)
+                        contactDropdown = dropDownTypes.LifeCycle;
+                    else if (field.FieldId == LEAD_SOURCE_FIELD)
+                        contactDropdown = dropDownTypes.LeadSource;
+
+                    if (field.FieldInputTypeId == fieldInputTypes.Checkbox || field.FieldInputTypeId == fieldInputTypes.DropDown
+                                                  || field.FieldInputTypeId == fieldInputTypes.Radio || field.FieldInputTypeId == fieldInputTypes.MultiSelect){
+                        var authToken = readCookie("accessToken");
+                        $.ajax({
+                            url: AdvancedSearch_BASE_URL + 'GetSearchQualifiers',
+                            type: 'get',
+                            dataType: 'json',
+                            data: { 'fieldId': field.FieldId, 'contactDropdown': contactDropdown },
+                            contentType: "application/json; charset=utf-8",
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                            }
+                        }).then(function(response){
+                            var filter = $.Deferred();
+                            if(response.success)
+                                filter.resolve(response);
+                            else
+                                filter.reject(response.error);
+                            return filter.promise();
+                        }).done(function(data){
+                            valueOptions = data.response;
+                            action.Action.ValueOptions = valueOptions;
+                            var model = new WorkflowContactFieldActionViewModel(action.Action);
+                            if(field.FieldInputTypeId == fieldInputTypes.MultiSelect)
+                                model.FieldValue(model.FieldValue());
+                            setNewAction(model);
+                        }).fail(function(err){
+                            notifyError(err);
+                        });
+
+                    }else{
+                        setNewAction(new WorkflowContactFieldActionViewModel(action.Action));
+                    }
+                }
+                if(viewModel.Fields().length > 0){
+                    setValueOptions();
+                }else{
+                    getFields().done(function (fieldsdata) {
+                        ko.utils.arrayForEach(fieldsdata, function (item) {
+                            item.ComputedFieldId = item.FieldId + "" + item.IsDropdownField;
+                        });
+                        viewModel.Fields(fieldsdata);
+                        setValueOptions();
+                    }).fail(function (err) {
+                        notifyError(err.responseText);
+                    });
+                }
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.SendText) {
+                getPhoneNumbers().done(function (phonesdata) {
+                    var model = new WorkflowTextNotificationActionViewModel(action.Action);
+                    model.PhoneNumbers(phonesdata);
+
+                    setNewAction(model)
+                }).fail(function (err) {
+                    notifyError(err.responseText);
+                });
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.SendCampaign) {
+                if(action.Action.CampaignID != null || action.Action.CampaignID != 'undefined'){
+                    getCampaignUrls(action.Action.CampaignID).done(function (campaignUrls) {
+                        action.Action.urls = campaignUrls;
+                        if(viewModel.AutomationCampaigns().length > 0){
+                            var model = new WorkflowCampaignActionViewModel(action.Action);
+                            model.Order = index +1;
+                            setNewAction(model)
+                        }else{
+                            getAllCampaigns(true).done(function (campaignsdata) {
+                                var model = new WorkflowCampaignActionViewModel(action.Action);
+                                model.Order = index +1;
+                                viewModel.AutomationCampaigns(campaignsdata);
+                                setNewAction(model)
+                            }).fail(function (err) {
+                                notifyError(err.responseText);
+                            });
+                        }
+                    });
+                }
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.SetTimer) {
+                var model = new WorkflowSetTimerActionViewModel(action.Action);
+                setNewAction(model)
+            }
+            else if (template.WorkflowActionTypeID == actionTypes.SendEmail) {
+                if (viewModel.FromUserEmails().length > 0) {
+                    var model = new WorkflowEmailNotificationActionViewModel(action.Action);
+                    setNewAction(model);
+                } else {
+                    getFromUserEmails().done(function (useremails) {
+                        viewModel.FromUserEmails(useremails.response);
+                        $.each( viewModel.FromUserEmails(), function (index, value) {
+                            value.DisplayEmail = SenderName  + " <" + value.EmailId + ">";
+                        });
+                        //viewModel.FromUserEmails().map(function(e){ delete e.EmailSignature})
+                        var model = new WorkflowEmailNotificationActionViewModel(action.Action);
+                        setNewAction(model);
+                    }).fail(function (err) {
+                        notifyError(err.responseText);
+                    });
+                }
+            }
+            else if(template.WorkflowActionTypeID == actionTypes.LinkActions){
+                getCampaignUrls(action.Action.CampaignID).done(function (campaignUrls) {
+                    action.Action.urls = campaignUrls;
+                    var model = new WorkflowCampaignActionViewModel(action.Action);
+                    // model.CampaignLinks = ko.observableArray(action.Action.urls);
+                    setNewAction(model);
+                }).fail(function(er){
+                    notifyError(er.responseText);
+                });
+            }
+            else {
+                setNewAction(new WorkflowLeadScoreActionViewModel(action.Action))
+            }
+
+        });
+        removepageloader();
+        ko.applyBindings(viewModel);
+
+    });
+</script>

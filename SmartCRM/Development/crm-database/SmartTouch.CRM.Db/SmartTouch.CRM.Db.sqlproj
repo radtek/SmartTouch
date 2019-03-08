@@ -1,0 +1,654 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>SmartTouch.CRM.Db</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{73640d00-ac92-4dfc-acc5-6170ccdfd2f3}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>SmartTouch.CRM.Db</RootNamespace>
+    <AssemblyName>SmartTouch.CRM.Db</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <Trustworthy>True</Trustworthy>
+    <GenerateCreateScript>False</GenerateCreateScript>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>E:\SmartTouchCRM\Development\crm-database\SmartTouch.CRM.Db\bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="Workflow\" />
+    <Folder Include="Workflow\Tables\" />
+    <Folder Include="dbo\Views\" />
+    <Folder Include="Storage\" />
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="Workflow\Functions\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="Workflow\Stored Procedures\" />
+    <Folder Include="dbo\User Defined Types\" />
+    <Folder Include="Workflow\User Defined Types\" />
+    <Folder Include="Security\" />
+    <Folder Include="dbo\Sequences\" />
+    <Folder Include="Snapshots" />
+    <Folder Include="New Folder" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\NoteTagMap.sql" />
+    <Build Include="dbo\Tables\CRMOutlookSync.sql" />
+    <Build Include="dbo\Tables\CampaignRecipients_0003.sql" />
+    <Build Include="dbo\Tables\TaxRates.sql" />
+    <Build Include="dbo\Tables\ThirdPartyClients.sql" />
+    <Build Include="dbo\Tables\NoteTagMap_Audit.sql" />
+    <Build Include="dbo\Tables\Cultures.sql" />
+    <Build Include="dbo\Tables\CampaignRecipients_0004.sql" />
+    <Build Include="dbo\Tables\Tours.sql" />
+    <Build Include="dbo\Tables\Currencies.sql" />
+    <Build Include="dbo\Tables\Tours_Audit.sql" />
+    <Build Include="dbo\Tables\CustomFieldSections.sql" />
+    <Build Include="dbo\Tables\CampaignRecipients_0005.sql" />
+    <Build Include="dbo\Tables\Notifications.sql" />
+    <Build Include="dbo\Tables\CustomFieldTabs.sql" />
+    <Build Include="dbo\Tables\NotificationStatuses.sql" />
+    <Build Include="dbo\Tables\CampaignRecipients_0006.sql" />
+    <Build Include="dbo\Tables\CustomFieldValueOptions.sql" />
+    <Build Include="dbo\Tables\TriggerWorkflowAction.sql" />
+    <Build Include="dbo\Tables\Operations.sql" />
+    <Build Include="dbo\Tables\DailySummaryEmailAudit.sql" />
+    <Build Include="dbo\Tables\Campaigns.sql" />
+    <Build Include="dbo\Tables\UserActivities.sql" />
+    <Build Include="dbo\Tables\Opportunities.sql" />
+    <Build Include="dbo\Tables\DashboardSettings.sql" />
+    <Build Include="dbo\Tables\UserActivityLogs.sql" />
+    <Build Include="dbo\Tables\Opportunities_Audit.sql" />
+    <Build Include="dbo\Tables\DashboardUserSettingsMap.sql" />
+    <Build Include="dbo\Tables\CampaignSearchDefinitionMap.sql" />
+    <Build Include="dbo\Tables\UserAddressMap.sql" />
+    <Build Include="dbo\Tables\DateFormats.sql" />
+    <Build Include="dbo\Tables\CampaignStatistics.sql" />
+    <Build Include="dbo\Tables\UserAuditTypes.sql" />
+    <Build Include="dbo\Tables\OpportunitiesRelationshipMap.sql" />
+    <Build Include="dbo\Tables\DeadlockEvents.sql" />
+    <Build Include="dbo\Tables\CampaignStatistics_0001.sql" />
+    <Build Include="dbo\Tables\UserProfileAudit.sql" />
+    <Build Include="dbo\Tables\Divisions.sql" />
+    <Build Include="dbo\Tables\OpportunitiesRelationshipMap_Audit.sql" />
+    <Build Include="dbo\Tables\Users.sql" />
+    <Build Include="dbo\Tables\DocRepositorys.sql" />
+    <Build Include="dbo\Tables\CampaignStatistics_0002.sql" />
+    <Build Include="dbo\Tables\Documents.sql" />
+    <Build Include="dbo\Tables\UserSettings.sql" />
+    <Build Include="dbo\Tables\CampaignStatistics_0003.sql" />
+    <Build Include="dbo\Tables\OpportunityActionMap.sql" />
+    <Build Include="dbo\Tables\DocumentTypes.sql" />
+    <Build Include="dbo\Tables\UserSocialMediaPosts.sql" />
+    <Build Include="dbo\Tables\OpportunityActionMap_Audit.sql" />
+    <Build Include="dbo\Tables\Dropdowns.sql" />
+    <Build Include="dbo\Tables\CampaignStatistics_0004.sql" />
+    <Build Include="dbo\Tables\WebAnalyticsProviders.sql" />
+    <Build Include="dbo\Tables\DropdownValues.sql" />
+    <Build Include="dbo\Tables\CampaignStatistics_0005.sql" />
+    <Build Include="dbo\Tables\WebVisitDailySummaryEmailAudit.sql" />
+    <Build Include="dbo\Tables\OpportunityContactMap.sql" />
+    <Build Include="dbo\Tables\DropdownValueTypes.sql" />
+    <Build Include="dbo\Tables\CampaignStatistics_0006.sql" />
+    <Build Include="dbo\Tables\WebVisitEmailAudit.sql" />
+    <Build Include="dbo\Tables\OpportunityContactMap_Audit.sql" />
+    <Build Include="dbo\Tables\Emails.sql" />
+    <Build Include="dbo\Tables\CampaignTagMap.sql" />
+    <Build Include="dbo\Tables\WebVisitNotificationsMapping.sql" />
+    <Build Include="dbo\Tables\EmailTemplates.sql" />
+    <Build Include="dbo\Tables\CampaignTemplates.sql" />
+    <Build Include="dbo\Tables\WebVisitUserNotificationMap.sql" />
+    <Build Include="dbo\Tables\EnvironmentSettings.sql" />
+    <Build Include="dbo\Tables\CampaignTemplatesTest.sql" />
+    <Build Include="dbo\Tables\WorkflowActions.sql" />
+    <Build Include="dbo\Tables\OpportunityGroups.sql" />
+    <Build Include="dbo\Tables\CampaignTypes.sql" />
+    <Build Include="dbo\Tables\WorkflowActionTypes.sql" />
+    <Build Include="dbo\Tables\OpportunityNoteMap.sql" />
+    <Build Include="dbo\Tables\FieldInputTypes.sql" />
+    <Build Include="dbo\Tables\ClassicCampaigns.sql" />
+    <Build Include="dbo\Tables\WorkflowAnalytics.sql" />
+    <Build Include="dbo\Tables\OpportunityNoteMap_Audit.sql" />
+    <Build Include="dbo\Tables\Fields.sql" />
+    <Build Include="dbo\Tables\ClientRefreshTokens.sql" />
+    <Build Include="dbo\Tables\FileTypes.sql" />
+    <Build Include="dbo\Tables\Communications.sql" />
+    <Build Include="dbo\Tables\FormFields.sql" />
+    <Build Include="dbo\Tables\OpportunityStageGroups.sql" />
+    <Build Include="dbo\Tables\CommunicationStatus.sql" />
+    <Build Include="dbo\Tables\WorkflowCampaignActionLinks.sql" />
+    <Build Include="dbo\Tables\Forms.sql" />
+    <Build Include="dbo\Tables\OpportunityTagMap.sql" />
+    <Build Include="dbo\Tables\CommunicationTracker.sql" />
+    <Build Include="dbo\Tables\WorkflowCampaignActions.sql" />
+    <Build Include="dbo\Tables\FormSubmissions.sql" />
+    <Build Include="dbo\Tables\OpportunityTagMap_Audit.sql" />
+    <Build Include="dbo\Tables\CommunicationTypes.sql" />
+    <Build Include="dbo\Tables\WorkflowContactFieldAction.sql" />
+    <Build Include="dbo\Tables\FormTags.sql" />
+    <Build Include="dbo\Tables\Communities.sql" />
+    <Build Include="dbo\Tables\WorkflowEmailNotificationAction.sql" />
+    <Build Include="dbo\Tables\ImageCategories.sql" />
+    <Build Include="dbo\Tables\Conditions.sql" />
+    <Build Include="dbo\Tables\WorkFlowLeadScoreAction.sql" />
+    <Build Include="dbo\Tables\ReceivedMailAudit.sql" />
+    <Build Include="dbo\Tables\ImageDomains.sql" />
+    <Build Include="dbo\Tables\ContactActionMap.sql" />
+    <Build Include="dbo\Tables\WorkFlowLifeCycleAction.sql" />
+    <Build Include="dbo\Tables\RefreshAnalytics.sql" />
+    <Build Include="dbo\Tables\Images.sql" />
+    <Build Include="dbo\Tables\ContactActionMap_Audit.sql" />
+    <Build Include="dbo\Tables\WorkflowNotifyUserAction.sql" />
+    <Build Include="dbo\Tables\ImportContactData.sql" />
+    <Build Include="dbo\Tables\Workflows.sql" />
+    <Build Include="dbo\Tables\ImportContactLogs.sql" />
+    <Build Include="dbo\Tables\Region.sql" />
+    <Build Include="dbo\Tables\WorkflowTagAction.sql" />
+    <Build Include="dbo\Tables\ReportModuleMap.sql" />
+    <Build Include="dbo\Tables\ImportContactsEmailStatuses.sql" />
+    <Build Include="dbo\Tables\ContactAddressMap.sql" />
+    <Build Include="dbo\Tables\WorkFlowTextNotificationAction.sql" />
+    <Build Include="dbo\Tables\Reports.sql" />
+    <Build Include="dbo\Tables\ImportCustomData.sql" />
+    <Build Include="dbo\Tables\ContactCommunityMap.sql" />
+    <Build Include="dbo\Tables\WorkflowTimerActions.sql" />
+    <Build Include="dbo\Tables\ResentCampaigns.sql" />
+    <Build Include="dbo\Tables\ImportDataSettings.sql" />
+    <Build Include="dbo\Tables\ContactCustomFieldMap.sql" />
+    <Build Include="dbo\Tables\WorkflowTriggers.sql" />
+    <Build Include="dbo\Tables\RoleModuleMap.sql" />
+    <Build Include="dbo\Tables\ImportPhoneData.sql" />
+    <Build Include="dbo\Tables\ContactEmailAudit.sql" />
+    <Build Include="dbo\Tables\AccountAddressMap.sql" />
+    <Build Include="dbo\Tables\WorkflowTriggerTypes.sql" />
+    <Build Include="dbo\Tables\Roles.sql" />
+    <Build Include="dbo\Tables\ImportTagMap.sql" />
+    <Build Include="dbo\Tables\ContactEmails.sql" />
+    <Build Include="dbo\Tables\AccountCustomReports.sql" />
+    <Build Include="dbo\Tables\WorkFlowUserAssignmentAction.sql" />
+    <Build Include="dbo\Tables\ScoreCategories.sql" />
+    <Build Include="dbo\Tables\IndexData.sql" />
+    <Build Include="dbo\Tables\ContactEmails_Audit.sql" />
+    <Build Include="Workflow\Tables\TerminatedActions.sql" />
+    <Build Include="dbo\Tables\SearchDefinitions.sql" />
+    <Build Include="dbo\Tables\LeadAdapterAndAccountMap.sql" />
+    <Build Include="dbo\Tables\AccountDataAccessPermissions.sql" />
+    <Build Include="Workflow\Tables\TrackActionLogs.sql" />
+    <Build Include="dbo\Tables\SearchDefinitionSubscriptionMap.sql" />
+    <Build Include="dbo\Tables\ContactImages.sql" />
+    <Build Include="dbo\Tables\AccountEmails.sql" />
+    <Build Include="dbo\Tables\LeadAdapterCommunicationTypes.sql" />
+    <Build Include="dbo\Tables\SearchDefinitionTagMap.sql" />
+    <Build Include="dbo\Tables\ContactIPAddresses.sql" />
+    <Build Include="dbo\Tables\Accounts.sql" />
+    <Build Include="Workflow\Tables\TrackActions.sql" />
+    <Build Include="dbo\Tables\LeadAdapterCustomFields.sql" />
+    <Build Include="dbo\Tables\SearchFilters.sql" />
+    <Build Include="dbo\Tables\ContactLeadAdapterMap.sql" />
+    <Build Include="dbo\Tables\LeadAdapterErrorStatus.sql" />
+    <Build Include="dbo\Tables\AccountSettings.sql" />
+    <Build Include="Workflow\Tables\TrackMessageLogs.sql" />
+    <Build Include="dbo\Tables\SearchPredicateTypes.sql" />
+    <Build Include="dbo\Tables\ContactLeadSourceMap.sql" />
+    <Build Include="dbo\Tables\LeadAdapterJobLogDetails.sql" />
+    <Build Include="dbo\Tables\Actions.sql" />
+    <Build Include="dbo\Tables\SearchQualifierTypes.sql" />
+    <Build Include="dbo\Tables\ContactNoteMap.sql" />
+    <Build Include="Workflow\Tables\TrackMessages.sql" />
+    <Build Include="dbo\Tables\LeadAdapterJobLogs.sql" />
+    <Build Include="dbo\Tables\Actions_Audit.sql" />
+    <Build Include="dbo\Tables\Sections.sql" />
+    <Build Include="dbo\Tables\ContactNoteMap_Audit.sql" />
+    <Build Include="dbo\Tables\LeadAdapterJobStatus.sql" />
+    <Build Include="dbo\Tables\SeedList.sql" />
+    <Build Include="dbo\Tables\LeadAdapterRecordStatus.sql" />
+    <Build Include="dbo\Tables\ServiceProviders.sql" />
+    <Build Include="dbo\Tables\ActionTagMap.sql" />
+    <Build Include="dbo\Tables\LeadAdapterTagMap.sql" />
+    <Build Include="dbo\Tables\ContactPhoneNumbers.sql" />
+    <Build Include="dbo\Tables\SignInActivity.sql" />
+    <Build Include="dbo\Tables\ActiveContacts.sql" />
+    <Build Include="dbo\Tables\LeadAdapterTypes.sql" />
+    <Build Include="dbo\Tables\ContactRelationshipMap.sql" />
+    <Build Include="dbo\Tables\Addresses.sql" />
+    <Build Include="dbo\Tables\States.sql" />
+    <Build Include="dbo\Tables\LeadScoreConditionValues.sql" />
+    <Build Include="dbo\Tables\ContactRelationshipMap_Audit.sql" />
+    <Build Include="dbo\Tables\ApplicationTourDetails.sql" />
+    <Build Include="dbo\Tables\Statuses.sql" />
+    <Build Include="dbo\Tables\LeadScoreMessages.sql" />
+    <Build Include="dbo\Tables\AVColumnPreferences.sql" />
+    <Build Include="dbo\Tables\StoreProcExecutionResults.sql" />
+    <Build Include="dbo\Tables\BulkContactData.sql" />
+    <Build Include="dbo\Tables\LeadScoreRules.sql" />
+    <Build Include="dbo\Tables\Contacts.sql" />
+    <Build Include="dbo\Tables\StoreProcParamsList.sql" />
+    <Build Include="dbo\Tables\BulkOperations.sql" />
+    <Build Include="dbo\Tables\LeadScores.sql" />
+    <Build Include="dbo\Tables\Contacts_Audit.sql" />
+    <Build Include="dbo\Tables\SubmittedFormData.sql" />
+    <Build Include="dbo\Tables\LoginAudit.sql" />
+    <Build Include="dbo\Tables\CampaignAnalytics.sql" />
+    <Build Include="dbo\Tables\SubmittedFormFieldData.sql" />
+    <Build Include="dbo\Tables\MarketingMessageAccountMap.sql" />
+    <Build Include="dbo\Tables\ContactSource.sql" />
+    <Build Include="dbo\Tables\SubscriptionDefaultDropdownValueMap.sql" />
+    <Build Include="dbo\Tables\MarketingMessageContentMap.sql" />
+    <Build Include="dbo\Tables\ContactSourceType.sql" />
+    <Build Include="dbo\Tables\SubscriptionModuleMap.sql" />
+    <Build Include="dbo\Tables\MarketingMessages.sql" />
+    <Build Include="dbo\Tables\ContactTagMap.sql" />
+    <Build Include="dbo\Tables\SubscriptionPermissionsMap.sql" />
+    <Build Include="dbo\Tables\MenuCategories.sql" />
+    <Build Include="dbo\Tables\ContactTextMessageAudit.sql" />
+    <Build Include="dbo\Tables\Subscriptions.sql" />
+    <Build Include="dbo\Tables\MenuItems.sql" />
+    <Build Include="dbo\Tables\ContactTourMap.sql" />
+    <Build Include="dbo\Tables\CampaignContactTagMap.sql" />
+    <Build Include="dbo\Tables\SubscriptionSettings.sql" />
+    <Build Include="dbo\Tables\ModuleOperationsMap.sql" />
+    <Build Include="dbo\Tables\ContactTourMap_Audit.sql" />
+    <Build Include="dbo\Tables\CampaignLinks.sql" />
+    <Build Include="dbo\Tables\SubscriptionSettingTypes.sql" />
+    <Build Include="dbo\Tables\Modules.sql" />
+    <Build Include="dbo\Tables\CampaignLogDetails.sql" />
+    <Build Include="dbo\Tables\Tags.sql" />
+    <Build Include="dbo\Tables\MomentaryCampaignRecipients.sql" />
+    <Build Include="dbo\Tables\ContactTypes.sql" />
+    <Build Include="dbo\Tables\CampaignRecipients.sql" />
+    <Build Include="dbo\Tables\Notes.sql" />
+    <Build Include="dbo\Tables\Tags_Audit.sql" />
+    <Build Include="dbo\Tables\ContactWebVisits.sql" />
+    <Build Include="dbo\Tables\CampaignRecipients_0001.sql" />
+    <Build Include="dbo\Tables\Notes_Audit.sql" />
+    <Build Include="dbo\Tables\ContactWorkflowAudit.sql" />
+    <Build Include="dbo\Tables\CampaignRecipients_0002.sql" />
+    <Build Include="dbo\Tables\Countries.sql" />
+    <Build Include="dbo\Tables\TagTypes.sql" />
+    <Build Include="dbo\Views\GET_TIME_LINES.sql" />
+    <Build Include="dbo\Views\vCampaignRecipients.sql" />
+    <Build Include="dbo\Views\vTagCounts.sql" />
+    <Build Include="dbo\Views\vTags.sql" />
+    <Build Include="dbo\Views\vTagsLeadScore.sql" />
+    <Build Include="dbo\Views\GET_Contact_Email_Phone.sql" />
+    <Build Include="dbo\Views\GET_Contact_Email_Phone_Zip.sql" />
+    <Build Include="dbo\Views\GET_Contact_Email_Phone_Zip_PrimaryLeadSource.sql" />
+    <Build Include="dbo\Views\GET_ContactCustomField_Values.sql" />
+    <Build Include="dbo\Views\GET_ContactCustomField_Values_test.sql" />
+    <Build Include="dbo\Views\GET_DropdownFieldValues.sql" />
+    <Build Include="dbo\Views\Get_Import_Data.sql" />
+    <Build Include="dbo\Views\GET_LeadAdapterDetails.sql" />
+    <Build Include="dbo\Views\GET_Opportunities_Timelines.sql" />
+    <Build Include="dbo\Views\GET_PhoneFields.sql" />
+    <Build Include="dbo\Views\GET_Primary_Contact_Phone_Number.sql" />
+    <Build Include="dbo\Views\GET_VisiStat_Top3_Pages.sql" />
+    <Build Include="dbo\Views\GetCampaingContactEmailStats.sql" />
+    <Build Include="dbo\Views\vAccountMetrics.sql" />
+    <Build Include="dbo\Views\vCampaignStatistics.sql" />
+    <Build Include="Storage\SECONDARY.sql" />
+    <Build Include="Storage\SecondaryFG.sql" />
+    <Build Include="Storage\WorkflowFileGroup.sql" />
+    <Build Include="dbo\Functions\Accounts_ContactsCount.sql" />
+    <Build Include="dbo\Functions\Contact_LeadScore.sql" />
+    <Build Include="dbo\Functions\EmailValidation.sql" />
+    <Build Include="dbo\Functions\fnReplaceCharAtPos.sql" />
+    <Build Include="dbo\Functions\Forms_Submission.sql" />
+    <Build Include="dbo\Functions\GET_Imports_CustomFieldValue.sql" />
+    <Build Include="dbo\Functions\GetCustomFieldValue.sql" />
+    <Build Include="dbo\Functions\GetCustomFieldValue_test.sql" />
+    <Build Include="dbo\Functions\isValidEmailFormat.sql" />
+    <Build Include="dbo\Functions\SentEmail_Count.sql" />
+    <Build Include="dbo\Functions\TagCounts.sql" />
+    <Build Include="dbo\Functions\UDF_Contact_OldLifcycle.sql" />
+    <Build Include="dbo\Functions\getCustomFieldTable.sql" />
+    <Build Include="dbo\Functions\GetInfo.sql" />
+    <Build Include="dbo\Functions\getPhoneNumberTable.sql" />
+    <Build Include="dbo\Functions\GetReputationInfo.sql" />
+    <Build Include="dbo\Functions\parseJSON.sql" />
+    <Build Include="dbo\Functions\Split.sql" />
+    <Build Include="dbo\Functions\GetLeadScore.sql" />
+    <Build Include="dbo\Functions\Split_2.sql" />
+    <Build Include="dbo\Stored Procedures\Account_Default_Roles.sql" />
+    <Build Include="dbo\Stored Procedures\Account_Default_Roles_v1.sql" />
+    <Build Include="dbo\Stored Procedures\Account_Subscriptions_Types.sql" />
+    <Build Include="dbo\Stored Procedures\Bounced_Mail_Data_Processor.sql" />
+    <Build Include="dbo\Stored Procedures\Calc_CampaignAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\Calc_WorkflowAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\Calc_WorkflowCampaignAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\DELETE_Account_Records.sql" />
+    <Build Include="dbo\Stored Procedures\DELETE_Ignored_TrackMessages.sql" />
+    <Build Include="dbo\Stored Procedures\DoBulkContactOperations.sql" />
+    <Build Include="dbo\Stored Procedures\Exec_RefreshAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\GenerateAudittrail.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Activity_Report_v1.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Account_BDX_Custom_Lead_Report.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Account_BDX_FreemiumCustomLead_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Campagin_Reports.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Campagin_Reports_N.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_CustomReport_Info.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_FormsCountSummary_Report.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Account_HotListContacts_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_LeadSource_Traffic_Details.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_NewLeads_AreaChart.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_NewLeads_AreaChart_V1.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_NewLeads_PieChart.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Opportunity_Pipeline_FunnelChart.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_OpportunityPipeline_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_OpportunityPipeline_v1.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_TourType_Lifecycle_v1.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_TourType_Lifecycle_v2.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_LeadSource_AreaChart.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_LeadSource_PieChart.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_LeadSource_v1.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_LeadSource_v2.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_LifeCycle_v1.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_LifeCycle_v2.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_TourType_v1.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_TourType_v2.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_Traffic_Types_BarChart.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_TrafficByLifcycle_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_TrafficBySource_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_TrafficByTourType_Lifcycle_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Account_TrafficByTourType_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_AccountsGrid.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Application_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Campaigns_Count.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Contact_TimelineData.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Contact_TimelineData_RowCounts.sql" />
+    <Build Include="dbo\Stored Procedures\GET_ElasticSearch_ContactData.sql" />
+    <Build Include="dbo\Stored Procedures\GET_HotList_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_WORKFLOW_SUMMARY.sql" />
+    <Build Include="dbo\Stored Procedures\getCampaignRecipientInfo.sql" />
+    <Build Include="dbo\Stored Procedures\getCampaignRecipientInfo_test.sql" />
+    <Build Include="dbo\Stored Procedures\GetGrabOnInvalidCouponResponses.sql" />
+    <Build Include="dbo\Stored Procedures\getSearchTitle.sql" />
+    <Build Include="dbo\Stored Procedures\getTagCounts.sql" />
+    <Build Include="dbo\Stored Procedures\GetUniqueRecpients.sql" />
+    <Build Include="dbo\Stored Procedures\HandleNextCampaign.sql" />
+    <Build Include="dbo\Stored Procedures\IMPORT_Contacts_Data.sql" />
+    <Build Include="dbo\Stored Procedures\INSERT_ACCOUNT.sql" />
+    <Build Include="dbo\Stored Procedures\INSERT_BDXACCOUNT.sql" />
+    <Build Include="dbo\Stored Procedures\INSERT_CAMPAIGN_OPENENTRY.sql" />
+    <Build Include="dbo\Stored Procedures\INSERT_Default_Tags_Reports.sql" />
+    <Build Include="dbo\Stored Procedures\INSERT_JobLogDetails.sql" />
+    <Build Include="dbo\Stored Procedures\INSERT_UPDATE_Contact_Data.sql" />
+    <Build Include="dbo\Stored Procedures\InsertBulkRecipients.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Contact_Imports.sql" />
+    <Build Include="dbo\Stored Procedures\processActiveContacts.sql" />
+    <Build Include="dbo\Stored Procedures\ProcessCampaignRecipients.sql" />
+    <Build Include="dbo\Stored Procedures\processUniqueRecipients.sql" />
+    <Build Include="dbo\Stored Procedures\Sp_insert_Default_MailchimpCredentials.sql" />
+    <Build Include="dbo\Stored Procedures\Sp_insert_Default_preconfig_searches.sql" />
+    <Build Include="dbo\Stored Procedures\Traffic_By_Source.sql" />
+    <Build Include="dbo\Stored Procedures\UPDATE_Actions_Tours_Lastupdatedby.sql" />
+    <Build Include="dbo\Stored Procedures\Update_Contact_LifecycleStage.sql" />
+    <Build Include="dbo\Stored Procedures\Update_Default_ImageID.sql" />
+    <Build Include="dbo\Stored Procedures\Update_LastTouchedInformation.sql" />
+    <Build Include="dbo\Stored Procedures\UpdateCampaignRecipientsStatus.sql" />
+    <Build Include="dbo\Stored Procedures\usp_UnusedIndexesLog.sql" />
+    <Build Include="dbo\Stored Procedures\VMTA_Log_Processor.sql" />
+    <Build Include="Workflow\Stored Procedures\GetNextBatch.sql" />
+    <Build Include="Workflow\Stored Procedures\ProcessTrackMessages.sql" />
+    <Build Include="Workflow\Stored Procedures\ProcessTrackMessages_NotUsing.sql" />
+    <Build Include="Workflow\Stored Procedures\triggerSubActions.sql" />
+    <Build Include="Workflow\Stored Procedures\triggerWorkflow.sql" />
+    <Build Include="Workflow\Stored Procedures\updateTrackActionLogs.sql" />
+    <Build Include="dbo\User Defined Types\AccountInfo.sql" />
+    <Build Include="dbo\User Defined Types\AddressInfo.sql" />
+    <Build Include="dbo\User Defined Types\Contact_List.sql" />
+    <Build Include="dbo\User Defined Types\CustomFieldList.sql" />
+    <Build Include="dbo\User Defined Types\IMPORT_ContactDetails.sql" />
+    <Build Include="dbo\User Defined Types\LastTouchedDetails.sql" />
+    <Build Include="dbo\User Defined Types\LeadAdapterDetails.sql" />
+    <Build Include="dbo\User Defined Types\LeadSourceInfo.sql" />
+    <Build Include="dbo\User Defined Types\ReportGroupList.sql" />
+    <Build Include="dbo\User Defined Types\ReportInfo.sql" />
+    <Build Include="dbo\User Defined Types\SavedSearchContacts.sql" />
+    <Build Include="dbo\User Defined Types\TemporaryRecipients.sql" />
+    <Build Include="Workflow\User Defined Types\TrackActionLogType.sql" />
+    <Build Include="Workflow\User Defined Types\TrackActionType.sql" />
+    <Build Include="Security\Workflow.sql" />
+    <Build Include="dbo\Sequences\CampaignRecipientsSequence.sql" />
+    <Build Include="dbo\Sequences\CampaignStatisticsSequence.sql" />
+    <Build Include="dbo\Stored Procedures\GetContactFieldsData.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Account_LeadSource_Report.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Account_LeadSource_Report_ContactInfo.sql" />
+    <Build Include="dbo\Stored Procedures\Get_FormSubmissionsByForm.sql" />
+    <Build Include="dbo\Tables\SpamIPAddresses.sql" />
+    <Build Include="dbo\Tables\SpamKeyWords.sql" />
+    <Build Include="dbo\Tables\SpamValidators.sql" />
+    <Build Include="dbo\Functions\IpToBinary.sql" />
+    <Build Include="dbo\Functions\getDataRangeContactReport.sql" />
+    <Build Include="dbo\Stored Procedures\Get_WorkFlow_Campaign_Related_Contacts.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Database_Lifecycle_Report_ContactInfo.sql" />
+    <Build Include="dbo\Stored Procedures\Get_DatabaseLifeCycleReport.sql" />
+    <Build Include="dbo\Stored Procedures\Contact_Duplicate_Check.sql" />
+    <Build Include="dbo\Tables\RoundRobinContactAssignment.sql" />
+    <Build Include="dbo\Functions\GenerateConsolidatedNoteDetails.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteNote.sql" />
+    <Build Include="dbo\Functions\GenerateContactSummary.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Account_All_LeadSource_Report.sql" />
+    <Build Include="dbo\Tables\UserActionMap.sql" />
+    <Build Include="dbo\Tables\UserTourMap.sql" />
+    <Build Include="dbo\Tables\WorkflowUserAssignmentAudit.sql" />
+    <Build Include="dbo\User Defined Types\NoteDetailsAndLastNoteDate.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Account_All_LeadSource_Report_ContactInfo.sql" />
+    <Build Include="dbo\Views\ContactSummary.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Contact_Owner.sql" />
+    <Build Include="dbo\Stored Procedures\Get_ReengagedContacts.sql" />
+    <Build Include="dbo\Stored Procedures\Get_ReEngamentClickSummaryReport.sql" />
+    <Build Include="dbo\Stored Procedures\Get_User_Created_Actions_List.sql" />
+    <Build Include="dbo\Stored Procedures\GetWorkflowCampaignActionLinks.sql" />
+    <Build Include="dbo\Stored Procedures\Workflow_AssignUser.sql" />
+    <Build Include="dbo\Views\GetContactLastNoteInfo.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Contact_FullData.sql" />
+    <Build Include="dbo\Views\vContactLeadSourceMapActive.sql" />
+    <Build Include="dbo\Stored Procedures\GetContactPrimaryDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_Communications.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_Company.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_ContactLeadSourceMap.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_Contacts.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_ContactTagMap.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_LeadAdapterJobLogDetails.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_Phone_Custom_Field.sql" />
+    <Build Include="dbo\Tables\CampaignPlainTextContentMap.sql" />
+    <Build Include="dbo\Stored Procedures\GetParentWorkflows.sql" />
+    <Build Include="dbo\Tables\ImportColumnMappings.sql" />
+    <Build Include="dbo\Stored Procedures\GetForm.sql" />
+    <Build Include="dbo\Tables\InvalidCouponsEngagedContacts.sql" />
+    <Build Include="dbo\Stored Procedures\GetContactsByImport.sql" />
+    <Build Include="dbo\Stored Procedures\GetContactsForWorkflow.sql" />
+    <Build Include="dbo\Stored Procedures\GetOpportunitySummary.sql" />
+    <Build Include="dbo\User Defined Types\SqlClrDeployScripts.sql" />
+    <Build Include="dbo\Stored Procedures\ProcessLeadScoreMessages.sql" />
+    <Build Include="dbo\Stored Procedures\GetRecentPopularTags.sql" />
+    <Build Include="dbo\Stored Procedures\GetTagsReport.sql" />
+    <Build Include="dbo\Stored Procedures\GetWorkflow.sql" />
+    <Build Include="dbo\Tables\Tag_Counts.sql" />
+    <Build Include="dbo\Stored Procedures\Calc_TagCounts.sql" />
+    <Build Include="Workflow\Stored Procedures\ProcessTrackMessages_SD.sql" />
+    <Build Include="dbo\Stored Procedures\GetNextCampaignToTrigger.sql" />
+    <Build Include="dbo\Tables\CampaignRetryAudit.sql" />
+    <Build Include="dbo\Stored Procedures\GetNextTime.sql" />
+    <Build Include="dbo\Stored Procedures\SaveContact.sql" />
+    <Build Include="dbo\User Defined Types\ContactType.sql" />
+    <Build Include="dbo\User Defined Types\AddresseType.sql" />
+    <Build Include="dbo\User Defined Types\CommunicationType.sql" />
+    <Build Include="dbo\User Defined Types\ImageType.sql" />
+    <Build Include="dbo\User Defined Types\ContactCustomFieldMapType.sql" />
+    <Build Include="dbo\User Defined Types\ContactPhoneNumberType.sql" />
+    <Build Include="dbo\User Defined Types\ContactEmailType.sql" />
+    <Build Include="dbo\User Defined Types\ContactLeadSourceMapType.sql" />
+    <Build Include="dbo\User Defined Types\ContactCommunityMapType.sql" />
+    <Build Include="dbo\Stored Procedures\Insert_Update_ContactFields.sql" />
+    <Build Include="dbo\Tables\FacebookLeadAdapter.sql" />
+    <Build Include="dbo\Tables\FacebookLeadgen.sql" />
+    <Build Include="Workflow\Tables\AutomationProcessLog.sql" />
+    <Build Include="dbo\Stored Procedures\UpdateContactCustomField.sql" />
+    <Build Include="dbo\Tables\FormNotificationSettings.sql" />
+    <Build Include="dbo\Tables\APILeadSubmissions.sql" />
+    <Build Include="dbo\Tables\SmartSearchQueue.sql" />
+    <Build Include="dbo\Stored Procedures\InsertToSmartSearchQueue.sql" />
+    <Build Include="dbo\Stored Procedures\DailyCampaignReport.sql" />
+    <Build Include="dbo\Stored Procedures\GetSenderRecipientInfoNightlyReport.sql" />
+    <Build Include="dbo\Tables\CampaignLitmusMap.sql" />
+    <Build Include="dbo\Tables\FailedEmailRecipients.sql" />
+    <Build Include="Storage\Contacts.sql" />
+    <Build Include="Storage\audit .sql" />
+    <Build Include="dbo\Stored Procedures\ContactEmailEngagementSummary.sql" />
+    <Build Include="dbo\Stored Procedures\ContactStatusInWorkflows.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Send_Email_Details_Of_Contact.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Contact_Campaign_Engagement_Details.sql" />
+    <Build Include="Storage\CampaignRecipientsGroup.sql" />
+    <Build Include="dbo\Stored Procedures\Process_ActionMailsToContacts.sql" />
+    <Build Include="dbo\Tables\EmailNotificationSettings.sql" />
+    <Build Include="dbo\Tables\ActionsMailOperations.sql" />
+    <Build Include="dbo\Tables\MailBulkOperations.sql" />
+    <Build Include="dbo\Stored Procedures\Get_ToursByContacts.sql" />
+    <Build Include="dbo\Stored Procedures\Deleting_IndexData.sql" />
+    <Build Include="dbo\Stored Procedures\GrabonTagsCreatingsp.sql" />
+    <Build Include="Storage\AccountIdList.sql" />
+    <Build Include="Storage\AccountId_Scheme_CampaignRecipients.sql" />
+    <Build Include="Storage\AccountId_Scheme_Contacts.sql" />
+    <Build Include="Storage\AccountId_Scheme_UserActivityLogs.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Opportunity_Pipeline_Report.sql" />
+    <Build Include="dbo\User Defined Types\OpportunityTableType.sql" />
+    <Build Include="dbo\User Defined Types\OpportunityContactMapTableType.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Opportunity_Buyers.sql" />
+    <Build Include="dbo\Stored Procedures\OpportunityBuyersSave.sql" />
+    <Build Include="dbo\Stored Procedures\SaveOpportunity.sql" />
+    <Build Include="dbo\Tables\SuppressedDomains.sql" />
+    <Build Include="dbo\Tables\SuppressedEmails.sql" />
+    <Build Include="dbo\Functions\GetPhoneFormart.sql" />
+    <Build Include="dbo\Functions\isValidEmailFormat_New.sql" />
+    <Build Include="dbo\Tables\SmartSearchContacts.sql" />
+    <Build Include="dbo\Tables\TemporaryCampaignRecipients.sql" />
+    <Build Include="dbo\Views\GET_ContactBasicInfo.sql" />
+    <Build Include="dbo\Stored Procedures\Duplicate_Data.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Contact_TimelineData2.sql" />
+    <Build Include="dbo\Stored Procedures\ScheduleRefreshAnalytics.sql" />
+    <Build Include="dbo\Stored Procedures\Update_Accounts_Table_Contact_Emails_Count.sql" />
+    <Build Include="dbo\Stored Procedures\Deleting_Accounts_Count.sql" />
+    <Build Include="dbo\Stored Procedures\CheckIfMatchedEndTrigger.sql" />
+    <Build Include="dbo\Stored Procedures\Scheduling_Action_Mails.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Opportunities_List.sql" />
+    <Build Include="dbo\Stored Procedures\GetNotifications.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Email_Stats_Summary.sql" />
+    <Build Include="dbo\Tables\CampaignMailTest.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Campaign_Related_Contacts.sql" />
+    <Build Include="dbo\Stored Procedures\GetContactsForSocialSync.sql" />
+    <Build Include="dbo\Stored Procedures\Update_Tag_Count.sql" />
+    <Build Include="dbo\Stored Procedures\GetEntitledReports.sql" />
+    <Build Include="dbo\Stored Procedures\GetNeverBounceSendMailData.sql" />
+    <Build Include="dbo\Tables\AccountActivities.sql" />
+    <Build Include="dbo\Tables\BouncedEmailData.sql" />
+    <Build Include="dbo\Tables\DebugLogs.sql" />
+    <Build Include="dbo\Tables\NeverBounceEmailStatus.sql" />
+    <Build Include="dbo\Tables\NeverBounceEntityType.sql" />
+    <Build Include="dbo\Tables\NeverBounceMappings.sql" />
+    <Build Include="dbo\Tables\NeverBounceRequests.sql" />
+    <Build Include="dbo\Tables\NeverBounceResponses.sql" />
+    <Build Include="dbo\Stored Procedures\GET_BouncedEmailReport.sql" />
+    <Build Include="dbo\Stored Procedures\GET_Contact_Campaign_Summary.sql" />
+    <Build Include="dbo\Stored Procedures\GET_LogIn_Frequency_Report.sql" />
+    <Build Include="dbo\Stored Procedures\GET_NeverBounce_Requests.sql" />
+    <Build Include="dbo\Stored Procedures\GetUniqueContacts.sql" />
+    <Build Include="dbo\Stored Procedures\Update_AccountActivities.sql" />
+    <Build Include="dbo\Stored Procedures\Update_Contact_EmailStatus.sql" />
+    <Build Include="dbo\Stored Procedures\Monthly_Active_Accounts_Users_List.sql" />
+    <Build Include="dbo\Stored Procedures\Monthly_User_Activity_Report.sql" />
+    <Build Include="dbo\Stored Procedures\Get_Tags_Contact_Count.sql" />
+    <Build Include="dbo\Stored Procedures\GetUserActivities.sql" />
+    <Build Include="dbo\Stored Procedures\GetCampaignRecipientInfo_628.sql" />
+    <Build Include="dbo\User Defined Types\CustomFieldList_1.sql" />
+    <Build Include="dbo\Tables\NoteActionMap.sql" />
+    <Build Include="dbo\Stored Procedures\ActionDetailsAddingToNoteSummary.sql" />
+    <Build Include="dbo\Stored Procedures\Process_Import_Contact_SecondaryLeadSourceMap.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Snapshots\SmartTouch.CRM.Db_20160606_14-36-13.dacpac" />
+    <None Include="SmartTouch.CRM.Db.publish.xml" />
+    <None Include="Snapshots\SmartTouch.CRM.Db_20170130_18-31-07.dacpac" />
+    <None Include="Snapshots\SmartTouch.CRM.Db_20170202_11-42-30.dacpac" />
+    <None Include="New Folder\SmartTouch_All_Objects_List.xlsx" />
+    <None Include="Snapshots\SmartTouch.CRM.Db_20170519_11-56-42.dacpac" />
+  </ItemGroup>
+  <ItemGroup>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\master.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>master</DatabaseVariableLiteralValue>
+    </ArtifactReference>
+    <ArtifactReference Include="$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\msdb.dacpac">
+      <HintPath>$(DacPacRootPath)\Extensions\Microsoft\SQLDB\Extensions\SqlServer\130\SqlSchemas\msdb.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseVariableLiteralValue>msdb</DatabaseVariableLiteralValue>
+    </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SmartTouch.CRM.EnterpriseCommunicationDb\SmartTouch.CRM.EnterpriseCommunicationDb.sqlproj">
+      <Name>SmartTouch.CRM.EnterpriseCommunicationDb</Name>
+      <Project>{6457e7a1-287b-4a2c-a236-1bf8678ba846}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>EnterpriseCommunicationDb</DatabaseSqlCmdVariable>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="EnterpriseCommunicationDb">
+      <DefaultValue>EnterpriseCommunication</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
+  </ItemGroup>
+</Project>

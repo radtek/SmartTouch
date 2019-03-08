@@ -1,0 +1,8 @@
+var client = new RestClient("http://localhost:56258/Tours");
+var request = new RestRequest(Method.POST);
+request.AddHeader("postman-token", "6233f712-aada-8ef4-f8ad-2ad14eaffcb4");
+request.AddHeader("cache-control", "no-cache");
+request.AddHeader("content-type", "application/json; charset=utf-8");
+request.AddHeader("authorization", "Bearer vIuTy21ubRCGhxQqpdItTKEKgItcvUi0Mc6OzvXeugtzOjSydHf95PolJJ7Xc3-A9vzZnOQ678Ze7PUAtsbs2B0BxEwd7KEtKjHZiTbUHPv3BlbNVB05clqafjrhJwxt5kZ_4-UJT0q6mhUreJVnQv7ooYUmOHriziU-8AMspD21x_Yxyf_swjsn1V-RlfeMu12PWT9sgt6z9fd5EOJXZYe-Kn9LP-QgAfcwm-L04qE0JbSuu91P7W4CPnqXYb6gNo0opdMXgZk_TRD9efrT3sef4N_3JWsXlfY6ksrcmUWalCNkf0i90vOHK8q8acpuspQ1ezUFtXz8JmFZ0OtjGMY6LUt-L1DvZecDPHC5ylpNeXnc1ulBjvIz1s1H5_jxBUccVOdNtHRMSSedIw_zLIIF1RY3c8d6QGUTIupdcXPAF2TGIVvvfTTNinF4XAufyj956N61yFpIJaf4or4rcg");
+request.AddParameter("application/json; charset=utf-8", "{\r\n\t\t\t\t\t\"AccountId\":4218,\r\n                    \"TourType\" : 4673,\r\n\t\t            \"TourDate\" : \"2017-08-09T14:30:00.905Z\",\r\n\t\t            \"TourDetails\" : \"Sample tour details-1\",\r\n\t\t            \"CommunityID\" : 4657,\r\n\t\t            \"SelectedReminderTypes\" : [3],\r\n\t\t            \"ReminderDate\" : \"2017-08-09T14:20:00.905Z\",\r\n\t\t            \"IsCompleted\" : 0,\r\n\t\t            \"IcsCanlender\" : 0,\r\n\t\t            \"OwnerIds\" : [6889, 9000],\r\n\t\t            \"Contacts\" : [{ \"Id\": 1891098}, {\"Id\": 1891095 }],\r\n\t\t            \"LastUpdatedOn \": null,\r\n\t\t            \"LastUpdatedBy\" : 6889,\r\n\t\t            \"CreatedBy\":6889\r\n}", ParameterType.RequestBody);
+IRestResponse response = client.Execute(request);

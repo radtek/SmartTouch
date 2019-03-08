@@ -1,0 +1,6 @@
+var client = new RestClient("http://localhost:56258/login");
+var request = new RestRequest(Method.POST);
+request.AddHeader("postman-token", "8d0514db-f30c-829e-6fbd-17c2cbc179b8");
+request.AddHeader("cache-control", "no-cache");
+request.AddHeader("content-type", "application/x-www-form-urlencoded");
+IRestResponse response = client.Execute(request);

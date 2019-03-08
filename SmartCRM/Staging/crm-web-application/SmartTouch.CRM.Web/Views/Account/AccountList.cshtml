@@ -1,0 +1,442 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.AccountViewModel
+@{
+    ViewBag.Title = "Accounts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var Details = ViewBag.accountId;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+@*<script src="~/Scripts/ViewModels/AccountListViewModel.js"></script>
+    <script src="~/Scripts/ViewModels/AccountViewModel.js"></script>*@
+@Scripts.Render("~/bundles/accountsgrid")
+
+
+<div class="clearfix mtl">
+    <div class="page-title">[|Accounts|]</div>
+    <div class="accounts-grid" id="accountsList">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.AccountViewModel>()
+        .Name("gridAccount")
+     .HtmlAttributes(new { @class = "k-grid-content" }).Excel(e => e.AllPages(true).FileName("Accounts").Filterable(true))
+    .Pageable(pageable => pageable
+            .Refresh(false)
+           .PageSizes(true)
+                .ButtonCount(10).Messages(m => m
+                    .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Account(s)|]")
+                    .Empty("[|No accounts to display|]")
+                    .ItemsPerPage("[|Accounts per page|]")))
+    .Columns(columns =>
+    { 
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Bound(e => e.AccountName).Title("[|Account Name|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20", @style = "width:400px;" });
+        columns.Bound(e => e.StatusMessage).Title("[|Status|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-15", @style = "width:100px;" });
+        columns.Bound(e => e.DomainURL).Title("[|Account URL|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20", @style = "width:400px;" });
+        columns.Bound(e => e.SubscriptionName).Title("[|Subscription Type|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-10", @style = "width:150px;" });
+
+
+        columns.Bound(e => e.CreatedOn).Title("[|Created Date|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20", @style = "width:200px;" });
+        columns.Bound(e => e.LastLogin).Title("[|Last Login|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20", @style = "width:200px;" });
+        columns.Bound(e => e.LastCampaignSent).Title("[|Last Campaign Sent|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-20", @style = "width:200px;" });
+
+
+        columns.Bound(e => e.ContactsCount).Title("[|Contacts|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-10", @style = "width:120px;" });
+        columns.Bound(e => e.EmailsCount).Title("[|Emails|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-10", @style = "width:120px;" });
+        columns.Bound(e => e.ActiveUsersCount).Title("[|Active Users|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-10", @style = "width:120px;" });
+        columns.Bound(e => e.SenderReputationCount).Title("[|Sender Reputation|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-10", @style = "width:150px;" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:90px;" });
+    })
+                  .Sortable(sortable => sortable.AllowUnsort(false))
+ .Resizable(resize => resize.Columns(true))
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="left-part">
+                    <label class="checkbox toggle-all" for="masterCheckBox">
+                        <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                        [|Select All|]
+                    </label>
+                </div>
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtaccountSearch" onkeydown="GetaccountBasedonsearch(event);" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                    <div class="grid-controls">
+                        <span class="sort-label">[|Showing|]</span>
+                        <span class="sort-select">
+                            @*<input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'TypeId', data:accountTypes, value: accountTypeValues}" />*@
+
+                            @(Html.Kendo().DropDownList()
+                                    .Name("accountTypes")
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                                    .Events(e => e.Change("accountTypeChange"))
+                                    .BindTo(new List<SelectListItem>() {
+                                        new SelectListItem() {
+                                            Text = "[|All Accounts|]",
+                                            Value = "0"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Active Accounts|]",
+                                            Value = "1"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Draft Accounts|]",
+                                            Value = "105"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Paused Accounts|]",
+                                            Value = "3"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Inactive Accounts|]",
+                                            Value = "4"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Maintenace Accounts|]",
+                                            Value = "5"
+                                        },
+                                })
+                            )
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </text>                );
+    })
+                                                                                     .ClientRowTemplate(
+                                                                                            @"<tr class='odd'><td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkaccount' data-name='#:AccountName#' id='#: AccountID #' data-toggle='checkbox'></label></td>
+                <td>" + Html.ActionLink("#:AccountName#", "EditAccount", new { accountId = "aid" }, null).ToHtmlString().Replace("aid", "#:AccountID#") + "</td>" +
+                @"
+<td>
+   #if (Status == 2 || Status == 3) {#<span class='at-paused'>[|Paused|]</span>#}
+    else if(Status == 1){#<span class='at-active'>[|Active|]</span>#}
+    else if(Status == 105){#<span class='at-draft'>[|Draft|]</span>#}
+  else if(Status == 5){#<span class='at-paused'>[|Maintenace|]</span>#}
+   else{#<span class='at-inactive'>Inactive</span>#}#</td>
+<td><a href='http://#:DomainURL#' target='_blank'> #:DomainURL# </a></td>
+       <td>#:SubscriptionName#</td>
+       <td>#=formatDate(CreatedOn)#</td>
+             <td>#=formatDate(LastLogin)#</td>
+             <td>#=formatDate(LastCampaignSent)#</td>
+             <td>#:ContactsCount#</td>
+             <td>#:EmailsCount#</td>
+<td>#if(ActiveUsersCount == 0){# #:ActiveUsersCount# #} else{# <a href='names' data-toggle='modal' onclick = 'getUsers(#:AccountID#)'>#:ActiveUsersCount# </a>#}#</td>
+          <td>
+            #if(SenderReputationCount > 0){#
+             #if(SenderReputationCount <= 50){#
+            <a href='./senderreputation/?reportType=2&reportId=187&runReportResults=True&AccountId=#:AccountID#'  target='_blank' style='color:red;'>#:SenderReputationCount#</a>
+                #}
+            else{# <a href='./senderreputation/?reportType=2&reportId=187&runReportResults=True&AccountId=#:AccountID#'  target='_blank'>#:SenderReputationCount#</a>#}#
+            #}
+            else{#<span>#:SenderReputationCount#</span>#}#</td>
+             <td class='grid-row-controls'><span> " + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditAccount", new { accountId = "aid" }, new { @title = "Edit Account" }).ToHtmlString().Replace("aid", "#:AccountID#") + "<a href='javascript:void(0)' onclick='DeleteAccount(#:AccountID#)' title='Delete Account'><i class='icon st-icon-bin-3'></i></a></span></td></tr>")
+                                                                                     .ClientAltRowTemplate(
+                                                                                      @"<tr class='odd'><td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkaccount' data-name='#:AccountName#' id='#: AccountID #' data-toggle='checkbox'></label></td>
+                <td>" + Html.ActionLink("#:AccountName#", "EditAccount", new { accountId = "aid" }, null).ToHtmlString().Replace("aid", "#:AccountID#") + "</td>" +
+                                                                                                                                @"
+<td><span class=''>#if (Status == 2 || Status == 3) {#<span class='at-paused'>[|Paused|]</span>#}
+        else if(Status == 1){#<span class='at-active'>[|Active|]</span>#}
+        else if(Status == 105){#<span class='at-draft'>[|Draft|]</span>#}
+  else if(Status == 5){#<span class='at-paused'>[|Maintenace|]</span>#}
+        else{#<span class='at-inactive'>Inactive</span>#}#</td>
+<td><a href='http://#:DomainURL#'  target='_blank'> #:DomainURL# </a></td>
+             <td>#:SubscriptionName#</td>
+             <td>#=formatDate(CreatedOn)#</td>
+             <td>#=formatDate(LastLogin)#</td>
+             <td>#=formatDate(LastCampaignSent)#</td>
+             <td>#:ContactsCount#</td>
+             <td>#:EmailsCount#</td>
+<td>#if(ActiveUsersCount == 0){# #:ActiveUsersCount# #} else{# <a href='names' data-toggle='modal' onclick = 'getUsers(#:AccountID#)'>#:ActiveUsersCount# </a>#}#</td>
+           <td>
+            #if(SenderReputationCount > 0){#
+             #if(SenderReputationCount <= 50){#
+            <a href='./senderreputation/?reportType=2&reportId=187&runReportResults=True&AccountId=#:AccountID#'  target='_blank' style='color:red;'>#:SenderReputationCount#</a>
+                #}
+            else{# <a href='./senderreputation/?reportType=2&reportId=187&runReportResults=True&AccountId=#:AccountID#'  target='_blank'>#:SenderReputationCount#</a>#}#
+            #}
+            else{#<span>#:SenderReputationCount#</span>#}#</td>
+             <td class='grid-row-controls'><span> " + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditAccount", new { accountId = "aid" }, new { @title = "Edit Account" }).ToHtmlString().Replace("aid", "#:AccountID#") + "<a href='javascript:void(0)' onclick='DeleteAccount(#:AccountID#)' title='Delete Account'><i class='icon st-icon-bin-3'></i></a></span></td></tr>")
+                                                                                             .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                                                                             .DataSource(dataSource => dataSource
+                                                                                             .Ajax()
+                                                                                             .PageSize(ItemsPerPage)
+                                                                                        .Read(read => read.Action("AccountsViewRead", "Account").Data("additionalInfo")).Sort(sort => sort.Add(t => t.AccountName))//, new { name = "#=''#" }
+                                                                                            )
+        )
+    </div>
+
+    <div aria-hidden="false" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="names" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content" @*style="width:900px"*@>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Users</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="dp-topnav-inner-body">
+                        <div class="k-grid k-widget k-secondary" id="grid1">
+                            <div>
+                                <div id="data"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left">
+                        <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        var contactDtls = '@(Details)';
+        if (contactDtls == 0) {
+            localStorage.removeItem("accountsearchtext");
+            localStorage.removeItem("accountsearchcontent");
+            createCookie("accountpagenumber", 1, 1); createCookie("accountpagesize", '@(ItemsPerPage)', 1);
+        }
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("accountsearchtext"),
+                status: localStorage.getItem("accountsearchcontent")
+            }
+        }
+    </script>
+
+    <script>
+        var BASE_URL = '@Url.Content("~/Account/")';
+        var searchText;
+
+        localStorage.setItem("accountsearchcontent", "0");
+        function formatDate(date) {
+            if (isNaN(Date.parse(date))) {
+                return "";
+            }
+            else {
+                var dateFormat = readCookie("dateformat");
+                if (dateFormat == null || dateFormat == 'undefined')
+                    return new Date(Date.parse(date)).toDateString();
+                else {
+                    console.log(date);
+                    var utzDate = new Date(moment(date).toDate());
+                    console.log(utzDate);
+                    return kendo.toString(utzDate, dateFormat + " hh:mm tt");
+                }
+            }
+        }
+
+        function getUsers(accountId){
+            $.ajax({
+                url: '@Url.Content("~/Account/GetUsers")',
+                type: 'get',
+                dataType: 'json',
+                data: { 'accountId': accountId },
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.Data != null && data.Data) {
+                        var tableData = CreateTable(data.Data);
+                        $('#names').on('show.bs.modal', function (event) {
+                            var modal = $(this);
+                            modal.find('#data').html(tableData);
+                        });
+                        $('#names').modal('show');
+                    }
+                },
+                error: function (error) { console.log(error); }
+            });
+        }
+
+        function CreateTable(data) {
+            var tbl = document.createElement('table');
+            //tbl.style.width  = '100px';
+            //tbl.style.border = '1px solid black';
+            var thead = CreateHeader();
+            tbl.appendChild(thead);
+            var tbdy = document.createElement('tbody');
+            for(i = 0; i < data.length; i ++)
+            {
+                var tr = document.createElement('tr');
+                if(data[i].Name){
+                    var td = document.createElement('td')
+                    td.appendChild(document.createTextNode(data[i].Name));
+                    tr.appendChild(td);
+                }
+                if(data[i].PrimaryEmail){
+                    var td = document.createElement('td')
+                    td.appendChild(document.createTextNode(data[i].PrimaryEmail));
+                    tr.appendChild(td);
+                }
+                if(data[i].Status){
+                    var td = document.createElement('td')
+                    var da = document.createElement('span');
+                    da.innerHTML = data[i].Status == 1 ? "<span class='at-active bold'>Active</span>" :  "<span class='at-inactive bold'>Inactive</span>";
+                    td.appendChild(da);
+                    tr.appendChild(td);
+                }
+                if(data[i].RoleName){
+                    var td = document.createElement('td')
+                    td.appendChild(document.createTextNode(data[i].RoleName));
+                    tr.appendChild(td);
+                }
+                tbdy.appendChild(tr);
+            }
+            tbl.appendChild(tbdy);
+            return tbl;
+        };
+
+        function CreateHeader() {
+            var thead = document.createElement('thead');
+            for(i = 0; i < 4; i++)
+            {
+                var th1 = document.createElement('th');
+                th1.appendChild(document.createTextNode(i== 0 ? 'User Name' : i == 1 ? 'Email' : i == 2 ? 'Status' : i == 3 ? 'Role' : ''));
+                th1.className = "k-grid-header";
+                thead.appendChild(th1);
+            }
+            return thead;
+        };
+
+        function accountTypeChange() {
+            var value = this.value();
+            localStorage.removeItem("accountsearchcontent");
+            localStorage.setItem("accountsearchcontent", value);
+
+            var grid = $("#gridAccount").data("kendoGrid");
+            var psize = readCookie("accountpagesize");
+            grid.dataSource.query({ page: 1, pageSize: psize });
+
+            $('[data-toggle="checkbox"]').each(function () { var $checkbox = $(this); $checkbox.checkbox(); });
+        }
+
+        function GetaccountBasedonsearch(e) {
+            setTimeout(function () {
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtaccountSearch").val() || (searchText === $("#txtaccountSearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtaccountSearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#gridAccount").data("kendoGrid"), searchBox = $("#txtaccountSearch").val(), accountType = $("#accountTypes").val(); //$("#contactTypes").val();
+
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.removeItem("accountsearchtext");
+                    localStorage.setItem("accountsearchtext", searchBox);
+
+                    //$("#gridAccount").data("kendoGrid").dataSource.read();
+                    var psize = readCookie("accountpagesize");
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    $('[data-toggle="checkbox"]').each(function () {
+                        var $checkbox = $(this);
+                        $checkbox.checkbox();
+                    });
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("accountsearchtext");
+                    $("#gridAccount").data("kendoGrid").dataSource.read();
+                    $('[data-toggle="checkbox"]').each(function () {
+                        var $checkbox = $(this);
+                        $checkbox.checkbox();
+                    });
+                }
+            }, 500);
+        }
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                $('[data-toggle="checkbox"]').each(function () {
+                    var $checkbox = $(this);
+                    $checkbox.checkbox();
+                });
+                bindCheckboxchnage('chkaccount');
+            }, 200)
+        }
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            //console.log($("select[data-role='dropdownlist']").data('kendoDropDownList').dataSource);
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+        function DeleteAccount(id)
+        {
+            alertifyReset("Delete Account","Cancel");
+            //alertify.confirm("Are you sure you want to delete this Account?", function (e) {
+            alertify.confirm("[|Are you sure you want to permanently DELETE the selected Account(s)|]?", function (e) {
+                if (e)
+                {
+                    pageLoader();
+                    var aid = [id];
+                    jsondata = JSON.stringify({ 'AccountID': aid, 'StatusID':6});
+                    varDeleteURL = "DeleteAccount";
+
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: BASE_URL + varDeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ 'accountData': jsondata })
+                    }).then(function (response) {
+                        var filter = $.Deferred();
+                        if (response.success) {
+                            filter.resolve(response);
+                        }
+                        else {
+                            filter.reject(response.error);
+                        }
+                        return filter.promise();
+                    }).done(function (data) {
+
+                        notifySuccess("[|Successfully deleted the account(s)|]");
+                        removepageloader();
+                        if (data.success === true) {
+                            $("#gridAccount").data("kendoGrid").dataSource.read();
+                        }
+                    }).fail(function (error) {
+                        removepageloader();
+                    });
+
+                }
+                else
+                {
+                    //notifyError("You've clicked Cancel");
+                    notifyError("[|Delete Account requested canceled|]");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            removepageloader();
+            var accountview = @(Html.Raw(Json.Encode(Model)));
+            viewModel = new accountlistViewModel(accountview, BASE_URL);
+            ko.applyBindings(viewModel);
+            var dropdownlisttype = $("#accountTypes").data("kendoDropDownList");
+            dropdownlisttype.value(localStorage.getItem("accountsearchcontent"));
+            $("#txtaccountSearch").val(localStorage.getItem("accountsearchtext"));
+            tableMasterCheckBox('accounts-grid');
+        });
+    </script>
+}
+

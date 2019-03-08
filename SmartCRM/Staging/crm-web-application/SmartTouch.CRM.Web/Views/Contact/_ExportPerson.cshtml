@@ -1,0 +1,93 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ExportPersonViewModel
+<script src="~/Scripts/ViewModels/ExportPersonViewModel.js"></script>
+
+@{
+    
+    var module = @ViewBag.module;   
+}
+
+<div class="moreinner" id="more2">
+    <div class="more-heading">
+
+        <span class="icon st-icon-export-1 display-inline"></span>
+
+        @if (ViewBag.module == "Contacts")
+        {
+            <h4 class="panel-title display-inline plm">[|Export Contact|]</h4>
+        }
+        else
+        {
+            <h4 class="panel-title display-inline plm">[|Download Submissions|]</h4>
+        }
+    </div>
+    <div class="moreinner-body">
+        <div class="form-group">
+                <label>[|Selected Fields|]</label>
+                <div>
+                    <select data-bind="kendoMultiSelect :{ data: SearchFields,dataValueField:'FieldId',dataTextField:'Title', value: selectedFields }" class="col-100"></select>
+                </div>
+            </div>
+        @*<div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+            <label class="control-label">[|Sort By|]</label>
+                    <select data-bind="kendoDropDownList :{ data: selectedDropDownItems,dataValueField:'FieldId',dataTextField:'Title', value: SortBy }"></select>
+        </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+            <label class="control-label">[|Sort Order|]</label>
+            <select data-bind="kendoDropDownList :{ data: SortOrderDropDownItems, value: SortOrder,dataValueField:'OrderID',dataTextField:'OrderName' }"></select>
+        </div>
+    </div>
+        </div>*@
+    <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+            <label class="control-label">[|Export As|]</label>
+            <select id="contactsGridExport" data-bind="kendoDropDownList :{ data: FormatDropDownItems, value: DownLoadAs }"></select>
+        </div>
+    </div>
+</div>
+</div>
+<div class="panel-footer">
+    <div class="pull-left">
+        @*<a data-bind="attr: { href: '@Url.Action("ExprortAsFile", "Contact")?exportPerson=' + SomeField()},click: ExportContacts" class="btn btn-lg btn-primary">Export</a>*@
+            @if (ViewBag.module == "Contacts")
+            {
+        <a data-bind="click: ExportContacts" class="btn btn-lg btn-primary">[|Export|]</a>
+            }
+            else
+            {
+                <a data-bind="click: ExportFormContacts" class="btn btn-lg btn-primary">[|Download|]</a>
+            }
+        <a href="javascript:void(0)" class="btn btn-lg" onclick="CloseTopInner(this)">[|Cancel|]</a>
+    </div>
+
+</div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {        
+        module = '@module';
+        var Contact_BASE_URL = '@Url.Content("~/Contact/")';
+        var ExportViewModel = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+
+        var fromContactDetails = typeof selfDetails != "undefined" ? true : false;
+        var fromOpportunityDetails = typeof selfOpportunity != "undefined" ? true : false;
+
+        var notselectall;
+        if(fromContactDetails == true)
+            notselectall = true;
+        else if(fromOpportunityDetails == true)
+            notselectall = true;
+        else
+            notselectall = readCookie("selectallsearchstring") == "" ? true : false ;
+
+        var ViewModel = new ExportPersonViewModel(ExportViewModel,Contact_BASE_URL,notselectall);
+        ko.applyBindings(ViewModel, document.getElementById("more2"));
+    });
+</script>

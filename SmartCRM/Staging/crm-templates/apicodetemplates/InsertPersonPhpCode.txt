@@ -1,0 +1,22 @@
+
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('https://services.smarttouch.net/person');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'cache-control' => 'no-cache',
+  'content-type' => 'application/json; charset=utf-8',
+  'authorization' => 'Bearer {ACCESS_TOKEN}'
+));
+
+$request->setBody('{"AccountId": {ACCOUNTID},"FirstName": "test","LastName": "test","CompanyName": "Real estate","Title": "Sales Man","Emails": [{"EmailId": "surendra1050@gmail.com","IsPrimary": true,"EmailStatusValue": "0"}],"Phones": [{"Number": "8801272203","IsPrimary": true,"PhoneType": {DROPDOWNVALUEID},"PhoneTypeName": "Webinar"}],"Communities": [{"DropdownValueID": "{DROPDOWNVALUEID}"}],"SelectedLeadSource": [{"DropdownValueID": "{DROPDOWNVALUEID}"}],"Addresses": [{"AddressLine1": "Image Hospital Main Road"}],"LifecycleStage": {DROPDOWNVALUEID},"LastUpdatedOn": "2017-05-17T15:03:42.905Z","CreatedOn": "2017-05-17T15:03:42.905Z","CustomFields": [{"CustomFieldId": {FIELDID},"Value": "This is Real estate company for home buyers"}],"FormId": {FORMID}}');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}

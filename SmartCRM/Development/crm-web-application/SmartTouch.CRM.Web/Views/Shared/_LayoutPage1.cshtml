@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+   
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/kendoui")
+    @Scripts.Render("~/bundles/knockout2")
+    @Scripts.Render("~/bundles/utilities")
+
+   @*@Scripts.Render("~/bundles/contactsgridvm")*@
+
+    @Scripts.Render("~/bundles/smarttouchframework")
+    @Scripts.Render("~/bundles/application")
+    @Scripts.Render("~/bundles/viewmodels") 
+
+    @Styles.Render("~/Content/kendocss")
+    @Styles.Render("~/Content/kendodatavizcss")
+    @Styles.Render("~/Content/smarttouchframework")
+    @Styles.Render("~/Content/smarttouchcss")
+    @Styles.Render("~/Content/campaignunsubscribe")
+   
+   
+    
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="~/img/favicon.ico">
+
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

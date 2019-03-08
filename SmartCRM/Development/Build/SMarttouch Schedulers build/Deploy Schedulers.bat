@@ -1,0 +1,1 @@
+SCommerce.Utilities.exe SmartTouchSchedulersDeploy

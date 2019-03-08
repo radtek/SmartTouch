@@ -1,0 +1,26 @@
+﻿<div class="formsubheading">[|Help URL|]</div>
+<div class="form-horizontal-large">
+    <div class="form-group">
+        <label class="control-label">[|URL|]*</label>
+        <input type="text" placeholder="https://smarttouch.atlassian.net/servicedesk/customer/portals" class="form-control" data-bind="value:HelpURL" maxlength="75">
+    </div>
+</div>
+<div class="formsubheading">[|Terms and conditions|]</div>
+<div id="applicationtour">    @*Added applicationtour as div as we have some issues with css while using redactor*@
+    <div class="form-horizontal-large">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <textarea id="termsEditor" class="form-control" name="content" rows="20" cols="30" data-bind="value:TC"> </textarea>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" data-bind="checked:ShowTC" /><span class="plm">[|Apply Terms and conditions|]</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <a class="btn btn-lg btn-primary" data-bind="click: function(data,event){saveAccount('Account')}"><span data-bind="text:saveText"></span></a>
+    @Html.ActionLink("[|Cancel|]", "AccountList", "Account", new { @class = "btn btn-lg" })
+</div>

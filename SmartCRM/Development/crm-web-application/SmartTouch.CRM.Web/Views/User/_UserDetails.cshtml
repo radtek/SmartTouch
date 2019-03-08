@@ -1,0 +1,281 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model UserViewModel
+@{
+    var page = ViewBag.PageName;
+}
+
+<div class="@(page == "EditUser" ? "sub-container" : "")">
+    @if (ViewBag.PageName == "EditUser")
+    {
+        <ul class="breadcrumb">
+            <li>@Html.ActionLink("[|Users|]", "UserList", "User", null, null)</li>
+            <li class="active">
+                <a href="javascript:void(0)">
+                    <!-- ko if: UserID() === 0 -->
+                    <span>[|Add User|]</span>
+                    <!-- /ko -->
+                    <!-- ko if: UserID() > 0 -->
+                    <span>[|Edit User|]</span>
+                    <!-- /ko -->
+                </a>
+            </li>
+        </ul>
+        @*@Html.ActionLink("Back to List", "UserList", "User", new { userId = 1 }, new { @class = "btn btn-lg" })*@
+        <div class="main-header">
+            <!-- ko if: UserID() === 0 -->
+            [|Add User|]
+            <!-- /ko -->
+            <!-- ko if: UserID() > 0 -->
+            [|Edit User|]
+            <!-- /ko -->
+        </div>
+    }
+    <div class="form-horizontal-large">
+        <div class="formsubheading">[|General|]</div>
+
+        @if (ViewBag.PageName == "EditUser")
+        {
+            <div class="clearfix">
+                <div class="form-group" id="userrole">
+                    <label class="control-label">[|Role|] <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'RoleName',dataValueField:'Id', data: Roles, value: RoleID}" />
+                </div>
+
+                <div class="form-group" id="userstatus">
+                    <label class="control-label">[|Status|] </label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Type',dataValueField:'Id', data:userStatus, value: Status}" />
+                </div>
+            </div>
+        }
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|First Name|] <span class="required">*</span></label>
+                <input type="text" placeholder="[|First Name|]" class="form-control" data-bind="value:FirstName" maxlength="75">
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Last Name|] <span class="required">*</span></label>
+                <input type="text" placeholder="[|Last Name|]" class="form-control" data-bind="value:LastName" maxlength="75">
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Title|]</label>
+                <input type="text" placeholder="[|Title|]" class="form-control" data-bind="value:Title" maxlength="30">
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Company|]</label>
+                <input type="text" id="txtCompanyName" placeholder="[|Company|]" class="form-control" onkeydown="callfunction(this)" data-bind="value:Company" maxlength="75">
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Phone|]</label>
+                <div data-bind="foreach: Phones">
+                    <div class="form-group input-group cu-input-group mbs" data-bind="attr:{id:'phones-'+$index()}">
+                        <div class="ed-email">
+                            <input type="text" placeholder="xxx xxx xxxx" class="form-control cu-smmd" data-bind="value: Number" maxlength="16" />
+                            <input class="input-plus-select" data-bind="kendoDropDownList: {data: $parent.PhoneTypes,value: PhoneType, dataValueField: 'DropdownValueTypeID', dataTextField:'DropdownValue'}" />
+                        </div>
+                        <div class="ed-primary-contact">
+                            <span class="phm primary-cont">
+                                <label class="radio-inline">
+                                    <input type="radio" name="primaryPhone" data-bind="attr:{id:$index()}, checked:$parent.primaryPhone,checkedValue: $data, click: $root.PhoneIs" />
+                                    [|Primary|]
+                                </label>
+                            </span>
+                        </div>
+                        <div class="ed-trash">
+                            <span data-bind="visible: IsPrimary() !== true" class="trash-record">
+                                <a class="email-trash" data-bind="click: $parent.removePhone" href="javascript:void(0)"><span class="icon st-icon-bin-3"></span></a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mtm"><a href="javascript:void(0)" data-bind="click: addPhone,visible:Phones().length<3"><i class="icon st-icon-add mrs"></i>[|Add Phone Number|]</a></div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">[|Email |]<span class="required">*</span></label>
+                @*<div class="form-group mbs cu-input-group">
+                        <input type="email" placeholder="someone@example.com" class="form-control" data-bind="value: PrimaryEmail,attr:{'readonly': true}" maxlength="256" />
+                       <!-- ko if: IsPrimary ==true-->
+                    </div>*@
+                <div data-bind="foreach: Emails">
+                    <div data-bind="attr:{id:'emails-'+$index()}">
+                        <!-- ko if: IsPrimary ==true-->
+                        <div class="form-group mbs cu-input-group">
+                            <input type="email" placeholder="someone@example.com" class="form-control" data-bind="value: EmailId,attr:{'readonly': true}" maxlength="256" />
+                        </div>
+                        <!-- /ko -->
+                        <!--ko ifnot:IsPrimary ==true-->
+                        <div data-bind="attr: {'class': $index() >= 0 ?'input-group mbx':'mbx'}">
+
+                            <input type="email" placeholder="someone@example.com" class="form-control" data-bind="value: EmailId,attr:{id:'Email_'+ $index()}, event: { blur: MailGunValidater.bind($data,$index()) }" maxlength="256" />
+                            <span class="input-group-btn">
+                                <a class="email-trash mlm" data-bind="click: $parent.removeEmail" href="javascript:void(0)"><span class="icon st-icon-bin-3"></span></a>
+                            </span>
+
+                        </div>
+                        <div data-bind=" attr:{id:'emailStatus_'+ $index()}" class="formError">
+                        </div>
+                        <!--/ko-->
+                    </div>
+                </div>
+                <div class="mtm"><a href="#" data-bind="click: addEmail"><i class="icon st-icon-add mrs"></i>[|Add Email|]</a></div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Web & Social|]</label>
+                <div data-bind="foreach: SocialMediaUrls">
+                    <div class="form-group input-group mbs cu-input-group">
+                        <input type="text" class="form-control cu-medium" data-bind="value: Url,attr:{placeholder: setPlaceHolder(MediaType())}" maxlength="2083" />
+                        <input class="input-plus-select" data-bind="kendoDropDownList: {data: $parent.SocialMediaUrlTypes, value: MediaType, widget: $parent.widget, change: $parent.updateURLType.bind($data,MediaType)}" />
+                        <span data-bind="if:$index() != 0" class="trash-record">
+                            <a class="email-trash mlm" data-bind="click: $parent.removeSocialMediaUrl" href="javascript:void(0)"><span class="icon st-icon-bin-3"></span></a>
+                        </span>
+                    </div>
+                </div>
+                <div class="mtm" data-bind="visible:selfUser.tempUrlTypes().length>0">
+                    <a href="javascript:void(0)" data-bind="click: addSocialMediaUrl"><span class="icon st-icon-add prs"></span>[|Add Web & Social links|]</a>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("~/Views/Shared/_AddressPartial.cshtml")
+    </div>
+    <div class="hr-border"></div>
+    <div>
+        <a class="btn btn-lg btn-primary" data-bind="click: saveUser"><span data-bind="text:saveText"></span></a>
+        @if (ViewBag.PageName == "EditUser")
+        {
+            @Html.ActionLink("[|Cancel|]", "UserList", "User", new { @class = "btn btn-lg" })
+        }
+    </div>
+</div>
+
+<script>
+    var callfunction;
+
+    function setPlaceHolder(mediaType) {
+        var placeholder = '';
+        switch (mediaType) {
+            case 'Facebook':
+                placeholder = "http://www.facebook.com/john.doe";
+                break;
+            case 'Website':
+                placeholder = "http://www.google.com";
+                break;
+            case 'LinkedIn':
+                placeholder = "http://www.linkedin.com/john.doe";
+                break;
+            case 'Twitter':
+                placeholder = "http://www.twitter.com/john.doe";
+                break;
+            case 'Google+':
+                placeholder = "http://www.plus.google.com/john.doe";
+                break;
+            case 'Blog':
+                placeholder = "http://www.landsofamerica.com/blog";
+                break;
+        }
+        return placeholder;
+    }
+
+    $(document).ready(function () {
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var mailgunPublicKey = '@System.Configuration.ConfigurationManager.AppSettings["mailgun_apikey"]';
+
+        $("#editor").kendoEditor();
+        var editor = $("#editor").data("kendoEditor");
+
+        var typewatch = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            }
+        })();
+
+        $("#txtCompanyName").kendoAutoComplete([]);
+
+        //var cmpName = $("#txtCompanyName");
+        //cmpName.bind('keydown keypress', function () {
+        //    typewatch(function() {
+        //        $.ajax({
+        //            url:  WEBSERVICE_URL + "/Company/Name",
+        //            type: 'get',
+        //            dataType: 'json',
+        //            data:{ 'query': cmpName.val()},
+        //            contentType: "application/json; charset=utf-8",
+        //            success: function(companiesData){
+        //                companyNameSuggestions = companiesData.Results;
+        //                var suggestions = [];
+        //                $.each(companyNameSuggestions, function(index,value){
+        //                    suggestions[index] = value.Text;
+        //                });
+
+        //                var dataSource =null;
+        //                $("#txtCompanyName").kendoAutoComplete([]);
+        //                var autocomplete = $("#txtCompanyName").data("kendoAutoComplete");
+        //                dataSource = new kendo.data.DataSource({
+        //                    data:suggestions
+        //                });
+
+        //                autocomplete.setDataSource(dataSource);
+        //            }});
+        //    }, 500);
+        //});
+
+
+        callfunction = function (val) {
+            typewatch(function () {
+                var authToken = readCookie("accessToken");
+                $.ajax({
+                    url: WEBSERVICE_URL + "/Company/Name",
+                    type: 'get',
+                    dataType: 'json',
+                    data: { 'query': $(val).val(), 'accountId': accountId },
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    success: function (companiesData) {
+                        companyNameSuggestions = companiesData.Results;
+                        var suggestions = [];
+                        $.each(companyNameSuggestions, function (index, value) {
+                            suggestions[index] = value.Text;
+                        });
+                        var dataSource = null;
+                        $("#txtCompanyName").kendoAutoComplete([]);
+                        var autocomplete = $("#txtCompanyName").data("kendoAutoComplete");
+                        dataSource = new kendo.data.DataSource({
+                            data: suggestions
+                        });
+                        autocomplete.setDataSource(dataSource);
+                    },
+                    error: function (response) {
+                        removepageloader();
+                        notifyError(response.responseText);
+                    }
+                });
+            }, 500);
+        };
+
+        MailGunValidater = function (id) {
+            var emailValidator = new EmailValidate(id, mailgunPublicKey);
+            updateEmailStatus(function (value) {
+                return emailValidator.validate(value)
+            }, id);
+        }
+        function updateEmailStatus(status, id) {
+            status(id);
+        }
+    });
+    $("input[name=userStatus]:radio").change(function () {
+        if ($(this).is(':checked'))
+            selfUser.Status($(this).val());
+    });
+</script>

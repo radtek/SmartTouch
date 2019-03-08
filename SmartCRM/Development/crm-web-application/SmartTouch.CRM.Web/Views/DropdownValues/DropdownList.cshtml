@@ -1,0 +1,169 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.DropdownViewModel
+@{
+    ViewBag.Title = "Dropdown Fields";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var Details = ViewBag.accountId;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+@*<script src="~/Scripts/ViewModels/DropdownValuesViewModel.js"></script>*@
+@Scripts.Render("~/bundles/dropdownFieldsvm")
+
+<div id="DropdownValuesList">
+    <div class="page-title">[|Dropdown Fields|]</div>
+    <div class="tags-grid">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.DropdownViewModel>()
+    .Name("grid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(false)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+                    .ButtonCount(10).Messages(m => m
+                        .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Dropdown Field(s)|]")
+                        .Empty("[|No dropdown fields to display|]")
+                        .ItemsPerPage("[|Dropdown Fields per page|]")))
+    .Columns(columns =>
+    {
+
+        columns.Template(e => "").Title("[|Field|]").HeaderHtmlAttributes(new { @class = "col-40" });
+        columns.Template(e => "").Title("[|Field values|]").HeaderHtmlAttributes(new { });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:80px;" });
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtSearch" onkeydown="GetDropdownValueFieldsBasedonsearch();" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                </div>
+            </div>
+        </text>);
+    })
+                       .ClientRowTemplate(
+                                         @"<tr class='odd'>
+                                    <td> <span>"
+                              + Html.ActionLink("#:Dropdownname#", "EditDropdown", new { dropdownId = "lid" }, new { data_toggle = "modal", data_target = "\\#bigmodal", @class = "drop-lab" }).ToHtmlString().Replace("lid", "#:DropdownID#") + "</span></td>" +
+                                                   @"<td>#:dropdownValuesToString#</td>
+                                   <td class='grid-row-controls'>
+                                        <span>"
+                                                                                      + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditDropdown", new { dropdownId = "lid" }, new { data_toggle = "modal", data_target = "\\#bigmodal", @title = "Edit Dropdown", @class = "drop-lab" }).ToHtmlString().Replace("lid", "#:DropdownID#")
+                                                      + "</span><span>"
+                                                      + Html.ActionLink("<i class='icon st-icon-eye notifiy-view'></i>", "DropdownvaluesView", new { dropdownID = "drid" }, new { data_toggle = "modal", data_target = "\\#modal", @title = "View DropdownValues" }).ToHtmlString().Replace("drid", "#:DropdownID#") +
+                                                      "<span></td></tr>")
+
+                       .ClientAltRowTemplate(
+                       @"<tr class='odd'>
+           <td>
+             <span>"
+                            + Html.ActionLink("#:Dropdownname#", "EditDropdown", new { dropdownId = "lid" }, new { data_toggle = "modal", data_target = "\\#bigmodal", @class = "drop-lab" }).ToHtmlString().Replace("lid", "#:DropdownID#") + "</span></td>" +
+                                                           @"<td> <span class='grid-truncate'>#:dropdownValuesToString#</span></td>
+                                   <td class='grid-row-controls'>
+                                        <span>"
+
+                                                               + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditDropdown", new { dropdownId = "lid" }, new { data_toggle = "modal", data_target = "\\#bigmodal", @title = "Edit Dropdown", @class = "drop-lab" }).ToHtmlString().Replace("lid", "#:DropdownID#")
+                       +
+
+                                                               "</span><span>" + Html.ActionLink("<i class='icon st-icon-eye notifiy-view'></i>", "DropdownvaluesView", new { dropdownID = "drid" }, new { data_toggle = "modal", data_target = "\\#modal", @title = "View DropdownValues" }).ToHtmlString().Replace("drid", "#:DropdownID#") +
+                           "</span></td></tr>")
+
+                      .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                      .DataSource(dataSource => dataSource
+                      .Ajax()
+                      .PageSize(ItemsPerPage)
+                              .Read(read => read.Action("DropdownValuesViewRead", "DropdownValues").Data("additionalInfo"))
+                      )
+        )
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        var contactDtls = '@(Details)';
+        if (contactDtls == 0) {
+            localStorage.removeItem("dropdownvaluesearchtext");
+            createCookie("dropdownvaluepagenumber", 1, 1); createCookie("dropdownvaluepagesize", '@(ItemsPerPage)', 1);
+        }
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("dropdownvaluesearchtext")
+            }
+        }
+    </script>
+
+    <script>
+        function GetDropdownValueFieldsBasedonsearch() {
+            setTimeout(function () {
+                $filter = new Array();
+                var grid = $("#grid").data("kendoGrid"), searchBox = $("#txtSearch").val();
+                localStorage.removeItem("dropdownvaluesearchtext");
+                if ($.trim(searchBox).length > 1) {
+                    localStorage.setItem("dropdownvaluesearchtext", searchBox);
+                    $("#grid").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    $("#grid").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                // bindCheckboxchnage();
+                $(".icon st-icon-edit").parent('a').attr('data-target', '#modal');
+                $(".drop-lab").attr('data-target', '#modal');
+            }, 200)
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+        $(document).ready(function () {
+            removepageloader();
+            $("#txtSearch").val(localStorage.getItem("dropdownvaluesearchtext"));
+            var BASE_URL = '@Url.Content("~/DropdownValues/")';
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+            var dropdownview = @(Html.Raw(Json.Encode(Model)));
+
+            var grid = $('#grid').data('kendoGrid');
+            var pno = readCookie("dropdownvaluepagenumber");
+            var psize = readCookie("dropdownvaluepagesize");
+            grid.dataSource.query({ page: pno, pageSize: psize });
+
+            $(':checkbox').on('change', function() {
+                $(this).triggerHandler('click');
+            });
+
+        });
+
+    </script>
+}
+
+
+
+
+

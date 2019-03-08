@@ -1,0 +1,71 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+
+<div class="dp-topnav-inner sendsms" id="divText">
+    <div class="dp-topnav-inner-heading">
+        <span class="icon st-icon-speech-bubble-center-2 display-inline"></span><h4 class="panel-title display-inline plm">[|New Text|]</h4>
+    </div>
+    <div class="moreinner-body">
+            @*<div class="sendemail dp-topnav-inner show" id="divText">
+                <div class="dp-topnav-inner-heading">
+                <span class="icon st-icon-envelope display-inline"></span>
+                <h4 class="panel-title display-inline plm">New Text</h4>
+
+            </div>*@
+            <div class="sendsms-body">
+                <div class="sendsms-header">
+                    <div class="recipients">
+                        <span class="recipients-label">
+                            [|To|] <span class="required">*</span> :
+                        </span>
+                        <input id="SendTextTO" class="from-list" type="text" data-bind="value:Text" maxlength="10" min="10" />
+                        <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                    </div>
+
+                    <div class="recipients">
+                        <span class="recipients-label">[|From|]<span class="required">*</span> :</span>                        
+                        <span class="from-list from">
+                            <input class="from-list from form-control" data-bind="kendoDropDownList: { data: fromPhoneNumbers, value: from}" />                            
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="txtBody" rows="10" class="form-control" data-bind="value: body, event: { keyup: DisplayBodyLength }" maxlength="137"></textarea>
+                        @*<div class="character-count"><span>[|Character Count|]</span> : <span id="Count">0</span></div>*@
+                        <div class="character-count"><span id="textbodylength" class="pull-right"></span></div>
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+    <div class="panel-footer">
+        <div class="pull-left">
+            <a class="btn btn-lg btn-primary" href="javascript:void(0)" data-bind="click:sendText">[|Send|]</a>
+            <a class="btn btn-lg" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/sendTextvm")
+@*<script src="~/Scripts/ViewModels/SendTextViewModel.js"></script>*@
+
+<script>
+
+        $(document).ready(function () {
+            var viewModel;
+            var senTextModel = @(Html.Raw(Json.Encode(Model)));
+            var BASE_URL = '@Url.Content("~/Contact/")';
+            var userId='@Thread.CurrentPrincipal.Identity.ToUserID()';
+            viewModel = new sendTextViewModel(senTextModel,BASE_URL);
+            
+            var tagify = new Tagify(WEBSERVICE_URL, viewModel, "","");
+            tagify.TagifyTextContacts("SendTextTO",userId);
+            ko.applyBindings(viewModel,document.getElementById("divText"));
+
+            $(document).on('keypress keyup keydown focus', '#txtBody', function (event) {                   
+                    $("#textbodylength").text((137 - $("#txtBody").val().length)+' [|Characters Remaining|]');
+            });
+        });    
+    function DisplayBodyLength()
+    {
+        $("#Count").text($("#txtBody").val().length);
+    }
+</script>

@@ -1,0 +1,578 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel
+@{
+    ViewBag.Title = "Saved Searches";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    var Details = ViewBag.SearchDefinitionId;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+@Scripts.Render("~/bundles/savedsearchesgrid")
+
+
+
+<div class="clearfix mtl">
+    @*<div class="col-md-6">*@
+
+    @*@using (Ajax.BeginForm("AdvancedSearchList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+        {*@
+    <div class="page-title saved-search">[|Smart Search|] <a href="#PredefinedSearches" data-toggle="collapse" class="pull-right saved-search-acc"><i class="icon st-icon-dropdownarrow"></i></a></div>
+    <div class="predefined-Search collapse in" id="PredefinedSearches">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel>()
+        .Name("gridadvancedsearch1")
+        .HtmlAttributes(new { @class = "k-grid-content" })
+        .AutoBind(false)
+        .Pageable(pageable => pageable
+
+            .Refresh(false)
+            //.PageSizes(new int[] { 10, 25, 50, 100, 250, 500, 1000 })
+            .ButtonCount(5).Messages(m => m
+                .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Saved Searche(s)|]")
+                .Empty("[|No saved searches to display|]").ItemsPerPage("[|Saved searches per page|]")))
+    .Columns(columns =>
+    {
+        //columns.Template(e => "").Title("").HeaderHtmlAttributes(new { });
+        columns.Bound(c => c.SearchDefinitionName).Title("[|Search|]").HeaderHtmlAttributes(new { });
+
+        columns.Bound(c => c.CreatedOn).Title("[|Created|]").HeaderHtmlAttributes(new { });
+        columns.Bound(c => c.LastRunDate).Title("[|Last Run|]").HeaderHtmlAttributes(new { });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:90px;" });
+    })
+
+                .ClientRowTemplate(
+                       @"<tr class='odd'>
+
+                <td>"
+                            + Html.ActionLink("#:SearchDefinitionName#", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, null)
+                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#") +
+
+                        "</td>" +
+
+                        "<td class='date'>#=displayDate_n(CreatedOn)#</td>" +
+                        "<td class='date'>#=displayDate_n(LastRunDate)#</td>" +
+                        "<td class='grid-row-controls'>" +
+                                        "<span>" + Html.ActionLink("<i class='icon st-icon-run'></i>", "SavedSearchAdvancedView", "Contact", new { SearchDefinitionID = "uid" }, new { @title = "Run Search" })
+                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+                        +
+                          "</span></td>" +
+                        "</tr>")
+                .ClientAltRowTemplate(
+                       @"<tr class='even'>
+
+                <td>"
+                            + Html.ActionLink("#:SearchDefinitionName#", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, null)
+                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#") +
+
+                        "</td>" +
+
+                        "<td>#=displayDate_n(CreatedOn)#</td>" +
+                        "<td>#=displayDate_n(LastRunDate)#</td>" +
+                        "<td class='grid-row-controls'>" +
+                                        "<span>" + Html.ActionLink("<i class='icon st-icon-run'></i>", "SavedSearchAdvancedView", "Contact", new { SearchDefinitionID = "uid" }, new { @title = "Run Search" })
+                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+
+                    +
+                          "</span></td>" +
+                        "</tr>")
+                            .Events(events => events.DataBinding("onDataBinding2").DataBound("onDataBound1"))
+                        .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .PageSize(ItemsPerPage)
+                                    .Read(read => read.Action("PredifinedAdvancedSearchViewRead", "AdvancedSearch").Data("additionalInfo"))//, new { name = "#=''#" }
+                       )
+        )
+    </div>
+    @*}*@
+
+
+
+
+
+    @*</div>*@
+
+    @*<div class="col-md-6">
+                @using (Ajax.BeginForm("AdvancedSearchList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+        {
+                    <div class="page-title saved-search">[|Favorite Searches|] <a href="#FavoriteSearches" data-toggle="collapse" class="pull-right saved-search-acc"><i class="icon st-icon-dropdownarrow"></i></a></div>
+                    <div class="campaigns-grid collapse in" id="FavoriteSearches">
+                        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel>()
+                .Name("gridadvancedsearch2")
+        .HtmlAttributes(new { @class = "k-grid-content" })
+            .Pageable(pageable => pageable
+                    .Refresh(false)
+                    //.PageSizes(new int[] { 10, 25, 50, 100, 250, 500, 1000 })
+                    .ButtonCount(5).Messages(m => m
+                        .Display("[|Showing|] {0}-{1} [|from|] {2:#,#} [|Saved Searche(s)|]")
+                        .Empty("[|No saved searches to display|]").ItemsPerPage("[|Saved searches per page|]")))
+            .Columns(columns =>
+            {
+                columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+                columns.Bound(c => c.SearchDefinitionName).Title("[|Search|]").HeaderHtmlAttributes(new { @class = "col-30" });
+                columns.Bound(c => c.TagsList).Title("[|Tag|]").HeaderHtmlAttributes(new { });
+                columns.Bound(c => c.CreatedOn).Title("[|Created|]").HeaderHtmlAttributes(new { });
+                columns.Bound(c => c.LastRunDate).Title("[|Last Run|]").HeaderHtmlAttributes(new { });
+                columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:160px;" });
+            })
+            .ToolBar(toolbar =>
+            {
+                toolbar.Template(@<text>
+                    <div class="toolbar grid-ct-header">
+                        <div class="left-part">
+                            <label class="checkbox toggle-all" for="masterCheckBox1">
+                                <input type='checkbox' data-toggle='checkbox' id='masterCheckBox1' />
+                                [|Select All|]
+                            </label>
+                        </div>
+
+                    </div>
+                </text>);
+            })
+                                                .ClientRowTemplate(
+                                                       @"<tr class='odd'>
+                        <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' SearchDefinitionID='#:SearchDefinitionID#' IsPreConfigSearch='#:IsPreConfiguredSearch#' IsFavoriteSearch='#:IsFavoriteSearch#' class='chkadvancedsearch2' data-toggle='checkbox'></label></td>
+                        <td>"
+                                                            + Html.ActionLink("#:SearchDefinitionName#", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, null)
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#") +
+
+                                                        "</td>" +
+                                                        "<td>#=getAllTags(TagsList)#</td>" +
+                                                        "<td class='date'>#=displayDate(CreatedOn)#</td>" +
+                                                        "<td class='date'>#=displayDate(LastRunDate)#</td>" +
+                                                        "<td class='grid-row-controls'>" +
+                                                        "<span>" + Html.ActionLink("<i class='icon st-icon-run'></i>", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, new { @title = "Run Search" })
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#")
+                                                        + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditSearch", new { SearchDefinitionID = "uid" }, new { @title = "Edit Search" })
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+                                                        + Html.ActionLink("<i class='icon st-icon-windows'></i>", "CopySearch", new { SearchDefinitionID = "uid" }, new { @title = "Copy Search" })
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#") +
+                                                                      "   <a href='javascript:void(0)' class='favoirate' onclick='AddToFavoirate(#:SearchDefinitionID#)' title='Favorite'><i class='icon st-icon-star'></i></a> "
+        +
+
+                                                                    " <a href='javascript:void(0)' title='Delete' onclick='Deleteadvancedsearch(#:SearchDefinitionID#)'><i class='icon st-icon-bin-3'></i></a></span></td>" +
+                                                        "</tr>")
+                                                .ClientAltRowTemplate(
+                                                       @"<tr class='even'>
+                        <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' SearchDefinitionID='#:SearchDefinitionID#' IsPreConfigSearch='#:IsPreConfiguredSearch#' IsFavoriteSearch='#:IsFavoriteSearch#' class='chkadvancedsearch2' data-toggle='checkbox'></label></td>
+                        <td>"
+                                                            + Html.ActionLink("#:SearchDefinitionName#", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, null)
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#") +
+
+                                                        "</td>" +
+                                                        "<td>#=getAllTags(TagsList)#</td>" +
+                                                        "<td>#=displayDate(CreatedOn)#</td>" +
+                                                        "<td>#=displayDate(LastRunDate)#</td>" +
+                                                        "<td class='grid-row-controls'>" +
+                                                         "<span>" + Html.ActionLink("<i class='icon st-icon-run'></i>", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, new { @title = "Run Search" })
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#")
+                                                        + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditSearch", new { SearchDefinitionID = "uid" }, new { @title = "Edit Search" })
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+                                                        + Html.ActionLink("<i class='icon st-icon-windows'></i>", "CopySearch", new { SearchDefinitionID = "uid" }, new { @title = "Copy Search" })
+                                                                                                     .ToHtmlString().Replace("uid", "#:SearchDefinitionID#") +
+                                                                      "<a href='javascript:void(0)' class='favoirate' onclick='AddToFavoirate(#:SearchDefinitionID#)' title='Favorite'><i class='icon st-icon-star'></i></a> <a href='javascript:void(0)' title='Delete' onclick='Deleteadvancedsearch(#:SearchDefinitionID#)'><i class='icon st-icon-bin-3'></i></a></span></td>" +
+                                                        "</tr>")
+                                                            .Events(events => events.DataBinding("onDataBinding1").DataBound("onDataBound2"))
+                                                        .DataSource(dataSource => dataSource
+                                                        .Ajax()
+                                                        .PageSize(5)
+                                                                    .Read(read => read.Action("FavourateAdvancedSearchViewRead", "AdvancedSearch").Data("additionalInfo"))//, new { name = "#=''#" }
+                                                       )
+                        )
+                    </div>
+                    }
+
+
+
+            </div>*@
+</div>
+
+<div class="clearfix mtl">
+    @*@using (Ajax.BeginForm("AdvancedSearchList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+        {*@
+    <div class="page-title">[|Saved Searches|]</div>
+    <div class="accounts-grid">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel>()
+        .Name("gridadvancedsearch")
+.HtmlAttributes(new { @class = "k-grid-content" })
+        .AutoBind(false)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+            .ButtonCount(10).Messages(m => m
+                .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Saved Searche(s)|]")
+                .Empty("[|No saved searches to display|]").ItemsPerPage("[|Saved searches per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Bound(c => c.SearchDefinitionName).Title("[|Search|]").HeaderHtmlAttributes(new { @class = "col-35" });
+        columns.Bound(c => c.TagsList).Title("[|Tag|]").HeaderHtmlAttributes(new { @class = "col-35" });
+        columns.Bound(c => c.CreatedOn).Title("[|Created|]").HeaderHtmlAttributes(new { @class = "col-35" });
+        columns.Bound(c => c.LastRunDate).Title("[|Last Run|]").HeaderHtmlAttributes(new { @class = "col-35" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:160px;" });
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="left-part">
+                    <label class="checkbox toggle-all" for="masterCheckBox">
+                        <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                        [|Select All|]
+                    </label>
+                </div>
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtadvancedsearchsearch" onkeydown="GetadvancedsearchBasedonsearch(event);" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                </div>
+            </div>
+        </text>);
+    })
+                    .ClientRowTemplate(
+                                   @"<tr class='odd'>
+                <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' SearchDefinitionID='#:SearchDefinitionID#' IsPreConfigSearch='#:IsPreConfiguredSearch#' IsFavoriteSearch='#:IsFavoriteSearch#' class='chkadvancedsearch' data-toggle='checkbox'></label></td>
+                <td>"
+                                                                + Html.ActionLink("#:SearchDefinitionName#", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, null)
+                                                                                                                 .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#") +
+
+                            "</td>" +
+                            "<td>#=getAllTags(TagName)#</td>" +
+                            "<td class='date'>#=displayDate_n(CreatedOn)#</td>" +
+                            "<td class='date'>#=displayDate_n(LastRunDate)#</td>" +
+                            "<td class='grid-row-controls'>" +
+                                                                                    "<span>" + Html.ActionLink("<i class='icon st-icon-run'></i>", "SavedSearchAdvancedView", "Contact", new { SearchDefinitionID = "uid" }, new { @title = "Run Search" })
+                                                                                                                         .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+                                    + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditSearch", new { SearchDefinitionID = "uid" }, new { @title = "Edit Search" })
+                                                                         .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+                                    + Html.ActionLink("<i class=' icon st-icon-windows'></i>", "CopySearch", new { SearchDefinitionID = "uid" }, new { @title = "Copy Search" })
+                                                                         .ToHtmlString().Replace("uid", "#:SearchDefinitionID#") +
+
+
+
+                                             "<a href='javascript:void(0)' title='Delete' onclick='Deleteadvancedsearch(#:SearchDefinitionID#)'><i class='icon st-icon-bin-3'></i></a></span></td>" +
+                            "</tr>")
+                    .ClientAltRowTemplate(
+                                   @"<tr class='even'>
+                <td class='grid-checkbox'><label class='checkbox'><input type='checkbox' SearchDefinitionID='#:SearchDefinitionID#' IsPreConfigSearch='#:IsPreConfiguredSearch#' IsFavoriteSearch='#:IsFavoriteSearch#' class='chkadvancedsearch' data-toggle='checkbox'></label></td>
+                <td>"
+                                                                + Html.ActionLink("#:SearchDefinitionName#", "RunSearch", new { SearchDefinitionID = "uid", IsPreConfigSearch = "IsPS", IsFavoriteSearch = "IsFavoriteConfig" }, null)
+                                                                                                 .ToHtmlString().Replace("uid", "#:SearchDefinitionID#").Replace("IsPS", "#:IsPreConfiguredSearch#").Replace("IsFavoriteConfig", "#:IsFavoriteSearch#") +
+
+                            "</td>" +
+                            "<td>#=getAllTags(TagName)#</td>" +
+                            "<td>#=displayDate_n(CreatedOn)#</td>" +
+                            "<td>#=displayDate_n(LastRunDate)#</td>" +
+                            "<td class='grid-row-controls'>" +
+                                                                    "<span>" + Html.ActionLink("<i class='icon st-icon-run'></i>", "SavedSearchAdvancedView", "Contact", new { SearchDefinitionID = "uid" }, new { @title = "Run Search" })
+                                                                                                 .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+                                    + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditSearch", new { SearchDefinitionID = "uid" }, new { @title = "Edit Search" })
+                                                                         .ToHtmlString().Replace("uid", "#:SearchDefinitionID#")
+                                            + Html.ActionLink("<i class=' icon st-icon-windows'></i>", "CopySearch", new { SearchDefinitionID = "uid" }, new { @title = "Copy Search" })
+                                                                         .ToHtmlString().Replace("uid", "#:SearchDefinitionID#") +
+
+                                              "<a href='javascript:void(0)' title='Delete' onclick='Deleteadvancedsearch(#:SearchDefinitionID#)'><i class='icon st-icon-bin-3'></i></a></span></td>" +
+                            "</tr>")
+                                .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .PageSize(ItemsPerPage)
+                            .Read(read => read.Action("AdvancedSearchViewRead", "AdvancedSearch").Data("additionalInfo"))//, new { name = "#=''#" }
+                           )
+        )
+    </div>
+    @*}*@
+</div>
+@section Scripts{
+    <script>
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        var advancedSearchDtls = '@(Details)';
+        if (advancedSearchDtls == 0) {
+            localStorage.removeItem("advancedsearchsearchtext");
+            createCookie("advancedsearchpagenumber", 1, 1); createCookie("advancedsearchpagesize", '@(ItemsPerPage)', 1);
+        }
+        createCookie("advancedsearchpagesize", '@(ItemsPerPage)', 1);
+        function additionalInfo() {
+            return {
+                //name: localStorage.getItem("advancedsearchsearchtext"),
+                name: localStorage.getItem("advancedsearchsearchtext"),
+            }
+        }
+    </script>
+
+    <script>
+        var searchText;
+
+        function favoriteSearchMasterCheckBox(gridclass) {
+            var masterID = $('#masterCheckBox1');
+            var classSelecter = gridclass + " table";
+            masterID.change(function () {
+                if ($(this).is(':checked')) {
+                    $('.' + classSelecter).find('tbody :checkbox').attr('checked', 'checked');
+                    $('.' + classSelecter).find('tbody :checkbox').parents('tr').addClass('k-state-selected');
+                    $('.' + classSelecter).find('tbody :checkbox').parent('label.checkbox').addClass('checked');
+                }
+                else {
+                    $('.' + classSelecter).find('tbody :checkbox').attr('checked', false);
+                    $('.' + classSelecter).find('tbody :checkbox').parents('tr').removeClass('k-state-selected');
+                    $('.' + classSelecter).find('tbody :checkbox').parent('label.checkbox').removeClass('checked');
+                }
+            });
+        }
+        function predefinedSearchMasterCheckBox(gridclass) {
+            var masterID = $('#masterCheckBox2');
+            var classSelecter = gridclass + " table";
+            masterID.change(function () {
+                if ($(this).is(':checked')) {
+                    $('.' + classSelecter).find('tbody :checkbox').attr('checked', 'checked');
+                    $('.' + classSelecter).find('tbody :checkbox').parents('tr').addClass('k-state-selected');
+                    $('.' + classSelecter).find('tbody :checkbox').parent('label.checkbox').addClass('checked');
+                }
+                else {
+                    $('.' + classSelecter).find('tbody :checkbox').attr('checked', false);
+                    $('.' + classSelecter).find('tbody :checkbox').parents('tr').removeClass('k-state-selected');
+                    $('.' + classSelecter).find('tbody :checkbox').parent('label.checkbox').removeClass('checked');
+                }
+            });
+        }
+        function favoriteSearch_bindCheckboxchnage(checkboxClass) {
+            var gridCheckBox = $('.' + checkboxClass);
+            var masterID = $('#masterCheckBox1');
+            gridCheckBox.change(function () {
+                if (!$(this).is(':checked')) {
+                    masterID.attr('checked', false);
+                    masterID.parent('label.checkbox').removeClass('checked');
+                    $(this).parents('tr').removeClass('k-state-selected');
+                }
+                else {
+                    if (gridCheckBox.length == $('.' + checkboxClass + ':checked').length) {
+                        masterID.attr('checked', 'checked');
+                        masterID.parent('label.checkbox').addClass('checked');
+                    }
+                    $(this).parents('tr').addClass('k-state-selected');
+                }
+            });
+        }
+        function predefineSearch_bindCheckboxchnage(checkboxClass) {
+            var gridCheckBox = $('.' + checkboxClass);
+            var masterID = $('#masterCheckBox2');
+            gridCheckBox.change(function () {
+                if (!$(this).is(':checked')) {
+                    masterID.attr('checked', false);
+                    masterID.parent('label.checkbox').removeClass('checked');
+                    $(this).parents('tr').removeClass('k-state-selected');
+                }
+                else {
+                    if (gridCheckBox.length == $('.' + checkboxClass + ':checked').length) {
+                        masterID.attr('checked', 'checked');
+                        masterID.parent('label.checkbox').addClass('checked');
+                    }
+                    $(this).parents('tr').addClass('k-state-selected');
+                }
+            });
+        }
+        function GetadvancedsearchBasedonsearch(e) {
+            setTimeout(function () {
+
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtadvancedsearchsearch").val() || (searchText === $("#txtadvancedsearchsearch").val() && e.keyCode == enterKeyPressCode))
+                {
+                    searchText = $("#txtadvancedsearchsearch").val();
+                }
+                else
+                    return;
+                $filter = new Array();
+                var grid = $("#gridadvancedsearch").data("kendoGrid"), searchBox = $("#txtadvancedsearchsearch").val();
+                //alert(searchBox);
+                if ($.trim(searchBox).length > 2) {
+                    //  alert("Lenght more than 2");
+                    localStorage.removeItem("advancedsearchsearchtext");
+                    localStorage.setItem("advancedsearchsearchtext", searchBox);
+
+                    var psize = readCookie("advancedsearchpagesize");
+                    $("#gridadvancedsearch").data("kendoGrid").dataSource.query({ page: 1, pageSize: psize });
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("advancedsearchsearchtext");
+                    $("#gridadvancedsearch").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 800);
+        }
+
+        $('#txtadvancedsearchsearch').keypress(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+                window.location = "/advancedsearchlist";
+            }
+        });
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chkadvancedsearch');
+            }, 200)
+        }
+        function onDataBinding1(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                predefineSearch_bindCheckboxchnage('chkadvancedsearch1');
+            }, 200)
+        }
+        function onDataBinding2(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                favoriteSearch_bindCheckboxchnage('chkadvancedsearch2');
+            }, 200)
+        }
+
+        function getAllTags(TagList) {
+            var TagString ="";
+            if(TagList!=null)
+                TagString =TagList;
+
+            return TagString;
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+
+        }
+        function onDataBound1(e) {
+            var colCount = $("#gridadvancedsearch1").find('table colgroup > col').length;
+
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+
+        }
+        function onDataBound2(e) {
+            var colCount = $("#gridadvancedsearch2").find('table colgroup > col').length;
+
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+
+        }
+        function Deleteadvancedsearch(id) {
+            alertifyReset("Delete advancedsearch", "Cancel");
+            var array = [];
+            array.push(id);
+            //var confirmMesaage = "Are you sure you want to delete this search?";
+            var  confirmMesaage = "[|You’re about to delete Saved-search. Are you sure you want to delete Saved-search?|]";
+            commondelete(confirmMesaage, array);
+        }
+        function AddToFavoirate(id) {
+
+            var favoriteURL = '@Url.Content("~/AdvancedSearch/")' + "SaveAsFavoriteSearch";
+            $.ajax({
+                url: favoriteURL,
+                type: 'post',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ searchDefinitionId: id })
+            }).then(function (response) {     
+                var filter = $.Deferred();
+                if (response.success) {    
+                    filter.resolve(response);
+                } 
+                else {         
+                    filter.reject(response.error);
+                }           
+                return filter.promise();
+            }).done(function (data) {
+                notifySuccess("[|Successfully updated as favorite searche|]");
+                setTimeout(
+                    function()
+                    {
+                        var grid = $('#gridadvancedsearch2').data("kendoGrid");
+                        grid.dataSource.fetch();
+                    },setTimeOutTimer);   
+            }).fail(function (error) {
+                notifyError(error);
+            });
+        }
+
+        function commondelete(confirmationMessage, advancedsearchIds) {
+            alertify.confirm(confirmationMessage, function (e) {
+                if (e) {
+                    var varDeleteURL = '@Url.Content("~/AdvancedSearch/")' + "DeleteSearches";
+                    jQuery.ajaxSettings.traditional = true
+                    $.ajax({
+                        url: varDeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ SearchID: advancedsearchIds })
+                    }).then(function (response) {     
+                        var filter = $.Deferred();
+                        if (response.success) {    
+                            filter.resolve(response);
+                        } 
+                        else {         
+                            filter.reject(response.error);
+                        }           
+                        return filter.promise();
+                    }).done(function (data) {
+                        notifySuccess("[|Successfully deleted the searches(s)|]");
+                        setTimeout(
+                            function()
+                            {
+                                window.location.href = "/advancedsearchlist";
+                            },setTimeOutTimer);   
+                    }).fail(function (error) {
+                        notifyError(error);
+                    });
+                }
+                else {
+                    notifyError("[|You've clicked Cancel|]");
+                }
+            });
+        }
+
+        function displayDate_n(date) {
+            if (date == null) {
+                return "";
+            }
+            return kendo.toString(kendo.parseDate(date, 'yyyy/MM/dd'), '@(DateFormat)');
+        }
+
+        $(document).ready(function () {
+            removepageloader();
+            var BASE_URL = '@Url.Content("~/AdvancedSearch/")';
+            var seachContent = @(Html.Raw(Json.Encode(Model)));
+            var itemsPerPage = '@(ItemsPerPage)';
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+            var viewModel = new searchListViewModel(seachContent, BASE_URL,WEBSERVICE_URL);
+            ko.applyBindings(viewModel);
+            $("#txtadvancedsearchsearch").val(localStorage.getItem("advancedsearchsearchtext"));
+
+            var grid = $("#gridadvancedsearch").data("kendoGrid")
+            var pno = readCookie("advancedsearchpagenumber");
+            var psize = readCookie("advancedsearchpagesize") == null ? itemsPerPage : readCookie("advancedsearchpagesize");
+            grid.dataSource.query({ page: pno, pageSize: psize });
+            var grid1 = $("#gridadvancedsearch1").data("kendoGrid")
+            grid1.dataSource.query({ page: pno, pageSize: psize });
+
+            tableMasterCheckBox('accounts-grid');
+            favoriteSearchMasterCheckBox('campaigns-grid');
+
+        });
+    </script>
+}
+

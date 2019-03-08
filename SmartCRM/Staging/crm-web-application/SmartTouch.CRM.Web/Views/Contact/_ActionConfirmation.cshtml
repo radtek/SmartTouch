@@ -1,0 +1,89 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model PersonViewModel
+@{
+    var message = ViewBag.Message != null ? ViewBag.Message : null;
+    var multipleContacts = (bool)ViewBag.MultipleContacts;
+    var okText = ViewBag.OkText != null ? ViewBag.OkText : null;
+    var actionId = ViewBag.ActionId != null ? ViewBag.ActionId : null;
+    var contactId = ViewBag.ContactId != null ? ViewBag.ContactId : null;
+    var userCreatedActions = (bool)ViewBag.UserCreatedActions;
+}
+<div class="modal-body">
+    @(message)
+</div>
+
+<div class="modal-footer" id="actionconfirmation">
+    <div class="pull-left">
+        @if (multipleContacts && userCreatedActions == false && contactId !=0)
+        {
+            <a class="btn btn-lg btn-primary" data-bind="click:function(data,event){ActionConfirmation('one')}"><span>[|Only for this contact|]</span></a>
+            <a class="btn btn-lg btn-primary" data-bind="click:function(data,event){ActionConfirmation('multiple')}"><span>[|All Contacts|]</span></a>
+        }
+        @if (!multipleContacts && userCreatedActions == false && contactId != 0)
+        {
+            <a class="btn btn-lg btn-primary" data-bind="click:function(data,event){ActionConfirmation('one')}"><span>@okText</span></a>
+        }
+        @if (!userCreatedActions && contactId == 0)
+        {
+            <a class="btn btn-lg btn-primary" data-bind="click:function(data,event){ActionConfirmation('userActions')}"><span>@okText</span></a>
+        }
+        <a class="btn btn-lg" aria-hidden="true"
+           data-dismiss="modal" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var PersonDetails = @(Html.Raw(Json.Encode(Model)));
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var Opportunity_Base_Url = '@Url.Content("~/Contact/")';
+        var Opportunity_Url = '@Url.Content("~/Opportunities/")';
+        var actionId = '@(actionId)';
+        var contactId = '@(contactId)';
+        var actionConfirmation = function()
+        {
+            selfActionConfirmation = this;
+            selfActionConfirmation.ActionConfirmation = function(message){
+                var deleteForAll = true;
+                if(message == 'one')
+                    deleteForAll = false;
+                if(message == 'userActions')
+                    deleteForAll = true;
+
+                var action = "DeleteAction";
+                pageLoader();
+                $.ajax({
+                    url: BASE_URL + action,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'actionId': actionId,'deleteForAll':deleteForAll,'contactId':contactId }),
+                }).then(function (response) {
+                    var filter = $.Deferred();
+                    if (response.success) {
+                        filter.resolve(response)
+                    }
+                    else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    $('.success-msg').remove();
+                    notifySuccess('[|Action deleted successfully|]');
+                    setTimeout(
+                        function () {
+                            createCookie('log', false, 1);
+                            window.location.reload(true);
+                        }, setTimeOutTimer);
+                }).fail(function (error) {
+                    $('.success-msg').remove();
+                    notifyError(error);
+                });
+            };
+        };
+        viewModel1 = new actionConfirmation();
+        console.log(viewModel1);
+        ko.applyBindings(viewModel1, document.getElementById("actionconfirmation"));
+    });
+
+</script>

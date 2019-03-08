@@ -1,0 +1,439 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+    var isIncludeSignature = ViewBag.IsIncludeSignature;
+    var key = Session["dropboxkey"];
+    var serviceProvider = ViewBag.ServiceProvider;
+    var userFullName = ViewBag.UserFullName;
+    var page = ViewBag.page;
+}
+
+@Styles.Render("~/Content/Redactor")
+<script type="text/javascript" src="~/Scripts/DropBox.js" id="dropboxjs" data-app-key='@key'></script>
+@*<script src="~/Scripts/redactor/redactor.js"></script>*@
+@Scripts.Render("~/bundles/redactor")
+
+
+@*<meta http-equiv='cache-control' content='no-store'>
+    <meta http-equiv='pragma' content='no-cache'>
+    <meta http-equiv='expires' content='0'>*@
+<div id="@(isModal==true ? "SendEmailModel" : "SendEmail")">
+    <div class="sendemail dp-topnav-inner" id="divMails">
+        @*<div class="more-heading">
+                <span class="icon st-icon-support-3 display-inline"></span> <h4 class="panel-title display-inline plm">New Email</h4>
+            </div>*@
+
+        <div class="dp-topnav-inner-heading">
+            <span class="icon st-icon-envelope display-inline"></span>
+            <h4 class="panel-title display-inline plm">[|New Email|]</h4>
+
+            @if (isModal)
+            {
+                if (key != null && key != "")
+                {
+                    <span id="containerModal" class="pull-right plm"></span>
+                }
+                else
+                {
+                    <a id="dropbox-settings-Modal" href="#" class="dropbox-dropin-btn dropbox-dropin-default pull-right plm"><span class="dropin-btn-status"></span>Choose from Dropbox</a>
+                }
+                @*@Html.Raw(@Html.ActionLink("[LinkMethod]", "GoogleDriveApi", "Contact", new { pageName = ViewBag.page }, new { data_toggle = "modal", data_target = "#sendemailmodal", @class = "sendmailpopup pull-right" }).ToHtmlString().Replace("[LinkMethod]", "<span class='icon st-icon-google-drive'></span>"))*@
+                <a id="googleDrive" href="#" class="sendmailpopup pull-right icon st-icon-google-drive"></a>
+            }
+            else
+            {
+                if (key != null && key != "")
+                {
+                    <span id="container" class="pull-right plm"></span>
+                }
+                else
+                {
+                    <a id="dropbox-settings" href="#" class="dropbox-dropin-btn dropbox-dropin-default pull-right plm"><span class="dropin-btn-status"></span>Choose from Dropbox</a>
+                }
+                @*@Html.Raw(@Html.ActionLink("[LinkMethod]", "GoogleDriveApi", "Contact", new { pageName = ViewBag.page }, new { data_toggle = "modal", data_target = "#googledrivemodal", @class = "sendmailpopup pull-right" }).ToHtmlString().Replace("[LinkMethod]", "<span class='icon st-icon-google-drive'></span>"))*@
+                <a id="googleDrive" href="#" class="sendmailpopup pull-right icon st-icon-google-drive"></a>
+            }
+
+        </div>
+
+        <div class="moreinner-body">
+            <div class="sendemail-body">
+                <div class="sendemail-header">
+                    <div class="recipients">
+                        <span class="recipients-label">
+                            <a id="@(isModal == true ? "ccbccbtnModel" : "ccbccbtn")" class="cc-bcc" href="javascript:void(0)">
+                            </a>
+                            To<span class="required">*</span> :
+                        </span>
+                        @*<input class="form-control" id="txtTo" type="text" data-bind="value:Text" />*@
+
+                        <input id="@(isModal == true ? "txtToModel" : "txtTo")" class="from-list" />
+                        <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+
+                    </div>
+                    <div id="@(isModal == true ? "ccbccModal" : "ccbcc")">
+                        <div class="recipients">
+                            <span class="recipients-label">CC :</span>
+                            <input class="from-list" id="@(isModal == true ? "txtCCModel" : "txtCC")" type="text" placeholder="CC">
+                        </div>
+                        <div class="recipients">
+                            <span class="recipients-label">BCC :</span>
+                            <input class="from-list" id="@(isModal == true ? "txtBCCModel" : "txtBCC")" type="text" placeholder="BCC">
+                            @*<input class="form-control" id="txtBCC" type="text" data-bind="value:Bcc" placeholder="BCC">*@
+                        </div>
+                    </div>
+
+                    <div class="recipients">
+                        <span class="recipients-label">[|From|] <span class="required">*</span> :</span>
+                        <span class="from-list from">
+                            @*<input min="1" data-bind="kendoDropDownList: {dataTextField:'ProviderName',dataValueField:'CommunicationLogID', data: Providers, value: ProviderID,optionLabel: 'Select...'}" />*@
+                            <input min="1" data-bind="kendoDropDownList: {dataTextField:'DisplayEmail',dataValueField:'EmailID', data: Emails, value: EmailID }" />
+                            <span class="validationMessage" data-bind="validationMessage:FromValidation"></span>
+                            @*<input class="form-control required" id="txtBCC" type="hidden" data-bind="value:ProviderID" placeholder="ProviderID">*@
+                            <input class="form-control required" id="txtBCC" type="hidden" data-bind="value:EmailID" placeholder="EmailID">
+                        </span>
+                    </div>
+
+                    <div class="recipients">
+                        <span class="recipients-label">[|Subject|] <span class="required">*</span> :</span>
+                        <input class="from-list from form-control" type="text" data-bind="value:Subject" placeholder="[|Subject|]">
+                    </div>
+                    <div class="redactor-editor-modified">
+                        <textarea name="content" id="@(isModal == true ? "editorModal" : "editor")"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <label><b>[|Note|]:</b> [|Use BACKSPACE to remove/delete attachments.|]</label>
+            <div class="pull-left">
+                <a class="btn btn-lg btn-primary" data-bind="click: sendEmails">[|Send|]</a>
+                <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                   data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+            </div>
+            <div class="pull-right">
+                <label class="checkbox display-inline" for="forInsertSignature">
+                    <input type="checkbox" value="" id="InsertSignature" data-toggle="checkbox" data-bind="checked:IsChecked,enable:HideSignature"> [|Insert Signature|]
+                </label>
+                <label class="checkbox display-inline mlm" for="forSendMeCopy">
+                    <input type="checkbox" value="" id="SendMeCopy" data-toggle="checkbox" data-bind="checked:IsSendMeCopy"> [|Send me Copy|]
+                </label>
+            </div>
+        </div>
+    </div>
+    <div id="bigmodal2" style="display:none">
+        <div class="modal-header st-move">
+            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+            <h4 class="modal-title"><span class="icon re-icon re-templates redactor-btn-image"></span> Choose a template</h4>
+        </div>
+        <div class="clearfix">
+            <div>
+                <div class="modal-body top">
+                    <div id="templatechange">
+                        <a class="btn btn-default active" href="javascript:void(0)" data-tcview="ftemplate" data-bind="click:showAllTemplates">[|All|]</a>
+                        <a class="btn btn-default" href="javascript:void(0)" data-tcview="fpredesign" data-bind="click:showOnlyPredesigned">[|Predesigned|]</a>
+                        <a class="btn btn-default" href="javascript:void(0)" data-tcview="fsaved" data-bind="click:showOnlySavedTemplates">[|Saved Templates|]</a>
+                        <a class="btn btn-default" href="javascript:void(0)" data-tcview="fsaved" data-bind="click:showSentCampaigns">[|Sent Campaigns|]</a>
+                    </div>
+                    <div>
+                        <div class="layout-search">
+                            <input type="search" class="form-control" placeholder="[|Search|]" data-bind="value:TemplateSearch,valueUpdate:'afterkeydown'" id="templatesearch">
+                            <i class="icon st-icon-search-2"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="dp-topnav-inner-body">
+                        <ul class="campaigns-layouts" data-bind="foreach:FilteredTemplates">
+                            <li>
+                                <div class="layout animation5">
+                                    <div class="overlay">
+                                        <a href="#" class="btn btn-default overlay-btn select" data-bind="click: $parent.selectTemplate">[|Select|]</a>
+
+                                    </div>
+                                    <!--ko if: Type == 4 -->
+                                    <a href="javascript:void(0)"><img data-bind="attr:{src: '@Url.Content("~/img/campaign-thumbnail.jpg")'}" alt="layout" /></a>
+                                    <!--/ko-->
+                                    <!--ko ifnot: Type == 4 -->
+                                    <a href="javascript:void(0)"><img data-bind="attr:{src: ThumbnailImageUrl}" alt="layout" /></a>
+                                    <!--/ko-->
+
+                                </div>
+                                <div class="layout-title" data-bind="text:Name,attr: { title: Name }"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <!--ko if: FilteredTemplates().length == 0 -->
+                        <span>No results found</span>
+                        <!--/ko-->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left">
+                        <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    @*</div>*@
+    @*</div>*@
+    @*<div id="modal">
+            <span>This is test contnet</span>
+        </div>*@
+    @*</div>*@
+    @*</div>*@
+</div>
+<script>
+    var popupMode = '@(isModal)';
+    var key = '@(key)';
+    var page = '@(page)';
+    console.log(key != "");
+    $("#bigmodal2").draggable({
+        handle: ".modal-header"
+    });
+
+    var options = {
+        // Required. Called when a user selects an item in the Chooser.
+        success: function (files) {
+            var Editor = "";
+            var editor = "";
+            if(popupMode=="True"){
+                editor= $("#editorModal").redactor('code.get');
+                Editor = "editorModal";
+            }
+            else{
+                editor= $("#editor").redactor("code.get");
+                Editor = "editor";
+            }
+
+            var selectedFiles="";
+            var previousvalue = editor;
+            $.each(files,function (index, File) {
+                selectedFiles +="<div id='attachment" +index+"' style='background-color: rgba(109, 152, 195, 0.2);border: 1px solid rgba(109, 152, 195, 0.2);color: #6d98c3;display: block;padding: 10px;margin-bottom:5px;' contenteditable='false' ><a href='"+File.link+"'  target='_blank' style='display: inline-block; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width: 400px;text-decoration: none;'> "+File.link+"</a><a href='javascript:void(0)' onclick='javascript: var d = document.getElementById(\"attachment" + index +"\");  d.parentNode.removeChild(d);' style='color: rgba(109, 152, 195, 1);float: right;font-weight: 700;text-decoration: none;'></a></div>";});
+            $("#" + Editor).redactor('insert.html', selectedFiles);
+        },
+        cancel: function () {
+        },
+        linkType: "preview", // or "direct"
+        multiselect: true, // or true
+        extensions: ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png','.xls']
+    };
+
+    if(popupMode=="True")
+    {
+        try{
+            console.log('Enter the DropBox Section');
+            var button = Dropbox.createChooseButton(options);
+            if (key != "")
+                document.getElementById("containerModal").appendChild(button);
+        }
+        catch(ex){
+            console.log("exception");
+            console.log(ex);
+            console.log(ex.message);
+        }
+    }
+    else
+    {
+        try{
+            var button = Dropbox.createChooseButton(options);
+            if (key != ""){
+                console.log("Appending");
+                document.getElementById("container").appendChild(button);
+            }
+        }
+        catch(ex){
+            console.log(ex.message);
+        }
+
+    }
+
+    function fnsuccess(arr) {
+        var Editor = "";
+        var editor = "";
+        if(popupMode=="True"){
+            editor= $("#editorModal").redactor('code.get');
+            Editor = "editorModal";
+        }
+        else{
+            editor= $("#editor").redactor("code.get");
+            Editor = "editor";
+        }
+        var selectedFiles="";
+        var previousvalue = editor;
+
+        $.each(arr,function (index, copylink){
+            selectedFiles +="<div id='attachment" +index+"' style='background-color: rgba(109, 152, 195, 0.2);border: 1px solid rgba(109, 152, 195, 0.2);color: #6d98c3;display: block;padding: 10px;margin-bottom:5px;' contenteditable='false' ><a href='"+copylink.Link+"'  target='_blank' style='display: inline-block; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;width: 400px;text-decoration: none;'> "+copylink.Link+"</a><a href='javascript:void(0)' onclick='javascript: var d = document.getElementById(\"attachment" + index +"\");  d.parentNode.removeChild(d);' style='color: rgba(109, 152, 195, 1);float: right;font-weight: 700;text-decoration: none;'></a></div>";});
+        $("#" + Editor).redactor('insert.html', selectedFiles);
+    }
+
+    $(document).ready(function () {
+        $('#editor').redactor({
+            focus: true,
+            plugins: ['bufferbuttons', 'fontfamily', 'fontcolor', 'fontsize', 'imagemanager', 'table', 'fullscreen', 'textdirection', 'video', 'underline', 'templates'],
+            source: true,
+            imageManagerJson: '@Url.Content("~/Contact/GetCampaignImages")',
+            uploadImageField: true,
+            imageUpload: '@Url.Content("~/Contact/UploadImage")',
+            imageUploadErrorCallback: function(json)
+            {
+                notifyError(json.error);
+            },
+            buttons : ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'image', 'link', 'alignment', 'horizontalrule', 'html'],
+            paragraphize: false,
+            replaceDivs: false,
+            boldTag: 'b',
+            fixed: false,
+            //pastePlainText: true,
+            convertImageLinks: true,
+            cleanOnPaste: false,
+            linebreaks: true,
+            deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'applet']
+        });
+
+        var popup = '@(isModal)';
+        if(popup=="True"){
+
+            $('#editorModal').redactor({
+                plugins: ['bufferbuttons', 'fontfamily', 'fontcolor', 'fontsize', 'imagemanager', 'table', 'fullscreen', 'textdirection', 'video', 'underline', 'templates'],
+                source: true,
+                imageManagerJson: '@Url.Content("~/Contact/GetCampaignImages")',
+                uploadImageField: true,
+                imageUpload: '@Url.Content("~/Contact/UploadImage")',
+                imageUploadErrorCallback: function(json)
+                {
+                    notifyError(json.error);
+                },
+                buttons : ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'image', 'link', 'alignment', 'horizontalrule', 'html'],
+                paragraphize: false,
+                replaceDivs: false,
+                boldTag: 'b',
+                fixed: true,
+                cleanOnPaste: false,
+                linebreaks: true,
+                deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'applet']
+            });
+            checkedContactEmailValues = "";
+        }
+        else {
+            //editor('editor');
+
+        }
+
+        var contactSuggestions = [];
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var serviceProviderID = '@serviceProvider';
+        var IsIncludeSignature ='@isIncludeSignature';
+        var userId='@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var viewModel;
+        var CampaingModel = @(Html.Raw(Json.Encode(Model)));
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var popup = '@(isModal)';
+        var userName = '@userFullName';
+        viewModel = new SendMailViewModel(CampaingModel,BASE_URL,popup,userName,IsIncludeSignature);
+        var txtToTag = "txtTo";
+
+        if(popup=="True")
+        {
+            var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId,"");
+            tagify.TagifyEmailContacts("txtToModel",userId);
+            tagify.TagifyEmailContacts("txtCCModel",userId);
+            tagify.TagifyEmailContacts("txtBCCModel",userId);
+            ko.applyBindings(viewModel,document.getElementById("SendEmailModel"));
+        }
+        else
+        {
+
+            var tagify = new Tagify(WEBSERVICE_URL, viewModel, accountId,"");
+            tagify.TagifyEmailContacts("txtTo",userId);
+            tagify.TagifyEmailContacts("txtCC",userId);
+            tagify.TagifyEmailContacts("txtBCC",userId);
+            ko.applyBindings(viewModel,document.getElementById("SendEmail"));
+        }
+
+        appendCheckbox();
+    });
+
+
+    $('#modal').on('hide.bs.modal', function () {
+        var elem = document.getElementById('SendEmailModel');
+        if(elem != null)
+            elem.remove();
+    });
+    var tempHTML = "";
+    $('#sendemailmodal').on('hide.bs.modal', function () {
+        var elem = document.getElementById('bigmodal2');
+        if(elem != null){
+            tempHTML = elem;
+            elem.remove();
+        }
+
+    });
+
+    $(':checkbox').on('change', function() {
+        $(this).triggerHandler('click');
+    });
+
+    $("#dropbox-settings, #dropbox-settings-Modal").click(function (e) {
+        notifyError("Please configure Dropbox from Account Settings");
+    });
+
+    function templatesModal(args) {
+        var modal  = document.getElementById("bigmodal2");
+        if(modal == null)
+            modal = tempHTML;
+        $(modal).css('display', '');
+        $("#sendemailmodal .modal-content").html(modal);
+    };
+
+    $('.st-icon-google-drive').click(function (e) {
+        e.preventDefault();
+            $.ajax({
+                url: '/Contact/GetGoogleDriveAPIKey',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: { }
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                console.log("+");
+                console.log(data);
+
+                if (data.response != null) {
+                    console.log(data.response);
+                    googleKey = data.response.APIKey;
+                    googleId = data.response.ClientID;
+                    if (googleId == "" || googleKey == "") {
+                        notifyError("Please configure Google Drive from Account Settings");
+                    }
+                    else {
+                        $("#googleDrive").attr("data-toggle", "modal").attr("data-target", "#googledrivemodal");
+                        $("#googledrivemodal").load("/Contact/GoogleDriveApi", { pageName: page, clientId: googleId, apiKey: googleKey });
+                    }
+                }
+            }).fail(function (error) {
+                console.log(error);
+                notifyError("Please configure Google Drive from Account Settings");
+            });
+
+    });
+
+</script>
+
+
+
+
+

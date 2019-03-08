@@ -1,0 +1,136 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel
+@using System.Threading
+@using System.Linq;
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+
+@{
+
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.SendMail);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+
+}
+
+
+
+
+<div class="clearfix">
+    <div class="form-horizontal contact-information">
+        <div class="clearfix cont-one">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|First Name|]</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static" data-bind="text:FirstName"></p>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Last Name|]</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static" data-bind="text:LastName"></p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix cont-two">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Title|]</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static" data-bind="text:Title"></p>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Company|]</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static" data-bind="text:CompanyName"></p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix cont-one">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Phone Number|]</label>
+                <div class="col-sm-7" data-bind="foreach: PhoneList">
+                    <p class="form-control-static contact-info">
+                        <span data-bind="text: (CountryCode() != null ? '+' + CountryCode() + ' ' : ' ') + $parent.FormatPhone(Number()) +  (Extension() != null ? ' Ext. ' + Extension() + ' ': ' ') +  ' (' + PhoneTypeName() + ')'"></span>
+                        <span class="primary-star" data-bind="visible:IsPrimary() === true"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix cont-two">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Email Address|]</label>
+                <div class="col-sm-7">
+                    <div data-bind="foreach: EmailList,visible:DoNotEmail() == false">
+                        <p class="form-control-static contact-info">
+                            <span data-bind="visible:(EmailStatusValue() == 53 || EmailStatusValue() == 54 || EmailStatusValue() == 57), text:EmailId"></span>
+                            <!--ko if: EmailStatusValue() != 53 && EmailStatusValue() != 54 && EmailStatusValue() != 57 -->
+                            @if (Permissions.Where(s => s.Module == AppModules.SendMail).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <a data-toggle="modal" data-target="#modal" data-bind="attr: { href: $parent.getEmail(EmailId(),ContactID())}, text:EmailId"></a>
+                            }
+                            else
+                            {
+                                <span data-bind="text:EmailId"></span>
+                            }
+                            <!--/ko-->
+                            <span data-bind="attr: {'class':IsPrimary() === true ? 'primary-star' : null }"></span>
+                        </p>
+                    </div>
+
+                    <div data-bind="foreach: EmailList,visible:DoNotEmail() == true">
+                        <p class="form-control-static contact-info" id="EmailAddress">
+                            <span data-bind="text:EmailId"></span>
+                            <span data-bind="attr: {'class':IsPrimary() === true ? 'primary-star' : null }"></span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Do Not Email|] </label>
+                <div class="col-sm-7">
+                    <p class="form-control-static"><span data-bind="text: DoNotEmail() == true ? '[|Yes|]' : '[|No|]'"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix cont-one">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Social|]</label>
+                <div class="contact-info col-sm-7" data-bind="foreach: SocialMediaUrls">
+                    <p class="form-control-static">
+                        <label>
+                            <a data-bind="attr: { href: URL, target:'_blank' }"><span data-bind="text:URL "></span></a>
+                            <span data-bind="text:' ('+MediaType()+')'"></span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5">[|Communities|]</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static"><span data-bind="text: communities"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix cont-two" data-bind="visible:Addresses().length > 0, foreach:Addresses">
+            <div class="form-group col-lg-6 static-field-group">
+                <label class="control-label col-sm-5 phn pvn bold pull-left pdl15">
+                    <span data-bind="text: AddressType"></span>
+                    <span>[|Address|]</span>
+                </label>
+                <div class="col-sm-7 contact-info">
+                    <p class="form-control-static">
+                        <span data-bind="text:ToString"></span>
+                        <span class="primary-star" data-bind="visible:IsDefault == true"></span>
+                        <a title="Zillow Lookup" style="cursor:pointer" class="edit-field-label field-label-plusicon" data-bind="visible: AddressLine1 && (ZipCode || (City && State.Name)), click: function(){ $parent.zillowLookUp($data)} ">
+                            <img src="/img/zillow_address_lookup.gif" />
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

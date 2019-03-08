@@ -1,0 +1,152 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.CustomFieldTabsViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    ViewBag.Title = "AddEditCustomFieldTabs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@*<script src="~/Scripts/draganddrop.js"></script>
+    <script src="~/Scripts/ViewModels/CustomFieldsViewModel.js"></script>
+    <script src="~/Scripts/knockout-sortable.min.js"></script>*@
+
+@Scripts.Render("~/bundles/customfieldvm")
+
+@Html.Partial("_CustomFieldTemplates")
+<div class="sub-container" style="display:none" data-bind="visible:true">
+    <div class="page-title">
+        [|Custom Fields|]
+    </div>
+
+
+    <div class="tabbable new-tabs tab-custom">
+
+        <ul class="nav nav-tabs custom-fields-tabs" id="customtabs" data-bind="sortable:{ data:CustomFieldTabs, connectClass: false, options: {  handle: '.st-icon-move'}}">
+            <li data-bind=" attr:{class: $parent.CurrentView() == $index() ? 'active':'',id:'tab-'+$index() }, click:$parent.changeTab.bind($data, $index())">
+                <span data-bind="value:SortID($index())"></span>
+                <a href="#contactinfo" class="custom-tab" data-bind="attr:{id:'tabname'+$index()}"><span data-bind="text:Name"></span></a>
+                <span data-bind="attr:{id:'tabnameinput'+$index()}, template:{name:'control-editname'}" class="pagenameinput form-group hide"></span>
+                <span class="tab-controls" data-bind="visible:$parent.CurrentView() == $index()">
+                    <!--ko ifnot: IsLeadAdapterTab()-->
+                    <span class="edit-custom-fields">
+                        <i class="icon st-icon-edit" data-bind="click:$root.editTabName.bind($data,$index())"></i>
+                    </span>
+                    <span class="edit-custom-fields" data-bind="click:$root.deleteTab.bind($data,$index(),CustomFieldTabId())">
+                        <i class="icon st-icon-bin-3"></i>
+                    </span>
+                    <!--/ko-->
+                    <span class="edit-custom-fields sort">
+                        <i class="icon st-icon-move"></i>
+                    </span>
+                </span>
+            </li>
+        </ul>
+        <div class="add-customtab">
+            <a href="javascript:void(0)" id="addcustomtab" data-bind="click:addTab"> <i class="icon st-icon-add mrs"></i> [|Add Tab|]</a>
+        </div>
+
+
+        <!-- /tabs -->
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="contactinfo" data-bind="if:CurrentView()!=-1">
+                <ul data-bind=" sortable:{data:CustomFieldTabs()[$root.CurrentView()].Sections,connectClass:false, options: {  handle: '.st-icon-move', axis: 'y' }}" class="tab-pane-section">
+
+                    <li class="panel panel-default" data-bind="attr:{id:'section'+$index()}">
+                        <div class="form-horizontal-large custom-fields panel-body ptn">
+                            <div class="legend pdt20">
+                                <span id="pagename" data-bind="attr:{id:'sectionname'+$index()}, text:Name"></span>
+                                <span class="tab-controls" data-bind="attr:{id:'section-controls'+CustomFieldSectionId()}">
+                                    <!--ko ifnot:selfCustomFields.CustomFieldTabs()[selfCustomFields.CurrentView()].IsLeadAdapterTab() -->
+                                    <a href="javascript:void(0)" class="campaign-nameedit" data-bind="click:$root.editSectionName.bind($data,$root.CurrentView(),$index())">
+                                        <i class="icon st-icon-edit"></i>
+                                    </a>
+                                    <a href="javascript:void(0)" class="campaign-nameedit" data-bind="click:$root.deleteSection.bind($data,$root.CurrentView(),$index(),CustomFieldSectionId())">
+                                        <i class="icon st-icon-bin-3"></i>
+                                    </a>
+                                   <span class="sct-srt-drp pull-right">
+                                       <span class="grid-controls op-sortoptions cust-sct-srt">
+                                           <span class="sort-label">[|Sort|]</span>
+                                           <span class="display-inline showing-items">
+                                               <input name="mediumnm" data-bind="kendoDropDownList: {dataValueField :'SortorderID', optionLabel: 'Select...' , dataTextField:'SortorderName', data:$root.Sortorderlist,value: SortorderID},attr:{id:'tabindex-' +$root.CurrentView() +'sectionindex-' +$index()}" class="select-block select-block-srt" />
+                                           </span>
+                                           <i class="icon st-icon-move sort"></i>
+                                       </span>
+                                   </span>
+                                    
+                                    
+                                    <!--/ko-->
+                                </span>
+                                <span data-bind="attr:{id:'sectionnameinput-'+$index()}" class="pagenameinput form-group hide">
+                                    <span class="input-group">
+                                        <input type="text" class="form-control" id="sectionnameinput" data-bind="value:$root.temporaryStorage, event: { keyup: $root.sectionkeyup.bind($data)}" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" data-bind="click:$root.optSaveSectionName.bind($data,$root.CurrentView(),$index())">
+                                                <span class="fui-check"></span>
+                                            </button>
+                                        </span>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" data-bind="click:$root.optCancelSectionName.bind($data,$root.CurrentView(),$index())">
+                                                <span class="fui-cross"></span>
+                                            </button>
+                                        </span>
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="added-custom-field">
+                                <ul class="custom-fields-list" data-bind="sortable:{template:'control-template', data:CustomFields, connectClass: false}"></ul>
+                            </div>
+                            <!--ko ifnot:selfCustomFields.CustomFieldTabs()[selfCustomFields.CurrentView()].IsLeadAdapterTab() -->
+                            <a href="javascript:void(0)" id="addcustomfield" class="addcustomfield" data-bind="click:$root.addField.bind($data,$root.CurrentView(),$index())"><span class="icon st-icon-add mrs"></span> [|Add Custom Field|]</a>
+                            <!--/ko-->
+                        </div>
+                        <input type="text" class="hide" data-bind="value:SortId=$index()">
+                    </li>
+
+                </ul>
+                <!--ko ifnot:selfCustomFields.CustomFieldTabs()[selfCustomFields.CurrentView()].IsLeadAdapterTab() -->
+                <a href="javascript:void(0)" id="addcustomfieldsection" data-bind="click:$root.addSection.bind($data,$root.CurrentView())" class=""><span class="icon st-icon-add mrs"></span> [|Add Section|]</a>
+                <!--/ko-->
+            </div>
+            <div class="tab-pane active" id="contactinfo" data-bind="if:CurrentView()==-1">
+                [|It's lonely here. Click Add Tab to get started.|]
+            </div>
+        </div>
+        <div class="hr-border mdb0"></div>
+    </div>
+
+    <div>
+        <a class="btn btn-lg btn-primary" href="#" data-bind="value:'Save',text:'[|Save All|]',click:saveAllCustomTabs"></a>
+        <a data-posturl="campaingslist" href="#" class="btn btn-lg" data-bind="click:cancelChanges">[|Cancel|]</a>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        setTimeout(function(){
+            $('.tab-pane-section').sortable({
+                handle: ".sort",
+                placeholder: "ui-state-highlight"
+            });
+            $('.custom-fields-list').sortable({
+                handle: ".sort",
+                placeholder: "ui-state-highlight"
+            });
+        },500 );
+        var newTab = '@Html.Raw(Json.Encode(ViewBag.NewTab))';
+        var newSection = '@Html.Raw(Json.Encode(ViewBag.NewSection))';
+        var newCustomField = '@Html.Raw(Json.Encode(ViewBag.NewField))';
+        var newValueOption = '@Html.Raw(Json.Encode(ViewBag.NewValueOption))';
+        var BASE_URL = '@Url.Content("~/CustomField/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var viewModel = new customFieldsViewModel(data, WEBSERVICE_URL);
+        ko.applyBindings(viewModel);
+
+        $( "#customtabs" ).sortable({ axis: "x" });
+    });
+</script>

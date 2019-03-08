@@ -1,0 +1,519 @@
+<Project>
+  <Name>Untitled</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>SmartTouch.CRM.Infrastructure.dll</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IAggregateRoot</Name>
+        <Access>Public</Access>
+        <Location left="648" top="309" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IReadOnlyRepository&lt;AggregateType, IdType&gt;</Name>
+        <Access>Public</Access>
+        <Location left="436" top="309" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">AggregateType FindBy(IdType id)</Member>
+        <Member type="Method">IEnumerable&lt;AggregateType&gt; FindAll()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IRepository&lt;AggregateType, IdType&gt;</Name>
+        <Access>Public</Access>
+        <Location left="224" top="309" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">Void Update(AggregateType aggregate)</Member>
+        <Member type="Method">Void Insert(AggregateType aggregate)</Member>
+        <Member type="Method">Void Delete(AggregateType aggregate)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IUnitOfWork</Name>
+        <Access>Public</Access>
+        <Location left="12" top="309" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">Void RegisterUpdate(IAggregateRoot aggregateRoot, IUnitOfWorkRepository repository)</Member>
+        <Member type="Method">Void RegisterInsertion(IAggregateRoot aggregateRoot, IUnitOfWorkRepository repository)</Member>
+        <Member type="Method">Void RegisterDeletion(IAggregateRoot aggregateRoot, IUnitOfWorkRepository repository)</Member>
+        <Member type="Method">Void Commit()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IUnitOfWorkRepository</Name>
+        <Access>Public</Access>
+        <Location left="860" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">Void PersistInsertion(IAggregateRoot aggregateRoot)</Member>
+        <Member type="Method">Void PersistUpdate(IAggregateRoot aggregateRoot)</Member>
+        <Member type="Method">Void PersistDeletion(IAggregateRoot aggregateRoot)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>BusinessRule</Name>
+        <Access>Public</Access>
+        <Location left="648" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private String ruleDescription</Member>
+        <Member type="Property">public String RuleDescription { get; }</Member>
+        <Member type="Constructor">public BusinessRule(String ruleDescription)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EntityBase&lt;IdType&gt;</Name>
+        <Access>Public</Access>
+        <Location left="436" top="12" />
+        <Size width="162" height="247" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private List&lt;BusinessRule&gt; brokenRules</Member>
+        <Member type="Property">public IdType Id { get; set; }</Member>
+        <Member type="Constructor">protected EntityBase()</Member>
+        <Member type="Method">protected abstract Void Validate()</Member>
+        <Member type="Method">protected Void AddBrokenRule(BusinessRule businessRule)</Member>
+        <Member type="Method">public IEnumerable&lt;BusinessRule&gt; GetBrokenRules()</Member>
+        <Member type="Method">public override Boolean Equals(Object entity)</Member>
+        <Member type="Method">public override Int32 GetHashCode()</Member>
+        <Member type="Method">public static Boolean operator ==(EntityBase&lt;IdType&gt; entity1, EntityBase&lt;IdType&gt; entity2)</Member>
+        <Member type="Method">public static Boolean operator !=(EntityBase&lt;IdType&gt; entity1, EntityBase&lt;IdType&gt; entity2)</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ValueObjectBase</Name>
+        <Access>Public</Access>
+        <Location left="224" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private List&lt;BusinessRule&gt; brokenRules</Member>
+        <Member type="Constructor">public ValueObjectBase()</Member>
+        <Member type="Method">protected abstract Void Validate()</Member>
+        <Member type="Method">public Void ThrowExceptionIfInvalid()</Member>
+        <Member type="Method">protected Void AddBrokenRule(BusinessRule businessRule)</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ValueObjectIsInvalidException</Name>
+        <Access>Public</Access>
+        <Location left="12" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public ValueObjectIsInvalidException(String message)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships />
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>SmartTouch.CRM.Domain.dll</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IContactRepository</Name>
+        <Access>Public</Access>
+        <Location left="224" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>Contact</Name>
+        <Access>Public</Access>
+        <Location left="12" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public String FirstName { get; set; }</Member>
+        <Member type="Property">public String LastName { get; set; }</Member>
+        <Member type="Property">public Address Address { get; set; }</Member>
+        <Member type="Property">public Int32 LeadScore { get; set; }</Member>
+        <Member type="Constructor">public Contact()</Member>
+        <Member type="Method">protected virtual Void Validate()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ContactBusinessRule</Name>
+        <Access>Public</Access>
+        <Location left="648" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public BusinessRule ContactFirstNameRequired</Member>
+        <Member type="Field">public BusinessRule ContactLastNameRequired</Member>
+        <Member type="Constructor">static ContactBusinessRule()</Member>
+        <Modifier>Static</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Address</Name>
+        <Access>Public</Access>
+        <Location left="436" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public String AddressLine1 { get; set; }</Member>
+        <Member type="Property">public String AddressLine2 { get; set; }</Member>
+        <Member type="Property">public String City { get; set; }</Member>
+        <Member type="Property">public String PostalCode { get; set; }</Member>
+        <Member type="Constructor">public Address()</Member>
+        <Member type="Method">protected virtual Void Validate()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Email</Name>
+        <Access>Public</Access>
+        <Location left="224" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public String EmailId { get; set; }</Member>
+        <Member type="Property">public Boolean IsVerified { get; set; }</Member>
+        <Member type="Constructor">public Email()</Member>
+        <Member type="Method">protected virtual Void Validate()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ValueObjectBusinessRule</Name>
+        <Access>Public</Access>
+        <Location left="12" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public BusinessRule CityInAddressRequired</Member>
+        <Member type="Constructor">static ValueObjectBusinessRule()</Member>
+        <Modifier>Static</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships />
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>SmartTouch.CRM.ApplicationServices.dll</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IContactService</Name>
+        <Access>Public</Access>
+        <Location left="224" top="544" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">GetContactResponse GetContact(GetContactRequest request)</Member>
+        <Member type="Method">GetContactsResponse GetContacts()</Member>
+        <Member type="Method">InsertContactResponse InsertContact(InsertContactRequest request)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>ResourceNotFoundException</Name>
+        <Access>Public</Access>
+        <Location left="12" top="544" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public ResourceNotFoundException(String message)</Member>
+        <Member type="Constructor">public ResourceNotFoundException()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>InitializeAutoMapper</Name>
+        <Access>Public</Access>
+        <Location left="1072" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public static Void Initialize()</Member>
+        <Member type="Method">private static Void CreateEntitiesToViewModels()</Member>
+        <Member type="Method">private static Void CreateViewModelsToEntities()</Member>
+        <Modifier>Static</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ServiceRequestBase</Name>
+        <Access>Public</Access>
+        <Location left="860" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">protected ServiceRequestBase()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>IntegerIdRequest</Name>
+        <Access>Public</Access>
+        <Location left="648" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public Int32 Id { get; private set; }</Member>
+        <Member type="Constructor">public IntegerIdRequest(Int32 id)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GetContactRequest</Name>
+        <Access>Public</Access>
+        <Location left="436" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public GetContactRequest(Int32 id)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ServiceResponseBase</Name>
+        <Access>Public</Access>
+        <Location left="224" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public Exception Exception { get; set; }</Member>
+        <Member type="Constructor">public ServiceResponseBase()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GetContactResponse</Name>
+        <Access>Public</Access>
+        <Location left="12" top="278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ContactViewModel Contact { get; set; }</Member>
+        <Member type="Constructor">public GetContactResponse()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>GetContactsResponse</Name>
+        <Access>Public</Access>
+        <Location left="1072" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public IEnumerable&lt;ContactViewModel&gt; Contacts { get; set; }</Member>
+        <Member type="Constructor">public GetContactsResponse()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>InsertContactRequest</Name>
+        <Access>Public</Access>
+        <Location left="860" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ContactViewModel ContactViewModel { get; set; }</Member>
+        <Member type="Constructor">public InsertContactRequest()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>InsertContactResponse</Name>
+        <Access>Public</Access>
+        <Location left="648" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public InsertContactResponse()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ContactService</Name>
+        <Access>Public</Access>
+        <Location left="436" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private readonly IContactRepository contactRepository</Member>
+        <Member type="Field">private readonly IUnitOfWork unitOfWork</Member>
+        <Member type="Constructor">public ContactService(IContactRepository contactRepository, IUnitOfWork unitOfWork)</Member>
+        <Member type="Method">public GetContactResponse GetContact(GetContactRequest request)</Member>
+        <Member type="Method">public GetContactsResponse GetContacts()</Member>
+        <Member type="Method">public InsertContactResponse InsertContact(InsertContactRequest request)</Member>
+        <Member type="Method">private ResourceNotFoundException GetContactNotFoundException()</Member>
+        <Member type="Method">private Void isContactValid(Contact contact)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ContactViewModel</Name>
+        <Access>Public</Access>
+        <Location left="224" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public String FirstName { get; set; }</Member>
+        <Member type="Property">public String LastName { get; set; }</Member>
+        <Member type="Property">public String AddressLine1 { get; set; }</Member>
+        <Member type="Property">public String AddressLine2 { get; set; }</Member>
+        <Member type="Constructor">public ContactViewModel()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>UpdateContactViewModel</Name>
+        <Access>Public</Access>
+        <Location left="12" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public Int32 Id { get; set; }</Member>
+        <Member type="Constructor">public UpdateContactViewModel()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="4" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="8" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="9" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="10" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="13" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="11" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>SmartTouch.CRM.Repository.dll</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IObjectContextFactory</Name>
+        <Access>Public</Access>
+        <Location left="648" top="360" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">CRMDb Create()</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>DatabaseUnitOfWork</Name>
+        <Access>Public</Access>
+        <Location left="436" top="360" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Dictionary&lt;IAggregateRoot, IUnitOfWorkRepository&gt; insertedAggregates</Member>
+        <Member type="Field">private Dictionary&lt;IAggregateRoot, IUnitOfWorkRepository&gt; updatedAggregates</Member>
+        <Member type="Field">private Dictionary&lt;IAggregateRoot, IUnitOfWorkRepository&gt; deletedAggregates</Member>
+        <Member type="Constructor">public DatabaseUnitOfWork()</Member>
+        <Member type="Method">public Void RegisterUpdate(IAggregateRoot aggregateRoot, IUnitOfWorkRepository repository)</Member>
+        <Member type="Method">public Void RegisterInsertion(IAggregateRoot aggregateRoot, IUnitOfWorkRepository repository)</Member>
+        <Member type="Method">public Void RegisterDeletion(IAggregateRoot aggregateRoot, IUnitOfWorkRepository repository)</Member>
+        <Member type="Method">public Void Commit()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DatabaseContact</Name>
+        <Access>Public</Access>
+        <Location left="224" top="360" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public Int32 Id { get; set; }</Member>
+        <Member type="Property">public String FirstName { get; set; }</Member>
+        <Member type="Property">public String LastName { get; set; }</Member>
+        <Member type="Property">public String Address { get; set; }</Member>
+        <Member type="Constructor">public DatabaseContact()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CRMDb</Name>
+        <Access>Public</Access>
+        <Location left="12" top="360" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public DbSet&lt;DatabaseContact&gt; Contacts { get; set; }</Member>
+        <Member type="Constructor">public CRMDb()</Member>
+        <Member type="Method">protected virtual Void OnModelCreating(DbModelBuilder modelBuilder)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CRMDbInitializer</Name>
+        <Access>Public</Access>
+        <Location left="860" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public CRMDbInitializer()</Member>
+        <Member type="Method">protected virtual Void Seed(CRMDb context)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Repository&lt;DomainType, IdType, DatabaseType&gt;</Name>
+        <Access>Public</Access>
+        <Location left="648" top="12" />
+        <Size width="162" height="298" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private readonly IUnitOfWork unitOfWork</Member>
+        <Member type="Field">private readonly IObjectContextFactory objectContextFactory</Member>
+        <Member type="Property">public IObjectContextFactory ObjectContextFactory { get; }</Member>
+        <Member type="Constructor">public Repository(IUnitOfWork unitOfWork, IObjectContextFactory objectContextFactory)</Member>
+        <Member type="Method">public Void Update(DomainType aggregate)</Member>
+        <Member type="Method">public Void Insert(DomainType aggregate)</Member>
+        <Member type="Method">public Void Delete(DomainType aggregate)</Member>
+        <Member type="Method">public abstract DomainType FindBy(IdType id)</Member>
+        <Member type="Method">public abstract DatabaseType ConvertToDatabaseType(DomainType domainType)</Member>
+        <Member type="Method">public Void PersistInsertion(IAggregateRoot aggregateRoot)</Member>
+        <Member type="Method">public Void PersistUpdate(IAggregateRoot aggregateRoot)</Member>
+        <Member type="Method">public Void PersistDeletion(IAggregateRoot aggregateRoot)</Member>
+        <Member type="Method">private DatabaseType RetrieveDatabaseTypeFrom(IAggregateRoot aggregateRoot)</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ContactRepository</Name>
+        <Access>Public</Access>
+        <Location left="436" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public ContactRepository(IUnitOfWork unitOfWork, IObjectContextFactory objectContextFactory)</Member>
+        <Member type="Method">public override Contact FindBy(Int32 id)</Member>
+        <Member type="Method">public override DatabaseContact ConvertToDatabaseType(Contact domainType)</Member>
+        <Member type="Method">public IEnumerable&lt;Contact&gt; FindAll()</Member>
+        <Member type="Method">private Contact ConvertToDomain(DatabaseContact databaseContact)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>LazySingletonObjectContextFactory</Name>
+        <Access>Public</Access>
+        <Location left="224" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public LazySingletonObjectContextFactory()</Member>
+        <Member type="Method">public CRMDb Create()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Nested</Name>
+        <Access>Public</Access>
+        <Location left="12" top="12" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">internal CRMDb instance</Member>
+        <Member type="Constructor">static Nested()</Member>
+        <Member type="Constructor">public Nested()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Nesting" first="7" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="7" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="5" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>objectContextFactory</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="8" second="3">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartRole>instance</StartRole>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

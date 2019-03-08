@@ -1,0 +1,106 @@
+﻿
+
+<div class="tab-pane" id="communicationproviders">
+    <div class="form-horizontal-large">
+        <div class="formsubheading">
+            [|Transactional|]
+            <div class="pull-right">
+                <a href="#transactional" data-toggle="collapse" data-parent="#" class="address-accordion"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+        <div id="transactional" class="in">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Mode|] <span class="required">*</span></label>
+                    <input min="1" data-bind="kendoDropDownList: {dataTextField:'CommunicationTypeName',dataValueField:'CommunicationTypeId', data: transactionalCommunicationModes, value: CommunicationType,optionLabel: '[|Select...|]'}" />
+
+                </div>
+                <!-- ko if: CommunicationType() == null-->
+                <div class="form-group" id="transactionalmode0">
+                    <label class="control-label">[|Provider|] <span class="required">*</span></label>
+                    <select name="mediumnm" class="select-block">
+                        <option value="0">[|Select Provider|]</option>
+                    </select>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: CommunicationType() == "1"-->
+                <div class="form-group" id="transactionalmode2">
+                    <label class="control-label">[|Provider|] <span class="required">*</span></label>
+
+                    <input data-bind="kendoDropDownList: {dataTextField: 'Name', dataValueField:'Id',data: transactionalEmailServiceProviders, value: EmailProviderType,optionLabel: '[|Select...|]'}" />
+
+                </div>
+                <!-- /ko -->
+                <!-- ko if: CommunicationType() == "2"-->
+                <div class="form-group" id="transactionalmode1">
+                    <label class="control-label">[|Provider|] <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField: 'Name', dataValueField:'Id',data: TextServiceProviders, value: TextProviderType,optionLabel: '[|Select...|]'}" />
+
+                </div>
+                <!-- /ko -->
+            </div>
+            <!-- ko if:EmailProviderType()!=null && EmailEnableProvider()==true-->
+            @Html.Partial("_CommonProvider")
+            <div data-bind="template:{name:'providertype-transactional',foreach:ServiceProviderRegistrationDetails()}"></div>
+
+            <!-- /ko -->
+            <!-- ko if:TextProviderType()!=null && TextEnableProvider()==true-->
+            @Html.Partial("_CommonProvider")
+            @*<div data-bind="template:{name:'Textprovidertype-'+TextProviderType(),data:ServiceProviderRegistrationDetails()[ServiceProviderRegistrationDetails().map(function(e){return e.TextProviderID;}).indexOf(parseInt(TextProviderType()))] }"></div>*@
+            <div data-bind="template:{name:'Textprovidertype',foreach:ServiceProviderRegistrationDetails() }"></div>
+
+            <!-- /ko -->
+        </div>
+
+        <div class="formsubheading">
+            [|Campaign Sender|]
+            <div class="pull-right">
+                <a href="#Campaign" data-toggle="collapse" data-parent="#" class="address-accordion"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+        <div id="Campaign" class="in">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Mode|] <span class="required">*</span></label>
+                    <input min="1" data-bind="kendoDropDownList: {dataTextField:'CommunicationTypeName',dataValueField:'CommunicationTypeId', data: campaignCommunicationModes, value: CampaignCommunicationType,optionLabel: '[|Select...|]'}" />
+
+                </div>
+                <!-- ko if: CampaignCommunicationType() == null-->
+                <div class="form-group" id="transactionalmode0">
+                    <label class="control-label">[|Provider|] <span class="required">*</span></label>
+                    <select name="mediumnm" class="select-block">
+                        <option value="0">[|Select Provider|]</option>
+                    </select>
+                </div>
+                <!-- /ko -->
+                <!-- ko if: CampaignCommunicationType() == "1"-->
+                <div class="form-group" id="transactionalmode2">
+                    <label class="control-label">[|Provider|] <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField: 'Name', dataValueField:'ServiceProviderId',data: emailServiceProviders, value: SelectedServiceProviderID,optionLabel: '[|Select...|]'},select:drpselect" />
+                </div>
+                <!-- /ko -->
+              
+            </div>
+            <!-- ko if:CampaignProviderType()!=null && CampaignEmailEnableProvider()==true -->
+            @Html.Partial("_CommonProvider")
+            <div data-bind="template:{name:'providertype-campaign',foreach:ServiceProviderRegistrationDetails()}"></div>
+
+            <!-- /ko -->
+            <!-- ko if:CampaignTextProviderType()!=null && CampaignTextEnableProvider()==true -->
+            @Html.Partial("_CommonProvider")
+            <div data-bind="template:{name:'CampainTextprovidertype',foreach:ServiceProviderRegistrationDetails() }"></div>
+
+            <!-- /ko -->
+        </div>
+    </div>
+
+</div>
+<div class="hr-border"></div>
+<div>
+    <a class="btn btn-lg btn-primary" data-bind="click:saveAccountSettings"><span data-bind="text:saveText"></span></a>
+    @Html.ActionLink("[|Cancel|]", "UserList", "User", null, new { @class = "btn btn-lg" })
+</div>
+
+
+
+

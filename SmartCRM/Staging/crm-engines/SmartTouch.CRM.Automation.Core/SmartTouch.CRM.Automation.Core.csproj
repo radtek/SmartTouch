@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{98273946-7485-4E95-9A3A-4B4EABE35D65}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SmartTouch.CRM.Automation.Core</RootNamespace>
+    <AssemblyName>SmartTouch.CRM.Automation.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>14fd023d</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>CA1709</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\WindowsAzure.ServiceBus.3.0.9\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>..\..\packages\ParallelExtensionsExtras.1.2.0.0\lib\net40\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
+    <Reference Include="Stateless, Version=2.5.36.0, Culture=neutral, PublicKeyToken=93038f0927583c9a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Stateless.2.5.36.0\lib\portable-net40+sl50+win+wp80+MonoAndroid10+xamarinios10+MonoTouch10\Stateless.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="AutomationEngine.cs" />
+    <Compile Include="AutomationWorkflow.cs" />
+    <Compile Include="AutomationWorkflow1.cs" />
+    <Compile Include="MessageProcessor.cs" />
+    <Compile Include="State.cs" />
+    <Compile Include="States\StateFactory.cs" />
+    <Compile Include="States\AdjustLeadScoreState.cs" />
+    <Compile Include="States\AssignUserState.cs" />
+    <Compile Include="States\FormSubmittedState.cs" />
+    <Compile Include="States\LifecycleChangedState.cs" />
+    <Compile Include="States\TagRemovedState.cs" />
+    <Compile Include="States\TriggerWorkflowState.cs" />
+    <Compile Include="States\UpdateFieldState.cs" />
+    <Compile Include="States\WaitingPeriodState.cs" />
+    <Compile Include="TriggerUtilities.cs" />
+    <Compile Include="WorkflowStateTransitionStatus.cs" />
+    <Compile Include="WorkflowTrigger.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\CampaignLinkClickedState.cs" />
+    <Compile Include="States\SendEmailState.cs" />
+    <Compile Include="States\NotifyUserState.cs" />
+    <Compile Include="States\SendCampaignState.cs" />
+    <Compile Include="States\SubWorkflowEndState.cs" />
+    <Compile Include="States\TagAddedState.cs" />
+    <Compile Include="States\WorkflowEndState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\crm-domain\SmartTouch.CRM.Domain\SmartTouch.CRM.Domain.csproj">
+      <Project>{02f0054a-4091-4b5e-ad5a-40b04728c6f5}</Project>
+      <Name>SmartTouch.CRM.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.Entities\SmartTouch.CRM.Entities.csproj">
+      <Project>{2c8eab14-9691-4396-86fb-b5bfdee8ae94}</Project>
+      <Name>SmartTouch.CRM.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.Infrastructure\SmartTouch.CRM.Infrastructure.csproj">
+      <Project>{34a8702b-08e7-4857-b5f4-d00643730e86}</Project>
+      <Name>SmartTouch.CRM.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-infrastructure\SmartTouch.CRM.MessageQueues\SmartTouch.CRM.MessageQueues.csproj">
+      <Project>{0748a6d3-6c9d-49f9-a0b7-4569511bad2a}</Project>
+      <Name>SmartTouch.CRM.MessageQueues</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\crm-web-services\SmartTouch.CRM.ApplicationServices\SmartTouch.CRM.ApplicationServices.csproj">
+      <Project>{4bd898b5-94a7-412e-9377-38416d7980f5}</Project>
+      <Name>SmartTouch.CRM.ApplicationServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Enterprise\LandMarkIT.Enterprise.Utilities\LandmarkIT.Enterprise.Utilities.csproj">
+      <Project>{0563ead0-f211-48bc-a919-428da9325725}</Project>
+      <Name>LandmarkIT.Enterprise.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartTouch.CRM.SearchEngine\SmartTouch.CRM.SearchEngine.csproj">
+      <Project>{71df1c5f-9936-45c7-b182-e6dee1a28cab}</Project>
+      <Name>SmartTouch.CRM.SearchEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild"> -->
+    <!-- <PropertyGroup> -->
+      <!-- <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText> -->
+    <!-- </PropertyGroup> -->
+    <!-- <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" /> -->
+    <!-- <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" /> -->
+  <!-- </Target> -->
+  <!-- <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" /> -->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

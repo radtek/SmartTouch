@@ -1,0 +1,10 @@
+<categories>
+  <refreshCategoryListInterval>1</refreshCategoryListInterval>
+  <noOfCategoryFields>1</noOfCategoryFields>
+  <allowCategoryListRefresh>1</allowCategoryListRefresh>
+  <allowCategoryListAdd>1</allowCategoryListAdd>
+  <syncAllItems>1</syncAllItems>
+  <categoryFields>
+    <categoryField1 label="Account" mandatory="0" parent="0" />
+  </categoryFields>
+</categories>

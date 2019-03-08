@@ -1,0 +1,488 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@model CompanyViewModel
+@{
+    ViewBag.Title = "AddEdit Company";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var mode = ViewBag.mode;
+}
+
+@Scripts.Render("~/bundles/contactsaddeditvm")
+@*<script src="~/Scripts/ViewModels/CompanyViewModel.js"></script>*@
+
+@*@Scripts.Render("~/bundles/companyvm")*@
+
+@{
+    var isAdmin = ViewBag.IsAdmin;
+    var isSTAdmin = ViewBag.IsSTAdmin;
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.CustomFields);
+    appModules.Add(AppModules.ChangeOwner);
+    var customeFieldsPermissions = MenuHelper.CheckPermission(appModules);
+}
+
+
+@using (Html.BeginForm("AddCompany", "Contact", FormMethod.Post,
+                                      new { name = "form-data", id = "form" }))
+{
+    <div class="sub-container form-horizontal-large" style="display:none" data-bind="visible:true">
+        <ul class="breadcrumb">
+            <li>@Html.ActionLink("[|Contacts|]", "ContactSearch", "Contact", null, null)</li>
+            <li class="active">
+                <a href="javascript:void(0)">
+                    <span data-bind="visible: ContactID() === 0" style="display:none">[|Add Company|]</span>
+                    <span data-bind="visible: ContactID() > 0" style="display:none">[|Edit Company|]</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="main-header">
+            <span data-bind="visible: ContactID() === 0" style="display:none">[|Add Company|]</span>
+            <span data-bind="visible: ContactID() > 0" style="display:none">[|Edit Company|]</span>
+            <!-- ko if: CompanyName()-->
+            <span class="field-status" data-bind="text: ('('+(CompanyName() ? CompanyName():'')+')')"></span>
+            <!-- /ko -->
+        </div>
+
+        <div class="formsubheading">[|General|]</div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Company Name|]<span class="required">*</span></label>
+                <input type="text" placeholder="[|Company|]" class="form-control" data-bind="value:CompanyName, valueUpdate: 'afterkeydown'" maxlength="75" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Phone|]</label>
+                <div data-bind="foreach: Phones">
+                    <div class="form-group input-group cu-input-group mbs">
+                        <div class="ed-phone">
+                            <div>
+                                <label class="control-label cu-smmd">[|Country Code|]</label>
+                                <input type="text" placeholder="xxx" class="form-control cu-smmd" data-bind="value: CountryCode" maxlength="3" style="width:70px" />
+                            </div>
+                            <div>
+                                <label class="control-label cu-smmd">[|Number|]</label>
+                                <input type="text" placeholder="xxx xxx xxxx" class="form-control cu-smmd" data-bind="value: Number" maxlength="16" style="width:180px" />
+                            </div>
+                            <div>
+                                <label class="control-label cu-smmd">[|Extension|]</label>
+                                <input type="text" placeholder="xxxxx" class="form-control cu-smmd" data-bind="value: Extension" maxlength="5" style="width:100px" />
+                            </div>
+                            <div>
+                                <label class="control-label cu-smmd">[|Phone Type|]</label>
+                                <input class="input-plus-select"
+                                       data-bind="kendoDropDownList: {data: $parent.PhoneTypes, value: PhoneType, dataValueField: 'DropdownValueID', dataTextField:'DropdownValue'}" />
+                            </div>
+                        </div>
+                        <div class="ed-primary-contact">
+                            <span class="phm primary-cont">
+                                <label class="radio-inline">
+                                    <input type="radio" name="primaryPhone" data-bind="attr:{id:'primaryPhone'+ $index()},checked:$root.primaryPhone,checkedValue: $data" class="primaryphone">
+                                    [|Primary|]
+                                </label>
+                            </span>
+                        </div>
+                        <div class="ed-trash">
+                            <span data-bind="visible: IsPrimary() !== true" class="trash-record">
+                                <a class="email-trash" data-bind="click: $parent.removePhone" href="javascript:void(0)"><span class="icon st-icon-bin-3"></span></a>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="mtm"><a href="javascript:void(0)" data-bind="click: addPhone"><span class="icon st-icon-add prs"></span>[|Add Phone Number|]</a></div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Owner|]<span class="required">*</span></label>
+                @if (isAdmin || customeFieldsPermissions.Where(w => w.Module == AppModules.ChangeOwner).Select(s => s.HasPermission).FirstOrDefault())
+                {
+                    <input data-bind="kendoDropDownList: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users ,value:OwnerId,template: templ, optionLabel: 'Select...' }" />
+                }
+                else
+                {
+                    <input disabled data-bind="kendoDropDownList: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users ,value:OwnerId,template: templ, optionLabel: 'Select...' }" />
+                }
+                <span data-bind="visible: ContactID() > 0" style="display:none" class="help-block">Note: Red color represents deleted users.</span>
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Email|]</label>
+                <div data-bind="foreach: Emails">
+                    <div class="form-group input-group mbs cu-input-group ">
+                        <div class="ed-email">
+                            <input type="email" placeholder="someone@example.com" class="form-control cu-medium" maxlength="256" data-bind="value:EmailId,attr:{id:'Email_'+ $index()}, event: { blur: MailGunValidater.bind($data,$index()) }" />
+                        </div>
+
+                        @if (isSTAdmin)
+                        {
+                            <div class="ed-email ed-pluse-select">
+                                <input class="input-plus-select" data-bind="kendoDropDownList: {dataValueField: 'Id', dataTextField:'Type', data:$parent.EmailStatuses, value: EmailStatusValue}" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="ed-status">
+                                <span class="st-verified" data-bind="visible: EmailStatusValue() === 51" style="display:none" title="Verified"></span>
+                                <span class="st-notverified" data-bind="visible: EmailStatusValue() === 50" style="display:none" title="Unverified"></span>
+                                <span class="st-soft-bounce" data-bind="visible: EmailStatusValue() === 52" style="display:none" title="Soft bounce"></span>
+                                <span class="st-hard-bounce" data-bind="visible: EmailStatusValue() === 53" style="display:none" title="Hard bounce"></span>
+                                <span class="st-unsubscribed" data-bind="visible: EmailStatusValue() === 54" style="display:none" title="Unsubscribed"></span>
+                                <span class="st-suppressed" data-bind="visible: EmailStatusValue() === 57" style="display:none" title="Suppressed"></span>
+                            </div>
+                        }
+                        <div class="ed-primary-contact">
+                            <span class="phm primary-cont">
+                                <label class="radio-inline">
+                                    <input type="radio" name="primaryEmail" data-bind="checked:$root.primaryEmail, checkedValue: $data">
+                                    [|Primary|]
+                                </label>
+                            </span>
+                        </div>
+                        <div class="ed-trash">
+                            <span data-bind="visible: IsPrimary() !== true" class="trash-record">
+                                <a class="email-trash" data-bind="click: $parent.removeEmail" href="javascript:void(0)"><span class="icon st-icon-bin-3"></span></a>
+                            </span>
+                            <div data-bind=" attr:{id:'emailStatus_'+ $index()}" class="formError">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mtm">
+                    <a href="javascript:void(0)" data-bind="click: addEmail"><span class="icon st-icon-add prs"></span>[|Add Email|]</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Do Not Email|]</label>
+                <label data-bind="attr: {'class': DoNotEmail() ?'checkbox checked':'checkbox' }">
+                    <input type="checkbox" data-toggle="checkbox" data-bind="checked: DoNotEmail, click: setDoNotEmail" />
+                </label>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Oops ! Contact Already Exists</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div data-bind="visible: EmailExist">
+                            <span style="font-size:14px; color:#7b7b7b;font-family:arial,sans-serif;">
+                                A Contact with same email [<a data-bind="visible: HasPermission(), attr:{href:'editcompany?contactId=' + DuplicateContactId() +'&contactType=2'}"><span data-bind="text: CompanyEmail() == null ? Name : CompanyEmail "></span></a><span data-bind="visible: !HasPermission(), text:  CompanyEmail() == null ? Name : CompanyEmail "></span>]
+                                already exists. Please click on the Contact Email to update the existing Contact or <a data-bind="attr:{href:'/contacts'}"><span>[|Cancel|]</span></a> to exit without creating the Contact.
+                            </span>
+                        </div>
+                        <div data-bind="visible: NameExist">
+                            <span style="font-size:14px; color:#7b7b7b;font-family:arial,sans-serif;">
+                                A Contact named [<a data-bind="visible: HasPermission(), attr:{href:'editcompany?contactId=' + DuplicateContactId() +'&contactType=2'}"><span data-bind="text: Name"></span></a><span data-bind="visible: !HasPermission(), text:  CompanyEmail() == null ? Name : CompanyEmail "></span>] 
+                                already exists. Please click on the Contact Name to update the existing Contact or <a data-bind="attr:{href:'/contacts'}"><span>[|Cancel|]</span></a> to exit without creating the Contact.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal end -->
+        @Html.Partial("~/Views/CustomField/_CustomFieldTemplates.cshtml")
+        <div class="tabbable new-tabs">
+            <ul class="nav nav-tabs">
+                <li class="active" data-bind="click:showGeneralFields"><a href="#contactinfo"><span class="icon st-icon-user-3"></span>[|Contact Details|]</a></li>
+
+                <li data-bind="click:showCustomFields"><a href="#customtabs"><span class="icon st-icon-marquee-plus"></span>[|Custom Fields|]</a></li>
+
+            </ul>
+            <div class="tab-content clearfix">
+                <div class="tab-pane active" id="contactinfo" data-bind="visible:CurrentView()=='generalfields'?true:false">
+
+                    <div class="formsubheading">[|Company Logo|]</div>
+
+                    <div class="profile-img-upload mbl clearfix">
+
+                        <figure class="pull-left"><img id="contactimage" data-bind="attr:{src:Image().ImageContent}" /> </figure>
+
+                        <div class="uploadcontrol pln">
+                            <div class="display-inline mtf upload-url">
+                                <label class="control-label ">[|URL|]</label>
+                                <div class="input-group">
+                                    <input type="text" placeholder="[|Paste your web URL here|]" data-bind="value:ProfileImage" id="txtUploadProfileImage" class="form-control mbl display-inline">
+                                    <a href="#" class="btn btn-m btn-primary input-group-btn" data-bind="click:uploadProfileImage">[|Upload|]</a>
+                                </div>
+                            </div>
+                            <div class="display-inline mtf">
+                                <label class="control-label ">&nbsp;</label>
+                                <div class="mhm">
+                                    ([|or|])
+                                </div>
+                            </div>
+                            <div class="display-inline mtf">
+                                <label class="mtm control-label">[|Choose picture from local drive|]</label>
+                                @(Html.Kendo().Upload()
+                    .Name("files")
+                    .Multiple(false)
+                    .Async(a => a
+                    .AutoUpload(false)
+                    )
+                    .Events(events => events
+                    .Select("onSelect")
+                    )
+                                )
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="formsubheading">[|Social|]</div>
+                    <div class="clearfix">
+
+                        @*<div class="form-group">
+                                <label class="control-label">Web & Social</label>
+                                <div data-bind="foreach: SocialMediaUrls">
+                                    <div class="form-group mbs">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="http://www.facebook.com/john.doe" class="form-control cu-medium" data-bind="value: Url" maxlength="2083" />
+                                            <span class="input-group-btn">
+                                                <input class="input-plus-select" data-bind="kendoDropDownList: {data: $parent.SocialMediaUrlTypes, value: MediaType}" />
+                                                <span data-bind="if:$index() != 0" class="trash-record"><button type="button" class="btn btn-default email-trash" data-bind="click: $parent.removeSocialMediaUrl"><span class="fui-cross"></span></button></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mtm"><a href="javascript:void(0)" data-bind="click: addSocialMediaUrl"><span class="st-rounded-addicon"></span>Add Web & Social links</a></div>
+                            </div>*@
+
+                        <div class="form-group">
+                            <label class="control-label">[|Web & Social|]</label>
+                            <div data-bind="foreach: SocialMediaUrls">
+                                <div class="form-group input-group mbs cu-input-group">
+                                    <input type="text" placeholder="http://www.facebook.com/john.doe" class="form-control cu-medium" data-bind="value: URL" maxlength="2083" />
+                                    <input class="input-plus-select" data-bind="kendoDropDownList: {data: $parent.SocialMediaUrlTypes, value: MediaType, widget: $parent.widget, change: $parent.updateURLType.bind($data,MediaType)}" />
+
+                                    <span data-bind="if:$index() != 0" class="trash-record">
+                                        <a class="email-trash mlm" data-bind="click: $parent.removeSocialMediaUrl" href="javascript:void(0)"><span class="icon st-icon-bin-3"></span></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="mtm" data-bind="visible:tempUrlTypes().length>0">
+                                <a href="javascript:void(0)" data-bind="click: addSocialMediaUrl"><span class="icon st-icon-add prs"></span>[|Add Web & Social links|]</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @Html.Partial("~/Views/Shared/_AddressPartial.cshtml")
+                </div>
+                <div class="tab-pane" id="customtabs" data-bind="visible:CurrentView()=='customfields'?true:false">
+                    @Html.Partial("~/Views/Contact/_EditContactCustomFields.cshtml")
+                </div>
+            </div>
+        </div>
+        <div class="hr-border"></div>
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click: function(data, event){ saveCompany(1) }"><span data-bind="text:saveText"></span></a>
+            <a class="btn btn-lg btn-primary" data-bind="click: function(data, event){ saveCompany(2) }"><span>Save and Add Another</span></a>
+            @Html.ActionLink("[|Cancel|]", "Contacts", null, new { @class = "btn btn-lg" })
+        </div>
+    </div>
+}
+
+<script>
+    var onSelect;
+    var viewModel;
+    $(document).ready(function(){
+        var newAddress = '@Html.Raw(Json.Encode(ViewBag.NewAddress))';
+
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var DropDownURL = '@Url.Content("~/DropdownValues/")';
+        var company = @(Html.Raw(Json.Encode(Model)));
+        var IMAGE_HOSTEDPATH='@HttpContext.Current.Application["image_hostedpath"]';
+        var ImagePath = '@Url.Content("~/img/NoImage_company.png")';
+        var mailgunPublicKey = '@System.Configuration.ConfigurationManager.AppSettings["mailgun_apikey"]';
+        var users;
+
+        var userList = function(){
+            $.ajax({
+                url: '/GetUsersList',
+                type: 'get',
+                dataType: 'json',
+                data:{ 'id': 0},
+                contentType: "application/json; charset=utf-8"
+            }).then(function (response) {
+                var filter = $.Deferred();
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                users = data.response;
+                getCountries();
+            }).fail(function (error) {
+                notifyError(error);
+            });
+        }
+
+        //var phoneTypeData;
+        //var phoneTypes = function(){
+        //    $.ajax({
+        //        url: DropDownURL + 'GetPhoneTypes',
+        //        type: 'get',
+        //        dataType: 'json',
+        //        contentType: "application/json; charset=utf-8",
+        //        data: { 'DropDownID': 1 },
+        //        success: function (data) {
+        //            phoneTypeData = data;
+
+        //        }
+        //    });
+        //}
+
+        var getCountries = function(){
+            $.ajax({
+                url: BASE_URL + 'GetCountries',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8"
+            }).then(function (response) {            
+                var filter = $.Deferred()            
+                if (response.success) {                
+                    filter.resolve(response)            
+                } else {                
+                    filter.reject(response.error)            
+                }            
+                return filter.promise()        
+            }).done(function (data) {
+                viewModel = new companyViewModel(company,data.response, BASE_URL,newAddress, DropDownURL,ImagePath,users);    
+                $.each(viewModel.SocialMediaUrls(), function(index,value){
+                    value.MediaType = ko.observable(value.MediaType);
+                    value.Url = ko.observable(value.Url);
+                });
+                ko.applyBindings(viewModel);
+            }).fail(function (error) {
+                notifyError(error);        
+            })
+        };
+        users = userList();
+        //getCountries();
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+
+        MailGunValidater = function(id){
+            emailData=this;
+            if(viewModel.CompanyName() != null && emailData.IsPrimary() == true && emailData.EmailId() != null && emailData.EmailId() != "")
+            {
+                $.ajax({
+                    url: BASE_URL + 'GetContactIdByName',
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        'isprimary': emailData.IsPrimary(),
+                        'email':emailData.EmailId(),
+                        'contactType': 2,
+                        'name': viewModel.CompanyName(),
+                        'contactId': viewModel.ContactID()
+                    }),
+                    success: function (data) {
+                        if(data.response)
+                        {
+                            if(data.response.DuplicateContactId > 0)
+                            {
+                                selfContact.HasPermission(data.response.HasPermission);
+                                viewModel.NameExist(false);
+                                viewModel.EmailExist(true);
+                                viewModel.CompanyEmail(data.response.Email)
+                                viewModel.Name(data.response.Name)
+                                viewModel.DuplicateContactId(data.response.DuplicateContactId);
+                                $('#myModal').modal('toggle');
+                            }
+                            else
+                            {
+                                var emailValidator = new EmailValidate(id,mailgunPublicKey);
+                                emailValidator.validate(id);
+                            }
+                        }
+                        else
+                        {
+                            var emailValidator = new EmailValidate(id,mailgunPublicKey);
+                            emailValidator.validate(id);
+                        }
+
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+            else
+            {
+                var emailValidator = new EmailValidate(id,mailgunPublicKey);
+                emailValidator.validate(id);
+            }
+
+
+        }
+
+
+
+    });
+
+    function onSelect(e) {
+
+        $('.k-file').hide();
+        var varImageType="";
+        $.each(e.files, function (index, value) {
+            var ok = value.extension.toLowerCase() == ".jpg"
+                    || value.extension.toLowerCase() == ".jpeg"
+                    || value.extension.toLowerCase() == ".png"
+                    || value.extension.toLowerCase() == ".bmp"
+
+            ;
+
+
+            if (!ok) {
+                e.preventDefault();
+                notifyError("Please upload jpg, jpeg, png, bmp files");
+            }
+            else if(bytesToSize(e.files[0].size)>3) {
+                e.preventDefault();
+                notifyError("Image size should not be more than 3 MB");
+                return false;
+            }
+            else {
+                $("#txtUploadProfileImage").val('');
+                viewModel.ContactImageUrl('');
+            }
+            var fileReader = new FileReader();
+            fileReader.onload = function (event) {
+                //   selfDetails.imagePath(event.target.result);
+                var image = document.getElementById("contactimage");
+                image.src = event.target.result;
+                viewModel.Image().ImageContent=event.target.result;
+            }
+            fileReader.readAsDataURL(e.files[0].rawFile);
+            viewModel.Image().ImageType= value.extension.toLowerCase();
+            viewModel.Image().OriginalName= e.files[0].name;
+        });
+        $(".k-upload-files.k-reset").find("li").remove();
+    }
+
+    function onComplete(e)
+    {
+        $(".k-upload-files.k-reset").find("li").remove();
+    }
+
+    function bytesToSize(bytes) {
+        return (bytes/(1024*1024)).toFixed(2);
+    }
+
+
+</script>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BHILeads>
+  <Lead Source="Trulia" LeadType="Home">
+    <Contact FirstName="Kimberly" LastName=" Mcdonald" Email="kimbermcdonald@outlook.com" Phone="(517) 816-2723" />
+    <Qualifications Comments="I am interested in 1845 SW Canola Dr, Pullman WA 99163." />
+    <PropertyInterest StateName="WA" MarketName="Pullman, WA" BuilderNumber="HHM01" BuilderName="Hayden Homes LLC" CommunityNumber="WHISH00" CommunityName="Whispering Hills" SpecAddress=" 1845 SW Canola Dr, Pullman WA 99163" Price="277136" />
+    <Telemetry CountElements="15" />
+  </Lead>
+
+  <Lead Source="Trulia" LeadType="Home">
+    <Contact FirstName="Kimberly" LastName=" Mcdonald" Email="kimbermcdonald@outlook.com" Phone="(517) 816-2723" />
+    <Qualifications Comments="I am interested in 590 SW Wheat Ridge Dr, Pullman WA 99163." />
+    <PropertyInterest StateName="WA" MarketName="Pullman, WA" BuilderNumber="HHM01" BuilderName="Hayden Homes LLC" CommunityNumber="WHISH00" CommunityName="Whispering Hills" SpecAddress=" 590 SW Wheat Ridge Dr, Pullman WA 99163" Price="268367" />
+    <Telemetry CountElements="15" />
+  </Lead>
+</BHILeads>

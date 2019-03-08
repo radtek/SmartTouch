@@ -1,0 +1,99 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model ImageDomainViewModel
+
+@{
+    ViewBag.Title = "Add Image Domain";
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+    bool isEditView = ViewBag.EditView != null ? true : false;
+}
+<script src="~/Scripts/ViewModels/ImageDomainViewModel.js"></script>
+<div id="imagedomain">
+    <div id="@(Model.ImageDomainId > 0 ? "editImageDomain" : isModal ? "addImageDomainModel" : "addImageDomain")" class="@(isModal ? "" : "")">
+        <div class="@(Model.ImageDomainId > 0 ? "" : "")">
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><span class="icon st-icon-create-rule prm"></span>@(Model.ImageDomainId > 0 ? "[|Edit Image Domain|]" : "[|Create Image Domain|]")</h4>
+                </div>
+            }
+            else
+            {
+                <div class="drop-heading">
+                    <span class="icon st-icon-create-rule display-inline"></span>
+                    <h4 class="panel-title display-inline plm">[|Create Image Domain|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "")">
+                <div class="dp-topnav-inner-body">
+
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="control-label">[|Image Domain|]</label>
+                            <input class="form-control required" id="txtcategory" data-bind="value:Domain,valueUpdate:'afterkeydown'">
+                        </div>
+                        <div class="form-group  col-md-6">
+                            <label class="control-label">[|Status|]</label>
+                            <div>
+                                <input type="radio" name="domainstatus" data-bind="checked:Status, value:'true'">
+                                <span>[|Active|]</span>
+                            </div>
+                            <div>
+                                <input type="radio" name="domainstatus" data-bind="checked:Status, value: 'false'" />
+                                <span>[|Inactive|]</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                <div class="pull-left">
+                    @if (Model.ImageDomainId > 0)
+                    {
+                        <a class="btn btn-lg btn-primary" id="saveBtn" data-bind="click: save.bind($data)" aria-hidden="@(Model.ImageDomainId > 0 ? "true" : "")"><span>[|Update|]</span></a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-lg btn-primary" id="save" data-bind="click: save.bind($data)" aria-hidden="@(Model.ImageDomainId > 0 ? "true" : "")"
+                           data-dismiss="@(Model.ImageDomainId > 0 ? "modal" : "")"><span>[|Save|]</span></a>
+                    }
+                    <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                       data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var tags = [];
+
+        var BASE_URL = '@Url.Content("~/ImageDomain/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var imageDomain = @(Html.Raw(Json.Encode(Model)));
+        var viewModel2 = new imageDomainViewModel(imageDomain,BASE_URL, WEBSERVICE_URL);
+
+        if(imageDomain.ImageDomainId == 0)
+        {
+            var popup = '@(isModal)';
+            if(popup=="True")
+            {
+                ko.applyBindings(viewModel2,document.getElementById("addImageDomainModel"));
+            }
+            else
+            {
+                ko.applyBindings(viewModel2,document.getElementById("addImageDomain"));
+            }
+        }
+        else
+        {
+            ko.applyBindings(viewModel2,document.getElementById("editImageDomain"));
+        }
+    });
+</script>
+
+

@@ -1,0 +1,138 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.20827.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Infrastructure", "..\crm-infrastructure\SmartTouch.CRM.Infrastructure\SmartTouch.CRM.Infrastructure.csproj", "{34A8702B-08E7-4857-B5F4-D00643730E86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Domain", "..\crm-domain\SmartTouch.CRM.Domain\SmartTouch.CRM.Domain.csproj", "{02F0054A-4091-4B5E-AD5A-40B04728C6F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Repository", "..\crm-persistence\SmartTouch.CRM.Repository\SmartTouch.CRM.Repository.csproj", "{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{961A83FB-5560-4DBE-BB79-BB85FDD34927}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{97673E60-1E23-4352-B371-88F79CA633AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Respositories", "Respositories", "{2D5A0DCE-1445-4195-9E27-22ADA7DE010D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{0EFA6BAB-1FC1-4125-855A-C860471E7162}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.ApplicationServices", "SmartTouch.CRM.ApplicationServices\SmartTouch.CRM.ApplicationServices.csproj", "{4BD898B5-94A7-412E-9377-38416D7980F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.WebService", "SmartTouch.CRM.WebService\SmartTouch.CRM.WebService.csproj", "{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.WebService.Tests", "Tests\SmartTouch.CRM.WebService.Tests\SmartTouch.CRM.WebService.Tests.csproj", "{F165F88D-958B-44F1-9FAC-B009DD4B210E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.ApplicationServices.Tests", "Tests\SmartTouch.CRM.ApplicationServices.Tests\SmartTouch.CRM.ApplicationServices.Tests.csproj", "{20903552-E720-4C75-8185-3B4D38946DCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1555F80F-6392-4A0E-AEA9-05BA6C3B03F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Tests", "..\crm-tests\SmartTouch.CRM.Tests\SmartTouch.CRM.Tests.csproj", "{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplication", "WebApplication", "{0540F68D-FC13-4B44-B072-5059A0864606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Web", "..\crm-web-application\SmartTouch.CRM.Web\SmartTouch.CRM.Web.csproj", "{C50374E4-24E4-4CD8-8EE2-3287282CF912}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 10
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://panther:8080/lmit0001/smarttouchcrm
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ..\\crm-infrastructure\\SmartTouch.CRM.Infrastructure\\SmartTouch.CRM.Infrastructure.csproj
+		SccProjectTopLevelParentUniqueName1 = SmartTouch.CRM.AppServer.sln
+		SccProjectName1 = ../crm-infrastructure/SmartTouch.CRM.Infrastructure
+		SccLocalPath1 = ..\\crm-infrastructure\\SmartTouch.CRM.Infrastructure
+		SccProjectUniqueName2 = ..\\crm-domain\\SmartTouch.CRM.Domain\\SmartTouch.CRM.Domain.csproj
+		SccProjectTopLevelParentUniqueName2 = SmartTouch.CRM.AppServer.sln
+		SccProjectName2 = ../crm-domain/SmartTouch.CRM.Domain
+		SccLocalPath2 = ..\\crm-domain\\SmartTouch.CRM.Domain
+		SccProjectUniqueName3 = ..\\crm-persistence\\SmartTouch.CRM.Repository\\SmartTouch.CRM.Repository.csproj
+		SccProjectTopLevelParentUniqueName3 = SmartTouch.CRM.AppServer.sln
+		SccProjectName3 = ../crm-persistence/SmartTouch.CRM.Repository
+		SccLocalPath3 = ..\\crm-persistence\\SmartTouch.CRM.Repository
+		SccProjectUniqueName4 = SmartTouch.CRM.ApplicationServices\\SmartTouch.CRM.ApplicationServices.csproj
+		SccProjectTopLevelParentUniqueName4 = SmartTouch.CRM.AppServer.sln
+		SccProjectName4 = SmartTouch.CRM.ApplicationServices
+		SccLocalPath4 = SmartTouch.CRM.ApplicationServices
+		SccProjectUniqueName5 = Tests\\SmartTouch.CRM.WebService.Tests\\SmartTouch.CRM.WebService.Tests.csproj
+		SccProjectTopLevelParentUniqueName5 = SmartTouch.CRM.AppServer.sln
+		SccProjectName5 = Tests/SmartTouch.CRM.WebService.Tests
+		SccLocalPath5 = Tests\\SmartTouch.CRM.WebService.Tests
+		SccProjectUniqueName6 = Tests\\SmartTouch.CRM.ApplicationServices.Tests\\SmartTouch.CRM.ApplicationServices.Tests.csproj
+		SccProjectTopLevelParentUniqueName6 = SmartTouch.CRM.AppServer.sln
+		SccProjectName6 = Tests/SmartTouch.CRM.ApplicationServices.Tests
+		SccLocalPath6 = Tests\\SmartTouch.CRM.ApplicationServices.Tests
+		SccProjectUniqueName7 = ..\\crm-tests\\SmartTouch.CRM.Tests\\SmartTouch.CRM.Tests.csproj
+		SccProjectTopLevelParentUniqueName7 = SmartTouch.CRM.AppServer.sln
+		SccProjectName7 = ../crm-tests/SmartTouch.CRM.Tests
+		SccLocalPath7 = ..\\crm-tests\\SmartTouch.CRM.Tests
+		SccProjectUniqueName8 = ..\\crm-web-application\\SmartTouch.CRM.Web\\SmartTouch.CRM.Web.csproj
+		SccProjectTopLevelParentUniqueName8 = SmartTouch.CRM.AppServer.sln
+		SccProjectName8 = ../crm-web-application/SmartTouch.CRM.Web
+		SccLocalPath8 = ..\\crm-web-application\\SmartTouch.CRM.Web
+		SccProjectUniqueName9 = SmartTouch.CRM.WebService\\SmartTouch.CRM.WebService.csproj
+		SccProjectTopLevelParentUniqueName9 = SmartTouch.CRM.AppServer.sln
+		SccProjectName9 = SmartTouch.CRM.WebService
+		SccLocalPath9 = SmartTouch.CRM.WebService
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34A8702B-08E7-4857-B5F4-D00643730E86} = {0EFA6BAB-1FC1-4125-855A-C860471E7162}
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5} = {97673E60-1E23-4352-B371-88F79CA633AD}
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053} = {2D5A0DCE-1445-4195-9E27-22ADA7DE010D}
+		{4BD898B5-94A7-412E-9377-38416D7980F5} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E} = {EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B}
+		{20903552-E720-4C75-8185-3B4D38946DCA} = {EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B}
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4} = {1555F80F-6392-4A0E-AEA9-05BA6C3B03F2}
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912} = {0540F68D-FC13-4B44-B072-5059A0864606}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,164 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model IList<WebVisitViewModel>
+@{
+    var dateFormat = ViewBag.DateFormat;
+    var contactId = ViewBag.ContactId;
+    var currentPage = ViewBag.CurrentPage;
+}
+<div id="WebVisits">
+    <div class="modal-header" data-bind="visible:true">
+        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+        <h4 class="modal-title"><span class="icon st-icon-paragraph-justify-2" data-bind="text:' Web Visits - '+ActualGroup().length"></span>
+            @*<a data-target="#bigmodal" data-toggle="modal"
+               class="st-leadnum" data-bind=" attr:{href: '/person/'+ActualGroup()[0].ContactId}">
+                <i class="icon st-icon-eye notifiy-view"></i>
+            </a>*@
+        </h4>
+    </div>
+    <div class="modal-body">
+        <div class="k-grid k-widget k-secondary no-grid-resize k-grid-content" id="grid1">
+            <div data-bind="if:ActualGroup().length>0">
+
+                <table data-bind="foreach:ActualGroup()">
+                    <thead class="k-grid-header">
+                        <tr data-bind="visible:$index()==0">
+                            <th data-bind="text: 'Date'" class="k-header col-20"></th>
+                            <th data-bind="text: 'Time'" class="k-header col-10"></th>
+                            <th data-bind="text: 'Duration'" class="k-header col-15"></th>
+                            <th data-bind="text: 'Page Visited'" class="k-header"></th>
+
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach:$data">
+                        <tr data-bind="if:$index()==0 || $parent.showGroup,attr:{class: $index()==0 ? 'activity': 'activity webview'}">
+                            <td class="col-20">
+                                <span data-bind="if:$index()==0 && $parent.length>1,click:selfWebVisits.toggleVisibility.bind($data,$parentContext.$index)">
+                                    <span class="enter_icon"><img src="~/img/entered.png" title="Contact entered website" /></span>
+                                </span>
+                                <span data-bind="if:$index()==$parent.length-1 && $parent.length>1,click:selfWebVisits.toggleVisibility.bind($data,$parentContext.$index)">
+                                    <span class="exit_icon">
+                                        <img src="~/img/exit.png" title="Contact exited from website" />
+                                    </span>
+                                </span>
+                                <span data-bind="if:$parent.length==1,click:selfWebVisits.toggleVisibility.bind($data,$parentContext.$index)">
+                                    <img src="~/img/bounce.png" title="Contact bounced from website" />
+                                </span>
+                                <span data-bind="html:displayDate_n(ConvertToDate(VisitedOn))"></span>
+                            </td>
+                            <td class="col-10">
+                                <span data-bind="text:timeStamp"></span>
+
+                            </td>
+                            <td class="col-15">
+                                <span data-bind="text:minutes > 0 || seconds >0 ? minutes + 'm, ' + seconds + 's' : '-'"></span>
+                            </td>
+                            <td class="col-10">
+                                <span data-bind="text:PageVisited"></span>
+                                <span data-bind="text:$index()==0 ? '('+ $parent.length + ($parent.length >1 ? ' views)' : ' view)'): ''"></span>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div data-bind="if:ActualGroup().length==0">
+                <table>
+                    <thead class="k-grid-header">
+                        <tr>
+                            <th data-bind="text: 'Date'" class="k-header">
+                            </th>
+                            <th data-bind="text: 'Page Visited'" class="k-header">
+                            </th>
+                            <th data-bind="text: 'Duration'" class="k-header">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No visits found for the period selected.|]</span></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer" data-bind="if:ActualGroup().length>0">
+        <a class="pull-left" id="viewcontactlink" data-bind="attr:{href: '/person/'+ ActualGroup()[0][0].ContactID+'/1' }, text:'View Contact'" href="javascript:void(0)"></a>
+        <a class="btn btn-lg btn-primary" aria-hidden="true" data-dismiss="modal" href="javascript:void(0)">Close</a>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var webVisits = @(Html.Raw(Json.Encode(Model)));
+
+        var webVisitsViewModel = function (){
+            ko.observableArray.fn.distinct = function (prop) {
+                var target = this;
+                target.index = {};
+                target.index[prop] = ko.observable({});
+
+                ko.computed(function () {
+                    //rebuild index
+                    var propIndex = {};
+
+                    ko.utils.arrayForEach(target(), function (item) {
+                        var key = ko.utils.unwrapObservable(item[prop]);
+                        if (key) {
+                            propIndex[key] = propIndex[key] || [];
+                            propIndex[key].push(item);
+                        }
+                    });
+
+                    target.index[prop](propIndex);
+                });
+
+                return target;
+            };
+            selfWebVisits = this;
+
+            selfWebVisits.showRow = ko.observableArray([]);
+            selfWebVisits.toggleVisibility = function(index) {
+                selfWebVisits.ActualGroup()[index()].showGroup(!selfWebVisits.ActualGroup()[index()].showGroup());
+            };
+            selfWebVisits.Visits = webVisits;
+            selfWebVisits.SplitVisits = ko.utils.arrayMap(webVisits, function(item) {
+                if (item.VisitReference != null && item.IsVisit == true)
+                    return item.VisitReference;
+            });
+            selfWebVisits.uniqueSplits = ko.utils.arrayGetDistinctValues(selfWebVisits.SplitVisits);
+            ko.utils.arrayRemoveItem(selfWebVisits.uniqueSplits,undefined)
+            selfWebVisits.ActualGroup = ko.observableArray([]);
+            ko.utils.arrayForEach(selfWebVisits.uniqueSplits,function(value, index){
+                var group = ko.utils.arrayFilter(webVisits, function(item) {
+                    item.VisitedOnDate = new Date(ConvertToDate(item.VisitedOn)).ToUtcUtzDate();
+                    item.minutes = Math.floor(item.Duration / 60);
+                    item.seconds = item.Duration % 60;
+                    item.timeStamp = ('0' + ConvertToDate(item.VisitedOn).ToUtcUtzDate().getHours()).slice(-2) + ":"
+                        + ('0' + ConvertToDate(item.VisitedOn).ToUtcUtzDate().getMinutes()).slice(-2)+ ":"
+                        + ('0' + ConvertToDate(item.VisitedOn).ToUtcUtzDate().getSeconds()).slice(-2);
+                    return item.VisitReference == value;
+                });
+                group.sort(function(left, right) { return left.VisitedOn == right.VisitedOn ? 0 : (left.VisitedOn < right.VisitedOn ? -1 : 1) })
+                group.showGroup = ko.observable(false);
+                //webVisits.map(function(e){ if (e.VisitReference ==  value) return e  });
+                selfWebVisits.ActualGroup.push(group);
+
+            })
+
+        };
+        var viewModel = new webVisitsViewModel();
+        if('@(currentPage)' == "ContactDetails")
+        {
+            $("#viewcontactlink").hide();
+        }
+        ko.applyBindings(viewModel,document.getElementById("WebVisits"));
+    });
+
+    function displayDate_n(date) {
+        if (date == null) {
+            return "";
+        }
+        var value = date.ToUtcUtzDate();
+        return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd'), '@(dateFormat)');
+    }
+</script>

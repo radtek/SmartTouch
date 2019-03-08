@@ -1,0 +1,113 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model UserViewModel
+
+@Scripts.Render("~/bundles/uservm")
+
+<div id="adduser">
+    <div class="drop-heading">
+        <span class="icon st-icon-user-2 display-inline"></span> <h4 class="panel-title display-inline plm">[|Add User|]</h4>
+    </div>
+
+    <div class="dp-topnav-inner-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">[|First Name|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|First Name|]" class="form-control" data-bind="value: FirstName, hasFocus:!(FirstName)" maxlength="75">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">[|Last Name|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|Last Name|]" class="form-control" data-bind="value: LastName" maxlength="75">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">[|Email|] <span class="required">*</span></label>
+                    <input type="email" placeholder="someone@example.com" class="form-control" data-bind="value: PrimaryEmail,attr:{id:'Email_'+ 0},event:{blur:MailGunValidater.bind($data,0)}" maxlength="256" />
+                    <div id="emailStatus_0"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="control-label">[|Role|] <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'RoleName',dataValueField:'Id', data: Roles, value: RoleID}" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">            
+            <label data-bind="attr: {'class': DoNotEmail() ?'checkbox checked':'checkbox' }">
+                <input type="checkbox" data-toggle="checkbox" data-bind="checked: DoNotEmail, click: setDoNotEmail" />&nbsp;
+                <label class="control-label">[|Do Not Notify|]</label>
+            </label>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click: saveUser">[|Add|]</a>
+            <a href="javascript:void(0)" class="btn btn-lg" onclick="CloseTopInner(this)">[|Cancel|]</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+        var BASE_URL = '@Url.Content("~/User/")';
+        var user = @(Html.Raw(Json.Encode(Model)));
+        var mailgunPublicKey = '@System.Configuration.ConfigurationManager.AppSettings["mailgun_apikey"]';
+
+        appendCheckbox();
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+
+        var AccountID='@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var loadUsers = (function () {
+            $.ajax({
+                url: BASE_URL + 'GetRoles',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: { 'accountID':AccountID },
+            }).then(function (response) {            
+                var filter = $.Deferred();
+                if (response.success) {
+                    filter.resolve(response);
+                } 
+                else {     
+                    filter.reject(response.error);
+                }
+                return filter.promise();
+            }).done(function (data) {
+                user.Roles = data.response;
+                //selfUser.Roles(data);
+                var viewModel2 = new userViewModel(user,data.response,BASE_URL);
+                ko.applyBindings(viewModel2,document.getElementById("adduser"));
+            }).fail(function (error) {
+                notifyError(error);
+            });;
+        });
+        loadUsers();
+
+        MailGunValidater = function (id) {
+            var emailValidator = new EmailValidate(id, mailgunPublicKey);
+            updateEmailStatus(function (value) {
+                return emailValidator.validate(value)
+            }, id);
+        }
+        function updateEmailStatus(status, id) {
+            status(id);
+        }
+    });
+</script>
+
+
+
+

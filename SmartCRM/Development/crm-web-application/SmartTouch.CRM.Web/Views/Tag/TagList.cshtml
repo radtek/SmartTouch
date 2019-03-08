@@ -1,0 +1,373 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.TagViewModel
+@{
+    ViewBag.Title = "Tags";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var Details = ViewBag.tagId;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+@*<script src="~/Scripts/ViewModels/TagViewModel.js"></script>*@
+
+@Scripts.Render("~/bundles/tagviewmodel")
+
+
+
+<div id="UserList">
+    <div class="page-title">[|Tags|]</div>
+    <div class="tags-grid">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.TagViewModel>()
+    .Name("grid")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .AutoBind(true)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+                    .PageSizes(true)
+                    .ButtonCount(10).Messages(m => m
+                        .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Tag(s)|]")
+                                .Empty("[|No tags to display|]").ItemsPerPage("[|Tags per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Bound(b => b.TagName).Template(e => "").Title("[|Tags|]").HeaderHtmlAttributes(new { @class = "col-50" });
+        columns.Bound(b => b.Count).Template(e => "").Title("[|Contacts Tagged|]").HeaderHtmlAttributes(new { @class = "text-center" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:130px;" });
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="left-part">
+                    <label class="checkbox toggle-all" for="masterCheckBox">
+                        <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                    </label> [|Select All|]
+                </div>
+
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtSearch" onkeydown="GetTagsBasedonsearch(this);" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                </div>
+            </div>
+        </text>);
+    })
+                                                               .ClientRowTemplate(
+                                                                                                             @"<tr class='odd'><td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chktag' data-LeadScoreTag='#:LeadScoreTag#' data-name='#:TagName#' data-status='#:Count#' id='#: TagID #' data-toggle='checkbox'></label></td>
+           <td>#:TagName#</td><td class ='text-center'>#if(Count == 0){# <span>#:Count#</span> #} else{# <a href='/taggedcontacts?TagID=#:TagID# &Type=1'>#:Count#</a> #}# </td>
+           <td class='grid-row-controls'><span>
+            <a href='/taggedcontacts?TagID=#:TagID# &Type=1' title='View'><i class='icon st-icon-eye notifiy-view'></i></a>
+                        #if(LeadScoreTag == false) {#
+                       <a href='mergetag?tagId=#:TagID#' data-toggle='modal' data-target='modal' title='Merge Tags'><i class='icon st-icon-merge'></i></a>
+
+                       #}#
+                        <a href='edittag?tagId=#:TagID#' data-toggle='modal' data-target='modal' title='Edit Tag'><i class='icon st-icon-edit'></i></a>
+                      #if(LeadScoreTag == false) {#
+                       <a href='javascript:void(0)' onclick='DeleteTag(#:TagID#,#:Count#,#:LeadScoreTag#)' title='Delete'><i class='icon st-icon-bin-3'></i></a>
+                        #}#
+          </span></td></tr>")
+
+                                                               // "#if(LeadScoreTag == false)"? + Html.ActionLink("<i class='con st-icon-merge'></i>", "_MergeTagModal", new { tagId = "tid" }, new { data_toggle = "modal", data_target = "modal" }).ToHtmlString().Replace("tid", "#:TagID#")
+
+                                                               .ClientAltRowTemplate(
+                                                                                                                                                         @"<tr class='even'><td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chktag' data-LeadScoreTag='#:LeadScoreTag#' data-name='#:TagName#' data-status='#:Count#' id='#: TagID #' data-toggle='checkbox'></label></td>
+           <td> <span class=''>#:TagName#</span></td><td class ='text-center'>#if(Count == 0){# <span>#:Count#</span> #} else{# <a href='/taggedcontacts?TagID=#:TagID# &Type=1'>#:Count#</a> #}# </td>
+           <td class='grid-row-controls'><span>
+  <a href='/taggedcontacts?TagID=#:TagID# &Type=1' title='View'><i class='icon st-icon-eye notifiy-view'></i></a>
+                        #if(LeadScoreTag == false) {#
+                       <a href='mergetag?tagId=#:TagID#' data-toggle='modal' data-target='modal' title='Merge Tags'><i class='icon st-icon-merge'></i></a>
+
+                       #}#
+                        <a href='edittag?tagId=#:TagID#' data-toggle='modal' data-target='modal' title='Edit Tag'><i class='icon st-icon-edit'></i></a>
+                      #if(LeadScoreTag == false) {#
+                       <a href='javascript:void(0)' onclick='DeleteTag(#:TagID#,#:Count#,#:LeadScoreTag#)' title='Delete'><i class='icon st-icon-bin-3'></i></a>
+                        #}#
+                       </span></td></tr>").Sortable().Resizable(resize => resize.Columns(true))
+                                                          .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                                              .DataSource(dataSource => dataSource
+                                                              .Ajax()
+                                                              .PageSize(ItemsPerPage)
+                                                              .Read(read => read.Action("TagsViewRead", "Tag").Data("additionalInfo"))
+
+                                                              //.Update(update => update.Action("EditingInline_Update", "Grid"))
+                                                              //.Destroy(update => update.Action("EditingInline_Destroy", "Grid"))
+                                                              )
+        )
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        var contactDtls = '@(Details)';
+        if (contactDtls == 0) {
+            localStorage.removeItem("tagsearchtext");
+            createCookie("tagpagenumber", 1, 1); createCookie("tagpagesize", '@(ItemsPerPage)', 1);
+        }
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("tagsearchtext")
+            }
+        }
+    </script>
+
+    <script>
+
+        var searchText;
+
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var BASE_URL = '@Url.Content("~/Tag/")';
+        function GetTagsBasedonsearch(e) {
+            setTimeout(function () {
+
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtSearch").val() || (searchText === $("#txtSearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtSearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#grid").data("kendoGrid"), searchBox = $("#txtSearch").val(), userType = $("#userTypes").val();
+                localStorage.removeItem("tagsearchtext");
+                if ($.trim(searchBox).length > 1) {
+                    localStorage.removeItem("tagsearchtext");
+                    localStorage.setItem("tagsearchtext", searchBox);
+                    //$("#grid").data("kendoGrid").dataSource.read();
+                    var psize = readCookie("tagpagesize");
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("tagsearchtext");
+                    $("#grid").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+        function UpdateTag(methodname, jsondata) {
+
+            var authToken = readCookie("accessToken");
+            $.ajax({
+                url: WEBSERVICE_URL + '/' + methodname,
+                type: "put",
+                data: jsondata,
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                },
+                success: function (data) {
+                    removepageloader();
+                    removeinnerLoader('editTag');
+                    alertifyReset("[|OK|]", "[|Cancel|]");
+                    if (data.IsAssociatedWithWorkflows == true && data.IsAssociatedWithLeadScoreRules == true) {
+                        alertify.confirm("[|The tag is associated with Workflows or Lead score. Still you want to upadate the tag?|]", function (e) {
+                            if (e) {
+                                pageLoader();
+                                UpdateTag("ContinueTag", jsondata);
+                            } else {
+                                notifyError("[|You've clicked Cancel|]");
+                            }
+                        });
+                    }else if(data.IsAssociatedWithWorkflows){
+                        alertify.confirm("[|The tag is associated with Workflows. Still you want to upadate the tag?|]", function (e) {
+                            if (e) {
+                                pageLoader();
+                                UpdateTag("ContinueTag", jsondata);
+                            } else {
+                                notifyError("[|You've clicked Cancel|]");
+                            }
+                        });
+                    }else if(data.IsAssociatedWithLeadScoreRules){
+                        alertify.confirm("[|The tag is associated with Lead score. Still you want to upadate the tag?|]", function (e) {
+                            if (e) {
+                                pageLoader();
+                                UpdateTag("ContinueTag", jsondata);
+                            } else {
+                                notifyError("[|You've clicked Cancel|]");
+                            }
+                        });
+                    } else {
+                        notifySuccess('[|Successfully saved the Tag|]');
+                        window.location.href = "tags";
+                    }
+                },
+                error: function (response) {
+                    removepageloader();
+                    notifyError(response.responseText);
+                }
+            });
+        }
+
+        function MergeTag(methodname, jsondata,itemcount) {
+
+            $.ajax({
+                url: BASE_URL + methodname,
+                type: "post",
+                data: JSON.stringify({ 'tagViewModel': jsondata }),
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8"
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                removeinnerLoader('mergeTag');
+                var response = data.response;
+                alertifyReset("[|OK|]", "[|Cancel|]");
+                if (response.IsInvolvedInLeadScore && response.IsInvolvedInWorkflows) {
+                    alertify.confirm("[|The tag is associated with Workflows and Lead score. Still you want to merge the tags?|]", function (e) {
+                        if (e) {
+                            pageLoader();
+                            MergeTag("ContinueMerging", jsondata,itemcount);
+                        } else {
+                            notifyError("[|You've clicked Cancel|]");
+                        }
+                    });
+                }else if(response.IsInvolvedInLeadScore){
+                    alertify.confirm("[|The tag is associated with Lead score. Still you want to merge the tags?|]", function (e) {
+                        if (e) {
+                            pageLoader();
+                            MergeTag("ContinueMerging", jsondata,itemcount);
+                        } else {
+                            notifyError("[|You've clicked Cancel|]");
+                        }
+                    });
+                }else if(response.IsInvolvedInWorkflows){
+                    alertify.confirm("[|The tag is associated with Workflows. Still you want to merge the tags?|]", function (e) {
+                        if (e) {
+                            pageLoader();
+                            MergeTag("ContinueMerging", jsondata,itemcount);
+                        } else {
+                            notifyError("[|You've clicked Cancel|]");
+                        }
+                    });
+                } else {
+                    var successmessage = "";
+                    if(itemcount == 0){
+                        successmessage = "[|No items changed|]";
+                    }else if(itemcount == 1){
+                        successmessage = "[|1 item have changed|]";
+                    }else {
+                        successmessage = itemcount + "[| items have changed|]";
+                    }
+                    notifySuccess(successmessage);
+                    window.location.href = "tags";
+                }
+
+            }).fail(function (error) {
+                removeinnerLoader('mergeTag');
+                notifyError(error);
+            });
+        }
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chktag');
+                $(".st-icon-edit").parent('a').attr('data-target', '#modal');
+                $(".st-icon-merge").parent('a').attr('data-target', '#modal');
+            }, 200)
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+        function DeleteTag(id, taggedCount ,ruleCount ) {
+            var validate = false;
+            var tid = 0;
+            if (id != 0) {
+                tid = [id];
+                validate = true;
+            }
+            else {
+                checkedvalues = fnGetChkvalGrid('chktag');
+                if (checkedvalues != "") {
+                    tid = checkedvalues;
+                    validate = true;
+                }
+                else {
+                    validate = false;
+                    notifyError("[|Please select at least one account|]");
+                }
+            }
+
+            if (validate) {
+                var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+                alertifyReset("Delete Tag", "Cancel");
+                alertify.confirm( taggedCount+ " [|items tagged for this tag|]. [|Are you sure you want to delete this Tag|]?", function (e) {
+                    if (e) {
+                        jsondata = JSON.stringify({ 'TagID': tid });
+                        varDeleteURL =  "Tag/DeleteTag";
+                        jQuery.support.cors = true;
+                        $.ajax({
+                            url: varDeleteURL,
+                            type: 'post',
+                            dataType: 'json',
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({ 'tagIds': jsondata })
+                        }).then(function (response) {
+                            var filter = $.Deferred()
+                            if (response.success) {
+                                filter.resolve(response)
+                            } else {
+                                filter.reject(response.error)
+                            }
+                            return filter.promise()
+                        }).done(function (data) {
+                            notifySuccess("[|Successfully deleted tag(s)|]");
+                            setTimeout(function () { window.location.href = "tags" }, setTimeOutTimer);
+                        }).fail(function (error) {
+                            notifyError(error);
+                        })
+                    }
+                    else {
+                        notifyError("[|You've clicked Cancel|]");
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            removepageloader();
+
+            $("#txtSearch").val(localStorage.getItem("tagsearchtext"));
+
+
+            var tagview = @(Html.Raw(Json.Encode(Model)));
+            var vm = new TagsViewModel(tagview, BASE_URL, WEBSERVICE_URL);
+            ko.applyBindings(vm);
+
+            var grid = $('#grid').data('kendoGrid');
+            var pno = readCookie("tagpagenumber");
+            var psize = readCookie("tagpagesize");
+            //grid.dataSource.query({ page: pno, pageSize: psize });
+            tableMasterCheckBox('tags-grid');
+        });
+
+    </script>
+
+}
+
+

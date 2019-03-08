@@ -1,0 +1,67 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model TagViewModel
+
+@*<script src="~/Scripts/ViewModels/TagViewModel.js"></script>*@
+
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+}
+
+@Scripts.Render("~/bundles/tagviewmodel")
+
+<div id="Note" >
+    <div id="@(isModal ? "editTagModel" : "editTag")" class="@(isModal ? "" : "")">
+        <div class="@(Model.TagID > 0 ? "" : "")">
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><span class="icon st-icon-tag display-inline plm"></span>[|Edit Tag|]</h4>
+                </div>
+            }
+            else
+            {
+                <div class="drop-heading">
+                    <span class="icon st-icon-tag display-inline"></span> <h4 class="panel-title display-inline plm">[|Edit Tag|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "")">
+                <div class="dp-topnav-inner-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">[|Tag|] <span class="required">*</span></label>                       
+                        <input class="form-control" id="txtTagName" type="text" data-bind="value:TagName,valueUpdate: 'afterkeydown'" placeholder="[|Name|]" maxlength="75" />
+                    </div>
+                </div>
+            </div>
+            <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" id="saveBtn" data-bind="click:saveTag" aria-hidden="true"><span>[|Save|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                       data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Tag/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagview = @(Html.Raw(Json.Encode(Model)));
+        
+        var tagviewModel = new TagsViewModel(tagview, BASE_URL, WEBSERVICE_URL,accountId);
+
+        var popup = '@(isModal)';
+        if(popup=="True")
+        {
+            ko.applyBindings(tagviewModel,document.getElementById("editTagModel"));
+        }
+        //else
+        //{
+        //    ko.applyBindings(tagviewModel,document.getElementById("mergeTag"));
+        //}
+    });
+</script>

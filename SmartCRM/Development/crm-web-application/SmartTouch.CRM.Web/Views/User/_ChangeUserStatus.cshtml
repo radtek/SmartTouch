@@ -1,0 +1,71 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model UserViewModel
+
+@Scripts.Render("~/bundles/uservm")
+
+<div id="changestatus">
+    <div class="drop-heading">
+        <span class="icon st-icon-spam display-inline"></span> <h4 class="panel-title display-inline plm">[|Change Status|]</h4>
+    </div>
+    <div class="dp-topnav-inner-body">
+        <div class="row">
+            <div class="form-group col-lg-6">
+                <div>
+                    <label class="radio-inline">
+                        <input type="radio" name="userStatus" class="activeStatus" value="1" data-bind="checked: Status" />
+                        [|Active|]
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="userStatus" class="inactiveStatus" value="2" data-bind="checked: Status" />
+                        [|Inactive|]
+                    </label>
+                    <div data-bind="value:Status" class="mtl"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click:updateStatus"><span>[|Update Status|]</span></a>
+            @*<a href="javascript:void(0)" class="btn btn-lg btn-primary" onclick="CloseTopInner(this)">Update Status</a>*@
+            <a href="javascript:void(0)" class="btn btn-lg" onclick="CloseTopInner(this)">[|Cancel|]</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var BASE_URL = '@Url.Content("~/User/")';
+        var user = @(Html.Raw(Json.Encode(Model)));
+        var role = [{Id:0,RoleName:"Sales"}];
+        var viewModel2 = new userViewModel(user,role,BASE_URL);
+        ko.applyBindings(viewModel2,document.getElementById("changestatus"));
+
+        var selectedUsers = fnGetSelectedUsers('chkuser');
+        if(selectedUsers.length == 1){
+            viewModel2.Status(selectedUsers[0].Status);
+            console.log(selectedUsers[0]);
+        }
+    });
+    checkedvalues = fnGetChkvalGrid('chkuser');    
+    //$('[data-toggle="radio"]').each(function () {
+    //    var $radio = $(this);
+    //    $radio.radio();
+    //});
+
+    //$('input[name=userStatus]:radio').live('click',function() {
+    //    console.log("click");
+    //    console.log($(this).is(":checked"));
+    //});
+    //$("input[name=userStatus]:radio").change(function () {
+    //    console.log($(".activeRadio").is(':checked'));
+    //    console.log($(".activeRadio").is(':checked'));
+    //    if ($(".activeRadio").is(':checked'))
+    //        selfUser.Status($(".activeRadio").val());
+    //    if ($(".inactiveRadio").is(':checked'))
+    //        selfUser.Status($(".inactiveRadio").val());
+    //});
+
+</script>
+
+

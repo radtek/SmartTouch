@@ -1,0 +1,146 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+@{
+    ViewBag.Title = "NightlyStatusReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool runReportResults = ViewBag.RunReportResults;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+@Scripts.Render("~/bundles/nightlyreportvm")
+<div>
+    <section>
+        <div class="sub-container" id="nightlyStatus">
+            <ul class="breadcrumb mbl">
+                <li><a href="/customreports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)" data-bind="text: ReportType() == 21 ? 'Nightly Campaign Report' : ReportType() == 22 ? 'Nightly Stats Report' : ReportType() == 23 ? 'Login Frequency Report' : 'Bounced Email Report'"></a></li>
+            </ul>
+            <div class="main-header mbl">
+                <span id="pagename" data-bind="text: ReportType() == 21 ? 'Nightly Campaign Report' : ReportType() == 22 ? 'Nightly Stats Report' : ReportType() == 23 ? 'Login Frequency Report' : 'Bounced Email Report'"></span>
+            </div>
+
+            <div class="form-horizontal-large mtl">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Date Range|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Period',dataValueField:'PeriodId', data: Periods ,value:PeriodId,change:periodChange}" />
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible:CustomDateDisplay">
+                        <label class="bold">[|Custom Range|] :</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomStartDate, max: fromMaxDate,format:DateFormat,change: fromDateChangeEvent }" />
+                        </div>
+                        <label class="display-inline mts mhl">[|To|]</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomEndDate, max: toMaxDate,format:DateFormat,change: toDateChangeEvent }" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix">
+                    <div class="form-group group-by1">
+                        <label class="display-inline bold">[|Subscription Type|]</label>
+                        <input data-bind="kendoDropDownList: {dataTextField:'Value',dataValueField:'SubscriptionID', data:Subscriptions, value: SubscriptionID }" />
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Account Names|]</label>
+                        <select data-bind="kendoMultiSelect: {dataTextField:'Name',dataValueField:'Id', data: AccountsList, value: AccountIdsList ,optionLabel: '[|Select...|]',placeholder:'[|All|]'}" class="multiselectwidth"></select>
+                    </div>
+                </div>
+
+                <div class="clearfix" data-bind="visible: ReportType() == 23">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Type|]</label>
+                        <input data-bind="kendoDropDownList: {dataTextField:'Value',dataValueField:'Id', data: LoginFrequencyReports, value: LoginFrequencyReportID}" />
+                    </div>
+                </div>
+
+                <div class="hr-border"></div>
+                <div class="pull-left">
+                    <a href="#" id="run-report" data-bind="click:RunReport" class="btn btn-lg btn-primary">[|Run Report|]</a>
+                </div>
+                <div class="pull-right">
+                    <a href="#" id="run-report-excel" data-bind="click:ExcelReport" class="btn btn-lg btn-primary">[|Export to Excel|]</a>
+                </div>
+            </div>
+
+            <div class="clearfix pvl smart-report" id="nightlyStatus">
+                <div class="clearfix no-grid-resize" data-bind="visible:ReportType() == 21">
+                    @Html.Partial("_NightlyCampaignReport")
+                </div>
+
+                <div class="clearfix no-grid-resize" data-bind="visible:ReportType() == 22">
+                    @Html.Partial("_NightlyStatusReport")
+                </div>
+
+                <div class="clearfix no-grid-resize" data-bind="visible:ReportType() == 23">
+                    @Html.Partial("_LoginFrequencyReport")
+                </div>
+
+                <div class="clearfix no-grid-resize" data-bind="visible:ReportType() == 24">
+                    @Html.Partial("_BouncedEmailReport")
+                </div>
+               
+                <div id="noRecordsFound" style="display:none;">
+                    <span>[|No records found|]</span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+<script type="text/javascript">
+    function onDataBinding(e){}
+
+    function onDataBound(e) {
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+
+    function formatDate(date) {
+        if (isNaN(Date.parse(date))) {
+            return "";
+        }
+        else {
+            var dateFormat = readCookie("dateformat");
+            if (dateFormat == null || dateFormat == 'undefined')
+                return new Date(Date.parse(date)).toDateString();
+            else {
+                var utzDate = new Date(moment(date).toDate());
+                return kendo.toString(utzDate, dateFormat + " hh:mm tt");
+            }
+        }
+    }
+
+    $(document).ready(function(){
+        var BASE_URL = '@Url.Content("~/Reports/")';
+        var runReport='@(runReportResults)';
+        var itemsPerPage = '@(ItemsPerPage)';
+        var reportModel = @(Html.Raw(Json.Encode(Model)));
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+        var users = [];
+        var viewModel = {};
+        viewModel = new nStatusReport(BASE_URL,reportModel,dateformat, itemsPerPage, runReport);
+        ko.applyBindings(viewModel);
+
+        function RunReport() {
+            nsReport.RunReport();
+        }
+
+        $("#excelexport").click(function(){
+            nsReport.ExcelReport();
+        });
+    });
+
+</script>

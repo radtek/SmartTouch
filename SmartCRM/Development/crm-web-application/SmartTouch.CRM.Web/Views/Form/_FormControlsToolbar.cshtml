@@ -1,0 +1,36 @@
+﻿@using SmartTouch.CRM.Entities;
+
+<div class="drag-controls">
+    <div class="drag-controls-content">
+        <div class="">
+            <div class="images-search">
+                <span class="icon st-icon-search-2"></span>
+                <input type="search" placeholder="[|Search|]" class="form-control display-inline" data-bind="value:searchQuery, valueUpdate:'afterkeydown'" />
+            </div>
+            <div class="form-fieldslist">
+                <a href="#Contactfields" data-toggle="collapse" class="drag-controls-subheading">
+                    <span class="camp-specify">[|Contact Fields|]</span>
+                    <span class="pull-right"><i class="icon st-icon-dropdownarrow"></i></span>
+                </a>
+                <ul data-bind="foreach:computedFieldSearch" class="collapse in" id="Contactfields">
+                    <li class="formitem" data-bind="attr:{id:'toolbarcontrol-'+FieldId}">
+                        <a href="javascript:void(0)" class="st-form-lastName" data-bind="text:Title"></a>
+                    </li>
+                </ul>
+                <a href="#Customtabfields" data-toggle="collapse" class="drag-controls-subheading">
+                    <span class="camp-specify">[|Custom Fields|]</span>
+                    <span class="pull-right"><i class="icon st-icon-dropdownarrow"></i></span>
+                </a>
+                <ul data-bind="foreach:computedCustomFieldSearch" class="collapse in" id="Customtabfields">
+                    <li class="formitem" data-bind="attr:{id:'toolbarcontrol-'+FieldId} ">
+                        <a href="javascript:void(0)" class="st-form-lastName" data-bind="text:Title"></a>
+                    </li>
+                </ul>
+                <div data-bind="visible:computedFieldSearch().length==0 && computedCustomFieldSearch()==0">
+                    <span class="bolder smaller-90">[|No fields found|]</span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,975 @@
+Return-Path: <gtaylor@smarttouchinteractive.com>
+Received: from server506.appriver.com (server506e.appriver.com [50.56.144.35]) by mail.landmarkit.in with SMTP;
+   Wed, 18 Dec 2013 23:27:35 -0600
+X-Note-AR-ScanTimeLocal: 12/18/2013 11:27:48 PM
+X-Policy: GLOBAL - smarttouchinteractive.com
+X-Policy: GLOBAL - smarttouchinteractive.com
+X-Policy: GLOBAL - smarttouchinteractive.com
+X-Policy: GLOBAL - smarttouchinteractive.com
+X-Policy: GLOBAL - smarttouchinteractive.com
+X-Policy: Too many policies to list
+X-Primary: gtaylor@smarttouchinteractive.com
+X-Note: This Email was scanned by AppRiver SecureTide
+X-Virus-Scan: V-
+X-Note-SnifferID: 0
+X-Note: TCH-CT/SI:0-55/SG:5 12/18/2013 11:27:42 PM
+X-GBUdb-Analysis: 0, 10.242.229.139, Ugly c=1 p=-0.951055 Source White
+X-Signature-Violations: 0-0-0-32767-c
+X-Note-419: 15.6007 ms. Fail:0 Chk:1345 of 1345 total
+X-Note: SCH-CT/SI:0-1345/SG:1 12/18/2013 11:27:43 PM
+X-Note: Spam Tests Failed:
+X-Country-Path: UNKNOWN->PRIVATE->UNITED STATES
+X-Note-Sending-IP: 10.242.229.139
+X-Note-Reverse-DNS: smtp.exg6.exghost.com
+X-Note-Return-Path: gtaylor@smarttouchinteractive.com
+X-Note: User Rule Hits:
+X-Note: Global Rule Hits: G327 G328 G329 G330 G334 G335 G445
+X-Note: Encrypt Rule Hits:
+X-Note: Mail Class: VALID
+X-Note: Headers Injected
+Received: from [10.242.229.139] (HELO smtp.exg6.exghost.com)
+  by server506.appriver.com (CommuniGate Pro SMTP 6.0.2)
+  with ESMTPS id 138549690; Wed, 18 Dec 2013 23:27:48 -0600
+Received: from DAGN07C-E6.exg6.exghost.com ([169.254.3.195]) by
+ HT08-E6.exg6.exghost.com ([50.56.144.150]) with mapi id 14.03.0158.001; Wed,
+ 18 Dec 2013 23:27:47 -0600
+From: "Grant C. Taylor" <gtaylor@smarttouchinteractive.com>
+To: Hari Pratap Elduri <haripratap.elduri@landmarkit.co.in>, Alan Daniel
+	<adaniel@smarttouchinteractive.com>, Ashok Reddy
+	<vakr@smarttouchinteractive.com>, Robert Cowes
+	<rcowes@smarttouchinteractive.com>
+CC: 'Landmark IT' <nagendra.chamalla@landmarkit.in>, 'Bharath Chandra'
+	<bharath.chandra@landmarkit.in>, "spandana.jaggumantri@landmarkit.in"
+	<spandana.jaggumantri@landmarkit.in>, 'Mahesh' <mahesh.kumar@landmarkit.in>,
+	'Venkata Ramana Reddy' <ramana.reddy@landmarkit.in>
+Subject: SPAM-HIGH:  RE: Agenda for review meeting 12/16/2013
+Thread-Topic: Agenda for review meeting 12/16/2013
+Thread-Index: Ac76HFlUkg4FL5x1TgC1gld/KskXuQCX4O0AAAZzWQAABu95UA==
+Date: Thu, 19 Dec 2013 05:27:44 +0000
+Message-ID: <63429AFDAE6DFA46857D348CAB6EAD591E7A96@DAGN07C-E6.exg6.exghost.com>
+References: <001f01cefa1d$beca07f0$3c5e17d0$@landmarkit.co.in>
+ <BFA50F343CF8CE479EF56850236C8A8F2B1362F3@DAGN01B-E6.exg6.exghost.com>
+ <006201cefc63$62c850e0$2858f2a0$@landmarkit.co.in>
+In-Reply-To: <006201cefc63$62c850e0$2858f2a0$@landmarkit.co.in>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [50.56.144.245]
+x-rerouted-by-exchange: 
+Content-Type: multipart/alternative;
+	boundary="_000_63429AFDAE6DFA46857D348CAB6EAD591E7A96DAGN07CE6exg6exgh_"
+MIME-Version: 1.0
+X-SmarterMail-Spam: HostKarma - Whitelist, URIBL:11
+X-SmarterMail-TotalSpamWeight: 40
+
+--_000_63429AFDAE6DFA46857D348CAB6EAD591E7A96DAGN07CE6exg6exgh_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+Hari,
+
+Here is additional feedback that should be used in conjunction with the fee=
+dback I provided last week.
+
+Contacts
+
+
+*         For Advanced Search:
+
+o   Change values of 'Find' dropdown to: People; and Companies
+
+o   Change values of the conditional dropdown to: all; and any
+
+o   Add text after dropdown that reads: "of the following:"
+
+o   Change 'Add | Remove' to current pattern, which consists of adding rows=
+ by selecting a link labeled '+ Add more criteria' and removing rows by sel=
+ecting a minus icon (in line with the row).
+
+o   Add 'Find [object]' button.  So, the button for People should read 'Fin=
+d People', and the button for Companies should read 'Find Companies'
+
+Automation
+
+
+*         For the 'Send an email' action, please detail the link action fun=
+ctionality.  We need to identify all links within the email, and allow the =
+User to add one or more of these actions: Add a tag; Adjust Lead Score; Upd=
+ate a field; and Notify user or Team.
+
+*         Add 'A Campaign is sent' as a trigger.
+
+*         In Automation settings, change 'Yes, inactivate this workflow on'=
+ to 'Yes, deactivate this workflow on'
+
+*         In Automation settings, change 'It depends, unenroll contact from=
+ these workflows' to 'No, remove Contact from these workflows'
+
+*         In the Automation Report, remove 'Total Contacts' from the Workfl=
+ow Summary.
+
+*         In the Automation Report, move the heading 'Workflow Summary' to =
+above the workflow steps
+
+*         In the Automation Report, change the heading 'Workflow Summary' t=
+o 'Workflow Analytics'
+
+*         In the Automation Report, if there are more steps than can be dis=
+played, use a carousel to allow the User to scroll forward and backwards th=
+rough the steps.
+
+Campaigns
+
+*         We're going to add the ability for Users to configure link action=
+s within Campaigns.
+
+I'll the information above to each interface specifications document.
+
+
+Grant C. Taylor
+M: 512-736-9032
+
+From: Hari Pratap Elduri [mailto:haripratap.elduri@landmarkit.co.in]
+Sent: Wednesday, December 18, 2013 8:38 PM
+To: Alan Daniel; Grant C. Taylor; Ashok Reddy; Robert Cowes
+Cc: 'Landmark IT'; 'Bharath Chandra'; spandana.jaggumantri@landmarkit.in; '=
+Mahesh'; 'Venkata Ramana Reddy'
+Subject: RE: Agenda for review meeting 12/16/2013
+
+HI Alan,
+
+Thanks for making call on sign-off on the modules.. since it is so importan=
+t for us get these for developers to start development..
+
+We will review below minor changes and that you have mentioned with grant t=
+oday and will have them updated based on the review comments
+
+Regards,
+Elduri Hari Pratap
+
+
+From: Alan Daniel [mailto:adaniel@smarttouchinteractive.com]
+Sent: Thursday, December 19, 2013 5:04 AM
+To: Hari Pratap Elduri; Grant C. Taylor; Ashok Reddy; Robert Cowes
+Cc: 'Landmark IT'; Bharath Chandra; spandana.jaggumantri@landmarkit.in<mail=
+to:spandana.jaggumantri@landmarkit.in>; 'Mahesh'; 'Venkata Ramana Reddy'
+Subject: RE: Agenda for review meeting 12/16/2013
+
+Hari,
+
+Contacts, Campaigns, and Automation are signed off on as of today, subject =
+to a few minor changes Grant will communicated.
+
+As an example in Contacts
+
+*         Basic Search should show the word "ANY" in addition to the curren=
+t word ALL.
+
+As an example in Campaigns
+
+*         We want to add the ability to add link actions when "customizing =
+a campaign" if links are added.
+
+o   Add Tag
+
+o   Add Points to Lead Score
+
+o   Alert User or Team
+
+As an example in Marketing Automation:
+
+
+*         Add a Trigger to the existing four options (Smart Search, Form, T=
+ag, Lifecycle Change)
+
+o   "Send Campaign"
+
+*         Add title.  Above icon should say "Workflow Summary".
+
+o   Add a right arrow for carosel scroll right if work flow summary has mor=
+e icons than what fits in one row"
+
+*         Change current Work Flow Summary to "Work Flow Analytics"
+
+There are more changes from today's meeting, but Grant will communicate the=
+se directly.
+
+AD
+
+From: Hari Pratap Elduri [mailto:haripratap.elduri@landmarkit.co.in]
+Sent: Sunday, December 15, 2013 11:15 PM
+To: Grant C. Taylor; Alan Daniel; Ashok Reddy; Robert Cowes
+Cc: 'Landmark IT'; Bharath Chandra; spandana.jaggumantri@landmarkit.in<mail=
+to:spandana.jaggumantri@landmarkit.in>; 'Mahesh'; 'Venkata Ramana Reddy'
+Subject: Agenda for review meeting 12/16/2013
+Importance: High
+
+Hi All,
+
+Please find the Agenda for review meeting
+
+
+1.       Sign-off for development for the modules - Contacts, Campaigns, Au=
+tomation
+
+2.       Review Account admin / ST Admin - HTML's based on Moqups
+
+3.       Interface documents - Review for account admin & ST Admin
+
+4.       Review Reports Moqups
+
+Regards,
+Elduri Hari Pratap
+
+
+
+--_000_63429AFDAE6DFA46857D348CAB6EAD591E7A96DAGN07CE6exg6exgh_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{mso-style-priority:34;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+span.EmailStyle18
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+span.EmailStyle19
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+span.EmailStyle20
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+span.EmailStyle21
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+/* List Definitions */
+@list l0
+	{mso-list-id:940602527;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-448990224 469032422 67698691 67698693 67698689 6769=
+8691 67698693 67698689 67698691 67698693;}
+@list l0:level1
+	{mso-level-start-at:16;
+	mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;
+	mso-fareast-font-family:Calibri;
+	mso-bidi-font-family:"Times New Roman";}
+@list l0:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l0:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l0:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l0:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l0:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l0:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l0:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l0:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l1
+	{mso-list-id:1365517228;
+	mso-list-type:hybrid;
+	mso-list-template-ids:311080170 67698689 67698691 67698693 67698689 676986=
+91 67698693 67698689 67698691 67698693;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l1:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l1:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l1:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l1:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l1:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l1:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l1:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l1:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l2
+	{mso-list-id:1604460809;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-100488606 67698689 67698691 67698693 67698689 67698=
+691 67698693 67698689 67698691 67698693;}
+@list l2:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:1.0in;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:1.5in;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l2:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:2.0in;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l2:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:2.5in;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:3.0in;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l2:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:3.5in;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l2:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:4.0in;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l2:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:4.5in;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l2:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:5.0in;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l3
+	{mso-list-id:1663044277;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-28250228 67698689 67698691 67698693 67698689 676986=
+91 67698693 67698689 67698691 67698693;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l3:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l3:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l3:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l3:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l3:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l3:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l3:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l3:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-US" link=3D"#0563C1" vlink=3D"#954F72">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D">Hari,=
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><o:p>=
+&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D">Here =
+is additional feedback that should be used in conjunction with the feedback=
+ I provided last week.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><o:p>=
+&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:12.0pt;color:#1F497D">Co=
+ntacts<o:p></o:p></span></b></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><o:p>=
+&nbsp;</o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">For Advanced Search:<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l1 level2 lfo4">
+<![if !supportLists]><span style=3D"font-size:12.0pt;font-family:&quot;Cour=
+ier New&quot;;color:#1F497D"><span style=3D"mso-list:Ignore">o<span style=
+=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">Change values of &#8216;Find&#8217; dropdown to: People; and Companies<o=
+:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l1 level2 lfo4">
+<![if !supportLists]><span style=3D"font-size:12.0pt;font-family:&quot;Cour=
+ier New&quot;;color:#1F497D"><span style=3D"mso-list:Ignore">o<span style=
+=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">Change values of the conditional dropdown to: all; and any<o:p></o:p></s=
+pan></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l1 level2 lfo4">
+<![if !supportLists]><span style=3D"font-size:12.0pt;font-family:&quot;Cour=
+ier New&quot;;color:#1F497D"><span style=3D"mso-list:Ignore">o<span style=
+=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">Add text after dropdown that reads: &#8220;of the following:&#8221;<o:p>=
+</o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l1 level2 lfo4">
+<![if !supportLists]><span style=3D"font-size:12.0pt;font-family:&quot;Cour=
+ier New&quot;;color:#1F497D"><span style=3D"mso-list:Ignore">o<span style=
+=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">Change &#8216;Add | Remove&#8217; to current pattern, which consists of =
+adding rows by selecting a link labeled &#8216;&#43; Add more criteria&#821=
+7; and removing rows by selecting a minus icon (in line with the
+ row).<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l1 level2 lfo4">
+<![if !supportLists]><span style=3D"font-size:12.0pt;font-family:&quot;Cour=
+ier New&quot;;color:#1F497D"><span style=3D"mso-list:Ignore">o<span style=
+=3D"font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">Add &#8216;Find [object]&#8217; button.&nbsp; So, the button for People =
+should read &#8216;Find People&#8217;, and the button for Companies should =
+read &#8216;Find Companies&#8217;<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:12.0pt;color:#1F497D"><o=
+:p>&nbsp;</o:p></span></b></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:12.0pt;color:#1F497D">Au=
+tomation<o:p></o:p></span></b></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:12.0pt;color:#1F497D"><o=
+:p>&nbsp;</o:p></span></b></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">For the &#8216;Send an email&#8217; action, please detail the link actio=
+n functionality.&nbsp; We need to identify all links within the email, and =
+allow the User to add one or more of these actions:
+ Add a tag; Adjust Lead Score; Update a field; and Notify user or Team.<o:p=
+></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">Add &#8216;A Campaign is sent&#8217; as a trigger.<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">In Automation settings, change &#8216;Yes, inactivate this workflow on&#=
+8217; to &#8216;Yes, deactivate this workflow on&#8217;<o:p></o:p></span></=
+p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">In Automation settings, change &#8216;It depends, unenroll contact from =
+these workflows&#8217; to &#8216;No, remove Contact from these workflows&#8=
+217;<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">In the Automation Report, remove &#8216;Total Contacts&#8217; from the W=
+orkflow Summary.<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">In the Automation Report, move the heading &#8216;Workflow Summary&#8217=
+; to above the workflow steps<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">In the Automation Report, change the heading &#8216;Workflow Summary&#82=
+17; to &#8216;Workflow Analytics&#8217;<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l1 level=
+1 lfo4"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">In the Automation Report, if there are more steps than can be displayed,=
+ use a carousel to allow the User to scroll forward and backwards through t=
+he steps.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:12.0pt;color:#1F497D"><o=
+:p>&nbsp;</o:p></span></b></p>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:12.0pt;color:#1F497D">Ca=
+mpaigns<o:p></o:p></span></b></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l3 level=
+1 lfo5"><![if !supportLists]><span style=3D"font-size:12.0pt;font-family:Sy=
+mbol;color:#1F497D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"=
+font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"font-size:12.0pt;color:#1F497=
+D">We&#8217;re going to add the ability for Users to configure link actions=
+ within Campaigns.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><o:p>=
+&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D">I&#82=
+17;ll the information above to each interface specifications document.<o:p>=
+</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><o:p>=
+&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><o:p>=
+&nbsp;</o:p></span></p>
+<div>
+<p class=3D"MsoNormal"><b><span style=3D"font-size:12.0pt;color:#262626">Gr=
+ant C. Taylor</span></b><span style=3D"font-size:12.0pt;color:#404040"><br>
+M: 512-736-9032</span><span style=3D"font-size:12.0pt;color:#1F497D"><o:p><=
+/o:p></span></p>
+</div>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;color:#1F497D"><o:p>=
+&nbsp;</o:p></span></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0in =
+0in 0in">
+<p class=3D"MsoNormal"><b>From:</b> Hari Pratap Elduri [mailto:haripratap.e=
+lduri@landmarkit.co.in]
+<br>
+<b>Sent:</b> Wednesday, December 18, 2013 8:38 PM<br>
+<b>To:</b> Alan Daniel; Grant C. Taylor; Ashok Reddy; Robert Cowes<br>
+<b>Cc:</b> 'Landmark IT'; 'Bharath Chandra'; spandana.jaggumantri@landmarki=
+t.in; 'Mahesh'; 'Venkata Ramana Reddy'<br>
+<b>Subject:</b> RE: Agenda for review meeting 12/16/2013<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">HI Alan,<o:p></o:p></s=
+pan></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Thanks for making call=
+ on sign-off on the modules.. since it is so important for us get these for=
+ developers to start development..<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">We will review below m=
+inor changes and that you have mentioned with grant today and will have the=
+m updated based on the review comments<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Regards,<o:p></o:p></s=
+pan></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Elduri Hari Pratap<o:p=
+></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<div>
+<div style=3D"border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0in =
+0in 0in">
+<p class=3D"MsoNormal"><b>From:</b> Alan Daniel [<a href=3D"mailto:adaniel@=
+smarttouchinteractive.com">mailto:adaniel@smarttouchinteractive.com</a>]
+<br>
+<b>Sent:</b> Thursday, December 19, 2013 5:04 AM<br>
+<b>To:</b> Hari Pratap Elduri; Grant C. Taylor; Ashok Reddy; Robert Cowes<b=
+r>
+<b>Cc:</b> 'Landmark IT'; Bharath Chandra; <a href=3D"mailto:spandana.jaggu=
+mantri@landmarkit.in">
+spandana.jaggumantri@landmarkit.in</a>; 'Mahesh'; 'Venkata Ramana Reddy'<br=
+>
+<b>Subject:</b> RE: Agenda for review meeting 12/16/2013<o:p></o:p></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Hari,<o:p></o:p></span=
+></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">Contacts, Campaigns, a=
+nd Automation are signed off on as of today, subject to a few minor changes=
+ Grant will communicated.<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">As an example in Conta=
+cts<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l0 level=
+1 lfo2"><![if !supportLists]><span style=3D"font-family:Symbol;color:#1F497=
+D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"font:7.0pt &quot;=
+Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Basic Search s=
+hould show the word &#8220;ANY&#8221; in addition to the current word ALL.&=
+nbsp;
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">As an example in Campa=
+igns<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l0 level=
+1 lfo2"><![if !supportLists]><span style=3D"font-family:Symbol;color:#1F497=
+D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"font:7.0pt &quot;=
+Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">We want to add=
+ the ability to add link actions when &#8220;customizing a campaign&#8221; =
+if links are added.<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l0 level2 lfo2">
+<![if !supportLists]><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#1F497D"><span style=3D"mso-list:Ignore">o<span style=3D"font:7.0pt &quo=
+t;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Add Tag<o:p></=
+o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l0 level2 lfo2">
+<![if !supportLists]><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#1F497D"><span style=3D"mso-list:Ignore">o<span style=3D"font:7.0pt &quo=
+t;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Add Points to =
+Lead Score<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l0 level2 lfo2">
+<![if !supportLists]><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#1F497D"><span style=3D"mso-list:Ignore">o<span style=3D"font:7.0pt &quo=
+t;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Alert User or =
+Team<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">As an example in Marke=
+ting Automation:<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l0 level=
+1 lfo2"><![if !supportLists]><span style=3D"font-family:Symbol;color:#1F497=
+D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"font:7.0pt &quot;=
+Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Add a Trigger =
+to the existing four options (Smart Search, Form, Tag, Lifecycle Change)<o:=
+p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l0 level2 lfo2">
+<![if !supportLists]><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#1F497D"><span style=3D"mso-list:Ignore">o<span style=3D"font:7.0pt &quo=
+t;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">&#8220;Send Ca=
+mpaign&#8221;<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l0 level=
+1 lfo2"><![if !supportLists]><span style=3D"font-family:Symbol;color:#1F497=
+D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"font:7.0pt &quot;=
+Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Add title.&nbs=
+p; Above icon should say &#8220;Workflow Summary&#8221;.&nbsp;&nbsp;&nbsp;
+<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"margin-left:1.0in;text-indent:-.25in=
+;mso-list:l0 level2 lfo2">
+<![if !supportLists]><span style=3D"font-family:&quot;Courier New&quot;;col=
+or:#1F497D"><span style=3D"mso-list:Ignore">o<span style=3D"font:7.0pt &quo=
+t;Times New Roman&quot;">&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Add a right ar=
+row for carosel scroll right if work flow summary has more icons than what =
+fits in one row&#8221;<o:p></o:p></span></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in;mso-list:l0 level=
+1 lfo2"><![if !supportLists]><span style=3D"font-family:Symbol;color:#1F497=
+D"><span style=3D"mso-list:Ignore">&middot;<span style=3D"font:7.0pt &quot;=
+Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span style=3D"color:#1F497D">Change current=
+ Work Flow Summary to &#8220;Work Flow Analytics&#8221;<o:p></o:p></span></=
+p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">There are more changes=
+ from today&#8217;s meeting, but Grant will communicate these directly.<o:p=
+></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D">AD<o:p></o:p></span></=
+p>
+<p class=3D"MsoNormal"><span style=3D"color:#1F497D"><o:p>&nbsp;</o:p></spa=
+n></p>
+<div>
+<div style=3D"border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt 0in =
+0in 0in">
+<p class=3D"MsoNormal"><b><span style=3D"font-size:10.0pt;font-family:&quot=
+;Tahoma&quot;,&quot;sans-serif&quot;">From:</span></b><span style=3D"font-s=
+ize:10.0pt;font-family:&quot;Tahoma&quot;,&quot;sans-serif&quot;"> Hari Pra=
+tap Elduri [<a href=3D"mailto:haripratap.elduri@landmarkit.co.in">mailto:ha=
+ripratap.elduri@landmarkit.co.in</a>]
+<br>
+<b>Sent:</b> Sunday, December 15, 2013 11:15 PM<br>
+<b>To:</b> Grant C. Taylor; Alan Daniel; Ashok Reddy; Robert Cowes<br>
+<b>Cc:</b> 'Landmark IT'; Bharath Chandra; <a href=3D"mailto:spandana.jaggu=
+mantri@landmarkit.in">
+spandana.jaggumantri@landmarkit.in</a>; 'Mahesh'; 'Venkata Ramana Reddy'<br=
+>
+<b>Subject:</b> Agenda for review meeting 12/16/2013<br>
+<b>Importance:</b> High<o:p></o:p></span></p>
+</div>
+</div>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Hi All,<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Please find the Agenda for review meeting<o:p></o:p>=
+</p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in">1.<span style=3D=
+"font-size:7.0pt;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;"=
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Sign-off for development for the modules &#8211; Contacts, Campaigns=
+, Automation
+<o:p></o:p></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in">2.<span style=3D=
+"font-size:7.0pt;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;"=
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Review Account admin / ST Admin &#8211; HTML&#8217;s based on Moqups=
+<o:p></o:p></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in">3.<span style=3D=
+"font-size:7.0pt;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;"=
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Interface documents &#8211; Review for account admin &amp; ST Admin<=
+o:p></o:p></p>
+<p class=3D"MsoListParagraph" style=3D"text-indent:-.25in">4.<span style=3D=
+"font-size:7.0pt;font-family:&quot;Times New Roman&quot;,&quot;serif&quot;"=
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span>Review Reports Moqups<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Regards,<o:p></o:p></p>
+<p class=3D"MsoNormal">Elduri Hari Pratap<o:p></o:p></p>
+<p class=3D"MsoListParagraph"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
+
+--_000_63429AFDAE6DFA46857D348CAB6EAD591E7A96DAGN07CE6exg6exgh_--

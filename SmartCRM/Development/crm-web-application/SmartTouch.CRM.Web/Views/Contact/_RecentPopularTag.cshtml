@@ -1,0 +1,281 @@
+﻿@{
+    bool TagPopup = ViewBag.TagPopup != null && ViewBag.TagPopup ? true : false;
+
+}
+
+<div class="@(TagPopup ? "st-recent-popular" : "")">
+
+    <div class="@(TagPopup ? "filters-tags st-tags" : "filters")">
+        <a href="javascript:void(0)" class="popularClicked">[|Popular|]</a>
+        <a href="javascript:void(0)" class="recentClicked">[|Recent|]</a>
+    </div>
+
+    <div class="@(TagPopup ? "tags-search cu-popup" : "tags-search")">
+        <!-- ko if:PopularTags() != null && PopularTags().length > 0-->
+        <ul class="search-results hide" data-bind="foreach:PopularTags" id="poplartags">
+            <li>
+                <label class="checkbox" data-bind="attr:{for:'populartag'+($index() + 1)}">
+                    <input type="checkbox" value="" data-toggle="checkbox" @*onchange="TagSelection(this)"*@ class="chk" onchange="TagSelection(this)" data-bind="checked:IsSelected, attr:{id:'populartag'+($index() + 1),tagid:TagID,tagname:TagName}">
+                    <span data-bind="text:TagName"></span>
+                </label>
+
+            </li>
+        </ul>
+        <!--/ko-->
+        <!-- ko if:PopularTags() != null && PopularTags().length == 0-->
+        <ul class="search-results hide" id="populartags_norecords">
+            <li class="no-records">
+                <div class="icon st-icon-tag"></div>
+                <div>[|No PopularTags|]</div>
+            </li>
+        </ul>
+        <!--/ko-->
+        <!-- ko if:RecentTags() != null &&  RecentTags().length > 0-->
+
+        <ul class="search-results hide" data-bind="foreach:RecentTags" id="recenttags">
+            <li>
+                <label class="checkbox" data-bind="attr:{for:'recenttag'+($index() + 1)}">
+                    <input type="checkbox" value="" data-toggle="checkbox" data-tagid="TagID()" class="tagCheckbox" onchange="TagSelection(this)" data-bind="checked:IsSelected,attr:{id:'recenttag'+($index() + 1),tagid:TagID,tagname:TagName}">
+                    <span data-bind="text:TagName"></span>
+                </label>
+            </li>
+        </ul>
+        <!--/ko-->
+        <!-- ko if:RecentTags() != null && RecentTags().length == 0-->
+        <ul class="search-results hide" id="recenttags_norecords">
+            <li class="no-records">
+                <div class="icon st-icon-tag"></div>
+                <div>[|No RecentTags|]</div>
+            </li>
+        </ul>
+        <!--/ko-->
+    </div>
+</div>
+<script>
+
+    var BASE_URL = '@Url.Content("~/Tag/")';
+    var TagPopup = '@TagPopup' == 'True' ? true : false;
+    var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+
+    $('.popularClicked').click(function () {
+        if (!$(this).hasClass('selected')) {
+
+            $(this).parent('.filters').find('a.selected').removeClass('selected');
+            $('ul#poplartags, ul#populartags_norecords').removeClass('hide').addClass('show');
+            $('ul#recenttags, ul#recenttags_norecords').removeClass('show').addClass('hide');
+            $('.recentClicked').removeClass('selected');
+            $(this).addClass('selected');
+        }
+        else {
+            $(this).removeClass('selected');
+
+            $('ul#poplartags, ul#populartags_norecords').removeClass('show').addClass('hide');
+
+        }
+
+    });
+
+
+    $('.recentClicked').click(function () {
+
+        if (!$(this).hasClass('selected')) {
+
+
+            $(this).parent('.filters').find('a.selected').removeClass('selected');
+            $('ul#poplartags, ul#populartags_norecords').removeClass('show').addClass('hide');
+            $('ul#recenttags, ul#recenttags_norecords').removeClass('hide').addClass('show');
+
+            $('.popularClicked').removeClass('selected');
+            $(this).addClass('selected');
+
+        } else {
+            $(this).removeClass('selected');
+            $('ul#recenttags, ul#recenttags_norecords').removeClass('show').addClass('hide');
+        }
+    });
+
+    var myFunction
+
+    var tagList; var tagLabelId; var tagids = "";
+    var RecentPopular = function (viewModel, id, type) {
+        var authToken = readCookie("accessToken");
+        if (authToken === undefined)
+            authToken = accessToken;
+
+        createCookie("tagLabelId", id, 1);
+
+        if (type == 'C') {
+
+            $(".st-recent-popular").css("margin-left", "0px");
+
+            tagList = viewModel.ContactTags();
+
+            $.each(viewModel.ContactTags(), function (index, tagItem) {
+                if (index == viewModel.ContactTags().length - 1) {
+                    tagids += tagItem.TagID();
+                }
+                else {
+                    tagids += tagItem.TagID() + ",";
+                }
+            });
+
+
+            $.ajax({
+                url: WEBSERVICE_URL + '/RecentPopularTags',
+                type: 'get',
+                dataType: 'json',
+                data: { 'tagList': tagids },
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                }
+            })
+            .done(function (data) {
+                viewModel.PopularTags(data.PopularTags);
+                viewModel.RecentTags(data.RecentTags);
+                appendCheckbox();
+            }).fail(function (err) {
+
+            });
+
+            tagLabelId = id;
+
+            myFunction = function (tagname, tagid) {
+
+              
+
+                if (tagname != null) {
+                    if (viewModel.ContactTags().length == 0) {
+                        $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                    }
+                    else {
+                        var tagIndex;
+                        var filter = ko.utils.arrayFilter(viewModel.ContactTags(), function (Tag, index) {
+
+                            var tagName; var tagID;
+
+                            tagName = Tag.TagName();
+                            tagID = Tag.TagID();
+
+                            if (tagName === tagname) {
+                                tagIndex = index;
+                            }
+                            return tagID === tagid;
+                        });
+
+                        if (filter.length == 0) {
+                            $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                        }
+                        else {
+                            $("#" + tagLabelId).removeTag(tagname, tagid);
+
+                            if (TagPopup == 'True') {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            tagList = viewModel.TagsList();
+
+            $.each(viewModel.TagsList(), function (index, tagItem) {
+                if (index == viewModel.TagsList().length - 1) {
+                    if (tagItem.TagID != undefined)
+                        tagids += tagItem.TagID;
+                    else
+                        tagids += tagItem.Id();
+                }
+                else {
+                    if (tagItem.TagID != undefined)
+                        tagids += tagItem.TagID + ",";
+                    else
+                        tagids += tagItem.Id() + ",";
+                }
+            });
+
+
+            $.ajax({
+                url: WEBSERVICE_URL + '/RecentPopularTags',
+                type: 'get',
+                dataType: 'json',
+                data: { 'tagList': tagids },
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                }
+            })
+            .done(function (data) {
+                viewModel.PopularTags(data.PopularTags);
+                viewModel.RecentTags(data.RecentTags);
+                appendCheckbox();
+            }).fail(function (err) {
+
+            });
+
+            tagLabelId = readCookie("tagLabelId");
+
+            myFunction = function (tagname, tagid) {
+                tagLabelId = readCookie("tagLabelId");
+                if (tagname != null) {
+                    if (viewModel.TagsList().length == 0) {
+                        $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                    }
+                    else {
+                        var tagIndex;
+                        var filter = ko.utils.arrayFilter(viewModel.TagsList(), function (Tag, index) {
+
+                            var tagName; var tagID;
+
+                            if (typeof Tag.TagName == 'function') {
+                                tagName = Tag.TagName();
+                                tagID = Tag.Id();
+                            }
+                            else {
+                                tagName = Tag.TagName;
+                                tagID = Tag.TagID;
+                            }
+
+                            if (tagName === tagname) {
+                                tagIndex = index;
+                            }
+                            return tagName === tagname;
+                        });
+                        if (filter.length == 0) {
+                            $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                        }
+                        else {
+                            $("#" + tagLabelId).removeTag(tagname);
+
+                            if (TagPopup == 'True') {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+    }
+
+    function TagSelection(value, event) {
+
+        var tagname = $(value).attr("tagname");
+        var tagid = $(value).attr("tagid");
+        myFunction(tagname, tagid);
+    }
+
+</script>

@@ -1,0 +1,147 @@
+﻿@using System.Threading
+@using System.Linq;
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    appModules.Add(AppModules.Contacts);
+    appModules.Add(AppModules.ContactTours);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Opportunity);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+
+
+
+<div class="page-title">
+    Dashboard  <span id="tourwelcome"></span>
+    <div class="setting pull-right" id="apptourdashboardsettings">
+        <a href="javascript:void(0)" class="btn drguploderbtn"><i class="icon st-icon-settings-2 black"></i> [|Settings|]</a>
+        <div class="setting-st da-header-specific ptl dash-settings" style="display:none;">
+            <div class="clearfix">
+                @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                    <div class="form-group">
+                        <label class="bold control-label">
+                            [|Top Row|]
+                            <span class="pull-right display-inline">
+                                <a href="javascript:void(0)" class="closesettings black" data-original-title="" title="">
+                                    <i class="icon st-icon-delete"></i>
+                                </a>
+                            </span>
+                        </label>
+
+
+                        <label data-bind="attr: {'class': Settings()[0].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                            <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[0].Value,value:'true'"> [|New Contacts|]
+                        </label>
+                        <label data-bind="attr: {'class': Settings()[1].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                            <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[1].Value,value:'true'"> [|Untouched Contacts|]
+                        </label>
+
+                        @if (Permissions.Where(s => s.Module == AppModules.ContactTours).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                            
+                            <label data-bind="attr: {'class': Settings()[2].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[2].Value,value:'true'"> [|Tours|]
+                            </label>
+                        }
+
+                    </div>
+                }
+            </div>
+            <div class="clearfix">
+                @if (Permissions.Where(s => s.Module == AppModules.Contacts || s.Module == AppModules.Opportunity).Select(s => s.HasPermission).Any())
+                {
+                    <div class="form-group">
+                        <label class="bold control-label">[|Middle Row|]</label>
+                        @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                            <label data-bind="attr: {'class': Settings()[3].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[3].Value,value:'true'">[|Top 5 Lead Sources|]
+                            </label>
+
+                            if (Permissions.Where(s => s.Module == AppModules.ContactTours).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                                <label data-bind="attr: {'class': Settings()[4].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                                    <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[4].Value,value:'true'">[|Top 5 Tour Sources|]
+                                </label>
+                            }
+                        }
+
+                      
+
+                        @if (Permissions.Where(s => s.Module == AppModules.Opportunity).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                            <label data-bind="attr: {'class': Settings()[5].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[5].Value,value:'true'">[|Opportunity Pipeline|]
+                            </label>
+
+                        }
+                    </div>
+                }
+            </div>
+            <div class="clearfix">
+                @if (Permissions.Where(s => s.Module == AppModules.Contacts || s.Module == AppModules.Campaigns).Select(s => s.HasPermission).Any())
+                {
+                    <div class="form-group">
+                        <label class="bold control-label">[|Bottom Row|]</label>
+                        @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                            <label data-bind="attr: {'class': Settings()[6].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[6].Value,value:'true'">[|Hot List|]
+                            </label>
+                        }
+
+                        @if (Permissions.Where(s => s.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                            <label data-bind="attr: {'class': Settings()[7].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[7].Value,value:'true'">[|Campaign List|]
+                            </label>
+                        }
+
+                        <label data-bind="attr: {'class': Settings()[10].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                            <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[10].Value,value:'true'">[|My Communications|]
+                        </label>
+
+                    </div>
+                }
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    @if (Permissions.Where(s => s.Module == AppModules.Contacts || s.Module == AppModules.ContactActions).Select(s => s.HasPermission).Any())
+                    {
+                        <label class="bold control-label">[|Calendar & Actions|]</label>
+                    }
+                    else
+                    {
+                        <label class="bold control-label">[|Calendar|]</label>
+                    }
+                    <label data-bind="attr: {'class': Settings()[8].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                        <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[8].Value,value:'true'">[|My Calendar|]
+                    </label>
+                    @if (Permissions.Where(a => a.Module == AppModules.Contacts).Select(p => p.HasPermission).SingleOrDefault())
+                    {
+                        if (Permissions.Where(a => a.Module == AppModules.ContactActions).Select(p => p.HasPermission).FirstOrDefault())
+                        {
+                            <label data-bind="attr: {'class': Settings()[9].Value ?'checkbox checked mrm':'checkbox mrm' }">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:Settings()[9].Value,value:'true'">[|My Actions|]
+                            </label>
+                        }
+                    }
+                  
+                </div>
+            </div>
+            <div>
+                <a class="btn btn-lg btn-primary" data-bind="click:saveUserSettings">[|Save|]</a>
+            </div>
+            <br />
+        </div>
+    </div>
+</div>

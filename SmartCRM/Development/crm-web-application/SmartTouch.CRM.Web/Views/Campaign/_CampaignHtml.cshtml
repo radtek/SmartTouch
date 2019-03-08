@@ -1,0 +1,46 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model CampaignViewModel
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style type="text/css">
+        .camp-sub {
+            width: 100%;
+            min-height: 16.428571429px;
+            padding: 10px 23px;
+            background-color: #dfdfdf;
+            max-width: 645px;
+            margin: 0px auto;
+        }
+        .overlay {
+            pointer-events: none;
+        }
+        .overlay:before {
+                content: '';
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                top: 0px;
+                background-color: rgba(0,0,0,0);
+                z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div id="campaigntest" class="overlay">
+        <div class="modal-header">
+            <div class="camp-sub">
+                <p class="modal-title"><span>@Model.Subject</span></><span> [|(Read Only)|]</span></p>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="camp-contx">
+                @Html.Raw(Model.HTMLContent)
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+@{
+    var controller = ViewData["controller"].ToString();
+
+    var leftMenu = (MenuCategory)ViewData["leftMenuCategory"];
+
+    var model = (MenuItemViewModel)ViewData["viewmodel"];
+
+    <div id="leftMenu">
+        <ul class="nav">
+            @foreach (var menu in model.LeftMenuItems)
+            {
+                <li class="@(controller.Equals(@menu.Controller) ? "active" : "")" id="@(@menu.MenuId != 0 ? "applicationtour"+@menu.MenuId : "")">
+                    @Html.ActionLink(@menu.Title, @menu.Action, @menu.Controller, null, new { @class = @menu.CssClass, data_placement = "right", title = @menu.Title })
+                    <span class="st-left-arrow"></span>
+                </li>
+            }
+        </ul>
+    </div>
+}

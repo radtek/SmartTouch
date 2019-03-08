@@ -1,0 +1,164 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model NoteViewModel
+
+@*<script src="~/Scripts/ViewModels/AddNoteViewModel.js"></script>*@
+
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+}
+<div id="Note">
+    <div id="@(Model.NoteId > 0 ? "editNote" : isModal ? "addNoteModel" : "addNote")" class="@(isModal ? "" : "")">
+        <div class="@(Model.NoteId > 0 ? "" : "")">
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><span class="icon st-icon-book-lines display-inline"></span> @(Model.NoteId > 0 ? "Edit Note" : "Add Note")</h4>
+                </div>
+            }
+            else
+            {
+                <div class="drop-heading">
+                    <span class="icon st-icon-book-lines display-inline"></span> <h4 class="panel-title display-inline plm">[|Add Note|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "")">
+                <div class="dp-topnav-inner-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">[|Note|] <span class="required">*</span></label>
+                        <textarea class="form-control" rows="3" data-bind="value:NoteDetails,hasFocus:!(NoteDetails), valueUpdate: 'afterkeydown'" maxlength="4000"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">[|Note Category|] <span class="required">*</span></label>
+                        <input title="NoteCategory" data-bind="kendoDropDownList: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data: NoteCategories, value: NoteCategory,optionLabel: '[|Select|]'}, valueUpdate: 'afterkeydown'" />
+                        <span class="validationMessage" data-bind="validationMessage:notecategoryValidation"></span>
+                    </div>
+                    <div class="form-group" data-bind="ifnot:SelectAll">
+                        <label class="control-label">[|People & Companies|] <span class="required">*</span></label>
+                        <div class="people-tags">
+                            <input id="@(Model.NoteId > 0 ? "editNoteContacts" : isModal ? "addNoteContacts" : "noteContacts")"
+                                   class="display-inline form-control tagsinput-info-round" data-bind="valueUpdate: 'afterkeydown'" />
+                            @*<input class="display-inline form-control tagsinput-info-round" data-bind="value:Test" />*@
+                            <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                        </div>
+                    </div>
+                    <div class="form-group" data-bind="if: SelectAll">
+                        <label class="control-label">[|People & Companies|]<span class="required">  ( ALL )</span></label>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">[|Tags|]</label>
+                        <div>
+                            <input id="@(Model.NoteId > 0 ? "editTxtnoteTags" : isModal ? "addTxtnoteTags" : "txtnoteTags")" class="form-control" />
+                        </div>
+                        <div>
+                            @{
+                                Html.RenderPartial("~/Views/Contact/_RecentPopularTag.cshtml");
+                            }
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group display-inline">
+
+                            <label data-bind="attr: {'class': AddToContactSummary() ? 'checkbox  checked':'checkbox' } ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:AddToContactSummary" /> &nbsp;[|Add to Contact Summary|]
+                            </label>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                <div class="pull-left">
+                    @*@if (Model.NoteId > 0)
+                        {
+                            <a class="btn btn-lg btn-primary" id="saveBtn" data-bind="click:updateNote" aria-hidden="@(Model.NoteId > 0 ? "true" : "")"><span>Update</span></a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-lg btn-primary" data-bind="click:insertNote" aria-hidden="@(Model.NoteId > 0 ? "true" : "")"
+                               data-dismiss="@(Model.NoteId > 0 ? "modal" : "")"><span>Save</span></a>
+                        }
+                        <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                           data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">Cancel</a>*@
+                    <a id="btnSave" class="btn btn-lg btn-primary" data-bind="@(Model.NoteId > 0 ? "click:updateNote" : "click:insertNote")"><span>[|Save|]</span></a>
+                    <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                       data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#btnSave').on("click",function(){
+        $(this).attr("disabled", "disabled");
+        setTimeout('$("a").removeAttr("disabled")', setTimeOutTimer);
+    });
+
+    $(document).ready(function () {
+        var tags = [];
+        var contactSuggestions = [];
+        var TagsList = [];
+
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var Note = @(Html.Raw(Json.Encode(Model)));
+        var noteContactTagId;
+        var noteTagId;
+        var viewModel2;
+
+        var fromContactDetails = typeof selfDetails != "undefined" ? true :false;
+        var fromOpportunityDetails = typeof selfOpportunity != "undefined" ? true : false;
+
+        var notselectall;
+        if(fromContactDetails == true)
+            notselectall = true;
+        else if(fromOpportunityDetails == true)
+            notselectall = true;
+        else
+            notselectall = readCookie("selectallsearchstring") == "" ? true : false ;
+
+        if(Note.NoteId == 0)
+        {
+            var popup = '@(isModal)';
+            if(popup=="True")
+            {
+                noteContactTagId = "addNoteContacts";
+                noteTagId = "addTxtnoteTags";
+                viewModel2 = new noteViewModel(Note,BASE_URL,notselectall);
+                ko.applyBindings(viewModel2,document.getElementById("addNoteModel"));
+            }
+            else
+            {
+                noteContactTagId = "noteContacts";
+                noteTagId ="txtnoteTags";
+                viewModel2 = new noteViewModel(Note,BASE_URL,notselectall);
+                ko.applyBindings(viewModel2,document.getElementById("addNote"));
+            }
+        }
+        else
+        {
+            noteContactTagId = "editNoteContacts";
+            noteTagId = "editTxtnoteTags";
+            viewModel2 = new noteViewModel(Note,BASE_URL,notselectall);
+            ko.applyBindings(viewModel2,document.getElementById("editNote"));
+        }
+
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel2, accountId,tagCreatedBy);
+        tagify.Tagify(noteTagId);
+        tagify.TagifyContacts(noteContactTagId);
+
+        var recentJs = new RecentPopular(viewModel2,noteTagId);
+    });
+    appendCheckbox();
+    $(':checkbox').on('change', function() {
+        $(this).triggerHandler('click');
+    });
+</script>
+

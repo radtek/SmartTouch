@@ -1,0 +1,17 @@
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://localhost:56258/Note/InsertNote",
+  "method": "POST",
+  "headers": {
+    "authorization": "Bearer 1HrstHob_1A44C41BQDiDzHvAFVrTWu1V7NSM-9BEgdjnMqvJ4iYIFKr1B3Va9wqepl18YwTWA3e8THsDRy0b22m6dLo8n0r4T6R-9PMbXn1cBln-slTZPpZyWvaeP-UpnHHPxAIiD-dw-onzbiJyhqq42NEVB0OZZeFABnxK2NJT0AfTwsvJciXufDt6d8rchNezkwnNS6OMdZob_S6nMFr6crwIhaQf4VVmgPy67_UB35jxtk7qrRMxkGSVaF11NTa6eTzU0Cd5bFual-QGe-IBvcMt8CWa-JfYpwf5EoJyxCa6yyVwvmIBYHOaVcJWK_h0E_VxsXTdb_wNYzvAMvPI1rI4AaaZvntsqUVaM7OG0jSWnATZZX_EzjAv6FmyiFlwaGMbtaR14SQQWFJyXtTzJC-sd5g-15f50YrBo5YOAtcip35HD5VXG_Axa3amCHs1gdED8B1q6B6LI-rSQ",
+    "content-type": "application/json; charset=utf-8",
+    "cache-control": "no-cache",
+    "postman-token": "bd510e08-f6ff-a296-0043-dfaf66122a9c"
+  },
+  "data": "\t\t\t   {\r\n                    \"NoteDetails\" : \"Sample note details\",\r\n\t\t            \"AccountId\" : 4218,\r\n\t\t            \"AddToContactSummary\" : 1,\r\n\t\t            \"NoteCategory\" : 22921,\r\n\t\t            \"Contacts\" : [{ \"Id\" : 1891136 }, { \"Id\" : 1891135 }],\r\n\t\t            \"TagsList\" : [{\"TagID\":0,\"AccountID\":4218,\"TagName\":\"ActiontestTag\"},{\"TagID\":0,\"TagName\":\"ActiontestTag-1\",\"AccountID\":4218}],\r\n\t\t            \"CreatedBy\":6889,\r\n\t\t            \"CreatedOn\":\"2017-08-08T15:03:42.905Z\",\r\n\t\t            \"LastUpdatedOn\" : null,\t\r\n\t\t            \"LastUpdatedBy\" : null\r\n                }"
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});

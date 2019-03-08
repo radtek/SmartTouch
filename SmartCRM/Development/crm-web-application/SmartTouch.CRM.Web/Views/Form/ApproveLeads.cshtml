@@ -1,0 +1,181 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model IEnumerable<SmartTouch.CRM.Domain.ValueObjects.ApproveLeadsQueue>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;    
+}
+<script src="~/Scripts/ViewModels/FormApproveLeadsViewModel.js"></script>
+<div class="page-title">[|Suspect Submissions|]</div>
+<div class="imagedomains-grid" id="leadsApproveList">
+    @(Html.Kendo().Grid<SmartTouch.CRM.Domain.ValueObjects.ApproveLeadsQueue>()
+        .Name("approveQueue")
+     .HtmlAttributes(new { @class = "k-grid-content" })
+     .Pageable(pageable => pageable
+            .Refresh(false)
+           .PageSizes(true)
+                .ButtonCount(10).Messages(m => m
+                    .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Approve Leads Queue(s)|]")
+                    .Empty("[|No suspect submissions queue to display|]")
+                    .ItemsPerPage("[|Suspect Submissions(s) per page|]"))).Excel(e => e.AllPages(true).FileName("Suspect_Submissions_List.xlsx"))
+    .Columns(columns =>
+    {
+        columns.Bound(b => b.LeadSourceType).Title("[|Source Type|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(b => b.FirstName).Title("[|First Name|]").HeaderHtmlAttributes(new { @class = "col-10" });
+        columns.Bound(b => b.LastName).Title("[|Last Name|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(b => b.Email).Title("[|Email|]").HeaderHtmlAttributes(new { @class = "col-10" });
+        //columns.Bound(b => b.MobilePhone).Title("[|Mobile Phone|]").HeaderHtmlAttributes(new { @class = "col-10" });
+        columns.Bound(b => b.Remarks).Title("[|Remarks|]").HeaderHtmlAttributes(new { @class = "col-10" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:90px;" });
+
+    }).ClientRowTemplate("<tr class='odd'><td title='#:LeadSourceType#'>#:LeadSourceType#</td>"+
+                                           "<td title='#:FirstName#'>#:FirstName# </td>"+
+                                           "<td title='#:LastName#'>#:LastName#</td>"+
+                                           "<td title='#:Email#'>#:Email#</td>"+
+                                           "<td title='#:Remarks#'>#:Remarks#</td>"+
+                                           "<td id='options' class='grid-row-controls'>"+
+                                                "<a href='javascript:void(0)' onclick='abc(\"#= FirstName #\", \"#= LastName #\", \"#= Email #\", \"#= SubmittedFormDataID #\", \"#= LeadSourceType #\")' title='Accept'><i class='icon st-icon-checkmark'></i></a>" +
+                                           "</td>"+
+                                                "</tr>")
+                            .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                     .DataSource(dataSource => dataSource
+                                     .Ajax()
+                                      .PageSize(ItemsPerPage)
+                                              .Read(read => read.Action("ApproveLeadsList", "Form", true))
+                                    )
+    )
+</div>
+
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @*<h4 class="modal-title" id="myModalLabel">Lead Source Update Alert!</h4>*@
+            </div>
+            <div class="modal-body">
+                <div class="dp-topnav-inner-body">
+                    <div class="k-grid k-widget k-secondary" id="grid1">
+                        <div>
+                            <table>
+                                <thead class="k-grid-header">
+                                    <tr>
+                                        <th data-bind="text: 'Field'">
+                                        </th>
+                                        <th data-bind="text: 'Submitted Value'">
+                                        </th>
+                                        <th data-bind="text: 'New Value'">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>First Name</td>
+                                        <td><span data-bind="text:FirstName"></span></td>
+                                        <td><input type="text" class="form-control" data-bind="value:NewFirstName" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Last Name</td>
+                                        <td><span data-bind="text:LastName"></span></td>
+                                        <td><input type="text" class="form-control" data-bind="value:NewLastName" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td><span data-bind="text:Email"></span></td>
+                                        <td><input type="text" class="form-control" data-bind="value:NewEmail" /></td>
+                                    </tr>
+                                    @*<tr>
+                                        <td>Mobile Phone</td>
+                                        <td><span data-bind="text:MobilePhone"></span></td>
+                                        <td><input type="text" class="form-control" data-bind="value:NewMobilePhone" /></td>
+                                    </tr>*@
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-lg btn-primary" data-bind="click: function(d, e){ updateFormData(d) }">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+    createCookie("approveleadpagenumber", 1, 1); createCookie("approveleadpagesize", '@(ItemsPerPage)', 1);
+
+    function updateSubmission(submittedFormDataId, firstName, lastName, email, mobilephone) {
+        console.log("func");
+        formApproveModel.FirstName(firstName);
+        formApproveModel.LastName(lastName);
+        formApproveModel.Email(email);
+        formApproveModel.MobilePhone(mobilephone);
+        formApproveModel.SubmittedFormDataID(submittedFormDataId);
+        $("#updateModal").modal({ show: true, keyboard: false, backdrop: 'static' });
+    };
+
+    function abc(f, l, e, s, le) {
+        formApproveModel.FirstName(f);
+        formApproveModel.LastName(l); 
+        formApproveModel.Email(e);
+        formApproveModel.LeadSourceType(le);
+        formApproveModel.SubmittedFormDataID(s);
+
+        formApproveModel.NewFirstName(f);
+        formApproveModel.NewLastName(l);
+        formApproveModel.NewEmail(e);
+        //formApproveModel.NewMobilePhone(mp);
+        $("#updateModal").modal({ show: true, keyboard: false, backdrop: 'static' });
+        return "";
+    };
+
+    function rejectSubmission(submittedFormDataId) {
+    
+    };
+
+    function onDataBinding(arg) {
+
+    };
+
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+
+    $(document).ready(function () {
+
+        var BASE_URL = '@Url.Content("~/Form/")';
+        var approveLeads = @(Html.Raw(Json.Encode(Model)));
+
+        var grid = $("#approveQueue").data("kendoGrid");
+        var pno = readCookie("approveleadpagenumber");
+        var psize = readCookie("approveleadpagesize");
+
+        //grid.dataSource.query({ page: pno, pageSize: psize });
+
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+        var viewModel = new formApproveLead(BASE_URL, approveLeads);
+        ko.applyBindings(viewModel);
+    });
+</script>
+
+

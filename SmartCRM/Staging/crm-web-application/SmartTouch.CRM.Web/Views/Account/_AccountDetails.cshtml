@@ -1,0 +1,343 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model AccountViewModel
+@{
+    var toggleAccountStatus = (bool)ViewData["accountStatus"];
+    var accountDomain = ViewData["Domain"];
+
+}
+
+<div>
+    <div class="form-horizontal-large">
+        <div class="clearfix">
+            <div class="form-group">
+                <div class="account-img-upload mbl clearfix">
+                    <figure><img id="contactimage" data-bind="attr:{src:Image().ImageContent?Image().ImageContent:''}" /> </figure>
+                    <div class="uploadcontrol pln">
+                        <div class="display-inline mtf">
+                            <label class="control-label">[|Upload Your Logo|]</label>
+                            <input type="file" name="files" id="images" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group subscription">
+                    <label class="control-label">[|Subscription|] <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'SubscriptionName',dataValueField:'SubscriptionID', data:Subscriptions,enable: AccountID() == 0,value: SubscriptionId,optionLabel:'[|Select..|]' }" tabindex="3" />
+                    <span class="validationMessage" data-bind="validationMessage:SubscriptionValidation"></span>
+                </div>
+            </div>
+
+            <div class="account-form-group">
+
+                <div class="form-group">
+                    <label class="control-label">[|Account Name|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|Account Name|]" class="form-control" data-bind="value:AccountName, hasFocus:!(AccountName)" maxlength="75" tabindex="1">
+                </div>
+
+                <div class="form-group domain-url">
+                    <label class="control-label">[|Domain URL|] <span class="required">*</span></label>
+
+
+                    <div class="input-group domain">
+                        <input type="text" placeholder="[|Domain URL|]" class="form-control" data-bind="value:DomainURL,enable:IsEnabled" maxlength="100" tabindex="2">
+                        <span class="input-group-addon">@accountDomain</span>
+                        @*<span class="tag-loader mrl" id="add-tag-loader" />*@
+                    </div>
+                    <label class="control-label" data-bind="text:DomainAvailability"></label>
+                </div>
+
+                @if (toggleAccountStatus)
+                {
+                    <div class="form-group status">
+                        <label class="control-label">[|Status|] <span class="required">*</span></label>
+                        <input data-bind="kendoDropDownList: {dataTextField:'Type',dataValueField:'Id', data:AccountStatus, value: Status,select: StatusSelect,enable:IsEnabled}" tabindex="4" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label">[|User Limit|]</label>
+                        <input type="number" placeholder="[|10|]" class="form-control" data-bind="value:UserLimit" maxlength="100" tabindex="1" min="1" max="9999" onkeypress="return Onlynumbers()">
+                    </div>
+                    <!--ko if:(Status() == 5 || Status() == 3)-->
+                    <div class="form-group">
+                        <label class="control-label">[|Status Message|] <span class="required">*</span></label>
+                        <textarea rows="2" class="form-control" data-bind="value:StatusMessage,valueUpdate:'afterkeydown'"></textarea>
+                    </div>
+                    <!--/ko-->
+
+                    <div class="form-group" data-bind="visible: AccountID() > 0">
+                        <label class="control-label">[|Exclude Roles|]</label>
+                        <select data-bind="kendoMultiSelect: {dataTextField:'RoleName',dataValueField:'Id', data: Roles, value: SelectedRoles,optionLabel: '[|Select Roles...|]' }" class="multiselectwidth"></select>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="clearfix">
+
+        </div>
+
+        <div class="formsubheading">
+            [|Primary Contact Information|]
+            <div class="pull-right">
+                <a href="#PrimaryContactInformation" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+        <div class="in" id="PrimaryContactInformation">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|First Name|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|First Name|]" class="form-control" data-bind="value:FirstName ,valueUpdate: 'afterkeydown'" maxlength="75" tabindex="5">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Last Name|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|Last Name|]" class="form-control" data-bind="value:LastName, valueUpdate: 'afterkeydown'" maxlength="75" tabindex="6">
+                </div>
+            </div>
+
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Company|]</label>
+                    <input type="text" id="txtCompanyName" placeholder="[|Company|]" class="form-control" data-bind="value:Company" maxlength="75" tabindex="7">
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Email|] <span class="required">*</span></label>
+                    <input type="email" placeholder="someone@example.com" class="form-control" data-bind="value: PrimaryEmail,attr:{id:'Email_'+ 0},event:{blur:MailGunValidater.bind($data,0)},valueUpdate: 'afterkeydown'" maxlength="256" tabindex="8" />
+                    <div id="emailStatus_0"></div>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">Phone <span class="required">*</span></label>
+                    <div data-bind="foreach: Phones">
+                        <div class="form-group input-group cu-input-group mbs">
+                            <input type="text" placeholder="xxx xxx xxxx" class="form-control cu-smmd" data-bind="value: PhoneNumber" maxlength="16" tabindex="9" />
+                            <input class="input-plus-select" data-bind="kendoDropDownList: {data: $parent.PhoneTypes, value: PhoneType}" tabindex="10" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("~/Views/Shared/_AddressPartial.cshtml")
+
+
+
+        <div class="formsubheading">
+            [|Company Privacy Policy|]
+            <div class="pull-right">
+                <a href="#CompanyPrivacyPolicy" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+        <div class="in" id="CompanyPrivacyPolicy">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|URL|]</label>
+                    <input type="text" placeholder="http://example.com" class="form-control" data-bind="value:PrivacyPolicy" maxlength="75" tabindex="19">
+                    @*<textarea cols="5" rows="10" data-bind="kendoEditor: PrivacyPolicy"></textarea>*@
+
+                </div>
+            </div>
+        </div>
+        <div class="formsubheading">
+            [|Social|]
+            <div class="pull-right">
+                <a href="#Social" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+        <div class="in" id="Social">
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Web & Social|]</label>
+                    <div data-bind="foreach: SocialMediaUrls">
+                        <div class="form-group mbs">
+                            <div class="input-group">
+                                <input type="text" placeholder="http://www.facebook.com/john.doe" class="form-control cu-medium" data-bind="value: Url" maxlength="2083" tabindex="20" />
+                                <span class="input-group-btn">
+                                    <input class="input-plus-select" data-bind="kendoDropDownList: {data: $parent.SocialMediaUrlTypes, value: MediaType}" tabindex="21" />
+                                    <span data-bind="if:$index() != 0"><button type="button" class="btn btn-default email-trash" data-bind="click: $parent.removeSocialMediaUrl"><span class="fui-cross"></span></button></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mtm"><a href="javascript:void(0)" data-bind="click: addSocialMediaUrl" tabindex="22"><i class="icon st-icon-add mrs"></i>[|Add Web & Social links|]</a></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="formsubheading">
+            Integrations
+            <div class="pull-right">
+                <a href="#Integrations" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+        <div class="in" id="Integrations">
+            <div class="legend">
+                [|Google Drive Settings|]
+            </div>
+            <div id="googledrive-acc">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="control-label">[|Google Drive Client Id|]</label>
+                        <input type="text" id="txtCompanyName" placeholder="[|Google Drive Client Id|]" class="form-control" data-bind="value: GoogleDriveClientID" maxlength="75" tabindex="23">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">[|Google Drive API Key|]</label>
+                        <input type="text" id="txtCompanyName" placeholder="[|Google Drive API Key|]" class="form-control" data-bind="value: GoogleDriveAPIKey" maxlength="75" tabindex="24">
+                    </div>
+                </div>
+            </div>
+            <div class="legend">
+                [|Dropbox Settings|]
+            </div>
+            <div id="dropbox-acc">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="control-label">[|Dropbox App Key|]</label>
+                        <input type="text" id="txtCompanyName" placeholder="[|Dropbox App Key|]" class="form-control" data-bind="value: DropboxAppKey" maxlength="75" tabindex="25">
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                [|Facebook APP Settings|]
+            </div>
+            <div id="fbappsettings">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="control-label">[|Facebook APP ID|]</label>
+                        <input type="text" placeholder="[|Facebook APP ID|]" class="form-control" data-bind="value: FacebookAPPID" tabindex="26">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">[|Facebook APP Secret|]</label>
+                        <input type="text" placeholder="[|Facebook APP Secret|]" class="form-control" data-bind="value: FacebookAPPSecret" tabindex="27">
+                    </div>
+                </div>
+            </div>
+            <div class="legend">
+                [|Twitter App Settings|]
+            </div>
+            <div id="twitterappsettings">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="control-label">[|Twitter API Key|]</label>
+                        <input type="text" placeholder="[|Twitter API Key|]" class="form-control" data-bind="value: TwitterAPIKey" tabindex="28">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">[|Twitter API Secret|]</label>
+                        <input type="text" placeholder="[|Twitter API Secret|]" class="form-control" data-bind="value: TwitterAPISecret" tabindex="29">
+                    </div>
+                </div>
+            </div>
+            <div class="legend">
+                [|Litmus&#x00AE; Settings|]
+            </div>
+            <div id="dropbox-acc">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="control-label">[|Litmus&#x00AE; API Key|]</label>
+                        <input type="text" id="txtCompanyName" placeholder="[|Litmus API Key|]" class="form-control" data-bind="value: LitmusAPIKey" maxlength="50" tabindex="34">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-horizontal-large">
+        <div class="formsubheading">
+            [|Localization|]
+            <div class="pull-right">
+                <a href="#localization-acc" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+            </div>
+        </div>
+
+        <div class="in" id="localization-acc">
+            <div class="clearfix">
+
+                <div class="form-group">
+                    <label class="control-label">[|Country|]<span class="req-st">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'Code', data: AccountCountries, value: CountryID}" tabindex="30" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Date Format|]<span class="req-st">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'FormatName',dataValueField:'DateFormatId', data: DateFormats, value: DateFormatID}" tabindex="31" />
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Time Zone|]<span class="req-st">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'DisplayName',dataValueField:'Id', data: TimeZones, value: TimeZone}" tabindex="32" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Currency|]<span class="req-st">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Symbol',dataValueField:'CurrencyId', data: Currency, value: CurrencyID}" tabindex="33" />
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group">
+                    <label class="control-label">[|Currency Format|]<span class="req-st">*</span></label>
+                    <span data-bind="text:CurrencyFormat"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-horizontal-large">
+        <div class="form-group display-inline" data-bind="visible:AccountID() == 339">
+            <label data-bind="attr: {'class': Disclaimer() ? 'checkbox  checked':'checkbox ' } ">
+                <input type="checkbox" data-toggle="checkbox" data-bind="checked: Disclaimer, click: DisclaimerClick" /> &nbsp; [|Include Disclaimer|]
+            </label>
+        </div>
+    </div>
+
+    <div class="hr-border"></div>
+    <div>
+        @if (toggleAccountStatus)
+        {
+            <a class="btn btn-lg btn-primary" data-bind="click: function(data,event){saveAccount('Account')}" tabindex="34"><span data-bind="text:saveText"></span></a>
+            @Html.ActionLink("[|Cancel|]", "AccountList", "Account", null, new { @class = "btn btn-lg" })   //This is for ST Admin
+        }
+        else
+        {
+            <a class="btn btn-lg btn-primary" data-bind="click: function(data,event){saveAccount('AccountSettings')}" tabindex="35"><span data-bind="text:saveText"></span></a>
+            @Html.ActionLink("[|Cancel|]", "UserList", "User", null, new { @class = "btn btn-lg" })    //This is for user's other than ST Admin
+        }
+    </div>
+</div>
+
+<script>
+
+    $(':checkbox').on('change', function () {
+        $(this).triggerHandler('click');
+    });
+
+    var mailgunPublicKey = '@System.Configuration.ConfigurationManager.AppSettings["mailgun_apikey"]';
+    function onComplete(e) {
+        $('.k-filename').hide();
+    }
+    function onProgress(e) { getFileInfo(e); $('.k-file').hide(); }
+
+    function onUpload(e) {
+        $('.k-filename').hide();
+    }
+
+    function bytesToSize(bytes) {
+        return (bytes / (1024 * 1024)).toFixed(2);
+    }
+
+    MailGunValidater = function (id) {
+        var emailValidator = new EmailValidate(id, mailgunPublicKey);
+        updateEmailStatus(function (value) {
+            return emailValidator.validate(value)
+        }, id);
+    }
+    function updateEmailStatus(status, id) {
+        status(id);
+       // viewModel.Emails()[id].EmailStatusValue = contactEmailStatus;
+    }
+    function Onlynumbers() {
+        var e = event || evt;
+        var charCode = e.which || e.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+
+</script>

@@ -1,0 +1,79 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+@{
+    ViewBag.Title = "[|Re-Engagement Click Summary|]";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var DateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    bool runReportResults = ViewBag.RunReportResults;
+    int reportId = ViewBag.ReportId;
+}
+@Scripts.Render("~/bundles/reengagementreport")
+
+
+
+<div class="sub-container">
+    <ul class="breadcrumb mbl">
+        <li><a href="/reports">[|Reports|]</a></li>
+        <li class="active"><a href="javascript:void(0)">[|Re-Engagement Click Summary|]</a></li>
+    </ul>
+    <div class="main-header  mbl">
+        <span id="pagename">[|Re-Engagement Click Summary|]</span>
+    </div>
+    <div class="form-horizontal-large mtl">
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="display-inline bold">[|Date Range|]</label>
+                <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'PeriodText',dataValueField:'PeriodId', data: Periods ,value:PeriodId}" />
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group" data-bind="visible:PeriodId()==dateFilters.customRange">
+                <label class="bold control-label">[|Custom Range|] :</label>
+                <div class="select-medium display-inline">
+                    <input data-bind="kendoDatePicker: { value: StartDate, format:DateFormat }" />
+                </div>
+                <label class="display-inline mts mhl">[|To|]</label>
+                <div class="select-medium display-inline">
+                    <input data-bind="kendoDatePicker: { value: EndDate, format:DateFormat }" />
+                </div>
+            </div>
+        </div>
+        <div class="form-horizontal-large mtl">
+            <label class="display-inline bold">[|Link Actions|]</label>
+            <div class="">
+                <div class="form-group">
+                    <span><input type="radio" name="flavorGroup" data-bind="checked: HasSelectedLinks,value:false" /> [|All Links|] </span>
+                    <span><input type="radio" name="flavorGroup" data-bind="checked: HasSelectedLinks,value:true" /> [|Select Links|]</span>
+
+                </div>
+            </div>
+            <div class="form-group" data-bind="visible:HasSelectedLinks()==true">
+                <select data-bind="kendoMultiSelect: {dataTextField:'LinkText',dataValueField:'CampaignLinkId', data: LinkActions, value: SelectedLinkActions ,optionLabel: '[|Select...|]',placeholder:'[|Select...|]'}" class="multiselectwidth"></select>
+            </div>
+        </div>
+        <div class="hr-border"></div>
+        <div>
+            <a href="#" id="run-report" data-bind="click:RunReport" class="btn btn-lg btn-primary">[|Run Report|]</a>
+        </div>
+        <div class="mtl no-grid-resize cu-table-responsive">
+            <div id="reengagementInfoGrid">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var dateFormat = '@(DateFormat)';
+        var reportId = '@reportId';
+        var itemsPerPage = '@ItemsPerPage';
+        var BASE_URL = '@Url.Content("~/Reports/")';
+
+        var viewModel = new reEngagementReportViewModel(dateFormat, parseInt(itemsPerPage),BASE_URL,reportId);
+        ko.applyBindings(viewModel);
+    })
+</script>
+

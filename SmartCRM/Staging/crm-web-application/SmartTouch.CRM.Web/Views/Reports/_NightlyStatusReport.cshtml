@@ -1,0 +1,52 @@
+﻿@(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.NightlyStatusReportViewModel>()
+    .Name("nightlyStatusGrid")
+                    .HtmlAttributes(new { @class = "k-grid-content" })
+                    .TableHtmlAttributes(new { @class = "nightlyreport" })
+           .AutoBind(false)
+                   .ToolBar(toolbar =>
+                         {
+                             toolbar.Template(@<text>
+                                @*<div class="toolbar grid-ct-header">
+                                    <a class="k-button k-button-icontext cu-grid-excel" id="excelexport">[|Export to Excel|]</a>
+                                </div>*@
+                            </text>);
+                         }).Excel(e => e.AllPages(true).FileName("Nightly_Stats_Report.xlsx"))
+                             .Pageable(pageable => pageable
+                                                    .PageSizes(new List<int>() { 10, 25, 50, 100, 250 })
+                                                    .ButtonCount(10)
+                                                    .Messages(m => m
+                                                    .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Account(s)|]")
+                                                                    .Empty("[|No Account(s) to display|]")
+                                                                    .ItemsPerPage("[|Account(s) Per Page|]")
+                                                    )
+                                                )
+                             .Reorderable(reorder => reorder.Columns(true))
+                             .Sortable()
+                             .Resizable(r => r.Columns(true))
+                             .Columns(columns =>
+                             {
+                                 columns.Bound(p => p.AccountName).Title("[|Account Name|]");
+                                 columns.Bound(p => p.SenderReputationCount).Title("[|Sender Reputation Count|]").HeaderHtmlAttributes(new { @style = "width:200px;" });
+                                 columns.Bound(p => p.CampaignsSent).Title("[|Campaigns Sent|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Recipients).Title("[|Recipients|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Sent).Title("[|Sent|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Delivered).Title("[|Delivered|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Bounced).Title("[|Bounced|]").HeaderHtmlAttributes(new { @style = "width:150px;" });
+                                 columns.Bound(p => p.Opened).Title("[|Opened|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Clicked).Title("[|Clicked|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.TagsAll).Title("[|Tags All|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.TagsActive).Title("[|Tags Active|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.SSAll).Title("[|SS All|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.SSActive).Title("[|SS Active|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                             })
+                             .ClientRowTemplate(@"<tr class='odd'><td title='#:AccountName#'>#:AccountName#</td>
+<td>#:SenderReputationCount#</td><td>#:CampaignsSent#</td><td>#:Recipients#</td><td>#:Sent#</td>
+<td>#:Delivered#</td><td>#:Bounced#</td>
+                                        <td>#:Opened#</td><td>#:Clicked#</td><td>#:TagsAll#</td><td>#:TagsActive#</td><td>#:SSAll#</td><td>#:SSActive#</td></tr>")
+                                                                                           .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                                                                .DataSource(dataSource => dataSource
+                                                                                    .Ajax()
+
+                                                                                                .Read(read => read.Action("GetNightlyStatusReport", "Reports"))
+                                                                                        )
+)

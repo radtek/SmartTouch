@@ -1,0 +1,6 @@
+var client = new RestClient("https://services.smarttouch.net/api/DropdownValues?dropdownId={DROPDOWNID}");
+var request = new RestRequest(Method.GET);
+request.AddHeader("cache-control", "no-cache");
+request.AddHeader("content-type", "application/json; charset=utf-8");
+request.AddHeader("authorization", "Bearer {ACCESS_TOKEN}");
+IRestResponse response = client.Execute(request);

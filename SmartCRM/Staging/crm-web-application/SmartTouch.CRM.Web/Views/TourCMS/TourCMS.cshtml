@@ -1,0 +1,68 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using System.Linq;
+@using SmartTouch.CRM.Web.Utilities
+@model IEnumerable<ApplicationTourViewModel>
+@{
+    ViewBag.Title = "Tour CMS";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/Redactor")
+@Scripts.Render("~/bundles/apptourcms")
+@Scripts.Render("~/bundles/redactor")
+
+<div class="sub-container form-horizontal-large">
+    <div id="applicationtour">
+        <div class="main-header">App Tour Manager </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group clearfix">
+                    <label>Select Section</label>
+                    <input class="stt-select-medium" id="appTour" data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'ApplicationTourDetailsID',data: Sections,optionLabel:{ Name: '[|Select|]', ApplicationTourDetailsID :-1}, select : ChangeSection}" />
+                </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input data-bind="value:Title" class="form-control" placeholder="[|Tour title|]">
+                </div>
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea id="editor" class="form-control" name="content" rows="20" cols="30" data-bind="value:Content"> </textarea>
+                </div>
+            </div>
+        </div>
+        <!-- Tour end -->
+        <div>
+            <div class="hr-border"></div>
+            <div>
+                <a class="btn btn-lg btn-primary" data-bind="click:saveTourCMS">
+                    <span>[|Update|]</span>
+                </a>
+                <a class="btn btn-lg btn-default" data-bind="click:cancel">
+                    <span>[|Cancel|]</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var viewModel;
+            var ApplicationTour = @(Html.Raw(Json.Encode(Model)));
+            var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+            var BASE_URL = '@Url.Content("~/TourCMS/")';
+            viewModel = new  ApplicationTourViewModel(ApplicationTour,BASE_URL,accountId);
+            ko.applyBindings(viewModel, document.getElementById("#applicationtour"));
+
+            $("#editor").redactor({
+                plugins: ['bufferbuttons', 'fontfamily', 'fontcolor', 'fontsize', 'table', 'fullscreen', 'textdirection', 'underline'],
+                focus: true,
+                source: true,
+                buttons : ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'link', 'alignment', 'horizontalrule', 'html'],
+                paragraphize: false,
+                replaceDivs: false,
+                boldTag: 'b',
+                cleanOnPaste: false,
+                linebreaks: true
+            });
+        });
+    </script>

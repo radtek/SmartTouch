@@ -1,0 +1,131 @@
+﻿@model SmartTouch.CRM.Domain.ValueObjects.WhitePages
+@{
+    Layout = null;
+}
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/knockout")
+@Styles.Render("~/Content/layoutstyles")
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="shortcut icon" href="~/img/favicon.ico" />
+    <style type="text/css">
+        .camp-sub {
+            width: 100%;
+            min-height: 16.428571429px;
+            padding: 10px 23px;
+            background-color: #dfdfdf;
+            max-width: 645px;
+            margin: 0px auto;
+        }
+
+        .overlay {
+            pointer-events: none;
+        }
+
+            .overlay:before {
+                content: '';
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                top: 0px;
+                background-color: rgba(0,0,0,0);
+                z-index: 9999;
+            }
+    </style>
+    <title>Whitepages</title>
+</head>
+<body>
+    <div id="campaigntest" class="overlay">
+        <div class="modal-header">
+            <div class="camp-sub">
+
+            </div>
+        </div>
+        <div class="modal-body" style="max-height: 1000px;">
+            <div class="camp-contx">
+                <div class="dp-topnav-inner-body">
+                    <div class="k-grid k-widget k-secondary" id="grid1">
+                        <div>
+                            <table>
+                                <thead class="k-grid-header">
+                                    <tr>
+                                        <th class="whitepageownerdetails">Field</th>
+                                        <th class="whitepageownerdetails">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="whitepageownerdetails">Address Line 1</td><td data-bind="text:AddressLine1"></td></tr>
+                                    <tr><td class="whitepageownerdetails">Address Line 2</td><td data-bind="text:AddressLine2"></td></tr>
+                                    <tr><td class="whitepageownerdetails">City</td><td data-bind="text:city"></td></tr>
+                                    <tr><td class="whitepageownerdetails">Zipcode</td><td data-bind="text:zip4"></td></tr>
+                                    <tr><td class="whitepageownerdetails">Last Sale Date</td><td data-bind="text:last_sale_date"></td></tr>
+                                    <tr><td class="whitepageownerdetails">Total Value</td><td data-bind="text:total_value"></td></tr>
+                                    <tr>
+                                        <td class="whitepageownerdetails">Owners</td>
+                                        <td>
+                                            <div data-bind="foreach:Owner">
+                                                <div class="whitepage-owner">
+                                                    <div><span class="whitepageownerdetails">Owner Name : </span><span data-bind="text:$data.name"></span></div>
+                                                    <div><span class="whitepageownerdetails">Owner Age Range : </span><span data-bind="text:$data.age_range"></span></div>
+                                                    <div><span class="whitepageownerdetails">Owner Gender : </span><span data-bind="text:$data.gender"></span></div>
+                                                    <div>
+                                                        <span class="whitepageownerdetails">Owner Phone No : </span>
+                                                        <div data-bind="foreach:$data.phones">
+                                                            <div data-bind="text:$data.phone_number"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="whitepageownerdetails">Current Residents</td>
+                                        <td>
+                                            <div data-bind="foreach:Current_residents">
+                                                <div class="whitepage-owner">
+                                                    <div><span class="whitepageownerdetails">Resident Name : </span><span data-bind="text:$data.name"></span></div>
+                                                    <div><span class="whitepageownerdetails">Resident Age Range : </span><span data-bind="text:$data.age_range"></span></div>
+                                                    <div><span class="whitepageownerdetails">Resident Gender : </span><span data-bind="text:$data.gender"></span></div>
+                                                    <div>
+                                                        <span class="whitepageownerdetails">Resident Phone No : </span>
+                                                        <span data-bind="foreach:$data.phones">
+                                                            <span data-bind="text:$data.phone_number"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var model = @(Html.Raw(Json.Encode(Model)));
+
+        var whitePagesViewModel = function(model){
+            whitePages = this;
+            whitePages.AddressLine1 = ko.observable(model.street_line_1);
+            whitePages.AddressLine2 = ko.observable(model.street_line_2);
+            whitePages.city = ko.observable(model.city);
+            whitePages.postal_code = ko.observable(model.postal_code);
+            whitePages.zip4 = ko.observable(model.zip4);
+            whitePages.last_sale_date = ko.observable(model.last_sale_date);
+            whitePages.total_value = ko.observable(model.total_value);
+            whitePages.Owner = ko.observableArray(model.owners);
+            whitePages.Current_residents = ko.observableArray(model.current_residents);
+
+        };
+        var viewModel = whitePagesViewModel(model);
+        ko.applyBindings(viewModel,document.getElementById("grid1"));
+    });
+</script>

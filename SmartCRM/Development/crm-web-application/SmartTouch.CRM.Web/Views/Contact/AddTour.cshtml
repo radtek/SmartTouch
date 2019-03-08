@@ -1,0 +1,115 @@
+﻿
+<script src="~/Scripts/ViewModels/AddTourViewModel.js"></script>
+<script src="~/Scripts/knockout.validation.js"></script>
+<script src="~/Scripts/knockout-kendo.min.js"></script>
+@{
+   
+    bool isEditView = ViewBag.EditView != null ? true : false;
+}
+
+<div id="topaddmeeting" class="dp-topnav-inner show">
+    <div class="drop-heading">
+        <span class="icon st-icon-pin-2 display-inline"></span> <h4 class="panel-title display-inline plm">Add Tour</h4>
+    </div>
+    <div class="dp-topnav-inner-body" style="overflow: hidden;" tabindex="5006">
+        <div class="row">
+            <div class="form-group pln">
+                <label for="exampleInputEmail1">Details</label>
+                <textarea class="form-control required" rows="3" data-bind="value:TourDetails,hasFocus:!(TourDetails)" maxlength="75"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 pln">
+                <div class="form-group ">
+                    <label class="control-label">Community *</label>
+                    <input data-bind="kendoDropDownList: { dataTextField: 'name', dataValueField:'communityId',data: CommunityTemp, value: Communities }" />
+                </div>
+            </div>
+
+            <div class="col-md-6 prn">
+                <div class="form-group">
+                    <label class="control-label">Tour Date</label>
+                    <div >
+                        <input type="text" data-bind="kendoDateTimePicker: {value:TourDate, interval :15}">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 pln">
+                <div class="form-group">
+                    <label class="control-label">Tour Type *</label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'TypeId', data: TourTypes, value: TourType}" />
+                </div>
+            </div>
+            <div class="col-md-6 prn">
+                <div class="form-group">
+                    <label class="control-label">Reminder Type</label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'TypeId', data: ReminderTypes, value: ReminderType}" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            
+            <div class="col-md-6 pln">
+                <div class="form-group">
+                    <label class="control-label">Reminder timeframe</label>
+                    <input id ="reminderTimeframe" data-bind="kendoDropDownList: {dataTextField:'name',dataValueField:'Id', data: ReminderTimeframes,value: ReminderTimeFrame}" />
+                </div>
+            </div>
+            <div class="col-md-6 prn">
+                <div class="form-group ">
+                    <label id="reminderDateLabel" class="control-label">Remind on</label>
+                    @*<input id = "reminderDate" data-bind="value:ReminderDate">*@
+                    <input type="text" data-bind="kendoDateTimePicker: {dataTextField: ReminderDate, value:ReminderDate,  max: TourDate}">
+                </div>
+            </div>
+        </div>
+    
+        <div class="user-panel-footer">
+            <div class="col-md-10 usertags pln">
+                <span class="st-custag"><span class="icon st-icon-tag prs"></span>People</span>
+                <input id="tagsinput" class="pln display-inline" data-bind="value:ContactsTagged" />
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-footer">
+        <div class="pull-left">
+            <a onclick="CloseTopInner(this)" class="btn btn-lg btn-primary" href="javascript:void(0)">Save</a>
+            <a onclick="CloseTopInner(this)" class="btn btn-lg" href="javascript:void(0)">Cancel</a>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    var editView='@(isEditView)';
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var Tour = @(Html.Raw(Json.Encode(Model)));
+        var ReminderTimeFrame;
+        var viewModel = new TourViewModel(Tour,BASE_URL,editView);
+        ko.applyBindings(viewModel);
+
+       
+        document.getElementById("reminderDate").value = Date().toString(); 
+
+        //$(function() {
+        //    if($(ReminderTimeFrame).val() != 3)
+        //        $("#reminderDate").hide();
+        //    if($(ReminderTimeFrame).val() != 3)
+        //        $("#reminderDateLabel").hide();
+        //    if($(ReminderTimeFrame).val() == 3)
+        //        $("#reminderDate").show();
+        //    if($(ReminderTimeFrame).val() == 3)
+        //        $("#reminderDateLabel").show();
+        //});
+
+    });
+
+</script>

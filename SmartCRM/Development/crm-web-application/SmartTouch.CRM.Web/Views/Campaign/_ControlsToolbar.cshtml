@@ -1,0 +1,133 @@
+﻿<script>
+    var searchText;
+
+    function additionalInfo() {
+        return {
+            name: localStorage.getItem("imagesearchtext"),
+            pageNumber: 1
+        }
+    }
+</script>
+
+<div class="drag-controls-content">
+    <div id="contentwidgetselements">
+        <ul class="widgets content-block st-widgets-edit-controls active">
+            <li class="item" id="control-title"><a href="javascript:void(0)" class="st-campaign-title">[|Title|]</a></li>
+            <li class="item" id="control-text"><a href="javascript:void(0)" class="st-campaign-text">[|Text|]</a></li>
+            <li class="item" id="control-table"><a href="javascript:void(0)" class="st-campaign-table-icon">[|Table|]</a></li>
+            <li class="item dropimg" id="control-image"><a href="javascript:void(0)" class="st-campaign-img">[|Image|]</a></li>
+            <li class="item dropimg" id="control-image-2"><a href="javascript:void(0)" class="st-campaign-img-2">[|Image X 2|]</a></li>
+            <li class="item dropimg" id="control-image-3"><a href="javascript:void(0)" class="st-campaign-img-3">[|Image X 3|]</a></li>
+            <li class="item dropimg" id="control-image-4"><a href="javascript:void(0)" class="st-campaign-img-4">[|Image X 4|]</a></li>
+            <li class="item" id="control-image-text-right"><a href="javascript:void(0)" class="st-campaign-img-text">[|Image+Text|]</a></li>
+            <li class="item" id="control-image-text-left"><a href="javascript:void(0)" class="st-campaign-img-text-left">[|Text+Image|]</a></li>
+            <li class="item" id="control-image-text-down"><a href="javascript:void(0)" class="st-campaign-img-text-bottom">[|Image+Text|]</a></li>
+            <li class="item" id="control-button"><a href="javascript:void(0)" class="st-campaign-button">[|Button|]</a></li>
+            <li class="item" id="control-divider"><a href="javascript:void(0)" class="st-campaign-divider">[|Divider|]</a></li>
+            <li class="item" id="control-social"><a href="javascript:void(0)" class="st-campaign-social">[|Social|]</a></li>
+        </ul>
+    </div>
+
+</div>
+
+
+@*<script id="fileTemplate" type="text/x-kendo-template">
+    <span class='k-progress'></span>
+    <div class='file-wrapper'>
+        <img id="campaignImage" height="40" width="40" />
+        <i class='file-heading file-name-heading'>#=name#</i>
+        <input type='text' id="txtFriendlyName" class="form-control" placeholder="[|Alt text|]" />
+
+        <button id="kendoUploadbutton" type='button' class='k-upload-action'></button>
+    </div>
+</script>*@
+<script type="text/javascript">
+    $("#otrBgClrPckr").kendoFlatColorPicker({
+        preview: false,
+        value: "#000"
+    });
+    $("#inrBgClrPckr").kendoFlatColorPicker({
+        preview: false,
+        value: "#000"
+    });
+    @*sessionStorage.initialFiles = "[]";
+    var initialFiles = JSON.parse(sessionStorage.initialFiles);
+
+    function onDataBinding(e) {
+        Reset();
+    }
+
+    function onDataBound(e) {
+        var colCount = $("#imagesgrid").find('table colgroup > col').length;
+
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr class="norecords"><td colspan="' + colCount + '" style=" margin: 0;"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No images found|]</span></div></td></tr>')
+        }
+        Reset();
+        adjustImageGalery();
+
+    };
+
+    var Images;
+    var AccountId = '@Html.Raw(Json.Encode(ViewBag.AccountID))';
+    var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+
+
+    var fileReader = new FileReader();
+    fileReader.onload = function (event) {
+        var mapImage = event.target.result;
+        $("#campaignImage").attr('src', mapImage);
+
+        fileReader.readAsDataURL(e.files[0].rawFile);
+        adjustImageGalery();
+        setTimeout(function () { $("#txtFriendlyName").val(current.name); }, 1000);
+    }
+
+    function GetImagessearch() {
+        setTimeout(function () {
+            $filter = new Array();
+            var grid = $("#imagesgrid").data("kendoGrid"), searchBox = $("#txtImagessearch").val();
+            localStorage.removeItem("imagesearchtext");
+            localStorage.setItem("imagesearchtext", searchBox);
+            $("#imagesgrid").data("kendoGrid").dataSource.read();
+            Reset();
+        }, 500);
+    }
+
+    var selectImage = function (objImage) {
+        $('.st-media-library ul li').removeClass('active');
+        $(objImage).addClass('active');
+        selfCampaign.selectedImage($(objImage).find('img').attr('src'));
+    }
+
+    var changeImage = function () {
+        if (selfCampaign.selectedImage()) {
+            $('#canvas #' + selfCampaign.imageBeingChanged())[0].src = selfCampaign.selectedImage();
+            $('.st-img-gallery li').removeClass('active');
+            selfCampaign.selectedImage("");
+        }
+        else
+            notifyError("Please select an image");
+        selfCampaign.Designer().CaptureAllEdits();
+        bindImageGallery();
+        //$('#imageEditorCloseButton').click();
+    }*@
+
+
+
+    //var adjustImageGalery = function () {
+
+    //    var contentHeight = $("#contentimageselements.content-block.active").height();
+    //    var searchHeight = $(".images-search").height();
+    //    var uploadButtonHeight = $("#uploadbuttonarea").outerHeight();
+    //    var dropAreaHeight = $(".k-widget.k-upload.k-header").outerHeight();
+    //    $(".k-grid-content").height(contentHeight - searchHeight - dropAreaHeight - (uploadButtonHeight > 0 ? uploadButtonHeight + 20 : uploadButtonHeight)); //10 padding
+    //};
+    //$(document).ready(function () {
+    //    $("#contentimageselements .k-grid-content").height("295px");
+    //    $(".k-grid-content").wrap("<div class='st-img-gallery'></div>");
+    //    $(window).scroll(function () {
+    //        adjustImageGalery();
+    //    });
+    //});
+</script>

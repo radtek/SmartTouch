@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BHILeads>
+<Lead LeadType="Rec. Community" Source="hotonhomes.com">
+<Contact Country="USA" PostalCode="75070" State="" City="" StreetAddress="123 address Address section" Phone="5321211111" Email="JAMES4673@yahoo.com" LastName="n" FirstName="james" Title="Manager"/>
+<Qualifications Comments="Quick survey:  First Time Homebuyer:Yes; Want to move:90+ days; Maximum monthly payment:$  1,500; Beds:3;" MoveInDate="20-10-2014" ReasonsForBuying="1111" Financing="30k$" PrefPriceHigh="280000" PrefPriceLow="180000"/>
+<PropertyInterest BuilderName="Bloomfield Homes" BuilderNumber="BloomfieldHomes" CommunityName="Kathryn Park" CommunityNumber="KA38" MarketName="hotonhomes.com" StateName="TX" />
+<Telemetry CountElements="14"/>
+</Lead>
+</BHILeads>
+
+

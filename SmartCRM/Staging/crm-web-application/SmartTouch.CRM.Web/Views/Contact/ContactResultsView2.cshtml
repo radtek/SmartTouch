@@ -1,0 +1,325 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedViewViewModel
+@{
+    ViewBag.Title = "Contacts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@Scripts.Render("~/bundles/Opportunityvm")
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.dataTables.min.js"></script>
+<style type="text/css">
+    .k-grid tr {
+        -webkit-transform: scale3d(1,1,1);
+    }
+
+    .k-grid th,
+    .k-grid td {
+        -webkit-transform: translateZ(0);
+    }
+</style>
+<script src="~/Scripts/ViewModels/AdvancedViewViewModel.js"></script>
+<script>
+    createCookie("selectallsearchstring", "", 1);
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    };
+    function GetContactsBasedonsearch(e) {
+        var searchText;
+        console.log("Get contacts based on search");
+        setTimeout(function () {
+            var enterKeyPressCode = 13;
+            if (searchText !== $("#txtSearch").val() || (searchText === $("#txtSearch").val() && e.keyCode == enterKeyPressCode))
+                searchText = $("#txtSearch").val();
+            else
+                return;
+            var grid =  selfmodel.grid;
+            var searchBox = $("#txtSearch").val();
+            var contactType = $("#contactTypes").val();
+            if ($.trim(searchBox).length > 2) {
+                selfmodel.SearchText(searchText);
+                grid.search(searchText).draw();
+            }
+            else if ($.trim(searchBox).length === 0) {
+                selfmodel.SearchText("");
+                grid.search(searchText).draw();
+            }
+        }, 800);
+    };
+    function ArrowClick() {
+        $("#selectallcheckbox").removeClass("checked");
+        $('#masterCheckBox_all').attr('checked', false);
+        $('#masterCheckBox_all').parent('label.checkbox').removeClass('checked');
+        if ($(".stc-select-drop").hasClass("stc-open")) {
+            $(".stc-select-drop").removeClass("stc-open");
+        }
+        else {
+            $(".stc-select-drop").addClass("stc-open");
+        }
+        $(".stc-select-drop").click(function () {
+            $(this).removeClass("stc-open");
+        });
+        $(document).mouseup(function (e) {
+            var container = $(".stc-select-all");
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                $(".stc-select-drop").removeClass("stc-open"); XMLDocument
+            }
+        });
+    };
+    function SelectAllPages(e) {
+        var selectallsearchstring = "";
+        var showingType="0";
+        if(localStorage.getItem("ShowingTypeADV")){
+            if(localStorage.getItem("ShowingTypeADV") == "1")
+                showingType="2";
+            else if(localStorage.getItem("ShowingTypeADV") == "2")
+                showingType="0";
+            else if(localStorage.getItem("ShowingTypeADV") == "3")
+                showingType="1";
+            else if(localStorage.getItem("ShowingTypeADV") == "4")
+                showingType="3";
+
+        }
+
+        if ($("#selectcheckbox_text").text() == "Select All") {
+            $("#selectcheckbox_text").text("All Pages");
+            $("#selectallcheckbox_text").text("Select All");
+            selectallsearchstring = ($("#txtSearch").val() == null ? "" : $("#txtSearch").val()) + "$" + showingType +"$0";
+            createCookie("selectallsearchstring", selectallsearchstring, 1);
+            createCookie("selectallsearchstring", selectallsearchstring, 1);
+        }
+        else if ($("#selectcheckbox_text").text() == "All Pages") {
+            $("#selectcheckbox_text").text("Select All");
+            $("#selectallcheckbox_text").text("All Pages");
+            createCookie("selectallsearchstring", "", 1);
+        }
+    };
+
+</script>
+
+<div id="clientsDb" style="display:none">
+    <div class="page-title">
+        [|Advanced View|]
+        <span>
+            <a class="back" data-bind="attr:{'href': IsDynamicGrid == 'True' ? '../contacts/search' : document.referrer}">
+                <i class="icon st-icon-leftdropdownarrow"></i> [|Back|]
+            </a>
+        </span>
+    </div>
+    <div class="st-saved-search-info" data-bind="visible: IsSavedSearch ">
+        <p>
+            <span class="control-label"> [|Saved Search Name :|] </span><span data-bind="text:SearchName"></span><span>
+                <a data-bind="visible:EntityType() == '1' && EntityId() != '0',attr:{ 'href': '@Url.Action("EditSearch", "AdvancedSearch")?SearchDefinitionID='+EntityId()+''}">
+                    <i class="icon st-icon-edit"></i>
+                </a>
+            </span>
+        </p>
+        <span class="control-label"> [|Criteria : |]</span><span data-bind="html:SearchDescription"></span>
+    </div>
+
+    @*<div class="resultsgrid contacts-gridresults" id="resultsGrid">
+        </div>*@
+    <div class="resultsgrid contacts-gridresults">
+        <div class="k-header k-grid-toolbar k-grid-top">
+            <div class="toolbar grid-ct-header">
+                <div class="left-part">
+                    <div class="stc-select-all">
+                        <div class="stc-select-main" onclick="ArrowClick()">
+                            <label id="selectcheckbox" class="checkbox stc-all-check toggle-all"
+                                   for="masterCheckBox">
+                                <span class="icons">
+                                    <span class="first-icon st-icon-checkbox-normal"></span><span class="second-icon st-icon-checkbox-selected"></span>
+                                </span><input type="checkbox" data-toggle="checkbox" id="masterCheckBox">
+                                <span id="selectcheckbox_text">Select All</span>
+                            </label>
+                            <i class="icon stc-drop-icon st-icon-dropdownarrow mlm"></i>
+                        </div>
+                        <div class="stc-select-drop">
+                            <label id="selectallcheckbox" class="checkbox toggle-all" for="masterCheckBox_all">
+                                <span class="icons">
+                                    <span class="first-icon st-icon-checkbox-normal"></span><span class="second-icon st-icon-checkbox-selected"></span>
+                                </span><input type="checkbox" data-toggle="checkbox" onchange="SelectAllPages(this)" id="masterCheckBox_all">
+                                <span id="selectallcheckbox_text">All Pages</span>
+
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-part">
+                    <div class="grid-search">
+                        <input type="search" id="txtSearch" onkeydown="GetContactsBasedonsearch(event)" class=" form-control" placeholder="[|Search|]" />
+                        <i class="icon st-icon-search-2"></i>
+                    </div>
+                    <div class="grid-controls">
+                        <span class="sort-label">[|Showing|]</span>
+                        <span class="sort-select">
+                            <input data-bind="kendoDropDownList:{ data : ShowingFields, value: ShowingType, dataValueField: 'Value', dataTextField: 'Text'}" />
+                        </span>
+                        <span class="sort-label">[|Fields|]</span>
+                        <span class="sort-select">
+                            <select class="cu-multiselect" data-bind="kendoMultiSelect:{ data : SearchFields, value: Fields, dataValueField: 'FieldId', dataTextField: 'Title', multiple:'multiple'}"></select>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive advancedview-grid">
+            <table id="resultsGrid" class="resultsgrid contacts-gridresults table">
+                <thead>
+                    <tr data-bind="foreach:getSelectedColumns()">
+                        <th data-bind="attr:{ 'title' : title}, style:{'font-family': 'OpensansBold'}"></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@*<script type="text/x-kendo-template" id="template">*@
+
+@*</script>*@
+<script>
+    $(document).ready(function() {
+        $('#306, #325').css({ 'display': 'none' });
+        var model = @(Html.Raw(Json.Encode(Model)));
+        var Contacts_BASE_URL = '@Url.Content("~/Contact/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var viewModel = new advancedViewViewModel(model, WEBSERVICE_URL, Contacts_BASE_URL);
+        ko.applyBindings(viewModel, document.getElementById("clientsDb"));
+        $("#clientsDb").show();
+        tableMasterCheckBox('resultsgrid');
+        selfmodel.BindGrid();
+    });
+
+    function AddOpportunity() {
+        var checkedvaluesforaddopportunity = fnGetChkvalGridForOpportunities('chkcontacts');
+        var IsPeople = readCookie("IsPeople");
+
+        var companies = $.grep(checkedvaluesforaddopportunity, function (n) {
+            return n.type === "2";
+        }).length;
+
+        var people = $.grep(checkedvaluesforaddopportunity, function (n) {
+            return n.type === "1";
+        }).length;
+
+        if (checkedvaluesforaddopportunity.length == 0) {
+            window.location.href = "addbuyermodal";
+        } else {
+
+            if ((IsPeople == "2" && companies > 1) || (IsPeople == "2" && companies == 0))
+                notifyError("[|Please select only one company|]");
+            else if (IsPeople == "1" && people == 0)
+                notifyError("[|Please select alteast one people|]");
+            else {
+                var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+
+                var array = [];
+                $.each(checkedvaluesforaddopportunity, function (index, value) {
+                    if (value.type == IsPeople)
+                        array.push(value.Id);
+                });
+                $.ajax({
+                    url: Opportunity_BASE_URL + 'StoreContacts',
+                    type: 'post',
+                    data: { 'ContactIDs': array.join() },
+                    dataType: 'json',
+                    success: function (response) {
+                        removepageloader();
+                        window.location.href = Opportunity_BASE_URL + "AddOpportunityWithBuyers?referencekey=" + response.stringKey;
+                    },
+                    error: function (response) {
+                        var error = jQuery.parseJSON(response.responseText);
+                        removepageloader();
+                        notifyError(error.Exception.Message);
+                    }
+                });
+            }
+        }
+    };
+
+    function copyContact() {
+        checkedvalue = fnGetChkvalGrid('chkcontacts');
+        if (checkedvalue != "") {
+            if (checkedvalue.length == 1) {
+                var contacttype = fnGetCheckedContactWithType();
+                if (contacttype == 1)
+                    window.location.href = "../copyperson?contactId=" + checkedvalue + "&contactType=" + contacttype;
+                else
+                    window.location.href = "../copycompany?contactId=" + checkedvalue + "&contactType=" + contacttype;
+            }
+            else {
+                notifyError("[|Please select only one contact|]");
+            }
+        }
+        else {
+            notifyError("[|Please select at least one contact|]");
+        }
+    }
+
+    function deleteContacts() {
+        checkedvaluesforcontacts = fnGetChkvalforContactsGrid('chkcontacts');
+        checkedContactStatus = false;
+        checkedContactStatus = fnGetChkStsforContact('chkcontacts');
+
+        if (checkedvaluesforcontacts != "") {
+            alertifyReset("Delete Contacts", "Cancel");
+            //alertify.confirm("Are you sure you want to delete these " + checkedvalues.length + " contact(s)?", function (e) {
+            if (readCookie("selectallsearchstring") != "")
+                DeleteMutlipleContacts("[|You are about to Bulk Delete Contacts and their history. This action cannot be undone. Are you sure you want to delete Contacts?|] ", checkedvaluesforcontacts);
+            else if (checkedContactStatus == true)
+                DeleteMutlipleContacts("[|You are about to Delete|] " + checkedvaluesforcontacts.length + " [|Contact(s) and their history. This action cannot be undone. Are you sure you want to delete|] " + checkedvaluesforcontacts.length + " [|Contact(s)?|]", checkedvaluesforcontacts);
+            else
+                DeleteMutlipleContacts("[|Restricted Access: You are attempting to delete Contact(s) which you have not created.|]" + "</br>" + checkedvaluesforcontacts.length + " [|Contact(s) created by you can only be deleted.|]", checkedvaluesforcontacts);
+        }
+        else {
+            notifyError("[|Please select at least one Contact created by you.|]");
+        }
+    }
+
+    function DeleteMutlipleContacts(confirmMessage, checkedvaluesforcontacts) {
+        alertify.confirm(confirmMessage, function (e) {
+            if (e) {
+                pageLoader();
+                varDeleteURL = "../Contact/DeleteContacts?contactIds=" + checkedvaluesforcontacts.toString();
+
+                $.ajax({
+                    url: Contacts_BASE_URL + "DeleteContacts",
+                    type: 'post',
+                    dataType: 'json',
+                    data: { 'contactIds': checkedvaluesforcontacts.toString() }
+                }).then(function (response) {
+                    var filter = $.Deferred();
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    if (readCookie("selectallsearchstring") != "")
+                        notifySuccess("[|Successfully deleted|] " + " [|Bulk Contact(s)|]");
+                    else
+                        notifySuccess("[|Successfully deleted|] " + data.response + " [|Contact(s)|]");
+                    setTimeout(
+                        function () {
+                            createCookie('log', false, 1);
+                            window.location.href = document.URL;
+                        }, setTimeOutTimer);
+                }).fail(function (error) {
+                    removepageloader();
+                    notifyError(error);
+                });
+            }
+            else {
+                notifyError("[|You've clicked Cancel|].[|The Contact(s) will not be deleted|]");
+            }
+        });
+    }
+</script>
+

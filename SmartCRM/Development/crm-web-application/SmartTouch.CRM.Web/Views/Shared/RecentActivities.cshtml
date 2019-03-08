@@ -1,0 +1,54 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+
+@model UserActivitiesListViewModel
+
+@*<script src="~/Scripts/ViewModels/UserActivitiesViewModel.js"></script>*@
+
+@Scripts.Render("~/bundles/recentactivities")
+
+
+<div class="activity-heading"><span class="icon st-icon-clock"></span><span class="mls">[|Recent Activities|]</span></div>
+<div id="UserActivities">
+    <!-- ko if : UserActivities().length == '0'-->
+    <ul class="activity">
+        <li class="no-activites">
+            <div>
+                <span class="icon st-icon-clock"></span>
+            </div>
+            <div>
+                [|No Activites|]
+            </div>
+        </li>
+    </ul>
+    <!-- /ko -->
+    <!-- ko if : UserActivities().length > 0-->
+    <ul class="activity">
+        <!-- ko foreach : UserActivities-->
+        <li>
+            <div>
+                <label class="activity-content" data-bind="text:Message"></label>
+                <span>
+                    <span data-bind="text:TimeInText"></span>
+                    <a href="#activityModal" data-toggle="modal"
+                       data-original-title="" title="View Activity" data-bind="click:$parent.ViewUserActivity">
+                        <i class="icon st-icon-eye notifiy-view"></i>
+                    </a>
+                </span>
+            </div>
+        </li>
+        <!-- /ko -->
+    </ul>
+    <!-- /ko -->
+    
+</div>
+<div class="previously-read"><a href="javascript:void(0)">Previous Activities<i class="icon st-icon-clock"></i></a></div>
+
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var Action = @(Html.Raw(Json.Encode(Model)));
+        var userActivitiesViewModel = new UserActivitiesViewModel(Action,BASE_URL);
+        ko.applyBindings(userActivitiesViewModel,document.getElementById("UserActivities"));
+    });
+</script>

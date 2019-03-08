@@ -1,0 +1,40 @@
+﻿<div class="clearfix">
+    <div id="reviewcampaignacc" class="in">
+
+        <div class="campaigns-body" id="campaignspreviewarea" style="margin: 0 auto; font-family: Calibri; min-height: 200px"
+             data-bind="style:{'background-color':$root.Designer().isDesktopMode() == true ? $root.Designer().StyleSheet().BackGround.OuterBackGround : '','max-width':$root.Designer().campaignMaxWidth()+'px'}">
+            <!-- ko if:$root.CampaignTypeId() == campaignType.REGULAR && $root.SubView()!='plaintextversion'-->
+            <div class="campaignsdesignarea-body" style="min-height:200px">
+                <div data-bind="html:$root.HTMLContent(),style:{'background-color':$root.Designer().StyleSheet().BackGround.InnerBackGround,'border-style':$root.Designer().StyleSheet().Border.BorderStyle(), 'border-width':$root.Designer().StyleSheet().Border.BorderThickness(),'border-color':$root.Designer().StyleSheet().Border.BorderColor}">
+                </div>
+            </div>
+            <!--/ko-->
+            <!-- ko if:$root.CampaignTypeId() == campaignType.HTMLCODE  && $root.SubView()!='plaintextversion'-->
+            <div class="campaignsdesignarea-body" style="min-height:200px;overflow:hidden;">
+                <div data-bind="html:$root.HTMLContent(),style:{'background-color':$root.Designer().StyleSheet().BackGround.InnerBackGround,'border-style':$root.Designer().StyleSheet().Border.BorderStyle(), 'border-width':$root.Designer().StyleSheet().Border.BorderThickness(),'border-color':$root.Designer().StyleSheet().Border.BorderColor}">
+                </div>
+            </div>
+            <!--/ko-->
+            <!-- ko if:$root.CampaignTypeId() == campaignType.PLAINTEXT -->
+            <div class="plaintextcampaign-preview" style="min-height: 200px; overflow: hidden; word-wrap: break-word; " data-bind="text:$root.HTMLContent()">
+            </div>
+            <!--/ko-->
+            <!-- ko if:$root.CampaignTypeId() != campaignType.PLAINTEXT && $root.SubView()=='plaintextversion'-->
+            <div>
+                <div>
+                    <label style="display:inline"><input data-bind="value:true,checked:$root.IncludePlainText" type="checkbox" /> Include plain text in Campaign Send</label>
+                    <span class="pull-right pullLabel-right" style="padding-bottom: 5px;">
+                        <a class="btn btn-lg btn-primary" data-bind="event:{click:$root.generatePlainTextVersion.bind(true)}">Auto Generate</a>
+                    </span>
+                </div>
+            </div>
+            <textarea id="plaintextversioneditor" data-bind="value:$root.PlainTextContent, text:$root.PlainTextContent,valueUpdate: 'afterkeydown'" style="">
+
+            </textarea>
+
+            <!--/ko-->
+
+        </div>
+
+    </div>
+</div>

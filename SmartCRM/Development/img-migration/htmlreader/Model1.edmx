@@ -1,0 +1,283 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SmartCRMLoadTestModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CampaignLinks">
+          <Key>
+            <PropertyRef Name="CampaignLinkID" />
+          </Key>
+          <Property Name="CampaignLinkID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CampaignID" Type="int" Nullable="false" />
+          <Property Name="URL" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LinkIndex" Type="tinyint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="75" />
+        </EntityType>
+        <EntityType Name="Campaigns">
+          <Key>
+            <PropertyRef Name="CampaignID" />
+          </Key>
+          <Property Name="CampaignID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CampaignStatusID" Type="smallint" Nullable="false" />
+          <Property Name="CampaignTemplateID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="75" Nullable="false" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="75" />
+          <Property Name="HTMLContent" Type="nvarchar(max)" />
+          <Property Name="ScheduleTime" Type="datetime" />
+          <Property Name="From" Type="nvarchar" MaxLength="256" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ServiceProviderID" Type="int" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="SenderName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ServiceProviderCampaignID" Type="nvarchar" MaxLength="150" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="100" />
+          <Property Name="LastViewedState" Type="char" MaxLength="1" />
+          <Property Name="LastUpdatedBy" Type="int" />
+          <Property Name="LastUpdatedOn" Type="datetime" />
+          <Property Name="IsLinkedToWorkflows" Type="bit" Nullable="false" />
+          <Property Name="ProcessedDate" Type="datetime" />
+          <Property Name="TagRecipients" Type="smallint" />
+          <Property Name="SSRecipients" Type="smallint" />
+        </EntityType>
+        <EntityType Name="ClassicCampaigns">
+          <Key>
+            <PropertyRef Name="ClassicCampaignID" />
+          </Key>
+          <Property Name="ClassicCampaignID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AID" Type="decimal" Precision="21" Scale="0" />
+          <Property Name="cid" Type="decimal" Precision="21" Scale="0" />
+          <Property Name="HTML" Type="nvarchar(max)" />
+          <Property Name="status" Type="bit" />
+          <Property Name="Title" Type="nvarchar" MaxLength="255" />
+          <Property Name="AccountID" Type="int" />
+          <Property Name="CampaignID" Type="int" />
+        </EntityType>
+        <EntityType Name="Images">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ImageID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FriendlyName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AccountID" Type="int" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ImageCategoryID" Type="tinyint" Nullable="false" />
+          <Property Name="OriginalName" Type="nvarchar(max)" />
+          <Property Name="StorageName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CampaignLinks_Campaigns">
+          <End Role="Campaigns" Type="Self.Campaigns" Multiplicity="1" />
+          <End Role="CampaignLinks" Type="Self.CampaignLinks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaigns">
+              <PropertyRef Name="CampaignID" />
+            </Principal>
+            <Dependent Role="CampaignLinks">
+              <PropertyRef Name="CampaignID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SmartCRMLoadTestModelStoreContainer">
+          <EntitySet Name="CampaignLinks" EntityType="Self.CampaignLinks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Campaigns" EntityType="Self.Campaigns" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClassicCampaigns" EntityType="Self.ClassicCampaigns" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Images" EntityType="Self.Images" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CampaignLinks_Campaigns" Association="Self.FK_CampaignLinks_Campaigns">
+            <End Role="Campaigns" EntitySet="Campaigns" />
+            <End Role="CampaignLinks" EntitySet="CampaignLinks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SmartCRMLoadTestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="SmartCRMLoadTestEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Images" EntityType="SmartCRMLoadTestModel.Images" />
+          <EntitySet Name="CampaignLinks" EntityType="SmartCRMLoadTestModel.CampaignLinks" />
+          <EntitySet Name="ClassicCampaigns" EntityType="SmartCRMLoadTestModel.ClassicCampaigns" />
+          <EntitySet Name="Campaigns" EntityType="SmartCRMLoadTestModel.Campaigns" />
+          <AssociationSet Name="FK_CampaignLinks_Campaigns" Association="SmartCRMLoadTestModel.FK_CampaignLinks_Campaigns">
+            <End Role="Campaigns" EntitySet="Campaigns" />
+            <End Role="CampaignLinks" EntitySet="CampaignLinks" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Images">
+          <Key>
+            <PropertyRef Name="ImageID" />
+          </Key>
+          <Property Name="ImageID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FriendlyName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AccountID" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ImageCategoryID" Type="Byte" Nullable="false" />
+          <Property Name="OriginalName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StorageName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="CampaignLinks">
+          <Key>
+            <PropertyRef Name="CampaignLinkID" />
+          </Key>
+          <Property Name="CampaignLinkID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignID" Type="Int32" Nullable="false" />
+          <Property Name="URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LinkIndex" Type="Byte" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Campaigns" Relationship="SmartCRMLoadTestModel.FK_CampaignLinks_Campaigns" FromRole="CampaignLinks" ToRole="Campaigns" />
+        </EntityType>
+        <EntityType Name="ClassicCampaigns">
+          <Key>
+            <PropertyRef Name="ClassicCampaignID" />
+          </Key>
+          <Property Name="ClassicCampaignID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AID" Type="Decimal" Precision="21" Scale="0" />
+          <Property Name="cid" Type="Decimal" Precision="21" Scale="0" />
+          <Property Name="HTML" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="Boolean" />
+          <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AccountID" Type="Int32" />
+          <Property Name="CampaignID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Campaigns">
+          <Key>
+            <PropertyRef Name="CampaignID" />
+          </Key>
+          <Property Name="CampaignID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CampaignStatusID" Type="Int16" Nullable="false" />
+          <Property Name="CampaignTemplateID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="Subject" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="HTMLContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ScheduleTime" Type="DateTime" Precision="3" />
+          <Property Name="From" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ServiceProviderID" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="AccountID" Type="Int32" Nullable="false" />
+          <Property Name="SenderName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ServiceProviderCampaignID" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LastViewedState" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="LastUpdatedBy" Type="Int32" />
+          <Property Name="LastUpdatedOn" Type="DateTime" Precision="3" />
+          <Property Name="IsLinkedToWorkflows" Type="Boolean" Nullable="false" />
+          <Property Name="ProcessedDate" Type="DateTime" Precision="3" />
+          <Property Name="TagRecipients" Type="Int16" />
+          <Property Name="SSRecipients" Type="Int16" />
+          <NavigationProperty Name="CampaignLinks" Relationship="SmartCRMLoadTestModel.FK_CampaignLinks_Campaigns" FromRole="Campaigns" ToRole="CampaignLinks" />
+        </EntityType>
+        <Association Name="FK_CampaignLinks_Campaigns">
+          <End Type="SmartCRMLoadTestModel.Campaigns" Role="Campaigns" Multiplicity="1" />
+          <End Type="SmartCRMLoadTestModel.CampaignLinks" Role="CampaignLinks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Campaigns">
+              <PropertyRef Name="CampaignID" />
+            </Principal>
+            <Dependent Role="CampaignLinks">
+              <PropertyRef Name="CampaignID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SmartCRMLoadTestModelStoreContainer" CdmEntityContainer="SmartCRMLoadTestEntities">
+          <EntitySetMapping Name="Images">
+            <EntityTypeMapping TypeName="SmartCRMLoadTestModel.Images">
+              <MappingFragment StoreEntitySet="Images">
+                <ScalarProperty Name="StorageName" ColumnName="StorageName" />
+                <ScalarProperty Name="OriginalName" ColumnName="OriginalName" />
+                <ScalarProperty Name="ImageCategoryID" ColumnName="ImageCategoryID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="FriendlyName" ColumnName="FriendlyName" />
+                <ScalarProperty Name="ImageID" ColumnName="ImageID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CampaignLinks">
+            <EntityTypeMapping TypeName="SmartCRMLoadTestModel.CampaignLinks">
+              <MappingFragment StoreEntitySet="CampaignLinks">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LinkIndex" ColumnName="LinkIndex" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+                <ScalarProperty Name="CampaignLinkID" ColumnName="CampaignLinkID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClassicCampaigns">
+            <EntityTypeMapping TypeName="SmartCRMLoadTestModel.ClassicCampaigns">
+              <MappingFragment StoreEntitySet="ClassicCampaigns">
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="HTML" ColumnName="HTML" />
+                <ScalarProperty Name="cid" ColumnName="cid" />
+                <ScalarProperty Name="AID" ColumnName="AID" />
+                <ScalarProperty Name="ClassicCampaignID" ColumnName="ClassicCampaignID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Campaigns">
+            <EntityTypeMapping TypeName="SmartCRMLoadTestModel.Campaigns">
+              <MappingFragment StoreEntitySet="Campaigns">
+                <ScalarProperty Name="SSRecipients" ColumnName="SSRecipients" />
+                <ScalarProperty Name="TagRecipients" ColumnName="TagRecipients" />
+                <ScalarProperty Name="ProcessedDate" ColumnName="ProcessedDate" />
+                <ScalarProperty Name="IsLinkedToWorkflows" ColumnName="IsLinkedToWorkflows" />
+                <ScalarProperty Name="LastUpdatedOn" ColumnName="LastUpdatedOn" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="LastViewedState" ColumnName="LastViewedState" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ServiceProviderCampaignID" ColumnName="ServiceProviderCampaignID" />
+                <ScalarProperty Name="SenderName" ColumnName="SenderName" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="ServiceProviderID" ColumnName="ServiceProviderID" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="From" ColumnName="From" />
+                <ScalarProperty Name="ScheduleTime" ColumnName="ScheduleTime" />
+                <ScalarProperty Name="HTMLContent" ColumnName="HTMLContent" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CampaignTemplateID" ColumnName="CampaignTemplateID" />
+                <ScalarProperty Name="CampaignStatusID" ColumnName="CampaignStatusID" />
+                <ScalarProperty Name="CampaignID" ColumnName="CampaignID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

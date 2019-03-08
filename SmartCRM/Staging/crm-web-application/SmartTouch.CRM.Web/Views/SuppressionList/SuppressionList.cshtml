@@ -1,0 +1,165 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using System.Linq;
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.SuppressionListViewModel
+
+@{
+    ViewBag.Title = "SuppressionList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-lg-12">
+    <div class="page-title pg-tle">
+        <h4>Suppression List</h4>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-horizontal-medium">
+            <div class="col-sm-3">
+                <h4>Email List</h4>
+            </div>
+            <div class="col-sm-3">
+                <input type="search" id="txtemailsearch" onkeydown="GetEmailBasedonsearch(event);" class=" form-control em-srh" placeholder="[|Search By Email|]" />
+            </div>
+        </div>
+        <div class="form-horizontal-large">
+            <div class="form-group">
+                <textarea rows="20" cols="30" placeholder="[| Add Emails|]" id="em-txt" class="form-control Emails" data-bind="value:Email, valueUpdate: 'afterkeydown'"></textarea>
+            </div>
+        </div>
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click:saveSuppressionEmailList">
+                <span>[|Save|]</span>
+            </a>
+            <a class="btn btn-lg btn-default" data-bind="click:emailCancel">
+                <span>[|Cancel|]</span>
+            </a>
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="form-horizontal-medium">
+            <div class="col-sm-3">
+                <h4>Domain List</h4>
+            </div>
+            <div class="col-sm-3">
+                <input type="search" id="txtdomainsearch" onkeydown="GetDomainBasedonsearch(event);" class=" form-control em-srh" placeholder="[|Search By Domain|]" />
+            </div>
+        </div>
+        <div class="form-horizontal-large">
+            <div class="form-group">
+                <textarea rows="20" cols="30" placeholder="[| Add Domains|]"  id ="dm-txt" class="form-control Emails" data-bind="value:Domain, valueUpdate: 'afterkeydown'"></textarea>
+            </div>
+        </div>
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click:saveSuppressionDomainList">
+                <span>[|Save|]</span>
+            </a>
+            <a class="btn btn-lg btn-default" data-bind="click:domainCancel">
+                <span>[|Cancel|]</span>
+            </a>
+
+    </div>
+</div>
+</div>
+<script src="~/Scripts/ViewModels/SuppressionListViewModel.js"></script>
+
+<script>
+    var BASE_URL = '@Url.Content("~/SuppressionList/")';
+   
+    $(document).ready(function () {
+        var viewModel;
+        var SuppressionList = @(Html.Raw(Json.Encode(Model)));
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        viewModel = new  SuppressionListViewModel(SuppressionList,BASE_URL,accountId);
+        ko.applyBindings(viewModel);
+    });
+    
+    var typewatch = (function () {
+        var timer = 0;
+        return function (callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
+
+    $("#em-txt").click(function(){
+        $(this).attr("placeholder", "Add Emails");
+    });
+
+    $("#dm-txt").click(function(){
+        $(this).attr("placeholder", "Add Domains");
+    });
+
+    function GetEmailBasedonsearch(email){
+        typewatch(function(){
+            var text= $("#txtemailsearch").val();
+            pageLoader();
+            $.ajax({
+                url: BASE_URL + "SearchForSuppressedEmailsAndDomains?text=" + text +"&type=" + 1,
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    removepageloader();
+                    if(data.response != null && data.response.length > 0)
+                    {
+                        var emailsList = ko.utils.arrayMap(data.response, function (email) {
+                            return email.Email;
+                        });
+
+                        var EmailList = [emailsList.join("\n")];
+                        document.getElementById("em-txt").value = EmailList;
+                    }
+                    else
+                    {
+                        document.getElementById("em-txt").value="";
+                        document.getElementById("em-txt").placeholder = "No records found";
+                    }
+                    
+                },
+                error: function (data) {
+                    notifyError("[| Failed to get email List |]");
+                }
+            });
+        },500);
+    }
+
+    function GetDomainBasedonsearch(e){
+        typewatch(function(){
+            var text= $("#txtdomainsearch").val();
+            pageLoader();
+            $.ajax({
+                url: BASE_URL + "SearchForSuppressedEmailsAndDomains?text=" + text +"&type=" + 2,
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    removepageloader();
+                    console.log(data.response);
+                    if(data.response != null && data.response.length > 0)
+                    {
+                        var domains = ko.utils.arrayMap(data.response, function (domain) {
+                            return domain.Domain;
+                        });
+
+                        var domainList = [domains.join("\n")];
+                        document.getElementById("dm-txt").value = domainList;
+                    }
+                    else
+                    {
+                        document.getElementById("dm-txt").value="";
+                        document.getElementById("dm-txt").placeholder = "No records found";
+                    }
+                },
+                error: function (data) {
+                    notifyError("[| Failed to get domain List |]");
+                }
+            });
+        },500);
+    }
+
+
+</script>

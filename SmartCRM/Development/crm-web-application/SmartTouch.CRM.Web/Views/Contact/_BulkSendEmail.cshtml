@@ -1,0 +1,175 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model BulkMailOperationViewModel
+
+@{ 
+    var isIncludeSignature = ViewBag.IsIncludeSignature;
+}
+
+@Scripts.Render("~/bundles/redactor")
+@Styles.Render("~/Content/Redactor")
+<script src="~/Scripts/ViewModels/BulkSendEmailViewMpdel.js"></script>
+
+    <div id="bulksendemail" class="">
+        <div class="drop-heading">
+            <span class="icon st-icon-envelope display-inline"></span>
+            <h4 class="panel-title display-inline plm">[|New Email|]</h4>
+        </div>
+        <div class="body">
+            <div class="dp-topnav-inner-body">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">[|Subject|]<span class="required">*</span></label>
+                    <input class="form-control" type="text" data-bind="value:Subject" placeholder="[|Subject|]">
+                </div>
+
+                <div class="form-group">
+                    <div class="bulk-em-by">
+                          <textarea contenteditable id="bulkeditor" data-bind="value:Body" cols="5"> </textarea>
+                    </div>
+                    @*<span class="validationMessage" data-bind="validationMessage:bodyValidation"></span>*@
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" data-bind="click: bulkSendEmails">[|Send|]</a>
+                    <a class="btn btn-lg" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+                <div class="pull-right">
+                    <label data-bind="attr: {'class': IsChecked() ?'checkbox  checked':'checkbox ' } ">
+                        <input type="checkbox"  data-toggle="checkbox" data-bind="checked:IsChecked,enable:HideSignature"> [|Insert Signature|]
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="bigmodal2" style="display:none;position:absolute;top:5px;z-index:100">
+            <div class="modal-header st-move">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title"><span class="icon re-icon re-templates redactor-btn-image"></span> [|Choose a template|]</h4>
+            </div>
+            <div class="clearfix">
+                <div>
+                    <div class="modal-body top">
+                        <div id="templatechange">
+                            <a class="btn btn-default active" href="javascript:void(0)" data-tcview="ftemplate" data-bind="click:showAllTemplates">[|All|]</a>
+                            <a class="btn btn-default" href="javascript:void(0)" data-tcview="fpredesign" data-bind="click:showOnlyPredesigned">[|Predesigned|]</a>
+                            <a class="btn btn-default" href="javascript:void(0)" data-tcview="fsaved" data-bind="click:showOnlySavedTemplates">[|Saved Templates|]</a>
+                            <a class="btn btn-default" href="javascript:void(0)" data-tcview="fsaved" data-bind="click:showSentCampaigns">[|Sent Campaigns|]</a>
+                        </div>
+                        <div>
+                            <div class="layout-search">
+                                <input type="search" class=" form-control" placeholder="[|Search|]" data-bind="value:TemplateSearch,valueUpdate:'afterkeydown'" id="templatesearch">
+                                <i class="icon st-icon-search-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="dp-topnav-inner-body">
+                            <ul class="campaigns-layouts" data-bind="foreach:FilteredTemplates">
+                                <li>
+                                    <div class="layout animation5">
+                                        <div class="overlay">
+                                            <a href="#" class="btn btn-default overlay-btn select" data-bind="click: $parent.selectTemplate">[|Select|]</a>
+
+                                        </div>
+                                        <!--ko if: Type == 4 -->
+                                        <a href="javascript:void(0)"><img data-bind="attr:{src: '@Url.Content("~/img/campaign-thumbnail.jpg")'}" alt="layout" /></a>
+                                        <!--/ko-->
+                                        <!--ko ifnot: Type == 4 -->
+                                        <a href="javascript:void(0)"><img data-bind="attr:{src: ThumbnailImageUrl}" alt="layout" /></a>
+                                        <!--/ko-->
+
+                                    </div>
+                                    <div class="layout-title" data-bind="text:Name,attr: { title: Name }"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <!--ko if: FilteredTemplates().length == 0 -->
+                            <span>[|No results found|]</span>
+                            <!--/ko-->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-left">
+                            <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+    $("#bigmodal2").draggable({
+        handle: ".modal-header"
+    });
+    $(document).ready(function () {
+        var Contacts_BASE_URL = '@Url.Content("~/Contact/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var bulkSendMail = @(Html.Raw(Json.Encode(Model)));
+        var IsIncludeSignature ='@isIncludeSignature';
+
+        $('#bulkeditor').redactor({
+              focus: true,
+              plugins: ['bufferbuttons', 'fontfamily', 'fontcolor', 'fontsize', 'imagemanager', 'table', 'fullscreen', 'textdirection', 'video', 'underline','templates'],
+            source: true,
+            imageManagerJson: '@Url.Content("~/Contact/GetCampaignImages")',
+            uploadImageField: true,
+            imageUpload: '@Url.Content("~/Contact/UploadImage")',
+            imageUploadErrorCallback: function(json)
+            {
+                notifyError(json.error);
+            },
+            buttons : ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'image', 'link', 'alignment', 'horizontalrule', 'html'],
+            paragraphize: false,
+            replaceDivs: false,
+            boldTag: 'b',
+            fixed: false,
+            //pastePlainText: true,
+            convertImageLinks: true,
+            cleanOnPaste: false,
+            linebreaks: true,
+            deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'applet']
+        });
+
+
+
+        var viewModel = new bulkSendEmailViewModel(bulkSendMail,Contacts_BASE_URL,WEBSERVICE_URL,IsIncludeSignature);
+        ko.applyBindings(viewModel,document.getElementById("bulksendemail"));
+
+        appendCheckbox();
+
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+    });
+
+    $('#modal').on('hide.bs.modal', function () {
+        var elem = document.getElementById('sendemailmodal');
+        if(elem != null)
+            elem.remove();
+    });
+
+    var tempHTML = "";
+    $('#sendemailmodal').on('hide.bs.modal', function () {
+        var elem = document.getElementById('bigmodal2');
+        if(elem != null){
+            tempHTML = elem;
+            elem.remove();
+        }
+
+    });
+
+
+
+    function templatesModal(args) {
+        var modal  = document.getElementById("bigmodal2");
+        if(modal == null)
+            modal = tempHTML;
+        $(modal).css('display', '');
+        $("#sendemailmodal .modal-content").html(modal);
+    };
+</script>

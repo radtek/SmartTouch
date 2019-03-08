@@ -1,0 +1,16 @@
+var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "http://localhost:56258/login",
+  "method": "POST",
+  "headers": {
+    "content-type": "application/x-www-form-urlencoded",
+    "cache-control": "no-cache",
+    "postman-token": "24b9afa5-4f2b-dc0a-d0e9-d63da0962418"
+  },
+  "data": ""
+}
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+});

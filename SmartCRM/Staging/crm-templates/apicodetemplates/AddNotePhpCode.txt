@@ -1,0 +1,33 @@
+<?php
+
+$request = new HttpRequest();
+$request->setUrl('http://localhost:56258/Note/InsertNote');
+$request->setMethod(HTTP_METH_POST);
+
+$request->setHeaders(array(
+  'postman-token' => 'b110cc56-269d-e647-8803-1d9ea2177a9f',
+  'cache-control' => 'no-cache',
+  'content-type' => 'application/json; charset=utf-8',
+  'authorization' => 'Bearer 1HrstHob_1A44C41BQDiDzHvAFVrTWu1V7NSM-9BEgdjnMqvJ4iYIFKr1B3Va9wqepl18YwTWA3e8THsDRy0b22m6dLo8n0r4T6R-9PMbXn1cBln-slTZPpZyWvaeP-UpnHHPxAIiD-dw-onzbiJyhqq42NEVB0OZZeFABnxK2NJT0AfTwsvJciXufDt6d8rchNezkwnNS6OMdZob_S6nMFr6crwIhaQf4VVmgPy67_UB35jxtk7qrRMxkGSVaF11NTa6eTzU0Cd5bFual-QGe-IBvcMt8CWa-JfYpwf5EoJyxCa6yyVwvmIBYHOaVcJWK_h0E_VxsXTdb_wNYzvAMvPI1rI4AaaZvntsqUVaM7OG0jSWnATZZX_EzjAv6FmyiFlwaGMbtaR14SQQWFJyXtTzJC-sd5g-15f50YrBo5YOAtcip35HD5VXG_Axa3amCHs1gdED8B1q6B6LI-rSQ'
+));
+
+$request->setBody('			   {
+                    "NoteDetails" : "Sample note details",
+		            "AccountId" : 4218,
+		            "AddToContactSummary" : 1,
+		            "NoteCategory" : 22921,
+		            "Contacts" : [{ "Id" : 1891136 }, { "Id" : 1891135 }],
+		            "TagsList" : [{"TagID":0,"AccountID":4218,"TagName":"ActiontestTag"},{"TagID":0,"TagName":"ActiontestTag-1","AccountID":4218}],
+		            "CreatedBy":6889,
+		            "CreatedOn":"2017-08-08T15:03:42.905Z",
+		            "LastUpdatedOn" : null,	
+		            "LastUpdatedBy" : null
+                }');
+
+try {
+  $response = $request->send();
+
+  echo $response->getBody();
+} catch (HttpException $ex) {
+  echo $ex;
+}

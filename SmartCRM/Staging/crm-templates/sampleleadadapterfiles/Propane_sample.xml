@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PROPLeads>
+  <Lead LeadSource="Ming Pao" LeadType="Newspaper Advertisement">
+    <Contact FirstName="Alan " LastName="Daniel" Address="" Apartment="" StreetName="" City="Austin" State="Texas" Email="adanielii@hotmail.com" PostalCode="78746" Phone="" LeadCategory="Newspaper Advertisement" TypeofHome="Detached" PriceRange="Over $900,000" workphone="" />
+    <Qualifications Comments="Lead Type: iPadLeads" />
+    <PropertyInterest StateName=" " MarketName="" BuilderNumber="199999" BuilderName="National Homes" CommunityNumber="02" CommunityName="Markham" InternetFormName="NationalHomes-iPadLeads-Markham" HomeHeating="" AirConditioner="" HotWaterHeater="" Appliances="" Grilling="" Fireplace="" Other="" CurrentProPaneSupplier="" DeliveryZipCode="" />
+    <Telemetry CountElements="" />
+  </Lead>
+</PROPLeads>

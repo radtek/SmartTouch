@@ -1,0 +1,40 @@
+﻿@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div class="da-new-leads">
+    <!-- ko if:NewLeadsAreaChartVisible()=="True" -->
+    <div class="bg-chart" id="danewleads"></div>
+    <!--/ko-->
+    <!-- ko if:NewLeadsAreaChartVisible()=="False" -->
+    <div class="dash-nodata new-contacts">[|No data found|]</div>
+    <!--/ko-->
+
+    <div class="left-part mll">
+        <div class="title"><a href="javascript:void(0)">[|New Contacts|]</a> </div>
+        @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+        {
+            <div class="total"><a data-bind="attr: { href:NewContactsLink() },text:NewLeadsTotalCount "></a></div>
+        }
+        else
+        {
+            <div class="total"><span data-bind="text:NewLeadsTotalCount" /></div>
+        }
+    </div>
+    <div class="right-part">
+        <!-- ko if: NewLeadsPreviousCount() <  NewLeadsTotalCount()  -->
+        <div class="total-percent high"><span id="newleadpercent" data-bind="text:NewLeadsPreviousCountPercentage"></span><span class="">%</span> </div>
+        <!--/ko-->
+        <!-- ko if: NewLeadsPreviousCount() >  NewLeadsTotalCount() -->
+        <div class="total-percent low"><span id="newleadpercent" data-bind="text:NewLeadsPreviousCountPercentage"></span><span class="">%</span> </div>
+        <!--/ko-->
+        <div class="percent-label">[|Previous 30 days|]</div>
+    </div>
+</div>
+

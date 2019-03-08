@@ -1,0 +1,65 @@
+﻿<script src="~/Scripts/knockout.validation.js"></script>
+<script src="~/Scripts/knockout-kendo.min.js"></script>
+<script src="~/Scripts/ViewModels/EmailCommunication.js"></script>
+
+<div class="sendemail dp-topnav-inner show" id="divMails">
+    <div class="dp-topnav-inner-heading">
+        <span class="icon st-icon-envelope display-inline"></span>
+        <h4 class="panel-title display-inline plm">[|New Email|]</h4>
+        @*<a href="#" onclick="Mailregistartion()" >SigIn</a>*@
+    </div>
+    <div class="sendemail-body">
+        <div class="sendemail-header">
+            <div class="recipients">
+                <span class="recipients-label">
+                    <a id="ccbccbtn" class="cc-bcc" href="javascript:void(0)">
+                        <span class="st-right-arrow"></span>
+                    </a>
+                    [|To|] :
+                </span>
+                <input class="form-control required" type="text" data-bind="value:to" placeholder="Recipients" />
+            </div>
+            <div id="ccbcc" class="hide">
+                <div class="recipients">
+                    <span class="recipients-label">[|CC|] :</span>
+                    <input class="form-control" data-bind="value:cc" type="text" placeholder="Recipients">
+                </div>
+                <div class="recipients">
+                    <span class="recipients-label">[|BCC|] :</span>
+                    <input class="form-control" type="text" data-bind="value:bcc" placeholder="Recipients">
+                </div>
+                </div>
+            <div class="recipients">
+                <span class="recipients-label">[|From|] :</span>
+                <input class="form-control required" type="text" data-bind="value:from" placeholder="Sender">
+            </div>
+            <div class="recipients">
+                <span class="recipients-label">[|Subject|] :</span>
+                <input class="form-control" type="text" data-bind="value:subject" placeholder="Subject">
+            </div>
+            <textarea id="editor" cols="5" rows="10" data-bind="value: body"></textarea>
+            <div class="panel-footer">
+                <div class="pull-left">
+                    <a class="btn btn-lg btn-primary" data-bind="click: sendEmails">[|Send|]</a>
+                    <a class="btn btn-lg" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+                </div>
+            </div>
+        </div>
+</div>
+<script >
+
+    $(document).ready(function () {
+     
+
+       
+        var viewModel;
+        var CampaingModel = @(Html.Raw(Json.Encode(Model)));
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        viewModel = new campaingMailsViewModel(CampaingModel,BASE_URL);
+        ko.applyBindings(viewModel,document.getElementById("divMails"));
+    });
+
+    $("#editor").kendoEditor();
+    var editor = $("#editor").data("kendoEditor");
+</script>

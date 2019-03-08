@@ -1,0 +1,282 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model PersonViewModel
+@{
+    ViewBag.Title = "Contacts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Scripts.Render("~/bundles/persondetailsvm")
+@using (Html.BeginForm("ContactDetails", "Contact", FormMethod.Post,
+                                      new { name = "form-data", id = "form" }))
+{
+<div class="ct-details">
+    <div class="ct-mainarea" id="personView">
+        <ul class="breadcrumb mbl">
+            <li>@Html.ActionLink("[|Contacts|]", "Index", "Contact", new { Id = 1 }, null)</li>
+            <li class="active"><a href="javascript:void(0)">[|Contact Details|]</a></li>
+        </ul>
+
+        <div class="panel">
+            <div class="user-body row">
+                <div class="col-md-7 pln prn">
+                    <div class="profile-pic-control">
+                      
+                        <div class="profile-pic"><figure><img src="~/img/NoImage.png" id="imgProfileImage" /> </figure></div>
+                            <div class="st-edit-profile"><a data-bind="attr: { 'href': '@Url.Action("EditContact", "Contact")?contactId=' + ContactID() +'&contactType=1' }">[|Edit Profile|]</a></div>
+
+                    </div>
+                    <div class="user-details">
+                        <h6 class="mtn" data-bind="text:Name,attr: { title: FullName }"></h6>
+                        <p class="mbm" data-bind="text:CompanyName"></p>
+                        <address class="mbn">
+                            <ul class="address">
+                                <li class="phone"><div data-bind="foreach: Phones"><div class="phone-number" data-bind="if: $index() == 0"><i class="icon st-icon-mobile prm"></i> <span data-bind="text:PhoneNumber"></span> <!-- ko if: PhoneNumber -->(<span data-bind="text:PhoneType"></span>)<!--/ko--></div>  </div></li>
+                                <li class="email"><i class="icon st-icon-mail-4 prm"></i>  <a href="javascript:void(0)" data-bind="text:PrimaryEmail"></a></li>
+                                <li class="location">
+                                    <div data-bind="foreach: Addresses">
+                                        <input hidden="hidden" data-bind="text: ($index() + 1)" />
+                                        <!-- ko if: IsDefault -->
+                                        <div class="place" data-bind="if: $index() == 0">
+                                            
+                                            <!-- ko if: AddressLine1 --><span data-bind="text:AddressLine1"></span>,<!--/ko-->
+                                            <!-- ko if: AddressLine2 --><span data-bind="text:AddressLine2"></span>,<!--/ko-->
+                                            <!-- ko if: City --> <span data-bind="text:City"></span>,<!--/ko-->
+                                                <!-- ko if: State --><span data-bind="text:State.Name"></span>,<!--/ko-->
+                                             
+                                                <span data-bind="text:Country.Name"></span>
+                                            <!-- ko if: ZipCode -->-<span data-bind="text:ZipCode"></span><!--/ko-->
+                                        </div>
+                                        <!-- /ko -->
+                                        <!-- ko ifnot: IsDefault -->
+                                        <div class="place" data-bind="if: $index() == 0">
+                                            <i class="icon st-icon-pin prm"></i>
+                                            <!-- ko if: AddressLine1 --><span data-bind="text:AddressLine1"></span>,<!--/ko-->
+                                            <!-- ko if: AddressLine2 --><span data-bind="text:AddressLine2"></span>,<!--/ko-->
+                                            <!-- ko if: City --> <span data-bind="text:City"></span>,<!--/ko-->
+                                                <!-- ko if: State --><span data-bind="text:State.Name"></span>,<!--/ko-->
+                                                <!-- ko if: Country --><span data-bind="text:Country.Name"></span><!--/ko-->
+                                            <!-- ko if: ZipCode -->-<span data-bind="text:ZipCode"></span><!--/ko-->
+                                        </div>
+                                        <!-- /ko -->
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </address>
+                    </div>
+                    
+                    <div class="clearfix"></div>
+                   
+                </div>
+                
+                <div class="col-md-5 prn">
+                    <div class="pull-right">
+                        <ul class="user-counts">
+                            <li class="score">
+                                <div class="label">[|Life Cycle|]</div>
+                                <div class="status" data-bind="text:LifeCycle"></div>
+                            </li>
+                            <li class="score">
+                                <div class="label">[|Last Contacted|]</div>
+                                <div class="status" data-bind="text:LastContactedString"></div>
+                            </li>
+                            <li class="score">
+                                <div class="label">[|Lead Source|]</div>
+                                <div class="status"><div class="mul-lead"><span data-bind="text:LeadSource"></span><span class="st-lead-score-white"></span></div></div>
+                                    @*<div class="status">
+                                                        <span>Google </span>
+                                                        @*<div class="status"><div class="mul-lead"><span data-bind="text:LeadSource"></span><span class="st-lead-score-white"></span></div></div>
+                                                    <a href="javascript:void(o)" title="Austin Business Journal, Facebook" data-placement="right" class="black mls">
+                                                        <span class="icon st-icon-podcast-2"></span>
+                                                    </a>
+                                        </div>
+                                    <div class="status">
+                                        <!-- ko if: SelectedLeadAdapters --><span data-bind="text: SelectedLeadAdapters"></span><!--/ko-->
+                                        @*<div class="status"><div class="mul-lead"><span data-bind="text:LeadSource"></span><span class="st-lead-score-white"></span></div></div>
+                                        <a href="javascript:void(o)" title="'data-bind:text: SelectedLeadAdapters'" data-placement="right" class="black mls">
+                                            
+                                            <span class="icon st-icon-podcast-2"></span>
+                                        </a>
+                                    </div>*@
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="user-panel-footer">
+                <div class="col-md-10 usertags pln">
+                    <span class="st-custag"><span class="icon st-icon-tag prs"></span>[|Tags|]</span>
+                    <input id="txtContactTags" class="pln display-inline" data-bind="value:ContactTags" />               
+                </div>
+
+                   
+                <div class="col-md-2 text-right mts" data-bind="foreach: SocialMediaUrls">
+                        <!-- ko if: MediaType()=='Facebook' && URL()!="" && URL()!=null --><a data-bind="attr: { href: URL, target:'_blank' }"><i data-bind="attr: { class:'icon st-icon-facebook' }"></i></a><!--/ko-->
+                        <!-- ko if: MediaType()=='Twitter' && URL()!="" && URL()!=null --><a data-bind="attr: { href: URL, target:'_blank'}"> <i data-bind="attr: { class:'icon st-icon-twitter' }"></i></a><!--/ko-->
+                        <!-- ko if: MediaType()=='Website' && URL()!="" && URL()!=null --><a data-bind="attr: { href: URL, target:'_blank'}"> <i data-bind="attr: { class:'icon st-icon-website' }"></i></a><!--/ko-->
+                        <!-- ko if: MediaType()=='LinkedIn' && URL()!="" && URL()!=null --><a data-bind="attr: { href: URL, target:'_blank'}"> <i data-bind="attr: { class:'icon st-icon-linkedin' }"></i></a><!--/ko-->
+                        <!-- ko if: MediaType()=='Google+' && URL()!="" && URL()!=null --><a data-bind="attr: { href: URL, target:'_blank'}"> <i data-bind="attr: { class:'icon st-icon-google-plus' }"></i></a><!--/ko-->
+                        <!-- ko if: MediaType()=='Blog' && URL()!="" && URL()!=null --><a data-bind="attr: { href: URL, target:'_blank'}"> <i data-bind="attr: { class:'icon st-icon-blog' }"></i></a><!--/ko-->
+                        <!-- ko if: MediaType()=='Skype' && URL()!="" && URL()!=null --><a data-bind="attr: { href: URL, target:'_blank'}"> <i data-bind="attr: { class:'icon st-icon-skype' }"></i></a><!--/ko-->
+                </div>
+                 
+            </div>
+        </div>
+      
+        <!--end of panel-->
+        <div class="tabbable contact-tab">
+            <ul class="nav nav-tabs" style="height: 42px;">
+                <li class="active"><a href="#timeline"><span class="icon st-icon-speech-bubble-center-2"></span>[|Timeline|]</a></li>
+                <li><a href="#contactinfo"><span class="icon st-icon-user-3"></span>[|Person Info|]</a></li>
+                <li><a href="#attachments"><span class="icon st-icon-cloud-add"></span>[|Attachments|]</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="timeline">
+                    @Html.Partial("_PartialTimeLineInfo")
+                </div>
+                <div class="tab-pane" id="contactinfo">
+                    @Html.Partial("_PersonDetailsContactInfo")
+                </div>
+                    <div class="tab-pane" id="attachments">
+                        @Html.Partial("_PartialAttachment")
+             </div>
+                </div>
+            </div>
+    </div>
+
+    <div class="ct-other-panels">
+        <ul class="previous-next mbl">
+            <li><a href="javascript:void(0)"><i class="fui-arrow-left"></i> [|Previous|]</a></li>
+            <li> - </li>
+            <li><a href="javascript:void(0)">[|Next|] <i class="fui-arrow-right"></i></a></li>
+        </ul>
+        @Html.Partial("_PartialContactDetails")
+    </div>
+</div>
+}
+
+@section Scripts{
+<script>
+    window.onunload = function () { localStorage.removeItem("contactdetails"); };
+    $(document).ready(function () {
+        $('#325').css({ 'display': 'none' });
+
+        var tags = [];
+        var PersonDetails = @(Html.Raw(Json.Encode(Model)));
+        var viewModel1 = new personDetailsViewModel(PersonDetails);
+        ko.applyBindings(viewModel1, document.getElementById("personView"));
+
+        var value = viewModel1.ContactID() + "|" + viewModel1.Name() + "|" + viewModel1.CompanyName();
+
+        localStorage.setItem("contactdetails", value);
+
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        if(PersonDetails.ContactImages!=null)
+        {
+            if(PersonDetails.ContactImages.ImageContent!=null && PersonDetails.ContactImages.ImageContent!="null" && PersonDetails.ContactImages.ImageContent!="" && typeof(PersonDetails.ContactImages.ImageContent)!="undefined")
+            $("#imgProfileImage").attr('src', PersonDetails.ContactImages.ImageContent);
+        }
+        $('#txtContactTags').tagsInput({
+            width:'auto',
+            onAddTag: function (value) {
+                $.ajax({
+                    url: BASE_URL + 'AddTag',
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'tagName': value, 'contactId': viewModel1.ContactID() })
+                }).then(function (response) {            
+                    var filter = $.Deferred()            
+                    if (response.success) {                
+                    filter.resolve(response)            
+                    } else {                
+                    filter.reject(response.error)            
+                    }            
+                    return filter.promise()        
+                }).done(function (data) {
+                    if (data.success === false)
+                    {
+                        notifyError(data.response); 
+                    }
+                }).fail(function (error) {                               
+                    notifyError(error);        
+                })
+            },
+            onRemoveTag: function (value) {
+                $.ajax({
+                    url: BASE_URL + 'RemoveTag',
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'tagName': value, 'contactId': viewModel1.ContactID() })
+                }).then(function (response) {            
+                    var filter = $.Deferred()            
+                    if (response.success) {                
+                    filter.resolve(response)            
+                    } else {                
+                    filter.reject(response.error)            
+                    }            
+                    return filter.promise()        
+                }).done(function (data) {
+                    if (data.success === false)
+                    {
+                        notifyError(data.response);
+                    }
+                }).fail(function (error) {                              
+                    notifyError(error);        
+                })
+            },
+
+            'onChange': function (input, value) {
+
+            }
+        });
+
+        var typewatch = (function(){
+            var timer = 0;
+            return function(callback, ms){
+                clearTimeout (timer);
+                timer = setTimeout(callback, ms);
+            }
+        })();
+
+        $("#txtContactTags_tag").kendoAutoComplete([]);
+
+        var tagNames = $("#txtContactTags_tag");
+        tagNames.bind('keydown keypress', function() {
+            typewatch(function() {
+                $.ajax({
+                    url:  WEBSERVICE_URL + "/Tag/Names",
+                    type: 'get',
+                    dataType: 'json',
+                    data:{ 'query': tagNames.val()},
+                    contentType: "application/json; charset=utf-8",
+                    success: function(tagsData){
+                        tags = tagsData.Tags;
+                        var suggestions = [];
+                        $.each(tags, function(index,value){
+                            suggestions[index] = value.TagName;
+                        });
+
+                        var dataSource =null;
+                        $("#txtContactTags_tag").kendoAutoComplete([]);
+                        var autocomplete = $("#txtContactTags_tag").data("kendoAutoComplete");
+                        dataSource = new kendo.data.DataSource({
+                            data:suggestions
+                        });
+
+                        autocomplete.setDataSource(dataSource);
+                    },
+                    error: function (response) { 
+                        notifyError(response.responseText);            
+                    }
+                });
+            }, 500);
+        });
+    });
+</script>
+
+}

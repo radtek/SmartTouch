@@ -1,0 +1,251 @@
+﻿
+@{
+    ViewBag.Title = "ContactEmailSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var contactID = ViewBag.ContactId;
+    int type = ViewBag.CategoryType;
+}
+
+@using (Ajax.BeginForm("ContactEmailSummary", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div class="sub-container">
+        <div id="ApiKeyslist">
+            <div class="main-header">
+                <div class="page-title">
+                    [|Contact Email Engagement Summary|]
+                    <span style="cursor:pointer">
+                        <a class="back" href="javascript:void(0)" onclick="backEvent('@contactID')">
+                            <i class="icon st-icon-leftdropdownarrow"></i> [|Back|]
+                        </a>
+                    </span>
+                </div>
+            </div>
+            <div class="Messages-grid">
+                @(Html.Kendo().Grid<SmartTouch.CRM.Domain.Contacts.ContactEmailSummary>()
+                    .Name("contactemailsummarygrid")
+                    .HtmlAttributes(new { @class = "k-grid-content" })
+                    .AutoBind(true)
+                    .Pageable(pageable => pageable
+                            .Refresh(false)
+                            .PageSizes(true)
+                        .ButtonCount(10).Messages(m => m
+                            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Items|]")
+                        .Empty("[|No items to display|]").ItemsPerPage("[|Items per page|]")))
+                    .Columns(columns =>
+                    {
+                        columns.Template(e => "").Title("[|From Email|]").HeaderHtmlAttributes(new { });
+                        columns.Template(e => "").Title("[|Subject|]").HeaderHtmlAttributes(new { });
+                        columns.Template(e => "").Title("[|Sent Date|]").HeaderHtmlAttributes(new { });
+                        columns.Template(e => "").Title("[|Open Status|]").HeaderHtmlAttributes(new { });
+                        columns.Template(e => "").Title("[|Links Clicked|]").HeaderHtmlAttributes(new { });
+                        columns.Template(e => "").Title("[|LastActivity|]").HeaderHtmlAttributes(new { });
+                        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { });
+                    })
+                     .ToolBar(toolbar =>
+                     {
+                     toolbar.Template(@<text>
+
+                    </text>);
+                     })
+
+                     .ClientRowTemplate(
+                                          @"<tr class='odd'>
+                                            <td>#:From#</td>
+                                            <td>#:Subject#</td>
+                                            <td>#=DisplaywithDateTimeFormat(SentOn)#</td>
+                                            <td>
+                                                #if(Opened == 1)
+                                                {#
+                                                  <span class='sta-cm-status'>Yes</span>
+                                                #}
+                                                else
+                                                {#
+                                                   <span class='sta-cm-status'>No</span>
+                                                #}#
+                                            </td>
+                                            <td>
+                                                #if(Clicked == 0)
+                                                {#
+                                                  <span class='sta-cm-status'>0</span>
+                                                #}
+                                                else
+                                                {#
+                                                   <a href='javascript:void(0)' data-target='\\#linksmodal' data-toggle='modal' onclick='getClickedLinks(#:SentMailDetailID#)' >#:Clicked#</a>
+                                                #}#
+                                            </td>
+                                            <td>#=DisplaywithDateTimeFormat(ActivityDate)#</td>
+                                            <td><a data-target='\\#bigmodal' data-toggle='modal' href='/getemailbody?SendMailDetailID=#:SentMailDetailID# ' ><i class='icon st-icon-eye'></i></a></td>
+                                            </tr>")
+                                        .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                        .DataSource(dataSource => dataSource
+                                        .Ajax()
+                                        .PageSize(ItemsPerPage)
+                                        .Read(read => read.Action("GetContactEmailSummaryReadView", "Contact").Data("searchParameters"))
+                                                    )
+                )
+            </div>
+        </div>
+    </div>
+
+    <div id="emailbodymodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Previous Comments</h4>
+                </div>
+                <div class="modal-body" id="email-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="linksmodal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Links</h4>
+                </div>
+                <div class="modal-body" id="email-links-body">
+                    <table id="content" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-hover">
+                        <!-- Grid header start -->
+                        <thead>
+                            <tr id="remove-content">
+                                <th align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:bold; background-color:#f5f5f5; color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;">
+                                    URL
+                                </th>
+                                <th align="left" style="margin:0px;padding:10px;font-size:12px; font-weight:bold; background-color:#f5f5f5; color:#555555;font-family:arial,sans-serif; border-bottom:solid 1px #d9d9d9;">
+                                    Clicked On
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+
+                        <!-- Grid header start -->
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+@section Scripts{
+
+    <script>
+        var ItemsPerPage = '@(ItemsPerPage)';
+        var contactId = '@(contactID)';
+        var typeId = '@(type)';
+
+        function searchParameters() {
+
+            var parameters = {
+                name: localStorage.getItem("searchParameters"),
+                filterdata: localStorage.getItem("filtercontent"),
+                contactId: contactId,
+                type: typeId
+            }
+            return parameters;
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        function backEvent(id) {
+            window.location.href = "/person/" + id + "/1";
+        }
+
+
+        localStorage.removeItem("searchParameters");
+        createCookie("contemsumpagenumber", 1, 1);
+        createCookie("contemsumpagesize", '@(ItemsPerPage)', 1);
+
+        function getClickedLinks(sentMailDetailId) {
+            var BASE_CONTACT_URL = '@Url.Content("~/Contact/")';
+
+            $.ajax({
+                url: BASE_CONTACT_URL + 'GetEmailClickedLinks',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: { 'smid': sentMailDetailId, 'cid': contactId }
+            }).then(function (response) {
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                $('#content tbody').html('');
+                $.each(data.response, function (ind, val) {
+                    tr = $('<tr/>');
+                    tr.append("<td align='left' valign='middle' style='font-size:12px; color:#9f9f9f; border-bottom:solid 1px #d9d9d9; padding:10px;'>" + val.URL + "</td>");
+                    tr.append("<td align='left' valign='middle' style='font-size:12px; color:#9f9f9f; border-bottom:solid 1px #d9d9d9; padding:10px;'>" + DisplaywithDateTimeFormat(val.ClickedDate) + "</td>");
+                    $('#content tbody').append(tr);
+                })
+            }).fail(function (error) {
+                notifyError(error);
+            })
+        }
+
+        function DisplaywithDateTimeFormat(date) {
+            var dateFormat = readCookie("dateformat").toUpperCase();
+            if (date == null) {
+                return "";
+            }
+            var utzDate = new Date(moment(date).toDate()).toUtzDate();
+            return moment(utzDate).format(dateFormat + " hh:mm A");
+        };
+
+        function EmilSummaryTypeChange() {
+            $("#contactemailsummarygrid").data("kendoGrid").dataSource.read();
+            var grid = $("#grid").data("kendoGrid");
+            var psize = readCookie("contemsumpagesize");
+            grid.dataSource.query({ page: 1, pageSize: psize });
+        }
+
+
+        function onDataBinding(arg) {
+
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+
+        $(document).ready(function () {
+            removepageloader();
+            var grid = $('#contactemailsummarygrid').data('kendoGrid');
+
+        });
+
+    </script>
+
+}

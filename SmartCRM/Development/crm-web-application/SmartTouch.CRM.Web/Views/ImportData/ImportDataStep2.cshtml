@@ -1,0 +1,255 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ImportDataListViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+
+@*<script src="~/Scripts/ViewModels/ImportDataViewModel.js"></script>*@
+@Scripts.Render("~/bundles/importdatavm")
+
+@{
+    var isAdmin = ViewBag.IsAdmin;
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.NeverBounce);
+    var permissions = MenuHelper.CheckPermission(appModules);
+}
+
+@using (Html.BeginForm("ImportDataStep2", "ImportData", FormMethod.Post,
+                                                  new { name = "form-data", id = "form" }))
+{
+    <div id="importdata" class="sub-container">
+        <div class="main-header">
+            [|Import Data|]
+            <div class="setting pull-right">
+                <a href="javascript:void(0)" class="btn drguploderbtn"><i class="icon st-icon-settings-2 black"></i> [|Settings|]</a>
+                <div class="setting-st header-specific" style="display:none;">
+                    <div class="pvl">
+                        <div class="pull-right display-inline"><a href="javascript:void(0)" class="closesettings black"><i class="icon st-icon-delete"></i></a></div>
+                        <div class="clearfix">
+                            <div class="form-group mbn display-inline">
+                                <div>
+                                    <label class="display-inline">
+                                        <input name="duplicates" type="radio" value="1" data-bind="checked:DuplicateLogic" />
+                                    </label>
+                                    <span>[|Using just an email address|].</span>
+                                </div>
+                                <div>
+                                    <label class="display-inline">
+                                        <input name="duplicates" type="radio" value="2" data-bind="checked:DuplicateLogic" />
+                                    </label>
+                                    <span>[|Using an email address and/or full name|]([|First Name and Last Name|]).</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="form-group mbn display-inline">
+                                <label class="bold">[|If duplicates are found|]</label>
+                                <div>
+                                    <label class="display-inline">
+                                        <input name="update" type="radio" value="false" data-bind="checked:UpdateOnDuplicate" />
+                                    </label>
+                                    <span>[|Do not import or update record|]</span>
+                                </div>
+                                <div>
+                                    <label class="display-inline">
+                                        <input name="update" type="radio" value="true" data-bind="checked:UpdateOnDuplicate" />
+                                    </label>
+                                    <span>[|Update record with populated data in the file|]</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix step2-import">
+            <div class="form-horizontal-large">
+                <div class="formsubheading">
+                    [|Step|] 2 [|of|] 2
+                    <span style="float:right">
+                        <a href="#" data-toggle="modal" data-original-title="" title=""> [|Help|] <i class="fui-question"></i></a>
+                    </span>
+                </div>
+            </div>
+            <div class="clearfix mvl">
+
+                <div class="form-group">
+                    <label class="control-label">[|Tags To Apply For Importing Contacts|]</label>
+                    <input id="importtags" class="select-block" data-bind="valueUpdate: 'afterkeydown'" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Owner|]<span class="required">*</span></label>
+                    @if (isAdmin)
+                    {
+                        <input data-bind="kendoDropDownList: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users ,value:OwnerId,template: templ }" />
+                    }
+                    else
+                    {
+                        <input disabled data-bind="kendoDropDownList: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users ,value:OwnerId, template: templ }" />
+                    }
+                    <span class="help-block">Note: Red color represents deleted users.</span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">[|Lead Source|]<span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data: LeadSources,value: LeadSourceId,optionLabel:'[|Select Lead Source|]..'}" />
+                    <span class="help-block">Note: A Lead Source is required. Please assign a Lead Source to your list from this dropdown or make sure your import file includes a Lead Source column..</span>
+                </div>
+                <div class="form-group">
+                    <label data-bind="attr: {'class': IncludeInReports() ?'checkbox  checked':'checkbox ' } " class="checkbox ">
+                        <input type="checkbox" data-toggle="checkbox" data-bind="checked:IncludeInReports,click:AllowInReports">[|Include Contacts in Reports|]
+                    </label>
+                </div>
+            </div>
+            @*<div class="clearfix mvl">
+                    <div class="form-group">
+                        <label class="control-label">[|Owner|]<span class="required">*</span></label>
+                      @if (isAdmin)
+                    {
+                            <input data-bind="kendoDropDownList: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users ,value:OwnerId,template: templ }" />
+                    }
+                    else
+                    {
+                            <input disabled data-bind="kendoDropDownList: {dataTextField:'OwnerName',dataValueField:'OwnerId', data: Users ,value:OwnerId, template: templ }" />
+                    }
+                        <span class="help-block">Note: Red color represents deleted users.</span>
+                    </div>
+                </div>*@
+
+            <div class="k-grid k-widget k-secondary">
+                <div class="k-grid-content">
+                    <table id="grid" data-role="grid" role="grid">
+                        <thead class="k-grid-header">
+                            <tr>
+                                <th class="k-header">[|File Fields|]</th>
+                                <th class="k-header">[|Application Fields|]</th>
+                                <th class="k-header">[|Preview|]</th>
+
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: Imports">
+                            <tr>
+                                <td data-bind="text: SheetColumnName"></td>
+                                <td>
+                                    <input data-bind="kendoDropDownList: {dataTextField:'Title', dataValueField:'Id',data: $root.AllFields,value:ContactFieldName, optionLabel: '[|Ignore|]', select: onSelect }" />
+                                </td>
+                                <td data-bind="text: PreviewData"></td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mtl clearfix">
+                <a data-bind="click:saveImportdata" class="btn btn-lg btn-primary">[|Import|]</a>
+                <a data-bind="attr: { href: '@Url.Action("CancelImport", "ImportData")?fileName=' + fileName()}" class="btn btn-lg">[|Cancel|]</a>
+            </div>
+            <div class="modal fade" id="myIncludeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <span data-bind="text:Messge"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="pull-left">
+
+                                <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){IncludeInOkay('one')}">[|Ok|]</a>
+
+                                <a class="btn btn-lg" aria-hidden="true"
+                                   data-dismiss="modal" data-bind="click:cancelInInclude" href="javascript:void(0)">[|Cancel|]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="myExcludeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <span data-bind="text:Messge"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="pull-left">
+
+                                <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){ExcludeInOkay('one')}">[|Ok|]</a>
+
+                                <a class="btn btn-lg" aria-hidden="true"
+                                   data-dismiss="modal" data-bind="click:cancelInExclude" href="javascript:void(0)">[|Cancel|]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="LSModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <span>[|A Lead Source for each Contact is required. If you do not have a Lead Source column mapped, please select a default Lead Source from the dropdown.|]</span>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="pull-left">
+
+                                <a class="btn btn-lg btn-primary" id="LSOK" data-bind="click:LSConfirm">[|Ok|]</a>
+
+                                <a class="btn btn-lg" aria-hidden="true"
+                                   data-dismiss="modal" data-bind="click:LSCancel" href="javascript:void(0)">[|Cancel|]</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+}
+
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var BASE_URL = '@Url.Content("~/ImportData/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var importdata = @(Html.Raw(Json.Encode(Model)));
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var neverBouncePermission = '@permissions.Select(s => s.HasPermission).SingleOrDefault()';
+
+        var users;
+        var viewModel2;
+
+        $.ajax({
+            url: '/GetUsersList',
+            type: 'get',
+            dataType: 'json',
+            data:{ 'id': 0},
+            contentType: "application/json; charset=utf-8"
+        }).then(function (response) {
+            var filter = $.Deferred();
+            if (response.success) {
+                filter.resolve(response)
+            } else {
+                filter.reject(response.error)
+            }
+            return filter.promise()
+        }).done(function (data) {
+            users = data.response;
+            viewModel2 = new ImportDataViewModel(importdata, BASE_URL,users, neverBouncePermission);
+            var tagify = new Tagify(WEBSERVICE_URL, viewModel2, accountId);
+            tagify.Tagify("importtags");
+
+            ko.applyBindings(viewModel2);
+        }).fail(function (error) {
+            notifyError(error);
+        });
+
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+    });
+</script>
+
+
+
+

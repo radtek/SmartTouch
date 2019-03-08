@@ -1,0 +1,230 @@
+﻿
+@model SmartTouch.CRM.ApplicationServices.ViewModels.OpportunityViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    ViewBag.Title = "Add Buyers";
+    Layout = null;
+    var DateFormat = ViewBag.DateFormat;
+    var OpportunityPage = ViewBag.OpportunityPage;
+    var IsContact = ViewBag.IsContact;
+    var IsPeople = ViewBag.IsPeople;
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+    var opportunityName = ViewBag.OpportunityName;
+}
+
+@Scripts.Render("~/bundles/Opportunityvm")
+
+<div id="buyer" style="display:none" data-bind="visible:true">
+    <div id="@(Model.OpportunityID > 0 ? "editBuyer" : isModal ? "addBuyerModel" : "addBuyer")" class="@(isModal ? "" : "")">
+        <div class="@(isModal ? "" : "")">
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><span class="icon st-icon-tick display-inline"></span> @(Model.OpportunityID > 0 ? "[|Edit Buyer|]" : "[|Add Buyer|]")</h4>
+                </div>
+            }
+            else
+            {
+                <div class="drop-heading">
+                    <span class="icon st-icon-tick display-inline"></span> <h4 class="panel-title display-inline plm">[|Add Buyer(s)|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "body")">
+                <div class="dp-topnav-inner-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label">[|Opportunity Name|]<span class="required">*</span></label>
+                                <input type="text" id="txtOpportunity" data-bind="value:OpportunityName, valueUpdate: 'afterkeydown'" class="form-control">
+                                <span class="validationMessage" data-bind="validationMessage:opportunityValidation"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">[|Stage|]<span class="required">*</span></label>
+                                <input data-bind="kendoDropDownList: { dataTextField: 'DropdownValue', dataValueField: 'DropdownValueID', data: Statuses, value: StageID },valueUpdate: 'afterkeydown'" />
+                                <span class="validationMessage" data-bind="validationMessage:stageValidation"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group " id="buyer-selection">
+                                @if (IsPeople == "1")
+                                {
+                                    <label>[|Buyer(s)|]<span class="required">*</span> <span class="pull-right pls-nm">[|(People only)|]</span></label>
+                                }
+                                @if (IsPeople == "2")
+                                {
+                                    <label>[|Buyer(s)|]<span class="required">*</span> <span class="pull-right pls-nm">[|(Company only )|]</span></label>
+                                }
+                                <input id="OpportunityContacts" data-bind="valueUpdate: 'afterkeydown'" placeholder="[|Type a contact name|]" class="display-inline form-control tagsinput-info-round">
+                                <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label">[|Potential$|] <span class="required">*</span></label>
+                                <input type="text" placeholder="[|Potential|]" data-bind="value:Potential,valueUpdate: 'afterkeydown'" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label">[|Expected Close|]<span class="required">*</span></label>
+                                <input data-bind="kendoDatePicker:{value:ExpectedCloseDate, format: dateFormat,min :minDate}, valueUpdate: 'afterkeydown'" />
+                                <span class="validationMessage" data-bind="validationMessage:DateValidation"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">[|Owner|]<span class="required">*</span></label>
+                                <input data-bind="kendoDropDownList: { dataTextField: 'Name', dataValueField: 'UserID', data: Users, value: UserID, optionLabel: 'Select Owner..' }" />
+                                <span class="validationMessage" data-bind="validationMessage:ownerValidation"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label">[|Comments|]</label>
+                                <textarea data-bind="value:Comments" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                    <div class="pull-left">
+                        <a id="btnSave" class="btn btn-lg btn-primary savebtn" data-bind="click:saveBuyer"><span>[|Save|]</span></a>
+                        <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                           data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function () {
+        var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+        var Contact_Base_Url = '@Url.Content("~/Contact/")';
+        var opportunity = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var oppName ='@(opportunityName)';
+        var modal = '@(isModal)';
+        var viewModel = new opportunityViewModel(opportunity,Opportunity_BASE_URL,WEBSERVICE_URL,Contact_Base_Url, '@(OpportunityPage)',oppName,modal);
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+ 
+        ko.applyBindings(viewModel,document.getElementById("buyer"));
+
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel,accountId,tagCreatedBy);
+        tagify.TagifyContacts("OpportunityContacts");
+
+        if (modal == 'True') {
+            $("#buyer-selection *").attr("disabled", true).off('click');
+
+        }
+        else {
+            $("#buyer-selection *").attr("disabled", false);
+        }
+
+        var txtTagId = "#contactsautosuggest";
+        jQuery(txtTagId).kendoAutoComplete({
+            minLength: 1,
+            placeholder: "Type a contact name",
+            height: 500,
+            filter: "contains",
+            serverFiltering: true,
+            dataTextField: "Text",
+            select: autocomplete_select
+        });
+
+        jQuery(document).on('keydown keypress', txtTagId, function (data) {
+            typewatch(function () {
+                var authToken = readCookie("accessToken");
+                $.ajax({
+                    url: WEBSERVICE_URL + "/Contact/FullName",
+                    type: 'get',
+                    dataType: 'json',
+                    data: { 'query': $(txtTagId).val(), 'accountId': accountId },
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    success: function (contactsData) {
+                        if (contactsData.Results.length > 0) {
+                            var autocomplete = jQuery(txtTagId).data("kendoAutoComplete");
+                            autocomplete.dataSource.data(contactsData.Results);
+                        }
+                    },
+                    error: function (response){
+                        notifyError(response.responseText);
+                    }
+                });
+            }, 500);
+
+            if($(this).val().length == 0)
+                viewModel.ContactTextID("");
+        });
+
+        function autocomplete_select(e) {
+            var dataItem = this.dataItem(e.item);
+            viewModel.ContactText(dataItem.Text);
+            viewModel.ContactTextID(dataItem.DocumentId);
+            e.preventDefault();
+        }
+
+        var typewatch = (function () {
+            var timer = 0;
+            return function (callback, ms) {
+                clearTimeout(timer);
+                timer = setTimeout(callback, ms);
+            };
+        })();
+
+
+        $("#txtOpportunity").kendoAutoComplete({
+            minLength: 1,
+            placeholder: "Type a opportunity name",
+            dataTextField: "OpportunityName",
+            select: autocomplete_opportunity_select
+        });
+
+        $(document).on('keydown keypress', "#txtOpportunity", function () {
+            typewatch(function () {
+                var authToken = readCookie("accessToken");
+                $.ajax({
+                    url:  WEBSERVICE_URL + "/getopportunities",
+                    type: 'get',
+                    dataType: 'json',
+                    data:{ 'query': $("#txtOpportunity").val(), 'accountId': accountId},
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                    },
+                    success: function (opportunitiesData) {
+                        viewModel.opportunityData(opportunitiesData);
+                        var autocomplete = $("#txtOpportunity").data("kendoAutoComplete");
+                        autocomplete.dataSource.data(opportunitiesData);
+                    },
+                    error: function (response) {
+                        notifyError(response.responseText);            
+                    }
+                });
+            }, 500);
+        });
+
+        function autocomplete_opportunity_select(e) {
+            var item = e.item;
+            var dataItem = this.dataItem(e.item);
+        }
+    });
+</script>

@@ -1,0 +1,274 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.LeadAdapterViewModel
+@{
+    ViewBag.Title = "Lead Adapter";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Details = ViewBag.accountId;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var DateFormat = ViewBag.DateFormat;
+}
+
+
+<div class="page-title">[|Lead Adapters|]</div>
+<div class="leadadapter-grid">
+    @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.LeadAdapterViewModel>()
+          .Name("gridLead")
+          .HtmlAttributes(new { @class = "k-grid-content" })
+          .Pageable(pageable => pageable
+          .Refresh(false)
+          .PageSizes(true)
+          .ButtonCount(10).Messages(m => m
+                          .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Lead Adapter(s)|]")
+                          .Empty("[|No lead adapters to display|]").ItemsPerPage("[|Lead Adapters per page|]")))
+          .Columns(columns =>
+          {
+              columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+              columns.Template(e => "").Title("[|Lead Adapter Name|]").HeaderHtmlAttributes(new { @class = "col-25" });
+              columns.Template(e => "").Title("[|Status|]").HeaderHtmlAttributes(new { @class = "col-10" });
+              columns.Template(e => "").Title("[|Details|]").HeaderHtmlAttributes(new { @class = "col-20" });
+              columns.Template(e => "").Title("[|Last Processed|]").HeaderHtmlAttributes(new { @class = "col-10" });
+              columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:120px;" });
+          })
+          .ToolBar(toolbar =>
+          {
+              toolbar.Template(
+                @<text>
+                    <div class="toolbar grid-ct-header">
+                        <div class="left-part">
+                            <label class="checkbox toggle-all" for="masterCheckBox">
+                                <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                            </label> [|Select All|]
+                        </div>
+                        <div class="right-part">
+                            <div class="grid-search">
+                                <input type="search" id="txtLeadadapter" onkeydown="GetLeadAdapterSearch();" class="form-control" placeholder="[|Search|]" />
+                                <i class="icon st-icon-search-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                </text>
+              );
+          })
+                           .ClientRowTemplate(
+                                                                                                                                                                        @"<tr class='odd'>
+                    <td class='grid-checkbox'>
+                        <label class='checkbox'>
+                            <input type='checkbox' class='chkleadadapter' data-name='#:LeadAdapterName#' id='#: LeadAdapterAndAccountMapId #' data-toggle='checkbox' />
+                        </label>
+                    </td>
+                    <td>
+                        <span class='' title='#=DisplayLeadAdapterName(LeadAdapterName, FacebookLeadAdapterName)#'>#=DisplayLeadAdapterName(LeadAdapterName, FacebookLeadAdapterName)#</span>
+                    </td>
+                    <td>
+                        <span class=''>#:LeadAdapterErrorName#</span>
+                    </td>
+                    <td>
+                        <span class=''>#:ServiceStatusMessage#</span>
+                    </td>
+                    <td>
+                        <span class=''>#=displayDate_n(LastProcessed)#</span>
+                    </td>
+                    <td class='grid-row-controls'>
+                        <span>
+                             <a href='/viewleadadapter?leadAdapterID=#:LeadAdapterAndAccountMapId#&leadAdapterName=#:LeadAdapterName#' title='View Lead Adapter'><i class='icon st-icon-eye notifiy-view'></i></a>
+                             #if(LeadAdapterType != 11)
+                             {#
+                            <a href='/editleadadapter?leadAdapterID=#:LeadAdapterAndAccountMapId#' title='Edit Lead Adapter'><i class='icon st-icon-edit'></i></a><a href='javascript:void(0)' onclick='DeleteLeadAdapter(#:LeadAdapterAndAccountMapId#)' title='Delete Lead Adapter' ><i class='icon st-icon-bin-3'></i></a>
+                             #}#
+                        </span>
+                    </td>
+                </tr>")
+                           .ClientAltRowTemplate(
+                                                                                                                                                                @"<tr class='even'>
+                    <td class='grid-checkbox'>
+                        <label class='checkbox'>
+                            <input type='checkbox' class='chkleadadapter' data-name='#:LeadAdapterName#' id='#: LeadAdapterAndAccountMapId #' data-toggle='checkbox' />
+                        </label>
+                    </td>
+                    <td>
+                        <span class='' title='#=DisplayLeadAdapterName(LeadAdapterName, FacebookLeadAdapterName)#'>#=DisplayLeadAdapterName(LeadAdapterName, FacebookLeadAdapterName)#</span>
+                    </td>
+                    <td>
+                        <span class=''>#:LeadAdapterErrorName#</span>
+                    </td>
+                    <td>
+                        <span class=''>#:ServiceStatusMessage#</span>
+                    </td>
+                    <td>
+                      <span class=''>#=displayDate_n(LastProcessed)#</span>
+                    </td>
+                    <td class='grid-row-controls'>
+                        <span>
+                             <a href='/viewleadadapter?leadAdapterID=#:LeadAdapterAndAccountMapId#&leadAdapterName=#:LeadAdapterName#' title='View Lead Adapter'><i class='icon st-icon-eye notifiy-view'></i></a>
+                             #if(LeadAdapterType != 11)
+                             {#
+                            <a href='/editleadadapter?leadAdapterID=#:LeadAdapterAndAccountMapId#' title='Edit Lead Adapter'><i class='icon st-icon-edit'></i></a><a href='javascript:void(0)' onclick='DeleteLeadAdapter(#:LeadAdapterAndAccountMapId#)' title='Delete Lead Adapter' ><i class='icon st-icon-bin-3'></i></a>
+                             #}#
+                        </span>
+                    </td>
+                </tr>")
+                            .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .PageSize(ItemsPerPage)
+                            .Read(read => read.Action("LeadAdaptersViewRead", "LeadAdapter").Data("additionalInfo")))
+    )
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+
+        var contactDtls = '@(Details)';
+        var ItemsCount = '@(ItemsPerPage)';
+        if (contactDtls == 0) {
+            localStorage.removeItem("leadadaptersearchtext");
+            localStorage.removeItem("leadadaptersearchcontent");
+            createCookie("leadadapterpagenumber", 1, 1); createCookie("leadadapterpagesize", ItemsCount, 1);
+        }
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("leadadaptersearchtext"),
+                status: localStorage.getItem("leadadaptersearchcontent")
+            }
+        }
+
+        /*This function is for displaying the date in the format that user requested*/
+        function displayDate_n(date) {
+            if (date == null) {
+                return "";
+            }
+            var value = date.ToUtcUtzDate();
+            return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd'), '@(DateFormat)' + " hh:mm:ss");
+        }
+
+
+        function DisplayLeadAdapterName(leadadaptername, facebookName) {
+            if (leadadaptername.toLowerCase() != 'facebook') {
+                switch ($.trim(leadadaptername).toLowerCase()) {
+                    case 'hotonhomes':
+                        leadadaptername = "Hot On Homes";
+                        break;
+                    case 'propleads':
+                        leadadaptername = "PROPLeads";
+                        break;
+                    case 'newhomefeed':
+                        leadadaptername = "New Home Feed";
+                        break;
+                    case 'privatecommunities':
+                        leadadaptername = "Private Communities";
+                        break;
+                    case 'buzzbuzzhomes':
+                        leadadaptername = "Buzz Buzz Homes";
+                        break;
+                    case 'homefinder':
+                        leadadaptername = "Home Finder";
+                    case 'trulia':
+                        leadadaptername = "Trulia";
+                        break;
+                    case 'buildersupdate':
+                        leadadaptername = "Buider's Update"
+                        break;
+                    default:
+                        leadadaptername = leadadaptername;
+                }
+                return leadadaptername;
+            }
+            else
+                return facebookName;
+        }
+
+        function GetLeadAdapterSearch() {
+            setTimeout(function () {
+                $filter = new Array();
+                var grid = $("#gridLead").data("kendoGrid"), searchBox = $("#txtLeadadapter").val()
+                localStorage.removeItem("leadadaptersearchtext");
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.setItem("leadadaptersearchtext", searchBox);
+                    $("#gridLead").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    $("#gridLead").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+        function onDataBinding(arg) {
+
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chkleadadapter');
+                $(".drop-lab").attr('data-target', '#modal');
+            }, 200)
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+
+            $('#masterCheckBox').attr('checked', false);
+            $('#masterCheckBox').parent('label.checkbox').removeClass('checked');
+            $(this).parents('tr').removeClass('k-state-selected');
+        }
+
+        function DeleteLeadAdapter(id) {
+            alertifyReset("Delete Lead", "Cancel");
+            alertify.confirm("[|Are you sure you want to delete this lead adapter|]?", function (e) {
+                if (e) {
+                    var leadAdapterID = [id];
+                    varDeleteURL = "/Account/DeleteLeadAdapter?leadAdapterID=" + leadAdapterID;
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: varDeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8"
+                    }).then(function (response) {
+                        var filter = $.Deferred();
+                        if (response.success)
+                            filter.resolve(response);
+                        else
+                            filter.reject(response.error);
+                        return filter.promise();
+                    }).done(function (data) {
+                        if (data.success) {
+                            removepageloader();
+                            notifySuccess("[|Successfully deleted the leadadapter|]");
+                            $("#gridLead").data("kendoGrid").dataSource.read();
+                        }
+                    }).fail(function (err) {
+                        removepageloader();
+                        notifyError(err);
+                    });
+                }
+                else {
+                    notifyError("[|You've clicked Cancel|]");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            removepageloader();
+            $("#txtLeadadapter").val(localStorage.getItem("leadadaptersearchtext"));
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+            tableMasterCheckBox('leadadapter-grid');
+        });
+    </script>
+
+}

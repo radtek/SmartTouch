@@ -1,0 +1,82 @@
+﻿@using SmartTouch.CRM.Entities
+@using SmartTouch.CRM.Web.Utilities
+@{
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+}
+
+<div class="da-traffic">
+    <!-- ko if:TourbySourceAreaChartVisible()=="True" -->
+    <div class="bg-chart" id="datrafficbySource"></div>
+    <!--/ko-->
+    <!-- ko if:TourbySourceAreaChartVisible()=="False" -->
+    <div class="dash-nodata tours">[|No data found|]</div>
+    <!--/ko-->
+    <div class="left-part">
+        <div class="title"><a href="javascript:void(0)">[|Tours|]</a></div>
+        @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+        {
+            <div class="total"><a data-bind="attr: { href:ToursByLeadSourceLink()},text:TrafficSourceTotalCount"></a></div>
+        }
+        else
+        {
+            <div class="total"><span data-bind="text:TrafficSourceTotalCount" /></div>
+        }
+    </div>
+    <div class="right-part">
+        <!-- ko if: TrafficSourcePreviousCount() <  TrafficSourceTotalCount()  -->
+        <div class="total-percent high"><span id="newleadpercent" data-bind="text:TrafficSourcePreviousCountPercentage"></span><span class="">%</span> </div>
+        <!--/ko-->
+        <!-- ko if: TrafficSourcePreviousCount() >  TrafficSourceTotalCount() -->
+        <div class="total-percent low"><span id="newleadpercent" data-bind="text:TrafficSourcePreviousCountPercentage"></span><span class="">%</span> </div>
+        <!--/ko-->
+        <div class="percent-label">[|Previous 30 days|]</div>
+
+        <a id="view-tourtype" class="st-c-viewtour">VIEW BY TOUR TYPE</a>
+    </div>
+</div>
+
+<div class="da-traffic-types" style="display:none;">
+    <!-- ko if:TourbyTypeBarChartVisible()=="True" -->
+    <div class="bg-chart" id="datrafficatypes"></div>
+    <!--/ko-->
+    <!-- ko if:TourbyTypeBarChartVisible()=="False" -->
+    <div class="dash-nodata tour-types">[|No data found|]</div>
+    <!--/ko-->
+    <div class="left-part">
+        <div class="title">
+            @if (Permissions.Where(s => s.Module == AppModules.Reports).Select(s => s.HasPermission).SingleOrDefault())
+            {
+                <a data-bind="attr: { href:ToursByTypeLink()}">[|Tour Types|]</a>
+            }
+            else
+            {
+                <a href="javascript:void(0)">[|Tour Types|]</a>
+            }
+        </div>
+        <a id="view-tours" class="st-c-viewtour">VIEW BY TOURS</a>
+    </div>
+</div>
+
+
+@*<script>
+
+    $("#view-tourtype").click(function () {
+        $(".da-traffic-types").show();
+        trafficByType(selfDashBoard.TourByTypeBarChartDetails(), TourByTypeMaxValue);
+        $(".da-traffic").hide();
+    });
+
+    $("#view-tours").click(function () {
+        $(".da-traffic-types").hide();
+        $(".da-traffic").show();
+    });
+
+</script>*@
+
+
+
+

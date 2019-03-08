@@ -1,0 +1,373 @@
+﻿@using System.Threading
+@using System.Linq;
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+
+@{
+    var DateFormat = ViewBag.DateFormat;
+    bool Reportpermissions = ViewBag.ReportPermissions != null ? ViewBag.ReportPermissions : false;
+    bool IsSTadmin = ViewBag.IsSTadmin != null ? ViewBag.IsSTadmin : false;
+    bool IsBDXAccount = ViewBag.IsBDXAccount != null ? ViewBag.IsBDXAccount : false;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.Reports);
+    appModules.Add(AppModules.ContactActions);
+    appModules.Add(AppModules.Campaigns);
+    appModules.Add(AppModules.Contacts);
+    appModules.Add(AppModules.ContactTours);
+    appModules.Add(AppModules.Opportunity);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+
+    IsBDXAccount = Permissions.Where(s => s.Module == AppModules.Opportunity).Select(s => s.HasPermission).SingleOrDefault() ? false : IsBDXAccount;
+    IsBDXAccount = Permissions.Where(s => s.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault() ? false : IsBDXAccount;
+}
+
+@Scripts.Render("~/bundles/dashboardvm")
+
+<div id="dashboardhtml">
+<div class="stm-notification-wrapper hide">
+    <div class="stm-notification">
+        <div class="stm-slider">
+            <i class="stm-close glyphicon glyphicon-remove" id="msg-rm"></i>
+            <div id="carousel-example-generic" class="carousel carousel-fade slide">
+                <div data-bind="foreach:Messages" class="carousel-inner" role="listbox">
+                    <div data-bind="attr:{class:$index() == 0 ?'item active':'item'}">
+                        <div class="stm-items-wrapper">
+                            <div class="stm-icon">
+                                <a><i data-bind="attr:{class:Icon }" class="icon"></i></a>
+                            </div>
+                            <div class="stm-item-text">
+                                <h4 data-bind="text:Subject"></h4>
+                                <p data-bind="html:Content"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon st-icon-leftdropdownarrow" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon st-icon-rightdropdownarrow" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dashboardBody ">
+    @Html.Partial("~/Views/Dashboard/_Settings.cshtml")
+</div>
+
+@if (IsBDXAccount == true)
+      {           
+        <div class="row da-bdx-view">
+                <div class="col-lg-6 col-md-6 da-bdx-left">
+                    <div class="da-level-one row">
+                        <div class="col-md-12 col-lg-6">
+                    <div class="widget mrb0" style="display: none" data-bind="visible:Settings()[0].Value">
+                        <div id="hsnewleads1" style="margin:0px;padding:0px;position:relative">
+                                @Html.Partial("~/Views/Dashboard/_NewLeads.cshtml")
+                            </div>
+                        </div>
+                </div>
+                        <div class="col-md-12 col-lg-6">
+                    <div class="widget mrb0" style="display: none" data-bind="visible:Settings()[1].Value">
+                        <div id="hsnewleads2" style="margin:0px;padding:0px;position:relative">
+                                @Html.Partial("~/Views/Dashboard/_UnTouchedLeads.cshtml")
+                            </div>
+                        </div>
+                    </div>
+            </div>
+                    <div class="da-level-two">
+                <div>
+                    <div class="widget" data-bind="visible:Settings()[3].Value">
+                        <div id="hstopleadsources1" style="margin:0px;padding:0px;position:relative">
+                            @Html.Partial("~/Views/Dashboard/_GetNewLeadsChartDetails.cshtml")
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+                <div class="col-lg-6 col-md-6 da-bdx-right da-level-one">
+            <div>
+                <div data-bind="visible:Settings()[6].Value==true" class="da-bdx-hot-list">
+                    <div id="hshotlist1" style="margin:0px;padding:0px;position:relative">
+                            @Html.Partial("~/Views/Dashboard/_HotList.cshtml")                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        }
+@if (IsBDXAccount == false)
+      {
+            if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+            {
+                    <div class="row da-level-one">
+                        @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                <div class="widget">
+                    <div class="col-lg-4 col-md-4 " style="display: none" data-bind="visible:Settings()[0].Value">
+                        <div id="hsnewleads1" style="margin:0px;padding:0px;position:relative">
+                                @Html.Partial("~/Views/Dashboard/_NewLeads.cshtml")
+                            </div>
+                    </div>
+                </div>
+                <div class="widget">
+                    <div class="col-lg-4 col-md-4 " style="display: none" data-bind="visible:Settings()[1].Value">
+                        <div id="hsnewleads2" style="margin:0px;padding:0px;position:relative">
+                                @Html.Partial("~/Views/Dashboard/_UnTouchedLeads.cshtml")
+                            </div>
+                    </div>
+                </div>
+                        }
+                        @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                        {
+                            if (Permissions.Where(s => s.Module == AppModules.ContactTours).Select(s => s.HasPermission).SingleOrDefault())
+                            {
+                    <div class="widget">
+                        <div class="col-lg-4 col-md-4" style="display: none" data-bind="visible:Settings()[2].Value">
+                            <div id="hstraffic1" style="margin:0px;padding:0px;position:relative">
+                                    @Html.Partial("~/Views/Dashboard/_GetTrafficbySourceAreaChartDetails.cshtml")
+                                </div>
+                        </div>
+                    </div>
+                                @*<div class="col-lg-4 col-md-4 widget" id="hstraffictypes1" style="display: none" data-bind="visible:Settings()[2].Value">
+                                    @Html.Partial("~/Views/Dashboard/_GetTrafficByTypeBarChartDetails.cshtml")
+                                </div>*@
+                            }
+                        }
+                    </div>
+            }
+            <div class="row da-level-two">
+                @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                {
+            <div class="col-lg-4 col-md-4 widget" style="display: none" data-bind="visible:Settings()[3].Value">
+                <div id="hstopleadsources1">
+                        @Html.Partial("~/Views/Dashboard/_GetNewLeadsChartDetails.cshtml")
+                    </div>
+            </div>
+                }
+
+                @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                {
+                    if (Permissions.Where(s => s.Module == AppModules.ContactTours).Select(s => s.HasPermission).SingleOrDefault())
+                    {
+                <div class="col-lg-4 col-md-4 widget" style="display: none" data-bind="visible:Settings()[4].Value">
+                    <div id="hstoptrafficsources1">
+                            @Html.Partial("~/Views/Dashboard/_GetTrafficBySourcePieChartDetails.cshtml")
+                        </div>
+                </div>
+                    }
+                }
+
+                @if (Permissions.Where(s => s.Module == AppModules.Opportunity).Select(s => s.HasPermission).SingleOrDefault())
+                {
+            <div class="col-lg-4 col-md-4 widget" style="display: none" data-bind="visible:Settings()[5].Value">
+                <div id="hspipeline1">
+                        @Html.Partial("~/Views/Dashboard/_GetTrafficByTypeFunnelChartDetails.cshtml")
+                    </div>
+            </div>
+                }
+
+            </div>
+
+            <div class="row da-level-three">
+                @if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+                {
+            <div data-bind="visible:Settings()[6].Value==true" style="display: none" class="col-lg-6 col-md-6">
+                <div id="hshotlist1">
+                                @Html.Partial("~/Views/Dashboard/_HotList.cshtml")
+                     </div>                   
+            </div>
+                }
+
+                @if (Permissions.Where(s => s.Module == AppModules.Campaigns).Select(s => s.HasPermission).SingleOrDefault())
+                {
+            <div class="col-lg-6 col-md-6" style="display: none" data-bind="visible:Settings()[7].Value">
+                <div id="hscampaignlist1">
+                        @Html.Partial("~/Views/Dashboard/_CampaignList.cshtml")
+                    </div>
+            </div>
+                }
+            </div>
+        }
+
+<div class="row calender-action" style="display: none" data-bind="visible:Settings()[8].Value">
+    <div class="list-inner">
+        <div class="title">[|My Calendar|]</div>
+        <div id="scheduler" data-bind="kendoScheduler:Calender().config"></div>
+    </div>
+</div>
+@if (Permissions.Where(s => s.Module == AppModules.Contacts).Select(s => s.HasPermission).SingleOrDefault())
+{
+    if (Permissions.Where(s => s.Module == AppModules.ContactActions).Select(s => s.HasPermission).SingleOrDefault())
+    {
+        <div id="hsactions1">
+            <div class="row calender-action" style="display: none" data-bind="visible:Settings()[9].Value">
+            <div class="list-inner">
+                <div class="title">
+                    [|My Actions|]
+                    <a data-bind="attr: { href: '/actions'}" class="view-all">View all Actions</a>
+
+                </div>
+                @{Html.RenderPartial("ActionsList");}
+            </div>
+        </div>
+        </div>
+    }
+}
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <span data-bind="text:ActionCompletedMessage"></span>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+
+                    <a class="btn btn-lg btn-primary" data-bind="click:function(event,data){Completed('one')}"><span data-bind="text:CompletedActionOption"></span></a>
+
+                    <a class="btn btn-lg" aria-hidden="true"
+                       data-dismiss="modal" data-bind="click:CancelAction" href="javascript:void(0)">[|Cancel|]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-6 col-md-6" style="display: none" data-bind="visible:WidgetsCount()==0">
+    <div class="list-inner">
+        <div class="title">[|It's lonely here. Click Settings to update this area.|]</div>
+    </div>
+</div>
+</div>
+<!-- Load JS here for greater good =============================-->
+@section Scripts{
+<script type="text/javascript">
+    var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+    var IsBDXAccount = '@(IsBDXAccount)';
+    var dateformat = '@(DateFormat)';
+    var reportPermissions = '@(Reportpermissions)';
+    var isStAdmin = '@(IsSTadmin)'
+    var pageNumber = 1;
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+
+    function onDataBinding(arg) {
+        setTimeout(function () {
+            appendCheckbox();
+            $(".drop-lab").attr('data-target', '#modal');
+        }, 200)
+    }
+
+    //function CompletedOperation(iscompleted, actionid, opportunityid) {
+    //    var action = "ActionCompletedOperation";
+    //    var arrowicon = $("#Arrow" + actionid);
+    //    arrowicon.toggleClass('hide');
+    //    selfDashBoard.MarkAsCompleteActionId(actionid);
+    //    pageLoader();
+    //    if (!iscompleted) {
+    //        selfDashBoard.ActionCompletedMessage("[|Are you sure you want to mark this Action as Completed|]?");
+    //        selfDashBoard.CompletedActionOption("[|OK|]");
+    //    }
+    //    else {
+    //        selfDashBoard.ActionCompletedMessage("[|Are you sure you want to mark this Action as not Completed|]?");
+    //        selfDashBoard.CompletedActionOption("[|OK|]");
+    //    }
+    //    selfDashBoard.ActionOpportunityId(opportunityid);
+    //    selfDashBoard.MarkAsCompleteStatus(iscompleted);
+    //    $('#myModal').modal('show');
+    //    removepageloader();
+    //    return false;
+    //}
+    function DisplaywithDateTimeFormat(date) {
+        var dateFormat = readCookie("dateformat").toUpperCase();
+        if (date == null) {
+            return "";
+        }
+        var utzDate = new Date(moment(date).toDate()).ToUtcUtzDate();
+        return "<i class='icon st-icon-calendar mrs'></i>" + moment(utzDate).format(dateFormat + " hh:mm A");
+    };
+
+    function checkboxClass(iscompleted) {
+        if (iscompleted == true)
+            return "checkbox  checked";
+        else
+            return "checkbox";
+    }
+
+
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+    createCookie("dateformat", dateformat, 1);
+
+    $(document).ready(function () {
+
+        $(document).mousedown(function (e) {
+            var t = $(".dash-settings, .drguploderbtn, .setting-st");
+            if (!t.is(e.target) && t.has(e.target).length === 0) {
+                $('.drguploderbtn').removeClass('open');
+                $('#drguploder, .setting-st').fadeOut('');
+            }
+        });
+
+
+        var URL = '@Url.Content("~/Dashboard/")';
+        var BASE_URL = '@Url.Content("~/Campaign/")';
+        var Contact_URL = '@Url.Content("~/Contact/")';
+        var Report_URL = '@Url.Content("~/Reports/")';
+
+        $.ajax({
+            url: Report_URL + 'GetDashboardItems',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (settings) {
+                viewModel = new dashBoardViewModel(BASE_URL, Contact_URL, reportPermissions, URL, Report_URL, settings, isStAdmin);
+                //viewModel.Settings(data);
+                ko.applyBindings(viewModel, document.getElementById("dashboardBody"));
+            },
+            error: function (error) {
+            }
+        });
+
+
+
+        function hoCarousel(hocarouselid) {
+
+            jQuery('#' + hocarouselid).jcarousel({
+                horizantol: true,
+                scroll: 2,
+
+            })
+        }
+
+        setTimeout(function () {
+            hoCarousel('dash-actions-carousel');
+        }, 3000);
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+
+    });
+
+</script>
+    
+}
+

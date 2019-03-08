@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PCRLeads>
+
+	<Lead LeadType="Community" source="PrivateCommunities.com">	
+	
+		<Contact City="Houston" Country="USA" Email="Bekisooy@att.net" FirstName="Beki" LastName="Sooy" RequestDate="2014-08-20 14:03:38.0" State="TX" StreetAddress="3219 Ivy falls dr"/>
+		
+		<Qualifications Comments="Floor plans of patio/villas"/>
+			
+		<PropertyInterest BuilderName="Spanish Oaks" CommunityID="1528" CommunityName="Spanish Oaks" MarketName="Austin" StateName="Texas"/>
+			
+		<Telemetry CountElements="14"/>
+
+	</Lead> 
+					
+				</PCRLeads>

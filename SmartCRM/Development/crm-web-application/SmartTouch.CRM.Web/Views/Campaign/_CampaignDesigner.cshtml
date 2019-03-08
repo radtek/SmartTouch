@@ -1,0 +1,618 @@
+﻿<div class="campaigns-drapanddrop" id="campaignDesignerCanvas">
+    <link href="~/Scripts/codemirror-2.37/theme/monokai.css" rel="stylesheet" />
+    <div class="campaigns-droparea " data-offset-top="130">
+        <div class="clearfix">
+
+            @*<div data-bind="visible:showDevices" class="campaign-viewbtn mbn pull-right">
+
+                <a href="javascript:void(0)" data-bind="event:{mouseup:isDesktopMode(true)}" class="btn btn-default btn-lg active" id="desktopview" data-class="desktop" onclick="campaignView(this)"><i class="icon st-icon-desktop"></i> [|Desktop|]</a>
+                <a href="javascript:void(0)" data-bind="event:{mouseup:isDesktopMode(false)}" class="btn btn-default btn-lg" id="tabletview" data-class="tablet" onclick="campaignView(this)"><i class="icon st-icon-tablet"></i> [|Tablet|]</a>
+                <a href="javascript:void(0)" data-bind="event:{mouseup:isDesktopMode(false)}" class="btn btn-default btn-lg" id="mobileview" data-class="mobile" onclick="campaignView(this)"><i class="icon st-icon-mobile-1"></i> [|Mobile|]</a>
+                </div>*@
+
+            <div id="campaign-tabs">
+                <a class="btn btn-lg" href="javascript:void(0)" data-toggle="modal" data-target="#designer-preview" data-bind="click:showPreview()">
+                    <i class="icon icon st-icon-eye notifiy-view"></i>[|Preview|]
+                </a>
+                <a class="btn btn-lg" href="javascript:void(0)" data-toggle="modal" data-target="#fulledit-View" data-bind="visible:($root.CampaignTypeId() == campaignType.REGULAR),click:fulleditcampaign()">
+                    <i class="icon st-icon-edit dwn"></i>[|View HTML Source|]
+                </a>
+                <a class="btn btn-lg" href="javascript:void(0)" data-bind="click:CodeDownlaod">
+                    <i class="icon st-icon-browser-download dwn"></i>[|Download HTML Source Code|]
+                </a>
+                <div class="cmp-brs" data-bind="visible:$root.CampaignTypeId()==campaignType.HTMLCODE">
+                    <input type="file" name="file" id="CodeCampaign" accept="text/*,html/*" class="cmp-inpt-fi" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaign Preview Modal BEGIN -->
+        <div class="modal fade" id="designer-preview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header">
+                        <div class="pull-right">
+                            <div class="btn-group campaign-viewbtn">
+                                <a href="javascript:void(0)" data-bind="event:{mouseup:isDesktopMode(true),click: function(){$root.SubView('desktop')}}" class="btn btn-default btn-lg active" id="desktopview" >
+                                    <i class="icon st-icon-desktop"></i> [|Desktop|]
+                                </a>
+                                <a href="javascript:void(0)" data-bind="event:{mouseup:isDesktopMode(false),click: function(){$root.SubView('tablet')}}" class="btn btn-default btn-lg" id="tabletview"  >
+                                    <i class="icon st-icon-tablet"></i> [|Tablet|]
+                                </a>
+                                <a href="javascript:void(0)" data-bind="event:{mouseup:isDesktopMode(false),click: function(){$root.SubView('mobile')}}" class="btn btn-default btn-lg" id="mobileview" >
+                                    <i class="icon st-icon-mobile-1"></i> [|Mobile|]
+                                </a>
+                            </div>
+                        </div>
+                        <h4 class="modal-title" id="myModalLabel">Campaign Preview</h4>
+
+                    </div>
+                    <div class="modal-body" style="min-height:500px">
+
+                        @Html.Partial("_CampaignPreview")
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Campaign Full Edit Screen-->
+        <div class="modal fade" id="fulledit-View" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Campaign Html</h4>
+                    </div>
+                    <div class="modal-body" style="min-height:500px">
+                        <div class="clearfix">
+                            <div id="campaignfulledit" class="in">
+                                <div id="contactfieldsinFltoolbar" style="display:none">
+                                    @Html.Partial("_CampaignControlsToolbar")
+                                </div>
+                                <div class="campaignfulledit-body" id="campfulledit" data-bind="valueUpdate: 'afterkeydown'">
+                                    <div contenteditable="true" id="fulledithtml" data-bind="html:$root.HTMLContent(), value:$root.HTMLContent()" style="width:100%;min-height:458px;overflow-y:scroll;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-lg btn-primary" data-bind="click:SaveEditableChanges()">Save</button>
+                        <button type="button" class="btn btn-lg btn-default" data-bind="click:CancelFullEdit()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--Regular Campaign-->
+        <!-- ko if : $parent.CampaignTypeId() == campaignType.REGULAR-->
+        <div class="campaigns-template" id="canvas">
+            <div class="campaigns-body" id="campaignsdesignarea" data-bind="style:{'max-width':campaignMaxWidth()+'px','background-color':StyleSheet().BackGround.OuterBackGround()}">
+                <div class="campaigns-list st-droparea" id="designerControls" data-bind="sortable:{template:'control-template', data:Controls},style:{'border-style':StyleSheet().Border.BorderStyle,'background-color':StyleSheet().BackGround.InnerBackGround, 'border-width':StyleSheet().Border.BorderThickness(), 'border-color':StyleSheet().Border.BorderColor()} ">
+                </div>
+            </div>
+            <span class="validationMessage" data-bind="validationMessage:controlsValidation"></span>
+        </div>
+        <!-- /ko -->
+        @Html.Partial("_ControlTemplates")
+
+        <!--Code Campaign-->
+        <!-- ko if: $parent.CampaignTypeId() == campaignType.HTMLCODE-->
+        <div class="campaigns-template" id="fhtml">
+            <div class="campaigns-body pd10" style=" margin: 0 auto; font-family: Calibri; ">
+                <div data-bind="visible:isHTMLEditable">
+                    <div class="campaignsdesignarea-body" id="campaigntemplatehtml" data-bind="valueUpdate: 'afterkeydown'">
+                        <textarea id="editablehtml" data-bind="text:$parent.HTMLContent,value:$parent.HTMLContent" style=" width: 100%; min-height: 250px;overflow-y:scroll;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ko-->
+        <!-- Plain Text Campaign -->
+        <!-- ko if : $parent.CampaignTypeId()==campaignType.PLAINTEXT-->
+        <div class="campaigns-template" id="plaintextcampaign" data-bind="valueUpdate: 'afterkeydown'">
+            <div id="plaintexteditor" contenteditable="true" data-bind="value:PlainText, text:PlainText" style="" ></div>
+        </div>
+        <!--/ko-->
+
+
+
+    </div>
+    <div class="modal fade" id="FEModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Save Campaign Html.</h4>
+                </div>
+                <div class="modal-body">
+                    <span>[|If you make major changes with respect to the structure of the campaign html.You will not be able to see the edit, delete and drag drop characteristics.|]</span>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left">
+
+                        <a class="btn btn-lg btn-primary" id="LSOK" data-bind="click:FEConfirm">[|Ok|]</a>
+
+                        <a class="btn btn-lg" aria-hidden="true"
+                           data-dismiss="modal" data-bind="click:FECancel" href="javascript:void(0)">[|Cancel|]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-bind="if:editMode()" id="editanimate">
+        <div class="modal-backdrop fade in">
+            <div class="stc-right-settings">
+                <div tabindex="-1" class="campaigns-theme-controls afx-new" data-offset-top="130" data-spy="affix" id="controleditor">
+                    <div class="st-editor-expander" data-bind="click:expandEditor" data-toggle="collapse">
+                        <i class="icon glyphicon glyphicon-chevron-left"></i>
+                    </div>
+                    <div class="st-editor-scroller" style="white-space:pre;background: none" data-toggle="collapse">
+                    </div>
+                    <h4 id="editor-header">Content Editor</h4>
+                    <div class="campaign-text-editor" id="editcontrol">
+                        <div id="contactfieldsintoolbar" style="display:none">
+                            @Html.Partial("_CampaignControlsToolbar")
+                        </div>
+                        <div id="Widgetedit">
+                            <div id="controlbeingedited" data-bind="html: editableContent,value: editableContent,valueUpdate: 'afterkeydown'" contenteditable="true" dir="ltr">
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer campagin-text-editor-footer">
+                        <div class="saveandclose">
+                            <div class="pull-right close-redactor-editor">
+                                <a href="campaigns.html" class="btn btn-lg btn-primary" id="cmp-htm-hd" data-bind="click:saveControl" data-dismiss="modal">Save &amp; Close</a>
+                                <a href="javascript:void(0)" class="btn btn-lg mln" id="cmp-htm-hd1" data-bind="click:cancelEditing" data-dismiss="modal">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="campaigns-theme-controls" data-offset-top="130" data-spy="affix" data-bind="visible:!editMode()">
+        <div class="btn-group ControlViews">
+            <a href="javascript:void(0)" class="btn btn-default btn-lg active" id="DesignControls" onclick="changeControls(this.id)" data-bind=" visible:$root.CampaignTypeId()==campaignType.REGULAR">
+                <i class="icon icon st-icon-windows"></i> [|Widgets|]
+            </a>
+            <a href="javascript:void(0)" class="btn btn-default btn-lg" id="MergeFields" onclick="changeControls(this.id)" data-bind=" visible:$root.CampaignTypeId()!=campaignType.REGULAR">
+                <i class="icon st-icon-converge"></i> [|Merge Fields|]
+            </a>
+            <a href="javascript:void(0)" class="btn btn-default btn-lg" id="contentdesign" onclick="changeControls(this.id)" data-bind=" visible:$root.CampaignTypeId()!=campaignType.PLAINTEXT">
+                <i class="icon icon-stc-coda_eco_ecology_environment_flower_green_leaf_nature_paper_plant"></i>[|Design|]
+            </a>
+            <a href="javascript:void(0)" class="btn btn-default btn-lg" id="contentimages" data-target="contentimageselements" data-name="Image" onclick="dragControlViews(this)" data-bind=" visible:$root.CampaignTypeId()==campaignType.REGULAR">
+                <i class="icon icon-stc-album_gallery_image_images_photo_photos_pictures_portfolio"></i> [|Images|]
+            </a>
+        </div>
+        <div class="drag-controls" data-bind="visible:!editMode()">
+            <div data-bind="visible:selfDesigner.currentControlBox()=='DesignControls'">
+                @Html.Partial("_ControlsToolbar")
+            </div>
+            <div data-bind="visible:selfDesigner.currentControlBox()=='MergeFields'">
+                @Html.Partial("_CampaignControlsToolbar")
+            </div>
+            <div data-bind="visible:selfDesigner.currentControlBox()=='contentimages'">
+                <div id="contentimageselements" class="content-block">
+                    <input type="file" name="files" id="images" />
+                    <div class="text-center mbm hide" id="uploadbuttonarea">
+                        <button type="button" id="uploadbutton" class="btn btn-primary" data-bind="click:$root.uploadfile">[|Upload Image|]</button>
+                    </div>
+                    <div class="content-images" id="imageTab">
+                        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ImageViewModel>()
+                    .Name("imagesgrid")
+
+                                    .AutoBind(true)
+                            .Columns(columns => { columns.Template(e => "").Title("[|Campaign Images|]"); })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Template(@<text>
+                            <div class="images-search">
+                                <span class="icon st-icon-search-2"></span>
+                                <input type="search" id="txtImagessearch" onkeydown="GetImagessearch();" class=" form-control display-inline" placeholder="[|Search|]" value="" />
+                            </div>
+                        </text>);
+                    })
+                                                                                    .ClientRowTemplate(@"<tr><td>
+                        <div class='' id='liCampaignImage#: ImageID #'>
+                        <div class='dropimg lib-img img-item'><img src='#:StorageName#' alt='#:FriendlyName#' /></div><div class='control-label' title='#:FriendlyName#'>#:FriendlyName#</div>
+                        <a href='javascript:void(0)' onclick='DeleteImage(#: ImageID #)' class='lib-img-del'> <i class='icon st-icon-delete'></i></a></div></td></tr>")
+
+                                                                                    .ClientAltRowTemplate(@"<tr class='even'><td>
+                        <div class='' id='liCampaignImage#: ImageID #'>
+                        <div class='dropimg lib-img img-item'><img src='#:StorageName#' alt='#:FriendlyName#' /></div><div class='control-label' title='#:FriendlyName#' >#:FriendlyName#</div>
+                        <a href='javascript:void(0)' onclick='DeleteImage(#: ImageID #)' class='lib-img-del'> <i class='icon st-icon-delete'></i></a></div></td></tr>")
+                                              .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                                              .Scrollable(scrollable => scrollable.Virtual(true))
+                                              .HtmlAttributes(new { @class = "campaign-images-grid" })
+                                              .DataSource(dataSource => dataSource
+                                              .Ajax()
+                                              .PageSize(10)
+                                                  //.ServerOperation(false)
+                                              .Read(read => read.Action("ImagesListView", "Campaign").Data("additionalInfo"))
+                                              ))
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+            <div data-bind="visible:selfDesigner.currentControlBox()=='contentdesign'">
+                <div>
+                    <a href="#Imageproperties" data-toggle="collapse" class="collapsed drag-controls-subheading"><span class="camp-specify">[|Backgrounds|]</span><span class="pull-right"><i class="icon st-icon-dropdownarrow"></i></span></a>
+                    <div class="form-horizontal-small custom-design collapse" id="Imageproperties">
+                        <div class="form-group">
+                            <label class="control-label">[|Outer Background|]</label>
+                            <div class="color-picker">
+                                <span class="color-thumbnail"></span>
+                                <input type="text" class="form-control" data-bind="kendoColorPicker: { buttons: true, change: applyOuterBgColor  }">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">[|Inner Background|]</label>
+                            <div class="color-picker">
+                                <span class="color-thumbnail"></span>
+                                <input data-bind="kendoColorPicker: { buttons: true,  change: applyInnerBgColor }" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#Borderproperties" data-toggle="collapse" class="collapsed drag-controls-subheading"><span class="camp-specify">[|Border|]</span><span class="pull-right"><i class="icon st-icon-dropdownarrow"></i></span></a>
+                    <div class="form-horizontal-small  custom-design collapse" id="Borderproperties">
+                        <div class="form-group">
+                            <label class="control-label">[|Border Style|]</label>
+                            <select name="mediumnm" class="select-block" data-bind="value:StyleSheet().Border.BorderStyle,options:StyleSheet().BorderStyles"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">[|Border Color|]</label>
+                            <div class="color-picker">
+                                <span class="color-thumbnail"></span>
+                                <input data-bind="kendoColorPicker:{buttons:true, change: applyBorderColor}" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">[|Border Thickness|]</label>
+                            <select name="mediumnm" class="select-block" data-bind="value:StyleSheet().Border.BorderThickness,options:StyleSheet().BorderThicknessStyles"></select>
+                        </div>
+                    </div>
+
+                    <a href="#Headingsproperties" data-toggle="collapse" class="collapsed drag-controls-subheading"><span class="camp-specify">[|Text|]</span><span class="pull-right"><i class="icon st-icon-dropdownarrow"></i></span></a>
+                    <div class="form-horizontal-small custom-design  collapse" id="Headingsproperties">
+                        <div class="form-group">
+                            <label class="control-label">[|Header Size|]</label>
+                            <div data-bind="kendoDropDownList:{dataTextField: 'Name', dataValueField:'TypeId', data:StyleSheet().HeaderTypes, value:StyleSheet().SelectedHeader}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">[|Heading Color|]</label>
+                            <div class="color-picker">
+                                <span class="color-thumbnail"></span>
+                                <input data-bind="kendoColorPicker:{buttons:true, change: applyHeadingColor }" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">[|Font Size|]</label>
+                            <input type="number" class="form-control" data-bind="value:StyleSheet().Headers()[StyleSheet().SelectedHeader()].FontSize" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">[|Font Color|]</label>
+                            <div class="color-picker">
+                                <span class="color-thumbnail"></span>
+                                <input data-bind="kendoColorPicker:{buttons:true, change: applyFontColor}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script id="fileTemplate" type="text/x-kendo-template">
+        <span class='k-progress'></span>
+        <div class='file-wrapper'>
+
+            <img id="campaignImage" height="40" width="40" />
+            <i class='file-heading file-name-heading'>#=name#</i>
+            <input type='text' id="txtFriendlyName" class="form-control" placeholder="[|Alt text|]" />
+
+            @*<button id="kendoUploadbutton" type='button' class='k-upload-action'></button>*@
+        </div>
+    </script>
+    <script type="text/javascript">
+
+
+
+        $("#CodeCampaign").kendoUpload({
+            async: {
+                saveUrl: "",
+                removeUrl: "",
+                autoUpload: true
+            },
+            localization: {
+                select: "<i class='icon icon-stc-Upload_up'></i><span class='cmp-brs-fi'>&nbsp;&nbsp;Browse to upload file</span>"
+            },
+            select: onSelectCode
+        });
+
+        function onSelectCode(e) {
+            $('.k-file').hide();
+            $(".k-upload-selected").hide();
+            $.each(e.files, function (index, value) {
+                var ok = value.extension.toLowerCase() == ".txt"
+                         || value.extension.toLowerCase() == ".html";
+
+                if (!ok) {
+                    e.preventDefault();
+                    notifyError("[|Please upload text, html files|]"); return false;
+                }
+                else {
+                }
+
+                var fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                    var r = cleanHTML(event.target.result);
+                    selfDesigner.codeMirror.setValue(r);
+                    setTimeout(function () {
+                        selfDesigner.codeMirror.refresh();
+                        selfDesigner.CaptureAllEdits();
+                    }, 1);
+                }
+                fileReader.readAsText(e.files[0].rawFile);
+            });
+            e.preventDefault();
+        };
+
+        var imageFetcher = 0;
+        function tabclick(tab) {
+            console.log(tab);
+
+            if (tab == 'U')
+                $("#FooterButtons").addClass("hide");
+            else if (tab == 'A') {
+                $("#FooterButtons").removeClass("hide");
+                if (imageFetcher == 0) {
+                    $('#txtImagessearch').keydown();
+                    imageFetcher++;
+                }
+            }
+        }
+
+
+
+        var changeControls = function (control) {
+            selfDesigner.currentControlBox(control);
+        }
+
+        //onImageDataBinding = function () {
+        //}
+        //onImageDataBound = function (e) {
+        //    var colCount = $("#imagesgrid").find('table colgroup > col').length;
+
+        //    if (e.sender.dataSource.view().length == 0) {
+        //        e.sender.table.find('tbody').append('<tr class="norecords"><td colspan="' + colCount + '" style=" margin: 0;"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No images found|]</span></div></td></tr>')
+        //    }
+        //    tBody = $('.k-virtual-scrollable-wrap tbody')[0];
+        //    ulElement = document.createElement('ul');
+        //    ulElement.innerHTML = tBody.innerHTML;
+        //    tBody.innerHTML = ulElement.outerHTML;
+        //    $('.st-media-library .k-grid-header-wrap.k-auto-scrollable').remove();
+        //    $('.st-media-library .k-grid-header').remove();
+        //}
+        //$('button.k-button.k-upload-selected').hide();
+
+        $("#otrBgClrPckr").kendoFlatColorPicker({
+            preview: false,
+            value: "#000"
+        });
+        $("#inrBgClrPckr").kendoFlatColorPicker({
+            preview: false,
+            value: "#000"
+        });
+        sessionStorage.initialFiles = "[]";
+        var initialFiles = JSON.parse(sessionStorage.initialFiles);
+
+        function onDataBinding(e) {
+            Reset();
+        }
+
+        function onDataBound(e) {
+            var colCount = $("#imagesgrid").find('table colgroup > col').length;
+
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr class="norecords"><td colspan="' + colCount + '" style=" margin: 0;"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No images found|]</span></div></td></tr>')
+            }
+            Reset();
+            adjustImageGalery();
+
+        };
+
+        var Images;
+        var AccountId = '@Html.Raw(Json.Encode(ViewBag.AccountID))';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        $("#images").kendoUpload({
+            async: {
+                saveUrl: "/Image/UploadImages",
+                autoUpload: false
+            },
+            template: kendo.template($('#fileTemplate').html()),
+            success: onSuccess,
+            multiple: false,
+            error: onError,
+            select: onSelect,
+            files: initialFiles,
+            upload: onUpload
+        });
+        function onUpload(e) {
+            e.data = {
+                FriendlyName: $("#txtFriendlyName").val()
+            };
+        }
+
+        function onSuccess(e) {
+            var response = e.response;
+            var successresult = response.success;
+            if (successresult == false) {
+                var errormessage = response.message;
+                notifyError(errormessage);
+                $('#uploadbutton').parent('div').removeClass('hide');
+                $('.k-upload-status.k-upload-status-total').remove();
+
+            } else {
+                $('.k-progress').hide();
+                $('.k-file-success').remove('');
+                $('.k-upload-status.k-upload-status-total').remove();
+                notifySuccess("Image uploaded successfully.")
+                GetImagessearch();
+            }
+        }
+
+        function onError(e) {
+            notifyError("An error occured Please contact administrator");
+            err1 = e.XMLHttpRequest.responseText;
+            $('#uploadbutton').parent('div').removeClass('hide');
+            $('.k-upload-status.k-upload-status-total').hide();
+        }
+
+        function onSelect(e) {
+            $.each(e.files, function (index, value) {
+                var ok = value.extension.toLowerCase() == ".jpg"
+                         || value.extension.toLowerCase() == ".jpeg"
+                         || value.extension.toLowerCase() == ".png"
+                         || value.extension.toLowerCase() == ".bmp"
+                ;
+                if (!ok) {
+                    e.preventDefault();
+                    notifyError("[|Please upload jpg, jpeg, png, bmp files|]");
+                }
+                else if ((e.files[0].size / (1024 * 1024)).toFixed(2) > 3) {
+                    e.preventDefault();
+                    notifyError("[|Image size should not be more than 3 MB|]");
+                } else {
+                    var currentInitialFiles = initialFiles;
+                    var current = {
+                        name: value.name,
+                        extension: value.extension,
+                        size: value.size
+                    }
+                    currentInitialFiles.push(current);
+                    sessionStorage.initialFiles = JSON.stringify(currentInitialFiles);
+                    ///console.log(sessionStorage.initialFiles);
+                     $('#kendoUploadbutton').addClass('hide');
+                    $('#uploadbutton').parent('div').removeClass('hide');
+                    $('.k-upload-status.k-upload-status-total').hide();
+                }
+            });
+
+            var fileReader = new FileReader();
+            fileReader.onload = function (event) {
+                var mapImage = event.target.result;
+                $("#campaignImage").attr('src', mapImage);
+            }
+            fileReader.readAsDataURL(e.files[0].rawFile);
+            adjustImageGalery();
+        }
+
+        function GetImagessearch() {
+            setTimeout(function () {
+                $filter = new Array();
+                var grid = $("#imagesgrid").data("kendoGrid"), searchBox = $("#txtImagessearch").val();
+                localStorage.removeItem("imagesearchtext");
+                localStorage.setItem("imagesearchtext", searchBox);
+                $("#imagesgrid").data("kendoGrid").dataSource.read();
+                Reset();
+            }, 500);
+        }
+
+
+        var DeleteImage = function (objImage) {
+            $(this).addClass('disabled');
+            innerLoader('imageTab');
+            $.ajax({
+                url: "Campaign/DeleteCampaignImage",
+                dataType: 'json',
+                data: { 'imageID': objImage },
+                contentType: "application/json; charset=utf-8"
+            }).then(function (response) {
+                removeinnerLoader('imageTab');
+
+                var filter = $.Deferred()
+                if (response.success) {
+                    filter.resolve(response)
+                } else {
+                    filter.reject(response.error)
+                }
+                return filter.promise()
+            }).done(function (data) {
+                GetImagessearch();
+                var Id = "#liCampaignImage" + objImage;
+                $(Id).parents('tr').remove();
+
+                var colCount = $("#imagesgrid").find('table tbody > tr').length;
+
+                if ($("#imagesdropablegrid").find('table tbody > tr').length == 0) {
+                    $("#imagesdropablegrid").find('table').find('tbody').append('<tr class="norecords"><td colspan="' + colCount + '" style=" margin: 0;"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No images found|]</span></div></td></tr>')
+                }
+
+            }).fail(function (error) {
+                GetImagessearch();
+                notifyError(error);
+            })
+        }
+
+        var adjustImageGalery = function () {
+
+            var contentHeight = $("#contentimageselements.content-block.active").height();
+            var searchHeight = $(".images-search").height();
+            var uploadButtonHeight = $("#uploadbuttonarea").outerHeight();
+            var dropAreaHeight = $(".k-widget.k-upload.k-header").outerHeight();
+            $(".k-grid-content").height(contentHeight - searchHeight - dropAreaHeight - (uploadButtonHeight > 0 ? uploadButtonHeight + 20 : uploadButtonHeight)); //10 padding
+        };
+        $(document).ready(function () {
+            $('#fulledithtml').redactor({
+                plugins: ['bufferbuttons', 'fontcolor', 'fontsize', 'fontname', 'fontfamily', 'table', 'imagemanager'],
+                buttons: ['html', 'formatting', 'bold', 'italic', 'underline', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'image', 'link', 'alignment', 'horizontalrule', 'html'],
+                replaceDivs: false,
+                focusend: true,
+                paragraphize: false,
+                //uploadImageField: true,
+                imageManagerJson: "/Campaign/ImagesListView",
+                imageUpload: "/Contact/UploadImage",
+                imageUploadErrorCallback: function (json) {
+                    notifyError(json.error);
+                },
+                //imageUpload: "/Image/UploadImages",
+                dragImageUpload: false,
+            });
+
+            //InititalizeLazyLoad();
+            //applyTableResizable();
+
+            $("#campfulledit .redactor-box ul").first().append('<li><a href="javascript:void(0)" id="fulleditMergeFields" ><span class="redactor-mergefied-disabled"><i class="icon st-icon-converge"></i> [|Merge Fields|]</span></a></li>');
+            $('#fulleditMergeFields').click(function () {
+                $('#contactfieldsinFltoolbar').toggle();
+            });
+
+            $("#contentimageselements .k-grid-content").height("295px");
+            $(".k-grid-content").wrap("<div class='st-img-gallery'></div>");
+            $(window).scroll(function () {
+                adjustImageGalery();
+            });
+        });
+
+        var highlightSaveCancelBtns = function(){
+            $('.saveandclose .pull-right').toggle("highlight", { color: '#88B764' });
+            $('.saveandclose .pull-right').toggle("highlight", { color: '#88B764' });
+        }
+
+    </script>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<BHILeads>
+  <Lead Source="BDX" LeadType="Rec. Community">
+    <Contact FirstName="Bob" LastName="Miller" PostalCode="78239" Email="amazon@msn.com" Country="USA" />
+    <Qualifications Comments="Lead Type: Brochure -  This prospect was matched to your community based on their request for recommendations meeting the following criteria: San Antonio 78260 and a 25 mile radius; and a price range from $240,000 to $500,000. " />
+    <PropertyInterest StateName="TX" MarketName="San Antonio" BuilderNumber="MILESTONE" BuilderName="Armadillo Homes - West" CommunityNumber="130150000" CommunityName="The Woods of Frederick Creek" />
+    <Telemetry CountElements="13" />
+  </Lead>
+</BHILeads>

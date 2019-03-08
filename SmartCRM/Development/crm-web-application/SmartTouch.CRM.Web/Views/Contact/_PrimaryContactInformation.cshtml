@@ -1,0 +1,245 @@
+﻿@using System.Threading
+@using System.Linq;
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.Entities
+
+@{
+
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.SendMail);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+    var isSTAdmin = ViewBag.IsSTAdmin;
+
+}
+
+<address class="mbn">
+    <ul class="address">
+        <li class="phone">
+
+            <div class="edit-field phone-field">
+
+                <div class="edit-field-label" data-bind="click:function(){ InlineEditing(3)}">
+                    <i class="icon st-icon-mobile prm"></i>
+                    <!-- ko if: Phones().length > 0 -->
+                    <!--ko foreach: Phones()-->
+                    <!--ko if: IsPrimary() == true-->
+                    <span data-bind="text: ($parent.PrimaryPhone().CountryCode() != null ? '+' + $parent.PrimaryPhone().CountryCode() + ' ' : ' ') + $parent.FormatPhone($parent.PrimaryPhone().Number())+ ' ' + ($parent.PrimaryPhone().Extension() != null ? ' Ext. ' + $parent.PrimaryPhone().Extension() + ' ': ' ') + ' (' + $parent.PrimaryPhone().PhoneTypeName() + ')'"></span>
+                    <!--/ko-->
+                    <!--/ko-->
+                    <!--/ko-->
+                    <!-- ko if: Phones().length == 0 || Phones().map(function(e){return e.IsPrimary()}).indexOf(true)==-1-->
+                    <span>[|Phone Not Available|]</span>
+                    <!--/ko-->
+                    <i class="icon st-icon-edit"></i>
+                </div>
+                <div class="edit-field-group">
+                    <div data-bind="foreach: Phones, visible:(Phones().length == 1 || $data.IsPrimary() == true)">
+                        <div class="form-group co-mmrb10">
+                            <label class="control-label" data-bind="visible: CountryCode != null && CountryCode != ''">[|Country Code|]</label>
+                            <input type="text" placeholder="xxx" class="form-control cu-smmd" data-bind="value: CountryCode, visible: CountryCode != null && CountryCode != ''" maxlength="3" />
+                            <label class="control-label">[|Phone|]</label>
+                            <input class="form-control" placeholder="xxx xxx xxxx" data-bind="value: Number" type="text" maxlength="16" />
+                            <label class="control-label" data-bind="visible: Extension != null && Extension != ''">[|Extension|]</label>
+                            <input type="text" placeholder="xxxxx" class="form-control cu-smmd" data-bind="value: Extension, visible: Extension != null && Extension != ''" maxlength="5" />
+
+                        </div>
+                        <div class="form-group co-mmrb10">
+                            <label class="control-label">[|Type|]</label>
+                            <input data-bind="kendoDropDownList: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data:$parent.PhoneTypes ,value: PhoneType }" />
+                        </div>
+                        <div class="form-group co-de-buttons">
+                            <label class="control-label">&nbsp;</label>
+                            <button data-bind="click:function(){ $parent.InlineSaving(3)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                            <button data-bind="click:function(){ $parent.InlineCancel(3)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </li>
+        <li class="email">
+            <div class="edit-field email-field">
+                <div class="edit-field-label">
+                    <i class="icon st-icon-mail-4 prm"></i>
+                    <!--ko if: DoNotEmail() == true -->
+                    <!--ko foreach:Emails()-->
+                    <!--ko if: EmailId() !== null && IsPrimary() === true -->
+                    <span data-bind="text:EmailId"></span>
+
+                    @*<a data-toggle="modal" data-target="#modal" data-bind="attr: { 'href': $parent.getEmail}, text:EmailId"></a>*@
+                    <span class="st-verified" data-bind="visible: EmailStatusValue() === 51" style="display:none"></span>
+                    <span class="st-notverified" data-bind="visible: EmailStatusValue() === 50" style="display:none"></span>
+                    <span class="st-soft-bounce" data-bind="visible: EmailStatusValue() === 52" style="display:none"></span>
+                    <span class="st-hard-bounce" data-bind="visible: EmailStatusValue() === 53" style="display:none"></span>
+                    <span class="st-unsubscribed" data-bind="visible: EmailStatusValue() === 54" style="display:none"></span>
+                    <span class="st-complained" data-bind="visible: EmailStatusValue() === 56" style="display:none"></span>
+                    <span class="st-suppressed" data-bind="visible: EmailStatusValue() === 57" style="display:none"></span>
+                    <!--/ko-->
+                    <!--/ko-->
+                    <!--/ko-->
+                    <!--ko if: DoNotEmail() == false -->
+                    <!--ko foreach:Emails()-->
+                    <!--ko if: EmailId() !== null && IsPrimary() === true -->
+                    <!--ko if: EmailStatusValue() == 53 || EmailStatusValue() == 54 || EmailStatusValue() == 57 -->
+                    <span data-bind="text:EmailId"></span>
+                    <!--/ko-->
+                    <!--ko if: EmailStatusValue() != 53 && EmailStatusValue() != 54 && EmailStatusValue() != 57 -->
+                    @if (Permissions.Where(s => s.Module == AppModules.SendMail).Select(s => s.HasPermission).SingleOrDefault())
+                    {
+                        <a data-toggle="modal" data-target="#modal" data-bind="attr: { href: $parent.getEmail(EmailId(),ContactID())},text:EmailId"></a>
+                    }
+                    else
+                    {
+                        <span data-bind="text:EmailId"></span>
+                    }
+                    <!--/ko-->
+                    @*<a data-toggle="modal" data-target="#modal" data-bind="attr: { 'href': $parent.getEmail}, text:EmailId"></a>*@
+                    <span class="st-verified" data-bind="visible: EmailStatusValue() === 51" style="display:none" title="Verified"></span>
+                    <span class="st-notverified" data-bind="visible: EmailStatusValue() === 50" style="display:none" title="Unverified"></span>
+                    <span class="st-soft-bounce" data-bind="visible: EmailStatusValue() === 52" style="display:none" title="Soft bounce"></span>
+                    <span class="st-hard-bounce" data-bind="visible: EmailStatusValue() === 53" style="display:none" title="Hard bounce"></span>
+                    <span class="st-unsubscribed" data-bind="visible: EmailStatusValue() === 54" style="display:none" title="Unsubscribed"></span>
+                    <span class="st-complained" data-bind="visible: EmailStatusValue() === 56" style="display:none" title="Complained"></span>
+                    <span class="st-suppressed" data-bind="visible: EmailStatusValue() === 57" style="display:none" title="Suppressed"></span>
+
+                    <!--/ko-->
+                    <!--/ko-->
+                    <!--/ko-->
+                    <!-- ko if: Emails().length === 0 || Emails().map(function(e){return e.IsPrimary()}).indexOf(true)==-1-->
+                    <span>[|Email Not Available|]</span>
+                    <!--/ko-->
+                    <i data-bind="click:function(){ InlineEditing(6)}" class="icon st-icon-edit"></i>
+                </div>
+
+                <div class="edit-field-group">
+                    <div data-bind="foreach: Emails, visible:(Emails().length == 1 || $data.IsPrimary() === true)">
+                        <div class="form-group co-mmrb10">
+                            <label class="control-label">[|Email|]</label>
+                            <input type="email" placeholder="someone@example.com" class="form-control cu-medium" maxlength="256" data-bind="value:EmailId,attr:{id:'Email_'+ $index()}, event: { blur: MailGunValidater.bind($data,$index()) }" />
+                            <div data-bind="attr:{id:'emailStatus_'+ $index()}">
+                            </div>
+                        </div>
+                        @if (isSTAdmin)
+                        {
+                            <div class="form-group co-mmrb10">
+                                <label class="control-label">[|Status|]</label>
+                                <input data-bind="kendoDropDownList: {dataValueField: 'Id', dataTextField:'Type', data:$parent.EmailStatuses, value: EmailStatusValue}" />
+                            </div>
+                        }
+                        <div class="form-group co-de-buttons">
+                            <label class="control-label">&nbsp;</label>
+                            <button data-bind="click:function(){ $parent.InlineSaving(6)}" class="btn btn-default" type="button"><i class="fui-check"></i></button>
+                            <button data-bind="click:function(){ $parent.InlineCancel(6)}" class="btn btn-default" type="button"><i class="fui-cross"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="location">
+            <div class="edit-field address-field">
+                <div class="edit-field-label field-address">
+                    <i class="icon st-icon-pin prm"></i>
+                    <!-- ko if: DefaultAddress -->
+                    <div title="Zillow Lookup" class="edit-field-label field-label-plusicon" data-bind="visible:DefaultAddress() && DefaultAddress().AddressLine1 && (DefaultAddress().Zipcode || (DefaultAddress().City && DefaultAddress().State)), click: function(){ zillowLookUp(1)} ">
+                        <img src="/img/zillow_address_lookup.gif" />
+                    </div>
+                    <span id="addresstext" data-bind="text: DefaultAddress().Stringified, click:function(){ InlineEditing(4)}"></span>
+                    @*<span data-bind="text: ' ('+DefaultAddress().AddressType+')'"></span>*@
+                    <!--/ko-->
+                    <!-- ko ifnot:DefaultAddress -->
+                    <span>[|Address Not Available|]</span>
+                    <!--/ko-->
+                    <i class="icon st-icon-edit" data-bind="click:function(){ InlineEditing(4)}"></i>
+                </div>
+
+                <div class="edit-field-group">
+                    <div data-bind="foreach: Addresses">
+                        <div data-bind="visible:($parent.Addresses().length == 1 || $data.IsDefault)">
+                            <div class="form-group" id="addressType_adtp">
+                                <label class="control-label">Address Type <span class="required">*</span></label>
+                                <input id="addressType" data-bind="kendoDropDownList: {dataValueField: 'DropdownValueID', dataTextField:'DropdownValue', data: $parent.AddressTypes, value: AddressTypeID }" />
+                            </div>
+
+                            <div class="form-group" id="country_cty">
+                                <label class="control-label">Country <span class="required">*</span></label>
+                                <input id="country" data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'Code', data: $parent.Countries, change: $parent.countryChanges, value: Country.Code, optionLabel: '[|Select|]...' }" />
+                            </div>
+                            <div class="form-group" id="state_st">
+                                <label class="control-label">
+                                    <span data-bind="visible:Country.Code =='CA'">[|Province|] <span class="required">*</span></span>
+                                    <span data-bind="visible:(Country.Code =='' || Country.Code !== 'CA')">[|State|] <span class="required">*</span></span>
+                                </label>
+                                <input id="state" data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'Code',change:$parent.stateChange, data: $parent.States, value: State.Code,optionLabel: '[|Select|]...'}" />
+                            </div>
+                            <div class="form-group" id="text_txt_l1">
+                                <label class="control-label">Address Line 1</label>
+                                <input type="text" placeholder="[|5316 Highway 290 West|]" class="form-control" data-bind="value: AddressLine1" maxlength="95">
+                            </div>
+                            <div class="form-group" id="text_txt_l2">
+                                <label class="control-label">Address Line 2</label>
+                                <input type="text" placeholder="[|Suite 560|]" class="form-control" data-bind="value: AddressLine2" maxlength="95">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">
+                                    <span data-bind="visible:Country.Code =='CA'">[|Municipality|]</span>
+                                    <span data-bind="visible:(Country.Code =='' || Country.Code !== 'CA')">[|City|]</span>
+                                </label>
+                                <input type="text" placeholder="" class="form-control" data-bind="value: City" maxlength="35">
+                            </div>
+                            <div class="form-group co-mmrb10">
+                                <label class="control-label">
+                                    <span data-bind="visible:Country.Code =='CA'">[|Postal Code|]</span>
+                                    <span data-bind="visible:(Country.Code =='' || Country.Code !== 'CA')">[|Zip Code|]</span>
+                                </label>
+                                <input type="text" class="form-control" data-bind="value:ZipCode" maxlength="11">
+                            </div>
+                            <div class="form-group co-de-buttons">
+                                <label class="control-label">&nbsp;</label>
+                                <button class="btn btn-default" data-bind="click:function(){ $parent.InlineSaving(4)}" type="button"><i class="fui-check"></i></button>
+                                <button class="btn btn-default" data-bind="click:function(){ $parent.InlineCancel(4)}" type="button"><i class="fui-cross"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</address>
+
+<div class="modal fade" id="zillowModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:1050;">
+    <div class="modal-dialog research-contact">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">SmartTouch&#8482 CRM - Research Contact</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" data-bind="foreach: Lookups">
+                    <div>
+                        <div class="whitepageownerdetails" data-bind="text: $parent.ContactType() == 2 ? $parent.CompanyName : $parent.FullName"></div>
+                        <div><span data-bind="text:Street"></span> <span data-bind="text:City"></span></div>
+                        <div><span data-bind="text:State"></span> <span data-bind="text:ZipCode"></span></div>
+                    </div>
+                    <ul class="text-center zillow-contact-details">
+                        <li><a data-bind="attr:{ href: HomeDetails, target: '_blank' }"> Zillow Home Details </a></li>
+                        <li><a data-bind="attr:{ href: GraphsAndData, target: '_blank' }">Graphs and Data </a></li>
+                        <li><a data-bind="attr:{ href: MapThisHome, target: '_blank' }">Map This Home </a></li>
+                        <li><a data-bind="attr:{ href: Comparables, target: '_blank' }">Comparables </a></li>
+                        @*<li><a data-bind="attr:{ href: Whitepages, target: '_blank' }">WhitePages </a></li>*@
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

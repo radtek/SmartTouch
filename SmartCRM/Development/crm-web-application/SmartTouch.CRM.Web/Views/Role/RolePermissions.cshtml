@@ -1,0 +1,277 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model RolePermissionsViewModel
+
+@*<script src="~/Scripts/ViewModels/RolePermissionsViewModel.js"></script>*@
+@Scripts.Render("~/bundles/rolevm")
+
+
+@*@using (Html.BeginForm("AddRolePermissions", "Role", FormMethod.Post,
+                                          new { name = "form-data", id = "form" }))
+    {*@
+
+<div class="sub-container" id="RolePermissions">
+    @*<div class="main-header mbl">
+            Roles Access Permissions
+        </div>*@
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("[|Roles|]", "RolesList", "Role", null, null)</li>
+        <li class="active">
+            <a href="javascript:void(0)">                
+                <span>[|Roles Access Permissions|]</span>               
+            </a>
+        </li>
+    </ul>
+
+    <div class="main-header">
+        [|Roles Access Permissions|]
+    </div>
+
+    <div>
+        <div class="k-grid roles-grid">
+            <table>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <label class="col-md-2 col-sm-3 col-xs-4 control-label pln pts bold">[|Roles|]</label>
+                            <span class="col-md-4 col-sm-5 col-xs-6">
+                                <input data-bind="kendoDropDownList: {dataTextField:'RoleName',dataValueField:'RoleId',data: Roles, value: SelectedRole,optionLabel: '[|Select Role|]'}" />
+                                <span class="validationMessage" data-bind="validationMessage:roleValidation"></span>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tbody data-bind="foreach:Modules">
+                    <tr>
+                        <!--ko if :  ModuleId() != 37 && ModuleId() != 70 && ModuleId() != 71 && ModuleId() != 72 && ModuleId() != 73 -->
+                        <td>
+                              <div class="form-group">
+                                    <label class="checkbox" data-bind="attr:{for:'Checkbox2'+($index() + 1)}">
+                                        <input type="checkbox" data-toggle="checkbox" data-bind="checked:IsSelected,attr:{id:'Checkbox2'+(ModuleId() + 1)},click:$parent.parentModuleChecked">
+                                        <label class="col-sm-offset-1 control-label pln bold" data-bind="template:{name:ModuleId()+''}">
+                                        </label>
+                                    </label>
+                                    @*<div class="col-md-10 col-sm-8 col-xs-8">
+                                        <label class="checkbox" data-bind="attr:{for:'Checkbox2'+($index() + 1)}">
+                                            <input type="checkbox" data-toggle="checkbox" data-bind="checked:IsSelected,attr:{id:'Checkbox2'+(ModuleId() + 1)},click:$parent.parentModuleChecked">
+                                        </label>
+                                    </div>*@
+                               </div>
+                        </td>
+                        <!--/ko-->
+                    </tr>
+                    <!-- ko if:SubModules().length > 0 -->
+                    <tr>
+                        <td data-bind="foreach:SubModules">
+                            <div class="form-group col-sm-3 col-xs-3">
+                                <label class="checkbox" data-bind="attr:{for:'Checkbox2'+($index() + 1)}">
+                                    <input type="checkbox" data-toggle="checkbox" data-bind="checked:IsSelected,attr:{id:'Checkbox2'+(ModuleId() + 1)},click:$root.childModuleChecked($parent,$data)">
+                                    <label class="col-sm-offset-1 control-label phn" data-bind="template:{name:ModuleId()+''}"></label>
+                                </label>
+                                @*<div class="col-md-6 col-sm-2 col-xs-3 phn">
+                                    <label class="checkbox" data-bind="attr:{for:'Checkbox2'+($index() + 1)}">
+                                        <input type="checkbox" data-toggle="checkbox" data-bind="checked:IsSelected,attr:{id:'Checkbox2'+(ModuleId() + 1)},click:$root.childModuleChecked($parent,$data)">
+                                    </label>
+                                </div>*@
+                            </div>
+                        </td>
+                    </tr>
+                    <!--/ko-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="hr-border"></div>
+    <div class="">
+        <a class="btn btn-lg btn-primary" data-bind="click:saveUserPermissions">[|Save|]</a>
+    </div>
+
+</div>
+@*}*@
+<script>
+    $(document).ready(function () {
+
+        var BASE_URL = '@Url.Content("~/Role/")';
+        var rolePermissionModel = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var roleViewModel = new RolePermissionsViewModel(rolePermissionModel,BASE_URL);
+        $.each(roleViewModel.Modules(), function(index,value){
+            value.ModuleId = ko.observable(value.ModuleId);
+            value.ModuleName = ko.observable(value.ModuleName);
+            value.IsSelected = ko.observable(value.IsSelected);
+            value.SubModules = ko.observableArray(value.SubModules);
+            if(value.SubModules != null)
+            {
+                $.each(value.SubModules(),function(index,subValue){
+                    subValue.ModuleId = ko.observable(subValue.ModuleId);
+                    subValue.ModuleName = ko.observable(subValue.ModuleName);
+                    subValue.IsSelected = ko.observable(subValue.IsSelected);
+                });
+            }
+        });
+        ko.applyBindings(roleViewModel);
+
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+    })
+
+</script>
+<script type="text/html" id="1">
+    <i class="icon st-icon-polaroid mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="2">
+    <i class=" icon st-icon-user-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="3">
+    <i class="icon st-icon-users mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="4">
+    <i class=" icon st-icon-bullhorn-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="9">
+    <i class="icon st-icon-tag mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="10">
+    <i class="icon st-icon-paragraph-justify-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="16">
+    <i class="icon st-icon-opputunities mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="19">
+    <i class="icon st-icon-polaroid-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="20">
+    <i class="icon st-icon-menu-pull-down mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="21">
+    <i class="icon st-icon-marquee-plus mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="22">
+    <i class="icon st-icon-database-add mrm tooltiptoggle "></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="23">
+    <i class="icon st-icon-inbox mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="24">
+    <i class="icon st-icon-clipboard-2 mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="27">
+    <i class="icon st-icon-role mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="31">
+    <i class="icon st-icon-search-2 mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="5">
+    <i class="icon st-icon-tick display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="6">
+    <i class="icon st-icon-book-lines display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="7">
+    <i class="icon st-icon-pin-2 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="8">
+    <i class="icon st-icon-support-3 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="17">
+    <i class="icon st-icon-tick display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="18">
+    <i class="icon st-icon-book-lines display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="25">
+    <i class="icon st-icon-envelope display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="26">
+    <i class="icon st-icon-speech-bubble-center-2 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="29">
+    <i class="icon st-icon-speech-bubble-center-2 display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="30">
+    <i class="icon st-icon-user display-inline mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="32">
+    <i class="icon st-icon-tag mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="33">
+    <i class="icon st-icon-split mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="34">
+    <i class="icon st-icon-dashboard mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="35">
+    <i class="icon st-icon-browser-download mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="36">
+    <i class="icon st-icon-user-3 mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="37">
+    <i class="icon st-icon-key mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="73">
+    <i class="icon st-icon-key mrm"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="74">
+    <i class="icon st-icon-bullhorn-2 mrm tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="76">
+    <i class="icon st-icon-mail-incoming tooltiptoggle"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="77">
+    <img src="/img/litmus-test-icon.png" />
+    <span>[|Litmus&#x00AE; Test|]</span>
+</script>
+<script type="text/html" id="79">
+    <img src="/img/leaf.png">
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="80">
+    <i class="icon st-icon-envelope"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="81">
+    <i class="icon st-icon-envelope"></i>
+    <span data-bind="text:ModuleName"></span>
+</script>
+<script type="text/html" id="82">
+    <i class="icon st-icon-paragraph-justify-2 mrm tooltiptoggle"></i>
+    <span>[|Approve Leads|]</span>
+</script>

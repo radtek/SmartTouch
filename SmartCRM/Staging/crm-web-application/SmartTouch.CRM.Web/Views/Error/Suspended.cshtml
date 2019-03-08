@@ -1,0 +1,128 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    Layout = null;
+    ViewBag.Title = "Error";
+    var StatusMessage = ViewBag.StatusMessage == null ? "" : ViewBag.StatusMessage;
+    var AccountName = ViewBag.AccountName == null ? "" : ViewBag.AccountName;
+    var ImageSource = ViewBag.ImageSrc == null ? "" : ViewBag.ImageSrc;
+    var NewStatusMessage = ViewBag.StatusMessage == null ? "" : ViewBag.StatusMessage;
+    NewStatusMessage = NewStatusMessage.Length > 250 ? NewStatusMessage.Substring(0, 250) + "......" : NewStatusMessage;
+}
+
+@Styles.Render("~/Content/smarttouchframework")
+@Styles.Render("~/Content/smarttouchcss")
+<title>On Hold</title>
+
+
+<link rel="shortcut icon" href="~/img/favicon.ico">
+<div class="body-container">
+    <section class="main-container">
+        <div class="st-su-error">
+               <div class="st-su-logo">
+                  <img src="../../img/login/logo.png" alt="Smarttouch" />
+               </div>
+            <div class="error">
+                <div class="suspended-view">
+                </div>
+                <div class="error-message">
+                    <div class="error-message-cell">
+                        <div class="suspended-msg-title">[|On Hold|]</div>
+                        <div class="error-msg-dis" title="@StatusMessage">@NewStatusMessage</div>
+                        <div class="error-heading-container">
+                            @if (ImageSource != "")
+                            {
+                                <div class="error-heading">
+                                    <img src="@ImageSource" />
+                                </div>
+                            }
+                            <div class="error-heading-msg">@AccountName</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="st-su-footer">SmartTouch Interactive, 4833 Spicewood Springs Road Suite 102 Austin, Texas 78759 Phone: 512-582-5900</div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .error-message {
+        width: 430px;
+        text-align: left;
+        height: 220px;
+        overflow: hidden;
+        vertical-align: top;
+        display: table;
+        width: 420px;
+        float: left;
+    }
+
+        .error-message img {
+            max-width: 100%;
+            max-height: 100%;
+            vertical-align: top;
+        }
+
+    .error-message-cell {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .error-heading-container {
+        border-top: 1px #dde1e4 solid;
+        padding-top: 12px;
+        margin-top: 12px;
+    }
+
+    .error-heading, .error-heading-msg {
+        display: inline-block;
+        vertical-align: middle;
+        height: 36px;
+        line-height: 36px;
+    }
+
+    .error-heading-msg {
+        margin-left: 24px;
+        font-size: 12px;
+    }
+
+    .st-su-error {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -317px;
+        margin-top: -144px;
+    }
+
+        .st-su-error .error {
+            position: relative;
+            left: 0px;
+            top: 0px;
+            margin: 0px;
+        }
+
+        .st-su-error .error-heading {
+            margin-right: 20px;
+        }
+
+        .st-su-error .error-heading-msg {
+            margin-left: 0px;
+        }
+
+    .st-su-logo {
+        padding-bottom: 15px;
+        text-align: center;
+    }
+
+        .st-su-logo img {
+            max-width: 200px;
+        }
+
+    .st-su-footer {
+        padding-top: 10px;
+        text-align: center;
+        font-size: 11px;
+        color: #A5A5A5;
+    }
+</style>

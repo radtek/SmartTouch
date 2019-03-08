@@ -1,0 +1,577 @@
+Return-Path: <haripratap.elduri@landmarkit.co.in>
+Received: from mail-pb0-f54.google.com (mail-pb0-f54.google.com [209.85.160.54]) by mail.landmarkit.in with SMTP;
+   Sun, 20 Oct 2013 00:46:49 -0500
+Received: by mail-pb0-f54.google.com with SMTP id ro12so5565521pbb.13
+        for <spandana.jaggumantri@landmarkit.in>; Sat, 19 Oct 2013 22:47:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20130820;
+        h=x-gm-message-state:from:to:references:in-reply-to:subject:date
+         :message-id:mime-version:content-type:thread-index:content-language;
+        bh=p2RBrfZlQyA1pDNrYRS1p774yXdqTsYaXL+QhzpusFo=;
+        b=UICINF5dWMZB2CS1zjUb251dqbYZEM6nvxvzxKFqX3jWUG9jKa+eHb8GgbOSLTZYup
+         L6tO5bODmok86k3e4nidvYioyF2e2/hx8wGNds2DyOehIG/ZrDpTlGTDYixT6KTcZCl/
+         AP9ZBI24K9vqYMIcRWEt58NviEL5IFKyGLTZMGKu23YBCgPyWhvIw87DzKqX78g3udzp
+         vi8E8GIKz+6WFtr2CA3uvu8mIU9tawJ436p/aNaMdF+e2pPQpyK1w6sZLP8TIlWTi1w5
+         VPD8ZBcCiB/OwwcXJa7Gd97PEwlHZTMVIXcHGiv1FfFHGRxImCsjOnIAymkyvv6qp5SA
+         goSA==
+X-Gm-Message-State: ALoCoQmVQrrjHMGar6Dn5Tp4qoq6XXTyFfdLKJ4T4XZA7lrHNIQfBu0Ac2CFNgrCCovHFgUB9cc7
+X-Received: by 10.66.154.1 with SMTP id vk1mr11795332pab.85.1382248033873;
+        Sat, 19 Oct 2013 22:47:13 -0700 (PDT)
+Return-Path: <haripratap.elduri@landmarkit.co.in>
+Received: from ElduriHari ([183.82.1.176])
+        by mx.google.com with ESMTPSA id go4sm12473330pbb.15.2013.10.19.22.47.11
+        for <spandana.jaggumantri@landmarkit.in>
+        (version=TLSv1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 19 Oct 2013 22:47:13 -0700 (PDT)
+From: "Elduri Hari Pratap" <haripratap.elduri@landmarkit.co.in>
+To: <spandana.jaggumantri@landmarkit.in>
+References: <63429AFDAE6DFA46857D348CAB6EAD591C5DBA@DAGN07C-E6.exg6.exghost.com>
+In-Reply-To: <63429AFDAE6DFA46857D348CAB6EAD591C5DBA@DAGN07C-E6.exg6.exghost.com>
+Subject: SPAM-HIGH:  FW: Wireframe flow
+Date: Sun, 20 Oct 2013 11:17:06 +0530
+Message-ID: <005901cecd57$d13d7e00$73b87a00$@landmarkit.co.in>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="----=_NextPart_000_005A_01CECD85.EB032780"
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQMhBFQd3aUQPdNJ9eYNYbB8ig/I0JdYpjjA
+Content-Language: en-us
+X-SmarterMail-Spam: URIBL:18
+X-SmarterMail-TotalSpamWeight: 72
+
+This is a multipart message in MIME format.
+
+------=_NextPart_000_005A_01CECD85.EB032780
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_001_005B_01CECD85.EB032780"
+
+
+------=_NextPart_001_005B_01CECD85.EB032780
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+FYI
+
+ 
+
+From: Grant C. Taylor [mailto:gtaylor@smarttouchinteractive.com] 
+Sent: Saturday, October 19, 2013 10:01 PM
+To: Landmark IT
+Cc: Alan Daniel; Robert Cowes; Ashok Reddy; Elduri Hari Pratap;
+siddhartha.thathayyagari@landmarkit.in
+Subject: Wireframe flow
+
+ 
+
+I created this Moqup project to show the flow from view to view:
+https://moqups.com/grantctaylor/0y5DJxiZ
+
+ 
+
+And, here's a quick video with narration:
+http://screencast.com/t/s4zHK7j13Zvs
+
+ 
+
+Btw, my inspiration for the action bar is Gmail and Outlook.com
+
+ 
+
+Here's an incomplete list of inspiration for certain features:
+
+ 
+
+
+Area
+
+Inspiration
+
+Notes
+
+
+Action bar
+
+Gmail & Outlook.com
+
+	
+
+Manage tags
+
+Gmail
+
+Gmail labels
+
+
+Contacts
+
+Nimble & OnePageCRM
+
+This view was inspired by a lot of sources but Nimble and OnePageCRM are the
+best references
+
+
+Search bar
+
+Nimble & Base
+
+	
+
+Advanced search
+
+Nimble
+
+	
+
+Opportunity
+
+OnePageCRM
+
+	
+
+Actions
+
+OnePageCRM
+
+	
+
+Document library
+
+Dropbox
+
+	
+
+Campaign editor
+
+RedCappi
+
+	
+
+Form editor
+
+RedCappi
+
+	
+
+Marketing Automation
+
+Infusionsoft & Bislr
+
+	
+
+ 
+
+ 
+
+Grant C. Taylor
+Product Manager
+
+SmartTouchR Interactive
+Leads + CRM + Marketing Automation = More Sales
+5316 Hwy. 290 West, Ste. 560
+M: 512-736-9032
+ <mailto:gtaylor@smarttouchinteractive.com>
+gtaylor@smarttouchinteractive.com
+ <http://www.smarttouchinteractive.com/> www.SmartTouchInteractive.com
+
+ <http://www.linkedin.com/company/2663331?trk=tyah>
+<https://plus.google.com/111821292339772191040/posts>
+<https://www.facebook.com/smarttouchint>
+<https://mobile.twitter.com/SmartTouchInt> 
+
+ 
+
+
+------=_NextPart_001_005B_01CECD85.EB032780
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40"><head><meta =
+http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii"><meta name=3DGenerator content=3D"Microsoft Word 15 =
+(filtered medium)"><!--[if !mso]><style>v\:* =
+{behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style><![endif]--><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+span.EmailStyle18
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]--></head><body lang=3DEN-US =
+link=3D"#0563C1" vlink=3D"#954F72"><div class=3DWordSection1><p =
+class=3DMsoNormal><span =
+style=3D'color:#1F497D'>FYI<o:p></o:p></span></p><p =
+class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p><div><div =
+style=3D'border:none;border-top:solid #E1E1E1 1.0pt;padding:3.0pt 0in =
+0in 0in'><p class=3DMsoNormal><b>From:</b> Grant C. Taylor =
+[mailto:gtaylor@smarttouchinteractive.com] <br><b>Sent:</b> Saturday, =
+October 19, 2013 10:01 PM<br><b>To:</b> Landmark IT<br><b>Cc:</b> Alan =
+Daniel; Robert Cowes; Ashok Reddy; Elduri Hari Pratap; =
+siddhartha.thathayyagari@landmarkit.in<br><b>Subject:</b> Wireframe =
+flow<o:p></o:p></p></div></div><p =
+class=3DMsoNormal><o:p>&nbsp;</o:p></p><p class=3DMsoNormal><span =
+style=3D'font-size:12.0pt'>I created this Moqup project to show the flow =
+from view to view: <a =
+href=3D"https://moqups.com/grantctaylor/0y5DJxiZ">https://moqups.com/gran=
+tctaylor/0y5DJxiZ</a><o:p></o:p></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></p><p =
+class=3DMsoNormal><span style=3D'font-size:12.0pt'>And, here&#8217;s a =
+quick video with narration: <a =
+href=3D"http://screencast.com/t/s4zHK7j13Zvs">http://screencast.com/t/s4z=
+HK7j13Zvs</a><o:p></o:p></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></p><p =
+class=3DMsoNormal><span style=3D'font-size:12.0pt'>Btw, my inspiration =
+for the action bar is Gmail and Outlook.com<o:p></o:p></span></p><p =
+class=3DMsoNormal><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></p><p =
+class=3DMsoNormal><span style=3D'font-size:12.0pt'>Here&#8217;s an =
+incomplete list of inspiration for certain =
+features:<o:p></o:p></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></p><table =
+class=3DMsoNormalTable border=3D0 cellspacing=3D0 cellpadding=3D0 =
+width=3D629 style=3D'width:472.1pt;border-collapse:collapse'><tr =
+style=3D'height:15.0pt'><td width=3D114 nowrap valign=3Dtop =
+style=3D'width:85.5pt;border:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><b><span =
+style=3D'color:black'>Area<o:p></o:p></span></b></p></td><td width=3D168 =
+nowrap valign=3Dtop style=3D'width:1.75in;border:solid windowtext =
+1.0pt;border-left:none;padding:0in 5.4pt 0in 5.4pt;height:15.0pt'><p =
+class=3DMsoNormal><b><span =
+style=3D'color:black'>Inspiration<o:p></o:p></span></b></p></td><td =
+width=3D347 nowrap valign=3Dtop style=3D'width:260.6pt;border:solid =
+windowtext 1.0pt;border-left:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><b><span =
+style=3D'color:black'>Notes<o:p></o:p></span></b></p></td></tr><tr =
+style=3D'height:15.0pt'><td width=3D114 nowrap valign=3Dtop =
+style=3D'width:85.5pt;border:solid windowtext =
+1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:15.0pt'><p =
+class=3DMsoNormal><span style=3D'color:black'>Action =
+bar<o:p></o:p></span></p></td><td width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Gmail &amp; =
+Outlook.com<o:p></o:p></span></p></td><td width=3D347 nowrap =
+valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Manage tags<o:p></o:p></span></p></td><td =
+width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Gmail<o:p></o:p></span></p></td><td width=3D347 =
+nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Gmail labels<o:p></o:p></span></p></td></tr><tr =
+style=3D'height:15.0pt'><td width=3D114 nowrap valign=3Dtop =
+style=3D'width:85.5pt;border:solid windowtext =
+1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:15.0pt'><p =
+class=3DMsoNormal><span =
+style=3D'color:black'>Contacts<o:p></o:p></span></p></td><td width=3D168 =
+nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Nimble &amp; =
+OnePageCRM<o:p></o:p></span></p></td><td width=3D347 nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>This view was inspired by a lot of sources but =
+Nimble and OnePageCRM are the best =
+references<o:p></o:p></span></p></td></tr><tr =
+style=3D'height:15.0pt'><td width=3D114 nowrap valign=3Dtop =
+style=3D'width:85.5pt;border:solid windowtext =
+1.0pt;border-top:none;padding:0in 5.4pt 0in 5.4pt;height:15.0pt'><p =
+class=3DMsoNormal><span style=3D'color:black'>Search =
+bar<o:p></o:p></span></p></td><td width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Nimble &amp; Base<o:p></o:p></span></p></td><td =
+width=3D347 nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Advanced search<o:p></o:p></span></p></td><td =
+width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Nimble<o:p></o:p></span></p></td><td width=3D347 =
+nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Opportunity<o:p></o:p></span></p></td><td =
+width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>OnePageCRM<o:p></o:p></span></p></td><td =
+width=3D347 nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Actions<o:p></o:p></span></p></td><td width=3D168 =
+nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>OnePageCRM<o:p></o:p></span></p></td><td =
+width=3D347 nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Document library<o:p></o:p></span></p></td><td =
+width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Dropbox<o:p></o:p></span></p></td><td width=3D347 =
+nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Campaign editor<o:p></o:p></span></p></td><td =
+width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>RedCappi<o:p></o:p></span></p></td><td width=3D347 =
+nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Form editor<o:p></o:p></span></p></td><td =
+width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>RedCappi<o:p></o:p></span></p></td><td width=3D347 =
+nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr><tr style=3D'height:15.0pt'><td =
+width=3D114 nowrap valign=3Dtop style=3D'width:85.5pt;border:solid =
+windowtext 1.0pt;border-top:none;padding:0in 5.4pt 0in =
+5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Marketing Automation<o:p></o:p></span></p></td><td =
+width=3D168 nowrap valign=3Dtop =
+style=3D'width:1.75in;border-top:none;border-left:none;border-bottom:soli=
+d windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in 5.4pt =
+0in 5.4pt;height:15.0pt'><p class=3DMsoNormal><span =
+style=3D'color:black'>Infusionsoft &amp; =
+Bislr<o:p></o:p></span></p></td><td width=3D347 nowrap valign=3Dtop =
+style=3D'width:260.6pt;border-top:none;border-left:none;border-bottom:sol=
+id windowtext 1.0pt;border-right:solid windowtext 1.0pt;padding:0in =
+5.4pt 0in 5.4pt;height:15.0pt'></td></tr></table><p =
+class=3DMsoNormal><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></p><p =
+class=3DMsoNormal><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></p><p =
+class=3DMsoNormal><b><span =
+style=3D'font-size:12.0pt;color:#262626'>Grant C. Taylor</span></b><span =
+style=3D'font-size:12.0pt'><br></span><span =
+style=3D'font-size:10.0pt;color:#7F7F7F'>Product Manager</span><span =
+style=3D'font-size:12.0pt'><br><br><b><span =
+style=3D'color:#60BF00'>SmartTouch&reg;</span> <span =
+style=3D'color:#5B5B5B'>Interactive</span><br></b></span><b><span =
+style=3D'font-size:10.0pt;color:#404040'>Leads + CRM + Marketing =
+Automation =3D </span></b><b><span =
+style=3D'font-size:10.0pt;color:#60BF00'>More Sales</span></b><span =
+style=3D'font-size:10.0pt'><br><span style=3D'color:#404040'>5316 Hwy. =
+290 West, Ste. 560<br>M: 512-736-9032</span><br><a =
+href=3D"mailto:gtaylor@smarttouchinteractive.com"><span =
+style=3D'color:blue'>gtaylor@smarttouchinteractive.com</span></a><br><a =
+href=3D"http://www.smarttouchinteractive.com/" target=3D"_blank" =
+title=3D"www.SmartTouchInteractive.com "><span =
+style=3D'color:blue'>www.SmartTouchInteractive.com</span></a><o:p></o:p><=
+/span></p><p class=3DMsoNormal><a =
+href=3D"http://www.linkedin.com/company/2663331?trk=3Dtyah"><span =
+style=3D'font-size:10.0pt;color:black;text-decoration:none'><img =
+border=3D0 width=3D22 height=3D22 id=3D"Picture_x0020_1" =
+src=3D"cid:image009.jpg@01CECCBE.BB6FEC50"></span></a><a =
+href=3D"https://plus.google.com/111821292339772191040/posts"><span =
+style=3D'font-size:10.0pt;color:#404040;text-decoration:none'><img =
+border=3D0 width=3D20 height=3D20 id=3D"Picture_x0020_2" =
+src=3D"cid:image010.jpg@01CECCBE.BB6FEC50"></span></a><a =
+href=3D"https://www.facebook.com/smarttouchint"><span =
+style=3D'font-size:10.0pt;color:#404040;text-decoration:none'><img =
+border=3D0 width=3D20 height=3D20 id=3D"Picture_x0020_4" =
+src=3D"cid:image011.png@01CECCBE.BB6FEC50"></span></a><a =
+href=3D"https://mobile.twitter.com/SmartTouchInt"><span =
+style=3D'font-size:10.0pt;color:#404040;text-decoration:none'><img =
+border=3D0 width=3D20 height=3D20 id=3D"Picture_x0020_5" =
+src=3D"cid:image012.jpg@01CECCBE.BB6FEC50"></span></a><span =
+style=3D'font-size:10.0pt;color:#404040'><o:p></o:p></span></p><p =
+class=3DMsoNormal><o:p>&nbsp;</o:p></p></div></body></html>
+------=_NextPart_001_005B_01CECD85.EB032780--
+
+------=_NextPart_000_005A_01CECD85.EB032780
+Content-Type: image/jpeg;
+	name="image009.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <image009.jpg@01CECCBE.BB6FEC50>
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMg
+IyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAWABYDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDvLm/n
+knudki/utzNubHAPaufvfFDwAkz7fxq2nlT3HiIyortbxSMm4Z2nJ5/SqN7fW2k2fhuRdOs5pb2N
+RI8seSclQf516cFFO3Lf/hrnkcs5+9zW3/OxZ8I+KLnUNZngMjMggL4bpncB/WiotPtbew+KWq21
+rGI4haBgi9ASUJxRXPiFFzvFWTSO6gpRjZssap4T1lNTv5NO1C3jhvSSyvuBKnscCsm68EeI7tbV
+ZNSsmW0/1AO75Ppx7Ciitqdadk/0RHsops3vCvhDU7bXLvV9bv4rmeaIQjygc9QckkewFFFFclac
+pT1OmEUkf//Z
+
+------=_NextPart_000_005A_01CECD85.EB032780
+Content-Type: image/jpeg;
+	name="image010.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <image010.jpg@01CECCBE.BB6FEC50>
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMg
+IyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAUABQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDibTWt
+YnnkMKpIVG52fgKM9ST0q3NrOv6ZqbQz28AuIB5rJ94AYzng+lZ2hXkq2mozzQxyabtSG8jAJZ1L
+ZG3HQ8degqXXNduNP1iSSynZoLmBfKySrLHtwqsP7ygY/XvSkuan7J/D2Ct+/nz1NX/kan/CwtXm
++Z7ezz04Q/40VyEeoO4LFFyTzRWCwlFKyj+Zp7Wb6i3UbaZql1HaTSxhJGTIbBIB7+tVJEMrl5Hd
+nPUsck0UV0GZ0fh3w5aalpzTTvMGEhX5GAGMD296KKKAP//Z
+
+------=_NextPart_000_005A_01CECD85.EB032780
+Content-Type: image/png;
+	name="image011.png"
+Content-Transfer-Encoding: base64
+Content-ID: <image011.png@01CECCBE.BB6FEC50>
+
+iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAO
+xAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUATWljcm9zb2Z0IE9mZmljZX/tNXEAAAQCSURBVDhP
+bZTbaxxlGMaf7zCnnT3lsDUJJbSJNZWmKraIqEWC9UIR7wvinVdeWvA6l97kHxBEb61eGW+kVURp
+RTS2TaTUVLCaNiZ2l2RPs7uzM+PzfZOYWH1hmN3v8Pue93m/d/Ti4iKOzr6w0Oz13pFCnnEcpYVA
+Cobgj8Nvaf5nZmLvJSDTJBtmWfZjOQyW1levfKmPzr240Nhpvh8Wgpl2JxKtdmRBQvLJafa9z0qG
+CdKUVM4beLHgYXSk9GqzGz1+4vRLb+nGTuui53qzd+/9hXqjBa3VAcjAuM8gM5EhiVOERQ9TR0ZQ
+CDy7drveRGezLibHKzPtbu+iTpL0mVani63tXfiBw4Otnhy0BySNqlJMTVTxysJTOD79CALfhedo
+XF1Zx6Xl7+C72oyd1UJCdNo90AebijFPGqQ0ZpnMJJIkoRqJZ58+gbNPzNrx/VBM3eztRAMUi77S
+UspUSSKoKKEKYdTwj+QiozAVKccThJ6H6ama5ZiDb93ZwJ27W/j9Xt2u86lWCZnoB402hnEMY7bn
+qtz9vLb/qOj2BrmPPMREbxDj8jdr+Pyrn+hn1frZjfro9HvQ2/UdtNp9bGw2MFIuwPMdgh04SoH6
+qRiYZBEem5lEpRRYoOKhjx6bwPnn57Gx1cDKzd8wwTXlMgslpINeHKHR7PPkFMYTSZhWkr8l5wZ4
+88lZXHj9OYRUYsJjAV4+dxrnz83jw0++xWdX1lAohqhWStAevfG8gBUuwGHKxp+Em5KE0mhDJ0p4
+gEbI+5bfAOOGgEuoiYRVVK6HIAjI8SlEMz3HJcznImkbYT+MZdLx8MPPG/jg0jW8tnAKE7UK+oMh
+vv5+HddvbWD19n2EYQjfD7jWgZbahXaHcKhUUeFBKXKsy2f1ly38sdnCmflpCxzECS5fW8enX1xH
+baxsga7v03PN60V12omtQvbxIX0HhQ6ERqkSQjH1PGOBICygUmWFC0F+T02WhqUpUzEtmsnBh4B7
++JRAhz6Z/t4PboRL780+QSMVMzX20UOjMCHdKMwv+MORCc5boOmhPKz3LILjupDDzKpTRiGBUjmp
+3eDSw2z/+3SYKoY8lECRZ2BSNkDXDfg4iCUVct6w2C9KFENWyOUtN53yf8GUXXO99ubNHfU9144Z
+ZWxOFiagFEmG69wIA70wWcvwYIdQ9d+cM2XupsaD5gDj7RjtbowoZjNqDzHHJ4+UMcKixUl2U9fG
+CkvbjeHJuWPjE7VWJHqDxPbt4TA9bA66ulbHjV+bvO8pOwg4eXwcBV9jtBxk7aj/59SYv6S3Vz5e
+rp564+3daPBuKQznRiv8wNgO/nekhPbZmtHu0BbO2FStKNGPU9npDW+PV0vv3V/5aPlvrZRiJJmv
+SbsAAAAASUVORK5CYII=
+
+------=_NextPart_000_005A_01CECD85.EB032780
+Content-Type: image/jpeg;
+	name="image012.jpg"
+Content-Transfer-Encoding: base64
+Content-ID: <image012.jpg@01CECCBE.BB6FEC50>
+
+/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMg
+IyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAUABQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSEx
+BhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElK
+U1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3
+uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDudNjT
+U7meS4kLKgBwp6k0t3pN1E8jQDzIRyp3Ddj6VW0E+UL/AG/fwpwOuAea2RdwzRmO23LcshCs4JUH
+Fd8nKMtNjxYck4rm3/4LMWDV5oIgiTACisqOPCY9zRVSpxvsZwrz5VqaVyn2PVJPs5ZCjcEHmpJd
+QunjKtO+GGDRRVxSaTZlNuMpJaFzStMtrmyEkiEtkjg0UUVx1JPmep6tGnD2a0P/2Q==
+
+------=_NextPart_000_005A_01CECD85.EB032780--
+

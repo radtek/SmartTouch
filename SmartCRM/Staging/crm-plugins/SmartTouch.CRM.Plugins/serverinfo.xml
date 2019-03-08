@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<ServerInfo>
+         <ServerInterface>HTTP_GET_POST</ServerInterface> 
+         <SyncHTTPHandlerURL>https://syncservices.smarttouchinteractive.com/login/</SyncHTTPHandlerURL>
+            <!--<SyncHTTPHandlerURL>http://localhost:55394/login/</SyncHTTPHandlerURL>-->
+            <SyncWsdlURL></SyncWsdlURL> 
+            <ServerAddressToShowUser>www.smarttouchinteractive.com</ServerAddressToShowUser> 
+</ServerInfo>

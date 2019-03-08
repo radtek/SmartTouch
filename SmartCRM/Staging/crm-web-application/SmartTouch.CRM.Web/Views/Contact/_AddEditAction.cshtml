@@ -1,0 +1,460 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model ActionViewModel
+
+@using SmartTouch.CRM.Entities
+@using System.Linq;
+
+@{
+    bool isModal = ViewBag.IsModal != null && ViewBag.IsModal ? true : false;
+    bool isEditView = ViewBag.EditView != null ? true : false;
+    List<AppModules> appModules = new List<AppModules>();
+    appModules.Add(AppModules.SendMail);
+    appModules.Add(AppModules.SendText);
+    var Permissions = MenuHelper.CheckPermission(appModules);
+    bool isActAdim = ViewBag.IsACTAdmin;
+    bool isPrivate = ViewBag.IsPrivate;
+    var isIncludeSignature = ViewBag.IsIncludeSignature;
+
+}
+
+@Scripts.Render("~/bundles/redactor")
+@Styles.Render("~/Content/Redactor")
+
+<div id="Action">
+    <div id="@(Model.ActionId > 0 ? "editAction" : isModal ? "addActionModel" : "addAction")" class="@(isModal ? "" : "")">
+        @*modal-dialog*@
+        <div class="@(isModal ? "" : "")">
+            @*modal-content*@
+            @if (isModal)
+            {
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                    <h4 class="modal-title"><span class="icon st-icon-tick display-inline"></span> @(Model.ActionId > 0 ? "[|Edit Action|]" : "[|Add Action|]")</h4>
+                </div>
+            }
+            else
+            {
+                <div class="drop-heading">
+                    <span class="icon st-icon-tick display-inline"></span> <h4 class="panel-title display-inline plm">[|Add Action|]</h4>
+                </div>
+            }
+            <div class="@(isModal ? "modal-body" : "body")">
+                <div class="dp-topnav-inner-body">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label">[|Action Type|]</label>
+                                <input data-bind="kendoDropDownList: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data: ActionTypes, value: ActionType}" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label">[|Action Date|]</label>
+                                <div>
+                                    <input id="kendodatepicker" data-bind="kendoDatePicker: { value: ActionDateOn, format: _dateformat }" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label">[|Start Time|]</label>
+                                <div>
+                                    <input id="kendodatepicker" data-bind="kendoTimePicker: { value: ActionStartTimeOn}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                                <label class="control-label">[|End Time|]</label>
+                                <div>
+                                    <input id="kendodatepicker" data-bind="kendoTimePicker: { value: ActionEndTimeOn,min:ActionEndTimeOn }" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    @if (isEditView == true)
+                    {
+                        <div class="form-group">
+                            @*<label for="exampleInputEmail1" id="ac-sub" data-bind="visible:(ShowTemplateIcon() && ActionDateOn().getTime() > utc_now().getTime()) || (ShowTemplateIcon() && ShowTemplateBody()) ">[|Subject|]<span class="required">*</span></label>*@
+                            @*data-bind="visible: !ShowTemplateIcon() || ((ShowTemplateIcon() && (ActionDateOn().getTime() < utc_now().getTime())))"*@
+                            <label for="exampleInputEmail1" id="ac-dtls">[|Action Details|]<span class="required">*</span></label>
+
+                            <textarea class="form-control" rows="3" data-bind="value:ActionMessage,hasFocus:!(ActionMessage), valueUpdate: 'afterkeydown'" maxlength="1000"></textarea>
+                        </div>
+                        @*<div class="form-group" data-bind="visible:(ShowTemplateIcon() && ActionDateOn().getTime() > utc_now().getTime()) || (ShowTemplateIcon() && ShowTemplateBody())">
+                            <div class="action-temp" style="width:580px;height:200px;border:1px solid #dfdfdf;" id="ac-tm-bdy">
+                                <textarea contenteditable id="actioneditor" data-bind="value: ActionTemplateHtml" cols="5"> </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group" data-bind="visible:(ShowTemplateIcon() && ActionDateOn().getTime() > utc_now().getTime()) || (ShowTemplateIcon() && ShowTemplateBody())">
+                            <div style="margin-top:23px;">
+                                <div data-bind="visible:ShowTemplateIcon() && (ActionDateOn().getTime() > utc_now().getTime())">
+                                    [|Note: Any email action created with future date will be scheduled. My actions grid provides option to turn off scheduled email|]
+                                </div>
+                                <div>
+                                    [|Note: Any chagnes to email would overrite email content from a previously completed Action.|]
+                                </div>
+                            </div>
+                        </div>*@
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            @*<label for="exampleInputEmail1" data-bind="visible: ShowTemplateIcon() && (ActionDateOn().getTime() > utc_now().getTime())">[|Subject|]<span class="required">*</span></label>*@
+                            @*data-bind="visible: !ShowTemplateIcon() || ((ShowTemplateIcon() && (ActionDateOn().getTime() < utc_now().getTime())))"*@
+                            <label for="exampleInputEmail1" >[|Action Details|]<span class="required">*</span></label>
+                            <textarea class="form-control" rows="3" data-bind="value:ActionMessage,hasFocus:!(ActionMessage), valueUpdate: 'afterkeydown'" maxlength="1000"></textarea>
+                        </div>
+                        @*<div class="form-group" data-bind="visible:ShowTemplateIcon() && (ActionDateOn().getTime() > utc_now().getTime())">
+                            <div class="action-temp" style="width:580px;height:200px;border:1px solid #dfdfdf;" id="ac-tm-bdy">
+                                <textarea contenteditable id="actioneditor" data-bind="value: ActionTemplateHtml" cols="5"> </textarea>
+                            </div>
+                        </div>
+                        <div class="form-group" data-bind="visible:(ShowTemplateIcon() && ActionDateOn().getTime() > utc_now().getTime()) || (ShowTemplateIcon() && ShowTemplateBody())">
+                            <div style="margin-top:23px;">
+                                [|Note: Any email action created with future date will be scheduled. My actions grid provides option to turn off scheduled email|]
+                            </div>
+                        </div>*@
+
+                    }
+                  
+
+                
+
+                    <div class="reminder-block" data-bind="enableAll:IsReminderValid">
+                        @{if (Model.SelectedReminderTypes.Count() == 0)
+                            {
+                                <div class="clearfix mbm">
+                                    <a href="javascript:void(0)" class="actionreminder-add" onclick="actionreminderAdd(this)">
+                                        <i class="icon st-icon-add prs"></i><span class="text"> [|Reminder|]</span>
+                                    </a>
+                                </div>
+                            }
+                        }
+
+                        <div class="@(Model.SelectedReminderTypes.Count() == 0 ? "hide" : "") actionsreminder-data" id="actionremindersection">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group ">
+                                        <label class="control-label">[|Reminder type|]</label>
+                                        @*<span class="validationMessage" data-bind="validationMessage:reminderTypeValidation"></span>*@
+                                        <select data-bind="kendoMultiSelect:{dataTextField:'Name',dataValueField:'TypeId', data: ReminderTypes, value: SelectedReminderTypes,change: $root.reminderChange, placeholder:'[|Select Reminder Types|]',enabled:IsReminderValid }" class="multiselectwidth"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        <label class="control-label">[|Remind on|]</label>
+                                        <label class="control-label">
+                                            <input id="kendodatetimepicker" data-bind="kendoDateTimePicker: { value: RemindOnDate,enabled: isReminderTypeValid, format: dateFormat,min :minDate }" />
+                                        </label>
+                                        <span class="validationMessage" data-bind="validationMessage:reminderDateValidation"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ">
+                                        <label class="control-label">[|Reminder Timeframe|]</label>
+                                        <span class="cu-re-center" data-bind="text:ReminderMethod,enabled: isReminderTypeValid"> </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group display-inline">
+                            <label data-bind="attr: {'class': IsCompleted() ?'checkbox  checked':'checkbox ' } ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked: IsCompleted,click:MarkAsComplete" /> &nbsp; [|Mark as completed|]
+                            </label>
+                        </div>
+                        <div class="form-group display-inline ac-ics">
+                            <label data-bind="attr: {'class': IcsCanlender() ?'checkbox  checked':'checkbox ' } " class="checkbox ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:IcsCanlender,click:allowIcsCalender"> &nbsp; Send as .ics Calendar Event
+                            </label>
+                        </div>
+                        <div data-bind="visible:IsCompleted()" class="form-group display-inline ac-ics">
+                            <label data-bind="attr: {'class': AddToNoteSummary() ?'checkbox  checked':'checkbox ' } " class="checkbox ">
+                                <input type="checkbox" data-toggle="checkbox" data-bind="checked:AddToNoteSummary,click:AllowActionToNoteSumarry"> &nbsp; Add to Contact Summary
+                            </label>
+                        </div>
+                        
+
+                        <div class="form-group" data-bind="ifnot:SelectAll">
+                           @if (isEditView == true)
+                           {
+                            <label class="control-label">
+                                [|People & Companies|]
+                                <span class="required">*</span>
+                                <a href="javascript(0)" id="ac-ple-sl" title="Emails will not be sent for contacts with no primary email, but Action will be marked as complet as per selection" data-bind="visible:(ShowTemplateIcon() && ActionDateOn().getTime() > utc_now().getTime()) || (ShowTemplateIcon() && ShowTemplateBody())"><i class="icon st-icon-notes"></i></a>
+                            </label>
+                           }
+                           else
+                           {
+                            <label class="control-label">
+                                [|People & Companies|]
+                                <span class="required">*</span>
+                                <a href="javascript(0)" title="Emails will not be sent for contacts with no primary email, but Action will be marked as complet as per selection." data-bind="visible: ShowTemplateIcon() && (ActionDateOn().getTime() > utc_now().getTime())"><i class="icon st-icon-notes"></i></a>
+                            </label>
+                           }
+                            <div class="people-tags">
+                                <input id="@(Model.ActionId > 0 ? "editActionContacts" : isModal ? "addActionContacts" : "actionContacts")"
+                                       class="display-inline form-control tagsinput-info-round" data-bind="valueUpdate: 'afterkeydown'" />
+                                <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group" data-bind="if: SelectAll">
+                            <label class="control-label">[|People & Companies|]<span class="required">  ( ALL )</span></label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">[|Assigned Users|] <span class="required">*</span></label>
+                            <div class="people-tags">
+                                <select data-bind="kendoMultiSelect: {dataTextField:'Name',dataValueField:'Id', data: Users, value: OwnerIds,placeholder:'[|Select Users...|]',enabled: '@isActAdim' == 'True' ? true: '@isPrivate' == 'False'}" class="multiselectwidth"></select>
+                                <span class="validationMessage" data-bind="validationMessage:UsersValidation"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">[|Tags|]</label>
+                            <div>
+                                <input id="@(Model.ActionId > 0 ? "editActionTags" : isModal ? "addActionTags" : "actionTags")" class="display-inline form-control" data-bind="valueUpdate: 'afterkeydown'" />
+                            </div>
+                            <div>
+                                @{
+                                    Html.RenderPartial("~/Views/Contact/_RecentPopularTag.cshtml");
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="@(isModal ? "modal-footer" : "panel-footer")">
+                    <div class="pull-left">
+                        <a id="btnSave" class="btn btn-lg btn-primary savebtn" data-bind="@(Model.ActionId > 0 ? "click:updateAction" : "click:insertAction")"><span>[|Save|]</span></a>
+                        <a class="btn btn-lg" aria-hidden="@(isModal ? "true" : "")"
+                           data-dismiss="@(isModal ? "modal" : "")" onclick="CloseTopInner(this)" href="javascript:void(0)">[|Cancel|]</a>
+                    </div>
+                    @*<div class="pull-right" data-bind="visible:(ShowTemplateIcon() && ActionDateOn().getTime() > utc_now().getTime()) || (ShowTemplateIcon() && ShowTemplateBody())">
+                        <label data-bind="attr: {'class': IncludeSignature() ?'checkbox  checked':'checkbox ' } ">
+                            <input type="checkbox" data-toggle="checkbox" data-bind="checked:IncludeSignature,enable:HideSignature"> [|Insert Signature|]
+                        </label>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+        <div id="bigmodal2" style="display:none;position:absolute;top:5px;z-index:100">
+            <div class="modal-header st-move">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title"><span class="icon re-icon re-templates redactor-btn-image"></span> Choose a template</h4>
+            </div>
+            <div class="clearfix">
+                <div>
+                    <div class="modal-body top">
+                        <div id="templatechange">
+                            <a class="btn btn-default active" href="javascript:void(0)" data-tcview="ftemplate" data-bind="click:showAllTemplates">[|All|]</a>
+                            <a class="btn btn-default" href="javascript:void(0)" data-tcview="fpredesign" data-bind="click:showOnlyPredesigned">[|Predesigned|]</a>
+                            <a class="btn btn-default" href="javascript:void(0)" data-tcview="fsaved" data-bind="click:showOnlySavedTemplates">[|Saved Templates|]</a>
+                            <a class="btn btn-default" href="javascript:void(0)" data-tcview="fsaved" data-bind="click:showSentCampaigns">[|Sent Campaigns|]</a>
+                        </div>
+                        <div>
+                            <div class="layout-search">
+                                <input type="search" class="form-control" placeholder="[|Search|]" data-bind="value:TemplateSearch,valueUpdate:'afterkeydown'" id="templatesearch">
+                                <i class="icon st-icon-search-2"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="dp-topnav-inner-body">
+                            <ul class="campaigns-layouts" data-bind="foreach:FilteredTemplates">
+                                <li>
+                                    <div class="layout animation5">
+                                        <div class="overlay">
+                                            <a href="#" class="btn btn-default overlay-btn select" data-bind="click: $parent.selectTemplate">[|Select|]</a>
+
+                                        </div>
+                                        <!--ko if: Type == 4 -->
+                                        <a href="javascript:void(0)"><img data-bind="attr:{src: '@Url.Content("~/img/campaign-thumbnail.jpg")'}" alt="layout" /></a>
+                                        <!--/ko-->
+                                        <!--ko ifnot: Type == 4 -->
+                                        <a href="javascript:void(0)"><img data-bind="attr:{src: ThumbnailImageUrl}" alt="layout" /></a>
+                                        <!--/ko-->
+
+                                    </div>
+                                    <div class="layout-title" data-bind="text:Name,attr: { title: Name }"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <!--ko if: FilteredTemplates().length == 0 -->
+                            <span>No results found</span>
+                            <!--/ko-->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="pull-left">
+                            <a class="btn btn-lg" aria-hidden="true" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+    <script>
+        $("#bigmodal2").draggable({
+            handle: ".modal-header"
+        });
+
+        $(document).ready(function () {
+        
+            var BASE_URL = '@Url.Content("~/Contact/")';
+            var Action = @(Html.Raw(Json.Encode(Model)));
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+            var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+            var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+            var _dateformat  = '@Thread.CurrentPrincipal.Identity.ToDateFormat()';
+            var IsIncludeSignature ='@isIncludeSignature';
+            var actionMode = '@isEditView';
+
+            var actionContactsTagId;
+            var actionTagId;
+
+            var fromContactDetails = typeof selfDetails != "undefined" ? true :false;
+            var fromOpportunityDetails = typeof selfOpportunity != "undefined" ? true : false;
+
+            var notselectall;
+            if(fromContactDetails == true || fromOpportunityDetails == true || controller == "Action")
+                notselectall = true;
+            else
+                notselectall = (readCookie("selectallsearchstring") == "" || readCookie("selectallsearchstring") == null || readCookie("selectallsearchstring") == undefined )  ? true : false ;
+
+            var reminderTypes = [];
+            if ("@Permissions.Where(s => s.Module == AppModules.SendMail).Select(s => s.HasPermission).SingleOrDefault()" == "True") reminderTypes.push( { TypeId: 1, Name: "[|Email|]" } );
+            reminderTypes.push({ TypeId: 2, Name: "[|Notification|]" });
+            if ("@Permissions.Where(s => s.Module == AppModules.SendText).Select(s => s.HasPermission).SingleOrDefault()" == "True") reminderTypes.push( { TypeId: 3, Name: "[|Text|]"  } );
+
+            $('#actioneditor').redactor({
+                focus: true,
+                plugins: ['bufferbuttons', 'fontfamily', 'fontcolor', 'fontsize', 'imagemanager', 'table', 'fullscreen', 'textdirection', 'video', 'underline', 'templates'],
+                source: true,
+                imageManagerJson: '@Url.Content("~/Contact/GetCampaignImages")',
+                uploadImageField: true,
+                imageUpload: '@Url.Content("~/Contact/UploadImage")',
+                imageUploadErrorCallback: function(json)
+                {
+                    notifyError(json.error);
+                },
+                buttons : ['html', 'formatting', 'bold', 'italic', 'deleted', 'unorderedlist', 'orderedlist', 'outdent', 'indent', 'image', 'link', 'alignment', 'horizontalrule', 'html'],
+                paragraphize: false,
+                replaceDivs: false,
+                boldTag: 'b',
+                fixed: false,
+                //pastePlainText: true,
+                convertImageLinks: true,
+                cleanOnPaste: false,
+                linebreaks: true,
+                deniedTags: ['html', 'head', 'link', 'body', 'meta', 'script', 'applet']
+            });
+
+            var ViewModel1 = new ActionViewModel(Action,BASE_URL,reminderTypes,_dateformat,notselectall,IsIncludeSignature,actionMode);
+
+
+
+            $.ajax({
+                url: BASE_URL + 'GetUsers',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    ViewModel1.Users(data.response);
+                    var ids = ViewModel1.OwnerIds();
+                    ViewModel1.OwnerIds([]);
+                    ViewModel1.OwnerIds(ids);
+
+                },
+                error: function () {
+                    console.log(errors);
+                }
+            });
+
+            if(Action.ActionId == 0)
+            {
+                var popup = '@(isModal)';
+                if(popup=="True")
+                {
+                    actionContactsTagId = "addActionContacts";
+                    actionTagId = "addActionTags";
+                    //var actionViewModel = new ActionViewModel(Action,BASE_URL,reminderTypes,_dateformat,notselectall);
+                    ko.applyBindings(ViewModel1,document.getElementById("addActionModel"));
+                }
+                else
+                {
+                    actionContactsTagId = "actionContacts";
+                    actionTagId = "actionTags";
+                    // var actionViewModel = new ActionViewModel(Action,BASE_URL,reminderTypes,_dateformat,notselectall);
+                    ko.applyBindings(ViewModel1,document.getElementById("addAction"));
+                }
+            }
+            else
+            {
+                actionContactsTagId = "editActionContacts";
+                actionTagId = "editActionTags";
+                // var actionViewModel = new ActionViewModel(Action,BASE_URL,reminderTypes,_dateformat,notselectall);
+                ko.applyBindings(ViewModel1,document.getElementById("editAction"));
+            }
+            var tagify = new Tagify(WEBSERVICE_URL, ViewModel1,accountId,tagCreatedBy);
+            tagify.Tagify(actionTagId);
+            tagify.TagifyContacts(actionContactsTagId);
+
+            var recentJs = new RecentPopular(ViewModel1,actionTagId);
+        });
+        appendCheckbox();
+        $('#btnSave').on("click",function(){
+            $(this).attr("disabled", "disabled");
+            setTimeout('$("a").removeAttr("disabled")', setTimeOutTimer);
+        });
+
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+
+        $('#modal').on('hide.bs.modal', function () {
+            var elem = document.getElementById('sendemailmodal');
+            if(elem != null)
+                elem.remove();
+        });
+
+        var tempHTML = "";
+        $('#sendemailmodal').on('hide.bs.modal', function () {
+            var elem = document.getElementById('bigmodal2');
+            if(elem != null){
+                tempHTML = elem;
+                elem.remove();
+            }
+
+        });
+
+        function templatesModal(args) {
+            var modal  = document.getElementById("bigmodal2");
+            if(modal == null)
+                modal = tempHTML;
+            $(modal).css('display', '');
+            $("#sendemailmodal .modal-content").html(modal);
+        };
+
+    </script>

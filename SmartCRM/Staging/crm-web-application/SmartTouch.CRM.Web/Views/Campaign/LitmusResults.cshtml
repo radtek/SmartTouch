@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "Litmus Results";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var emailClients = new Dictionary<string, string>();
+    emailClients.Add("OL2000", "Outlook 2000");
+    emailClients.Add("OL2003", "Outlook 2003");
+    emailClients.Add("OL2007", "Outlook 2007");
+    //emailClients.Add("OL2010", "Outlook 2010");
+    emailClients.Add("OL2011", "Outlook 2011");
+    emailClients.Add("OL2013", "Outlook 2013");
+    var campaignId = ViewBag.CampaignID;
+}
+
+<div class="main-template">
+    <div class="clearfix brdr-btm">
+        <div class="pull-left" id="templatechange">
+            <span class="litms-rslt">[|Litmus Results|]</span>
+        </div>
+        <div class="pull-right">
+            <span class="pull-right back active" style="cursor:pointer">
+                <a href="javascript:void(0)" onclick="backEvent('@campaignId')">
+                    <i class="icon st-icon-leftdropdownarrow"></i> [|Back|]
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="mtl show" id="ftemplate">
+        <ul class="campaigns-layouts">
+            @foreach (var client in emailClients)
+            {
+//                var thumburl = string.Format("https://{0}.capture.litmuscdn.com/{1}/results/{0}-vertical-allowed-1366-thumb450.png", client.Key.ToLower(), ViewBag.EmailGuid);
+                var thumburl = string.Format("https://instant-api.litmus.com/v1/emails/{0}/previews/{1}/thumb450", ViewBag.EmailGuid, client.Key);
+
+                <li>
+                    <div>
+                        <img src="@thumburl" alt="@client.Value" 
+                             height="200" width="200" 
+                             data-toggle="modal"  
+                             data-target="#litmus-preview" 
+                             data-client="@client.Key"
+                             data-clientValue="@client.Value"
+                             onclick="imagePreview(this)"  />
+                    </div>
+                    <div class="layout-title-lm" title="'@client.Key.ToLower()'">@client.Value</div>
+                </li>
+               
+            }
+            
+        </ul>
+    </div>
+    <div class="modal fade" id="litmus-preview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Litmus Preview</h4>
+                </div>
+                <div class="modal-body" id="lmt-img-ctn" style="min-height:500px">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="imgpopclose()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type='text/javascript'>
+
+function backEvent(id)
+{
+    window.location.href = "/editcampaign?campaignId=" + id;
+}
+
+function imagePreview(e) {
+    $("#lmt-img-ctn img").remove();
+    var emailGuid = '@ViewBag.EmailGuid'
+    var client = $(e).data('client')
+    var clientValue = $(e).data('clientvalue');
+    var fullSrc = 'https://instant-api.litmus.com/v1/emails/' + emailGuid + '/previews/' + client + '/full';
+    var x = document.createElement("img");
+    x.setAttribute("src", fullSrc);
+    x.setAttribute("height", "auto");
+    x.setAttribute("width", "auto");
+    document.getElementById('lmt-img-ctn').appendChild(x);
+    $('#myModalLabel').val(clientValue)
+}
+
+function imgpopclose() {
+    $("#lmt-img-ctn img").remove();
+}
+</script>
+

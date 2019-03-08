@@ -1,0 +1,279 @@
+﻿@{
+    bool TagPopup = ViewBag.TagPopup != null && ViewBag.TagPopup ? true : false;
+
+}
+
+<div class="@(TagPopup ? "st-recent-popular" : "")">
+
+    <div class="@(TagPopup ? "filters-tags st-tags" : "filters")">
+        <a href="javascript:void(0)" class="popularClicked-popup">[|Popular|]</a>
+        <a href="javascript:void(0)" class="recentClicked-popup">[|Recent|]</a>
+    </div>
+
+    <div class="@(TagPopup ? "tags-search cu-popup" : "tags-search")">
+        <!-- ko if:PopularTags() != null && PopularTags().length > 0-->
+        <ul class="search-results hide" data-bind="foreach:PopularTags" id="poplartags-popup">
+            <li>
+                <label class="checkbox" data-bind="attr:{for:'populartag'+($index() + 1)}">
+                    <input type="checkbox" value="" data-toggle="checkbox" class="chk" onchange="TagSelectionInPopup(this)" data-bind="checked:IsSelected, attr:{id:'populartag'+($index() + 1),tagid:TagID,tagname:TagName}">
+                    <span data-bind="text:TagName"></span>
+                </label>
+
+            </li>
+        </ul>
+        <!--/ko-->
+        <!-- ko if:PopularTags() != null && PopularTags().length == 0-->
+        <ul class="search-results hide" id="populartags_norecords-popup">
+            <li class="no-records">
+                <div class="icon st-icon-tag"></div>
+                <div>[|No PopularTags|]</div>
+            </li>
+        </ul>
+        <!--/ko-->
+        <!-- ko if:RecentTags() != null &&  RecentTags().length > 0-->
+
+        <ul class="search-results hide" data-bind="foreach:RecentTags" id="recenttags-popup">
+            <li>
+                <label class="checkbox" data-bind="attr:{for:'populartag'+($index() + 1)}">
+                    <input type="checkbox" value="" data-toggle="checkbox" data-tagid="TagID()" class="tagCheckbox" onchange="TagSelectionInPopup(this)" data-bind="checked: IsSelected, attr: { id: 'recenttag' + ($index() + 1), tagid: TagID, tagname: TagName }">
+               
+                    <span data-bind="text:TagName"></span>
+                </label>
+            </li>
+        </ul>
+        <!--/ko-->
+        <!-- ko if:RecentTags() != null && RecentTags().length == 0-->
+        <ul class="search-results hide" id="recenttags_norecords-popup">
+            <li class="no-records">
+                <div class="icon st-icon-tag"></div>
+                <div>[|No RecentTags|]</div>
+            </li>
+        </ul>
+        <!--/ko-->
+    </div>
+</div>
+<script>
+
+    var BASE_URL = '@Url.Content("~/Tag/")';
+    var TagPopup = '@TagPopup' == 'True' ? true : false;
+    var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+
+    $('.popularClicked-popup').click(function () {
+
+        if (!$(this).hasClass('selected')) {
+
+            $(this).parent('.filters-tags').find('a.selected').removeClass('selected');
+            $('ul#poplartags-popup, ul#populartags_norecords-popup').removeClass('hide').addClass('show');
+            $('ul#recenttags-popup, ul#recenttags_norecords-popup').removeClass('show').addClass('hide');
+            $('.recentClicked-popup').removeClass('selected');
+            $(this).addClass('selected');
+        }
+        else {
+            $(this).removeClass('selected');
+            $('ul#poplartags-popup, ul#populartags_norecords-popup').removeClass('show').addClass('hide');
+
+        }
+    });
+
+
+    $('.recentClicked-popup').click(function () {
+
+        if (!$(this).hasClass('selected')) {          
+                $(this).parent('.filters').find('a.selected').removeClass('selected');
+                $('ul#poplartags-popup, ul#populartags_norecords-popup').removeClass('show').addClass('hide');
+                $('ul#recenttags-popup, ul#recenttags_norecords-popup').removeClass('hide').addClass('show');
+          
+                $('.popularClicked-popup').removeClass('selected');
+                $(this).addClass('selected');
+
+        } else {
+            $(this).removeClass('selected');
+            $('ul#recenttags-popup, ul#recenttags_norecords-popup').removeClass('show').addClass('hide');
+        }
+    });
+
+    var myFunction_popup
+
+    var tagList; var tagLabelId; var tagids = "";
+    var RecentPopular = function (viewModel, id, type) {
+        
+        var authToken = readCookie("accessToken");
+        if (authToken === undefined)
+            authToken = accessToken;
+        
+        createCookie("tagLabelIdInPopup", id, 1);
+        
+        
+        if (type == 'C') {
+
+            $(".st-recent-popular").css("margin-left", "0px");
+
+            tagList = viewModel.ContactTags();
+
+            $.each(viewModel.ContactTags(), function (index, tagItem) {
+                if (index == viewModel.ContactTags().length - 1) {
+                    tagids += tagItem.TagID();
+                }
+                else {
+                    tagids += tagItem.TagID() + ",";
+                }
+            });
+            
+            $.ajax({
+                url: WEBSERVICE_URL + '/RecentPopularTags',
+                type: 'get',
+                dataType: 'json',
+                data: { 'tagList': tagids },
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + authToken);
+                }
+            })
+            .done(function (data) {
+                viewModel.PopularTags(data.PopularTags);
+                viewModel.RecentTags(data.RecentTags);
+                appendCheckbox();
+            }).fail(function (err) {
+
+            });
+
+            tagLabelId = id;
+
+            myFunction_popup = function (tagname, tagid) {
+
+                if (tagname != null) {
+                    if (viewModel.ContactTags().length == 0) {
+                        $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                    }
+                    else {
+                        var tagIndex;
+                        var filter = ko.utils.arrayFilter(viewModel.ContactTags(), function (Tag, index) {
+
+                            var tagName; var tagID;
+
+                            tagName = Tag.TagName();
+                            tagID = Tag.TagID();
+
+                            if (tagName === tagname) {
+                                tagIndex = index;
+                            }
+                            return tagID === tagid;
+                        });
+
+                        if (filter.length == 0) {
+                            $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                        }
+                        else {
+                            $("#" + tagLabelId).removeTag(tagname, tagid);
+
+                            if (TagPopup == 'True') {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            tagList = viewModel.TagsList();
+
+            $.each(viewModel.TagsList(), function (index, tagItem) {
+                if (index == viewModel.TagsList().length - 1) {
+                    if (tagItem.TagID != undefined)
+                        tagids += tagItem.TagID;
+                    else
+                        tagids += tagItem.Id();
+                }
+                else {
+                    if (tagItem.TagID != undefined)
+                        tagids += tagItem.TagID + ",";
+                    else
+                        tagids += tagItem.Id() + ",";
+                }
+            });
+
+
+            $.ajax({
+                url: WEBSERVICE_URL + '/RecentPopularTags',
+                type: 'get',
+                dataType: 'json',
+                data: { 'tagList': tagids },
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + authToken)
+                }
+            })
+            .done(function (data) {
+                viewModel.PopularTags(data.PopularTags);
+                viewModel.RecentTags(data.RecentTags);
+                appendCheckbox();
+            }).fail(function (err) {
+
+            });
+
+            tagLabelId = readCookie("tagLabelIdInPopup");
+
+            myFunction_popup = function (tagname, tagid) {
+                tagLabelId = readCookie("tagLabelIdInPopup");
+                if (type == 'F')
+                    tagLabelId = id;
+
+                if (tagname != null) {
+                    if (viewModel.TagsList().length == 0) {
+                        $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                    }
+                    else {
+                        var tagIndex;
+                        var filter = ko.utils.arrayFilter(viewModel.TagsList(), function (Tag, index) {
+
+                            var tagName; var tagID;
+
+                            if (typeof Tag.TagName == 'function') {
+                                tagName = Tag.TagName();
+                                tagID = Tag.Id();
+                            }
+                            else {
+                                tagName = Tag.TagName;
+                                tagID = Tag.TagID;
+                            }
+
+                            if (tagName === tagname) {
+                                tagIndex = index;
+                            }
+                            return tagName === tagname;
+                        });
+                        if (filter.length == 0) {
+                            $("#" + tagLabelId).addTag(tagname, { UID: tagid });
+                        }
+                        else {
+                            $("#" + tagLabelId).removeTag(tagname);
+
+                            if (TagPopup == 'True') {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+    }
+
+    function TagSelectionInPopup(value, event) {
+        var tagname = $(value).attr("tagname");
+        var tagid = $(value).attr("tagid");
+        myFunction_popup(tagname, tagid);
+    }
+
+</script>

@@ -1,0 +1,22 @@
+﻿<div>
+
+    <ul class="relationship" data-bind="foreach: Relationshipentry">
+
+        <li class="row">
+            <div class="col-md-11 pln">
+                <div class="loadedcontacts">
+                    <span class="mtl mrm" data-bind="text: DisplayContact"></span>
+                    <span class="mtl mrm bold" data-bind="text: DisplayRelationShipTypeValues"></span>
+                    <span class="mtl mrm">is</span>
+                    <span class="mtl" data-bind="text: RelatedContact"></span>
+                </div>
+            </div>
+            <div class="col-md-1 pln prn">
+                <a href="javascript:void(0)" data-bind="click: $parent.removeRelationshipentry"><span class="icon st-icon-bin black"></span></a>
+            </div>
+        </li>
+
+        @*<span data-bind="text: $index"> </span>:*@
+
+    </ul>
+</div>

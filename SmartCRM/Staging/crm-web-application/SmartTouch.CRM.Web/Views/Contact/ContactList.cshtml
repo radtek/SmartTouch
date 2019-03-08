@@ -1,0 +1,1041 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.ContactGridEntry
+
+
+@{
+    ViewBag.Title = "Contacts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var Details = ViewBag.ContactDetail == null ? 0 : 1;
+    var JobID = ViewBag.JobID == null ? null : ViewBag.JobID;
+
+    var TagID = ViewBag.TagID == null ? null : ViewBag.TagID;
+    var TagType = ViewBag.TagType == null ? null : ViewBag.TagType;
+
+    var ContactType = ViewBag.ContactType == null ? null : ViewBag.ContactType;
+    var SSDefinitiationId = ViewBag.SSDefinitiationId == null ? null : ViewBag.SSDefinitiationId;
+
+    var FormID = ViewBag.FormID == null ? null : ViewBag.FormID;
+    var WorkflowID = ViewBag.WorkflowID == null ? null : ViewBag.WorkflowID;
+    var ActionID = ViewBag.ActionID == null ? null : ViewBag.ActionID;
+    var recordStatus = ViewBag.recordStatus == null ? null : ViewBag.recordStatus;
+    var IsSendEmail = ViewBag.EmailPermission != null ? ViewBag.EmailPermission : false;
+    var Persons = ViewBag.Persons == null ? null : ViewBag.Persons;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    var WorkflowContactState = ViewBag.WorkflowContactState == null ? null : ViewBag.WorkflowContactState;
+    var IsAccountAdmin = ViewBag.IsAccountAdmin;
+    var CampaignID = ViewBag.CampaignID == null ? null : ViewBag.CampaignID;
+    var CampaignLinkID = ViewBag.CampaignLinkID == null ? null : ViewBag.CampaignLinkID;
+    var CampaignDrillDownActivity = ViewBag.CampaignDrillDownActivity == null ? null : ViewBag.CampaignDrillDownActivity;
+    var WorkflowCampFromDate = ViewBag.WfCmpFromDate == null ? null: ViewBag.WfCmpFromDate;
+    var WorkflowCampToDate = ViewBag.WfCmpToDate == null ? null: ViewBag.WfCmpToDate;
+    var IsSavedSearch = ViewBag.IsSavedSearch != null ? ViewBag.IsSavedSearch : false;
+    var ViewDynamicGrid = ViewBag.IsDynamicGrid == null ? false : ViewBag.IsDynamicGrid;
+    var guid = ViewBag.Guid == null ? null : ViewBag.Guid;
+    var neverBounceId = ViewBag.NeverBounceID == null ? null : ViewBag.NeverBounceID;
+    var neverBounceEmailStatus = ViewBag.NBES == null ? null : ViewBag.NBES;
+}
+
+@Scripts.Render("~/bundles/contactsgridvm")
+@Scripts.Render("~/bundles/Opportunityvm")
+
+
+@using (Ajax.BeginForm("ContactList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="clientsDb" style="display:none">
+        <div class="page-title">[|Contacts|]</div>
+        <div class="contacts-grid">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ContactGridEntry>()
+    .Name("grid")
+    .AutoBind(false)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+.PageSizes(true)
+            .ButtonCount(10)
+            .Numeric(true).Messages(m => m
+            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Contact(s)|]")
+                .Empty("[|No contacts to display|]").ItemsPerPage("[|Contacts per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => { }).ClientTemplate(" ").Title("[|Details|]");
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Template(@<text>
+            <div class="toolbar grid-ct-header">
+                <div class="left-part">
+                    <div class="stc-select-all">
+                        <div class="stc-select-main" onclick="ArrowClick()">
+                            <label id="selectcheckbox" class="checkbox stc-all-check toggle-all"
+                                   for="masterCheckBox">
+                                <span class="icons">
+                                    <span class="first-icon st-icon-checkbox-normal"></span><span class="second-icon st-icon-checkbox-selected"></span>
+                                </span><input type="checkbox"  data-toggle="checkbox" id="masterCheckBox">
+                                <span id="selectcheckbox_text">Select All</span>
+                            </label>
+                            <i class="icon stc-drop-icon st-icon-dropdownarrow mlm"></i>
+                        </div>
+                        <div class="stc-select-drop">
+                            @*<label  class="selectcheckbox checkbox toggle-all" for="masterCheckBox">
+                                <span class="icons">
+                                    <span class="first-icon st-icon-checkbox-normal"></span><span class="second-icon st-icon-checkbox-selected"></span>
+                                </span><input type="checkbox" data-toggle="checkbox" id="masterCheckBox">
+                                Select All
+                            </label>*@
+                            <label id="selectallcheckbox" class="checkbox toggle-all" for="masterCheckBox_all">
+                                <span class="icons">
+                                    <span class="first-icon st-icon-checkbox-normal"></span><span class="second-icon st-icon-checkbox-selected"></span>
+                                </span><input type="checkbox" data-toggle="checkbox" onchange="SelectAllPages(this)" id="masterCheckBox_all">
+                                <span id="selectallcheckbox_text">All Pages</span>
+
+                            </label>
+                        </div>
+                    </div>
+               </div>
+
+                    @*<div class="left-part">
+                <label class="checkbox toggle-all" for="masterCheckBox">
+                    <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                    [|Select All|]
+                </label>
+                <label class="checkbox toggle-all" for="masterCheckBox">
+                    <input type='checkbox' data-toggle='checkbox' onchange="SelectAllPages(this)" id='masterCheckBox' />
+                    [|Select All Pages|]
+                </label>
+            </div>*@
+
+                    <div class="right-part">
+                        <div class="grid-search" id="appTourContactsSearch">
+                            <input type="search" id="txtSearch" onkeydown="GetContactsBasedonsearch(event);" class=" form-control" placeholder="[|Search|]" />
+                            <i class="icon st-icon-search-2"></i>
+                        </div>
+                        <div class="grid-controls">
+                            <span class="sort-label">[|Showing|]</span>
+                            <span class="sort-select" id="appTourContactsShowing">
+                                @*<input id="categories" data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'TypeId', data:RelationshipTypes, value: RelationShipTypeValues}" />*@
+                                @(Html.Kendo().DropDownList()
+                                    .Name("contactTypes")
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                                    .Events(e => e.Change("contactTypeChange"))
+                                    .BindTo(new List<SelectListItem>() {
+                                        new SelectListItem() {
+                                            Text = "[|People|]",
+                                            Value = "0"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Companies|]",
+                                            Value = "1"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|People and Companies|]",
+                                            Value = "2"
+                                        },
+                                        new SelectListItem(){
+                                            Text = "[|My Contacts|]",
+                                            Value = "3"
+                                        },
+                                        new SelectListItem(){
+                                            Text = "[|Recently Viewed|]",
+                                            Value = "4"
+                                        }
+                                })
+                                )
+                            </span>
+
+                            <span class="sort-label">[|Sort|]</span>
+                            <span class="sort-select" id="appTourContactsSort">
+                                @*<input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'TypeId', data:RelationshipTypes, value: RelationShipTypeValues}" />*@
+                                @(Html.Kendo().DropDownList()
+                                    .Name("sortType")
+                                            .DataTextField("Text")
+                                            .DataValueField("Value")
+                                    .Events(e => e.Change("sorttypeChange"))
+                                    .BindTo(new List<SelectListItem>() {
+                                        new SelectListItem() {
+                                            Text = "[|Select|]",
+                                            Value = "0"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Recently Updated Contacts|]",
+                                            Value = "1"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Full Name|]",
+                                            Value = "2"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "[|Company Name|]",
+                                            Value = "3"
+                                        }
+                                })
+                                )
+                            </span>
+                        </div>
+                    </div>
+                </div>
+        </text>);
+    })
+                                                                                                                                                                                                                                                                                                                                                                                  .ClientRowTemplate(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @"<tr class='odd'>
+            <td class='grid-checkbox'>
+                <label class='checkbox'>
+                    <input type='checkbox' class='chkcontacts' data-name='#:Name #' data-company='#:CompanyName #' data-Email='#:PrimaryEmail#' data-email-id = '#:PrimaryContactEmailID#' data-phone-id= '#:PrimaryContactPhoneNumberID#'
+                  id='#: ContactID #' data-contacttype='#: ContactType #'data-phone='#:Phone#'  data-EmailStatus='#:PrimaryEmailStatus#'  data-DonotEmail='#:DoNotEmail#' data-IsDelete='#:IsDelete#' data-IsAccountAdmin ='#:IsAccountAdmin#' data-toggle='checkbox'  />
+                </label>
+            </td>
+            <td class='grid-img'>
+
+                    <span>
+                        #if (ContactType === 1)
+                            {#
+                                #if(ContactImageUrl)
+                                   {#
+                                        <a href='/person/#:ContactID#/#= ++rowNumber #' class='grid-noimage'><figure><img src='#:ContactImageUrl#' /></figure></a>
+                                   #}
+                                else
+                                  {#
+                                        <a href='/person/#:ContactID#/#= ++rowNumber #'><i class='icon st-icon-user-4'></i></a>
+                                  #}#
+                            #}
+                            else
+                            {#
+                                #if(ContactImageUrl)
+                                {#
+                                        <a href='/company/#:ContactID#/#= ++rowNumber #' class='grid-noimage'><figure><img src='#:ContactImageUrl#' /></figure></a>
+                                #}
+                                else
+                                {#
+                                    <a href='/company/#:ContactID#/#= ++rowNumber #'><i class='icon st-icon-company'></i></a>
+                                #}#
+                            #}#
+                    </span>
+
+            </td><td class='details'>
+                <div class='grid-details'>
+                    <div class='grid-details-row'>
+                        #if (ContactType === 1)
+                            {#
+                                <span class='description grid-name'>
+                                    <a href='/person/#:ContactID#/#= rowNumber #' title='#:FullName#'>#:Name#</a>
+                                </span>
+                                <span class='description grid-company'>
+                                    #if(CompanyName == null){##} else {# #: CompanyName# #}#
+                                </span>
+                            #}
+                        else
+                        {#
+                            <span class='description grid-name'>
+                                <a href='/company/#:ContactID#/#= rowNumber #'>#:Name#</a>
+                            </span>
+                        #}#
+                    </div>
+
+                      <div class='grid-details-row'>
+                        <span class='description grid-phone'>
+                            #=formatPhoneNumber (Phone, PhoneCountryCode, PhoneExtension)#
+                        </span>
+                        <span class='description grid-email'>
+                        #if(PrimaryEmail == 'Email Not Available')
+                            {#
+                                Email Not Available
+                            #}
+                          else
+                            {#
+                                #if(IsSendEmail=='False'|| DoNotEmail==true || PrimaryEmailStatus == 53 || PrimaryEmailStatus == 54 || PrimaryEmailStatus == 57)
+                                {#
+                                    <label> #:PrimaryEmail#</label>
+                                #}
+                               else
+                            {#" + Html.ActionLink("#:PrimaryEmail#", "_SendMailModel", new { contactName = "lid", email = "emailID" }, new { title = "#:PrimaryEmail#", data_toggle = "modal", data_target = "modal", @class = "drop-lab" }).ToHtmlString().Replace("lid", "#=getEmailData(Name,PrimaryEmail)#").Replace("emailID", "#:PrimaryContactEmailID#") + @"
+
+                            #}#
+                            #}#
+
+                        </span>
+                        #if (ContactType === 1)
+                        {#
+                            <span class='description grid-prospect'>
+                                #if(LifecycleStage == null || LifecycleName == null )
+                                {#
+                                    Not Available
+                                #}
+                                else
+                                {#
+                                    #: LifecycleName#
+                                #}#
+                            </span>
+                        #}#
+                    </div>
+                    <div class='grid-details-row'>
+                        <span class='description grid-address'>
+                            #: Address #
+                        </span>
+                        #if (ContactType === 1)
+                        {#
+                            <span class='description grid-date'>
+                                #:LastTouched#
+                            </span>
+                        #}#
+                    </div>
+                </div>
+            </td>
+
+            <td class='grid-row-controls'>
+                <span>
+                    #if (ContactType === 1)
+                    {#
+                        <a href='/editperson?contactId=#:ContactID#&contactType=#:ContactType#' title='Edit Contact'><i class='icon st-icon-edit'></i></a>
+                    #}
+                    else{#
+                        <a href='/editcompany?contactId=#:ContactID#&contactType=#:ContactType#' title='Edit Contact'><i class='icon st-icon-edit'></i></a>
+                    #}#
+                    #if (IsDelete === true || IsAccountAdmin == 'True') {#
+                    <a href='javascript:void(0)' onclick='DeleteContact(#: ContactID #)' title='Delete Contact'><i class='icon st-icon-bin-3'></i></a>
+                    #}#
+                </span>
+            </td>
+          </tr>")
+
+                                                                                                                                                                                                                                                                                                                                                                            .ClientAltRowTemplate(
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @"<tr class='even'>
+            <td class='grid-checkbox'>
+                <label class='checkbox'>
+                     <input type='checkbox' class='chkcontacts' data-name='#:Name #' data-company='#:CompanyName #' data-Email='#:PrimaryEmail#' data-email-id = '#:PrimaryContactEmailID#' data-phone-id= '#:PrimaryContactPhoneNumberID#'
+                  id='#: ContactID #' data-contacttype='#: ContactType #'data-phone='#:Phone#' data-DonotEmail='#:DoNotEmail#' data-EmailStatus='#:PrimaryEmailStatus#' data-IsDelete='#:IsDelete#' data-IsAccountAdmin ='#:IsAccountAdmin#' data-toggle='checkbox'  />
+                </label>
+            </td>
+            <td class='grid-img'>
+
+                    <span>
+                        #if (ContactType === 1)
+                            {#
+                                #if(ContactImageUrl)
+                                   {#
+                                        <a href='/person/#:ContactID#/#= ++rowNumber #' class='grid-noimage'><figure><img src='#:ContactImageUrl#' /></figure></a>
+                                   #}
+                                else
+                                  {#
+                                        <a href='/person/#:ContactID#/#= ++rowNumber #'><i class='icon st-icon-user-4'></i></a>
+                                  #}#
+                            #}
+                            else
+                            {#
+                                #if(ContactImageUrl)
+                                {#
+                                        <a href='/company/#:ContactID#/#= ++rowNumber #' class='grid-noimage'><figure><img src='#:ContactImageUrl#' /></figure></a>
+                                #}
+                                else
+                                {#
+                                    <a href='/company/#:ContactID#/#= ++rowNumber #'><i class='icon st-icon-company'></i></a>
+                                #}#
+                            #}#
+                    </span>
+
+            </td>
+            <td class='details'>
+                <div class='grid-details'>
+                    <div class='grid-details-row'>
+                        #if (ContactType === 1)
+                            {#
+                                <span class='description grid-name'>
+                                    <a href='/person/#:ContactID#/#= rowNumber #' title='#:FullName#'>#:Name#</a>
+                                </span>
+                                <span class='description grid-company'>
+                                     #if(CompanyName == null){##} else {# #: CompanyName# #}#
+                                </span>
+                            #}
+                        else
+                        {#
+                            <span class='description grid-name'>
+                                <a href='/company/#:ContactID#/#= rowNumber #'>#:Name#</a>
+                            </span>
+                        #}#
+                    </div>
+                    <div class='grid-details-row'>
+                        <span class='description grid-phone'>
+                            #=formatPhoneNumber(Phone, PhoneCountryCode, PhoneExtension)#
+                        </span>
+                        <span class='description grid-email'>
+                            #if(PrimaryEmail == 'Email Not Available')
+                            {#
+                                Email Not Available
+                            #}
+                              else
+                            {#
+                                #if(IsSendEmail=='False'|| DoNotEmail==true|| PrimaryEmailStatus == 53 || PrimaryEmailStatus == 54 || PrimaryEmailStatus == 57)
+                                {#
+
+                               <label> #:PrimaryEmail#</label>
+                                #}
+                               else
+                            {#" + Html.ActionLink("#:PrimaryEmail#", "_SendMailModel", new { contactName = "lid", email = "emailID" }, new { title = "#:PrimaryEmail#", data_toggle = "modal", data_target = "modal", @class = "drop-lab" }).ToHtmlString().Replace("lid", "#=getEmailData(Name,PrimaryEmail)#").Replace("emailID", "#:PrimaryContactEmailID#") + @"
+
+                            #}#
+                            #}#
+                        </span>
+                        #if (ContactType === 1)
+                        {#
+                            <span class='description grid-prospect'>
+                                #if(LifecycleStage == null|| LifecycleName == null)
+                                {#
+                                    Not Available
+                                #}
+                                else
+                                {#
+                                    #: LifecycleName#
+                                #}#
+                            </span>
+                        #}#
+                    </div>
+                    <div class='grid-details-row'>
+                        <span class='description grid-address'>
+                            #: Address #
+                        </span>
+                        #if (ContactType === 1)
+                        {#
+                            <span class='description grid-date'>
+                                #:LastTouched#
+                            </span>
+                        #}#
+                    </div>
+                </div>
+            </td>
+
+            <td class='grid-row-controls'>
+                <span>
+                    #if (ContactType === 1)
+                    {#
+                        <a href='/editperson?contactId=#:ContactID#&contactType=#:ContactType#' title='Edit Contact'><i class='icon st-icon-edit'></i></a>
+                    #}
+                    else{#
+                        <a href='/editcompany?contactId=#:ContactID#&contactType=#:ContactType#' title='Edit Contact'><i class='icon st-icon-edit'></i></a>
+                    #}#
+                    #if (IsDelete === true || IsAccountAdmin == 'True') {#
+                    <a href='javascript:void(0)' onclick='DeleteContact(#: ContactID #)' title='Delete Contact'><i class='icon st-icon-bin-3'></i></a>
+                    #}#
+                </span>
+            </td>
+          </tr>")
+                              .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                              .DataSource(dataSource => dataSource
+                              .Ajax()
+                              .PageSize(ItemsPerPage)
+                              .Read(read => read.Action("ContactsViewRead", "Contact").Data("searchParameters"))//, new { name = "#=''#" }
+                              ))
+        </div>
+    </div>
+}
+
+@section Scripts
+{
+<script>
+
+    $('#menuItem236').removeAttr('display');
+
+    function createCookie(name, value, days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            var expires = "; expires=" + date.toGMTString();
+        } else var expires = "";
+        document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+    localStorage.removeItem("ContactsGrid");
+    localStorage.removeItem("OpportunityName");
+    localStorage.removeItem("OpportunityID");
+    var contactDtls = '@(Details)';
+    if (contactDtls == 0) {
+        localStorage.removeItem("searchtext");
+        localStorage.removeItem("searchcontent");
+        localStorage.removeItem("sortcontent");
+
+        createCookie("pagenumber", 1, 1);
+        createCookie("pagesize", '@(ItemsPerPage)', 1);
+    }
+
+    var JobID = '@(JobID)';
+    var TagID = '@(TagID)';
+    var FormID = '@(FormID)';
+    var recordStatus = '@(recordStatus)';
+    var IntegratedPersons = '@(Persons)';
+    var WorkflowID = '@(WorkflowID)';
+    var CampaignID = '@(CampaignID)';
+    var CampaignLinkID = '@(CampaignLinkID)';
+    var ActionID = '@(ActionID)';
+    var WorkflowContactState = '@(WorkflowContactState)';
+    var IsAccountAdmin = '@(IsAccountAdmin)';
+    var TagType = '@(TagType)';
+    var ContactType = '@(ContactType)';
+    var SSDefinitiationId = '@(SSDefinitiationId)';
+    var NeverBounceRequestId = '@(neverBounceId)';
+    var neverBounceEmailStatus = '@(neverBounceEmailStatus)';
+
+    if (JobID != null) {
+        localStorage.setItem("ImportedJobID", JobID);
+    } else {
+        localStorage.removeItem("ImportedJobID");
+    }
+
+    if (TagID != null) {
+        localStorage.setItem("TagID", TagID);
+    } else {
+        localStorage.removeItem("TagID");
+    }
+
+    if (ContactType != null) {
+        localStorage.setItem("ContactType", ContactType);
+    } else {
+        localStorage.removeItem("ContactType");
+    }
+
+    if (SSDefinitiationId != null) {
+        localStorage.setItem("SSDefinitiationId", SSDefinitiationId);
+    } else {
+        localStorage.removeItem("SSDefinitiationId");
+    }
+
+    if (TagType != null) {
+        localStorage.setItem("TagType", TagType);
+    } else {
+        localStorage.removeItem("TagType");
+    }
+
+    if (ActionID != null) {
+        localStorage.setItem("ActionID", ActionID);
+    } else {
+        localStorage.removeItem("ActionID");
+    }
+
+    if (FormID != null) {
+        localStorage.setItem("ViewSubmissionFormID", FormID);
+    } else {
+        localStorage.removeItem("ViewSubmissionFormID");
+    }
+
+    if (recordStatus != null && recordStatus != "") {
+        localStorage.setItem("ImportedRecordStatus", recordStatus);
+    } else {
+        localStorage.removeItem("ImportedRecordStatus");
+    }
+
+    if (IntegratedPersons != "") {
+        localStorage.setItem("IntegratedPersons", IntegratedPersons);
+    } else {
+        localStorage.removeItem("IntegratedPersons");
+    }
+
+    if (WorkflowID != null) {
+        localStorage.setItem("WorkflowID", WorkflowID);
+        localStorage.setItem("WorkflowContactState", WorkflowContactState);
+    } else {
+        localStorage.removeItem("WorkflowID");
+        localStorage.removeItem("WorkflowContactState");
+    }
+
+    if (CampaignID != null) {
+        localStorage.setItem("CampaignID", CampaignID);
+        localStorage.setItem("CampaignDrillDownActivity", '@CampaignDrillDownActivity');
+        localStorage.setItem("CampaignLinkID", '@CampaignLinkID');
+        localStorage.setItem("WfCampFromDate", '@WorkflowCampFromDate');
+        localStorage.setItem("WfCampToDate", '@WorkflowCampToDate');
+    } else {
+        localStorage.removeItem("CampaignID");
+        localStorage.removeItem("CampaignDrillDownActivity");
+        localStorage.removeItem("CampaignLinkID");
+        localStorage.setItem("WfCampFromDate", '@WorkflowCampFromDate');
+        localStorage.setItem("WfCampToDate", '@WorkflowCampToDate');
+    }
+
+    if (NeverBounceRequestId != null) {
+        localStorage.setItem("NeverBounceRequestID", NeverBounceRequestId);
+        localStorage.setItem("NeverBounceEmailStatus", neverBounceEmailStatus);
+    }
+    else {
+        localStorage.removeItem("NeverBounceRequestID");
+        localStorage.removeItem("NeverBounceEmailStatus");
+    }
+
+    localStorage.removeItem("contactdetails");
+
+    function searchParameters() {
+        var parameters = {
+            name: localStorage.getItem("searchtext"),
+            type: localStorage.getItem("searchcontent"),
+            sorter: localStorage.getItem("sortcontent"),
+            JobID: localStorage.getItem("ImportedJobID"),
+            TagID: localStorage.getItem("TagID"),
+            TagType: localStorage.getItem("TagType"),
+            SSType: localStorage.getItem("ContactType"),
+            SSDefinitiationId: localStorage.getItem("SSDefinitiationId"),
+            FormID: localStorage.getItem("ViewSubmissionFormID"),
+            recordStatus: localStorage.getItem("ImportedRecordStatus"),
+            IntegratedPersons: localStorage.getItem("IntegratedPersons"),
+            WorkflowID: localStorage.getItem("WorkflowID"),
+            WorkflowContactState: localStorage.getItem("WorkflowContactState"),
+            CampaignID: localStorage.getItem("CampaignID"),
+            CampaignLinkID: localStorage.getItem("CampaignLinkID"),
+            CampaignDrillDownActivity: localStorage.getItem("CampaignDrillDownActivity"),
+            WorflowCampFromDate: localStorage.getItem("WfCampFromDate"),
+            WorkflowCampToDate: localStorage.getItem("WfCampToDate"),
+            ActionID: localStorage.getItem("ActionID"),
+            isSavedSearch: '@(IsSavedSearch)',
+            viewDynamicGrid: '@(ViewDynamicGrid)',
+            guid: '@(guid)',
+            NeverBounceRequestID: localStorage.getItem("NeverBounceRequestID"),
+            NeverBounceEmailStatus: localStorage.getItem("NeverBounceEmailStatus")
+        }
+        return parameters;
+    }
+
+</script>
+<script>
+    //window.onunload = function () { eraseCookie("searchcontent"); eraseCookie("searchtext"); eraseCookie("sortcontent"); };
+    localStorage.removeItem("contactsData");
+    localStorage.removeItem("OpportunityView");
+    // localStorage.removeItem("ContactOpportunity");
+    localStorage.setItem("ContactOpportunity", "grid");
+    localStorage.setItem("ContactsGrid", "1"); // 1# standard
+    localStorage.setItem("contactsdisplayurl", document.URL);
+    createCookie("selectallsearchstring", "", 1);
+    var searchText;
+    var IsSendEmail = '@IsSendEmail';
+
+    var Contacts_BASE_URL = '@Url.Content("~/Contact/")';
+
+    function contactTypeChange() {
+        var value = this.value();
+        localStorage.setItem("searchcontent", value);
+        var dropDown = $("#sortType").data("kendoDropDownList");
+
+        if (value == "1") {
+            var itemToRemove = dropDown.dataSource.at(2);
+            dropDown.dataSource.remove(itemToRemove);
+            console.log("in ifff condition");
+            //  localStorage.setItem("ImportedJobID"
+            dropDown.select(0);
+        }
+        else if (dropDown.dataSource.total() < 4) {
+            dropDown.dataSource.data([]);
+            dropDown.dataSource.data(
+               [{ "Text": "[|Select|]", "Value": "0" },
+                { "Text": "[|Recently Updated Contacts|]", "Value": "1" },
+                { "Text": "[|Full Name|]", "Value": "2" },
+                { "Text": "[|Company Name|]", "Value": "3" }]
+            );
+        }
+
+        $("#grid").data("kendoGrid").dataSource.read();
+        appendCheckbox();
+    }
+
+    function sorttypeChange() {
+        var value = this.value();
+        localStorage.setItem("sortcontent", value);
+        $("#grid").data("kendoGrid").dataSource.read();
+    };
+
+    function getEmailData(contactname, PrimaryEmialID) {
+        var Text = contactname + " " + "<" + PrimaryEmialID + ">" + " " + "*";
+        var name = encodeURIComponent(Text);
+        return name;
+    }
+
+    function formatPhoneNumber(phone, code, extension) {
+        var phoneTYpe = phone.split(",");
+
+        if (phone == "(xxx) xxx - xxxx") {
+            return phone;
+        } else {
+            var phoneFormat = formatPhone(phoneTYpe[0]);
+            return (code != null ? "+" + code + " " : "") + phoneFormat + (extension != null ? " Ext. " + extension + " " : "") + " (" + phoneTYpe[1] + ")";
+        }
+    }
+
+    var rowNumber = 0;
+    var rnumber = 0;
+    function renderNumber(data) {
+        // return ++rowNumber;
+    }
+
+    function GetContactsBasedonsearch(e) {
+        setTimeout(function () {
+            var enterKeyPressCode = 13;
+            if (searchText !== $("#txtSearch").val() || (searchText === $("#txtSearch").val() && e.keyCode == enterKeyPressCode))
+                searchText = $("#txtSearch").val();
+            else
+                return;
+
+            $filter = new Array();
+            var grid = $("#grid").data("kendoGrid");
+            var searchBox = $("#txtSearch").val();
+            var contactType = $("#contactTypes").val();
+
+            if ($.trim(searchBox).length > 2) {
+                localStorage.removeItem("searchtext");
+                var psize = readCookie("pagesize");
+                localStorage.setItem("searchtext", searchBox);
+
+                grid.dataSource.query({ page: 1, pageSize: psize });
+
+                appendCheckbox();
+
+            }
+            else if ($.trim(searchBox).length === 0) {
+                localStorage.removeItem("searchtext");
+                $("#grid").data("kendoGrid").dataSource.read();
+                appendCheckbox();
+            }
+        }, 800);
+    }
+
+    function onDataBound(e) {
+        $("#clientsDb").show();
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        //console.log($("select[data-role='dropdownlist']").data('kendoDropDownList').dataSource);
+        $("select[data-role='dropdownlist']").not("#contactsGridExport").data('kendoDropDownList').setDataSource(dataSource);
+        //  $("select[data-role='dropdownlist']").data('kendoDropDownList').dataSource=
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+        $('#masterCheckBox').attr('checked', false);
+        $('#masterCheckBox').parent('label.checkbox').removeClass('checked');
+
+
+        $('#masterCheckBox_all').attr('checked', false);
+        $('#masterCheckBox_all').parent('label.checkbox').removeClass('checked');
+
+        $('#CheckBox').attr('checked', false);
+        $('#CheckBox').parent('label.checkbox').removeClass('checked');
+
+        $(this).parents('tr').removeClass('k-state-selected');
+
+        $('#grid > table').attr('id', 'appTourContactsGrid');
+    }
+
+    function onDataBinding(arg) {
+        rowNumber = (arg.sender.dataSource.page() - 1) * arg.sender.dataSource.pageSize();
+        ++rnumber;
+        setTimeout(function () {
+            appendCheckbox();
+            bindCheckboxchnage('chkcontacts');
+            $(".drop-lab").attr('data-target', '#modal');
+        }, 200)
+    }
+
+    function DeleteContact(id) {
+        alertifyReset("Delete Contact", "Cancel");
+        // alertify.confirm("Are you sure you want to delete this Contact?", function (e) {
+        alertify.confirm("[|You are about to Delete 1 Contact(s) and their history. This action cannot be undone. Are you sure you want to delete 1 Contact(s)?|]", function (e) {
+            if (e) {
+                pageLoader();
+                // varDeleteURL = "Contact/DeleteContact?id=" + id;
+                jQuery.support.cors = true;
+                $.ajax({
+                    url: Contacts_BASE_URL + "DeleteContact",
+                    data: JSON.stringify({ id: id }),
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8'
+                }).then(function (response) {
+                    var filter = $.Deferred()
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    notifySuccess("[|Successfully deleted the Contact|]");
+                    setTimeout(function () {
+                        window.location.href = document.URL;
+                    }, setTimeOutTimer);
+                }).fail(function (error) {
+                    notifyError(error);
+                    removepageloader();
+                })
+
+            }
+            else {
+                notifyError("[|You've clicked Cancel|].[|The Contact(s) will not be deleted|].");
+            }
+        });
+    }
+
+    function deleteContacts() {
+        checkedvaluesforcontacts = fnGetChkvalforContactsGrid('chkcontacts');
+        checkedContactStatus = false;
+        checkedContactStatus = fnGetChkStsforContact('chkcontacts');
+
+        if (checkedvaluesforcontacts != "") {
+            alertifyReset("Delete Contacts", "Cancel");
+            //alertify.confirm("Are you sure you want to delete these " + checkedvalues.length + " contact(s)?", function (e) {
+            if (readCookie("selectallsearchstring") != "")
+                DeleteMutlipleContacts("[|You are about to Bulk Delete Contacts and their history. This action cannot be undone. Are you sure you want to delete Contacts?|] ", checkedvaluesforcontacts);
+            else if (checkedContactStatus == true)
+                DeleteMutlipleContacts("[|You are about to Delete|] " + checkedvaluesforcontacts.length + " [|Contact(s) and their history. This action cannot be undone. Are you sure you want to delete|] " + checkedvaluesforcontacts.length + " [|Contact(s)?|]", checkedvaluesforcontacts);
+            else
+                DeleteMutlipleContacts("[|Restricted Access: You are attempting to delete Contact(s) which you have not created.|]" + "</br>" + checkedvaluesforcontacts.length + " [|Contact(s) created by you can only be deleted.|]", checkedvaluesforcontacts);
+        }
+        else {
+            notifyError("[|Please select at least one Contact created by you.|]");
+        }
+    }
+
+    function DeleteMutlipleContacts(confirmMessage, checkedvaluesforcontacts) {
+        alertify.confirm(confirmMessage, function (e) {
+            if (e) {
+                pageLoader();
+                varDeleteURL = "../Contact/DeleteContacts?contactIds=" + checkedvaluesforcontacts.toString();
+
+                $.ajax({
+                    url: Contacts_BASE_URL + "DeleteContacts",
+                    type: 'post',
+                    dataType: 'json',
+                    data: { 'contactIds': checkedvaluesforcontacts.toString() }
+                }).then(function (response) {
+                    var filter = $.Deferred();
+                    if (response.success) {
+                        filter.resolve(response)
+                    } else {
+                        filter.reject(response.error)
+                    }
+                    return filter.promise()
+                }).done(function (data) {
+                    // Process success result    
+                    if (readCookie("selectallsearchstring") != "")
+                        notifySuccess("[|Successfully deleted|] " + " [|Bulk Contact(s)|]");
+                    else
+                        notifySuccess("[|Successfully deleted|] " + data.response + " [|Contact(s)|]");
+                    setTimeout(
+                        function () {
+                            createCookie('log', false, 1);
+                            window.location.href = document.URL;
+                        }, setTimeOutTimer);
+                }).fail(function (error) {
+                    // Display error message to user            
+                    removepageloader();
+                    notifyError(error);
+                });
+            }
+            else {
+                notifyError("[|You've clicked Cancel|].[|The Contact(s) will not be deleted|]");
+            }
+        });
+    }
+
+    function copyContact() {
+        checkedvalue = fnGetChkvalGrid('chkcontacts');
+        if (checkedvalue != "") {
+            if (checkedvalue.length == 1) {
+                var contacttype = fnGetCheckedContactWithType();
+                if (contacttype == 1)
+                    window.location.href = "../copyperson?contactId=" + checkedvalue + "&contactType=" + contacttype;
+                else
+                    window.location.href = "../copycompany?contactId=" + checkedvalue + "&contactType=" + contacttype;
+            }
+            else {
+                notifyError("[|Please select only one contact|]");
+            }
+        }
+        else {
+            notifyError("[|Please select at least one contact|]");
+        }
+    }
+
+    function advancedView() {
+        var grid = $("#grid").data("kendoGrid");
+        var currentPage = grid.dataSource.page();
+        var psize = readCookie("pagesize");
+
+        $.ajax({
+            url: Contacts_BASE_URL + 'SaveGridData',
+            type: 'post',
+            data: { 'SearchString': $("#txtSearch").val(), 'ShowingField': $("#contactTypes").val(), 'SortingField': $("#sortType").val(), 'PageNo': currentPage, 'PageCount': psize },
+            dataType: 'json',
+            success: function (response) {
+                removepageloader();
+                window.location.href = "../contactresults?guid=" + response;
+            },
+            error: function (response) {
+                var error = jQuery.parseJSON(response.responseText);
+                removepageloader();
+                notifyError(error.Exception.Message);
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+
+        $('#306').css({ 'display': 'none' });
+
+        var name = ["taggedcontacts", "searchDefinitioncontacts", "tagreportcontacts", "actioncontacts", "workflowcontactlist", "campaigncontacts", "workflowcontacts", "integratedpersons", "importedcontacts", "leadadaptercontacts", "viewsubmissions", "nvbbemcts"];
+        var pathName = window.location.pathname.replace('/', '');
+        if (name.indexOf(pathName) > -1)
+            $('#325').css({ 'display': 'none' });
+
+        removepageloader();
+        createCookie('log', true, 1);
+        var dropdownlisttype = $("#contactTypes").data("kendoDropDownList");
+
+        if (localStorage.getItem("searchcontent") != null) {
+
+            dropdownlisttype.value(localStorage.getItem("searchcontent"));
+        }
+        else if (localStorage.getItem("searchcontent") == null) {
+            localStorage.setItem("searchcontent", "0");
+        }
+        else if (localStorage.getItem("ImportedJobID") != "") {
+            dropdownlisttype.select(2);
+            localStorage.setItem("searchcontent", "2");
+        }
+        else if (localStorage.getItem("ActionID") != "") {
+            dropdownlisttype.select(2);
+            localStorage.setItem("searchcontent", "2");
+        }
+
+        var dropdownlistsort = $("#sortType").data("kendoDropDownList");
+        if (localStorage.getItem("sortcontent") != null) {
+            dropdownlistsort.value(localStorage.getItem("sortcontent"));
+        }
+
+        $("#txtSearch").val(localStorage.getItem("searchtext"));
+        var grid = $('#grid').data('kendoGrid');
+        var pno = readCookie("pagenumber");
+        var psize = readCookie("pagesize");
+        grid.dataSource.query({ page: pno, pageSize: psize });
+
+        tableMasterCheckBox('contacts-grid');
+    });
+
+
+    function SelectAllPages(e) {
+        var selectallsearchstring = "";
+        if ($("#selectcheckbox_text").text() == "Select All") {
+            $("#selectcheckbox_text").text("All Pages");
+            $("#selectallcheckbox_text").text("Select All");
+
+            selectallsearchstring = (localStorage.getItem("searchtext") == null ? "" : localStorage.getItem("searchtext")) + "$" +
+              (localStorage.getItem("searchcontent") == null ? "0" : localStorage.getItem("searchcontent")) + "$" + (localStorage.getItem("sortcontent") == null ? "0" : localStorage.getItem("sortcontent"));
+            createCookie("selectallsearchstring", selectallsearchstring, 1);
+        }
+        else if ($("#selectcheckbox_text").text() == "All Pages") {
+            $("#selectcheckbox_text").text("Select All");
+            $("#selectallcheckbox_text").text("All Pages");
+            createCookie("selectallsearchstring", "", 1);
+        }
+    }
+
+    function ArrowClick() {
+
+        $("#selectallcheckbox").removeClass("checked");
+
+
+        $('#masterCheckBox_all').attr('checked', false);
+        $('#masterCheckBox_all').parent('label.checkbox').removeClass('checked');
+
+        if ($(".stc-select-drop").hasClass("stc-open")) {
+            console.log("test ok");
+            $(".stc-select-drop").removeClass("stc-open");
+        }
+        else {
+            $(".stc-select-drop").addClass("stc-open");
+
+        }
+
+        $(".stc-select-drop").click(function () {
+            $(this).removeClass("stc-open");
+        });
+        $(document).mouseup(function (e) {
+            var container = $(".stc-select-all");
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                $(".stc-select-drop").removeClass("stc-open"); XMLDocument
+            }
+        });
+
+
+    }
+
+    function AddOpportunity() {
+        var checkedvaluesforaddopportunity = fnGetChkvalGridForOpportunities('chkcontacts');
+        var IsPeople = readCookie("IsPeople");
+
+        var companies = $.grep(checkedvaluesforaddopportunity, function (n) {
+            return n.type === "2";
+        }).length;
+
+        var people = $.grep(checkedvaluesforaddopportunity, function (n) {
+            return n.type === "1";
+        }).length;
+
+
+        if (checkedvaluesforaddopportunity.length == 0) {
+            window.location.href = "";
+        } else {
+
+            if ((IsPeople == "2" && companies > 1) || (IsPeople == "2" && companies == 0))
+                notifyError("[|Please select only one company|]");
+            else if (IsPeople == "1" && people == 0)
+                notifyError("[|Please select alteast one people|]");
+            else {
+                var Opportunity_BASE_URL = '@Url.Content("~/Opportunities/")';
+
+                var array = [];
+                $.each(checkedvaluesforaddopportunity, function (index, value) {
+                    if (value.type == IsPeople)
+                        array.push(value.Id);
+                });
+
+
+                $.ajax({
+                    url: Opportunity_BASE_URL + 'StoreContacts',
+                    type: 'post',
+                    data: { 'ContactIDs': array.join() },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log(response);
+                        removepageloader();
+                        console.log("key");
+                        console.log(response.stringKey);
+                       // window.location.href = Opportunity_BASE_URL + "AddOpportunityWithBuyers?referencekey=" + response.stringKey;
+                    },
+                    error: function (response) {
+                        var error = jQuery.parseJSON(response.responseText);
+                        removepageloader();
+                        notifyError(error.Exception.Message);
+                    }
+                });
+
+
+
+                //window.location.href = Opportunity_BASE_URL + "AddOpportunityWithBuyers?ContactIDs=" + array.join();
+            }
+        }
+    }
+
+    function SyncContact() {
+
+    };
+
+
+</script>
+
+}
+

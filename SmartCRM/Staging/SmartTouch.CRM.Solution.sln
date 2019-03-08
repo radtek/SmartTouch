@@ -1,0 +1,566 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Infrastructure", "crm-infrastructure\SmartTouch.CRM.Infrastructure\SmartTouch.CRM.Infrastructure.csproj", "{34A8702B-08E7-4857-B5F4-D00643730E86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Domain", "crm-domain\SmartTouch.CRM.Domain\SmartTouch.CRM.Domain.csproj", "{02F0054A-4091-4B5E-AD5A-40B04728C6F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Repository", "crm-persistence\SmartTouch.CRM.Repository\SmartTouch.CRM.Repository.csproj", "{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{961A83FB-5560-4DBE-BB79-BB85FDD34927}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{97673E60-1E23-4352-B371-88F79CA633AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repositories", "Repositories", "{2D5A0DCE-1445-4195-9E27-22ADA7DE010D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{0EFA6BAB-1FC1-4125-855A-C860471E7162}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.ApplicationServices", "crm-web-services\SmartTouch.CRM.ApplicationServices\SmartTouch.CRM.ApplicationServices.csproj", "{4BD898B5-94A7-412E-9377-38416D7980F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.ApplicationServices.Tests", "crm-web-services\Tests\SmartTouch.CRM.ApplicationServices.Tests\SmartTouch.CRM.ApplicationServices.Tests.csproj", "{20903552-E720-4C75-8185-3B4D38946DCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1555F80F-6392-4A0E-AEA9-05BA6C3B03F2}"
+	ProjectSection(SolutionItems) = preProject
+		crm-web-services\SmartTouch.CRM.WebService\Web.config = crm-web-services\SmartTouch.CRM.WebService\Web.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Tests", "crm-tests\SmartTouch.CRM.Tests\SmartTouch.CRM.Tests.csproj", "{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApplication", "WebApplication", "{0540F68D-FC13-4B44-B072-5059A0864606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Web", "crm-web-application\SmartTouch.CRM.Web\SmartTouch.CRM.Web.csproj", "{C50374E4-24E4-4CD8-8EE2-3287282CF912}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{56BAC540-AC51-4E32-83F8-F5B4ECFC3012}"
+	ProjectSection(SolutionItems) = preProject
+		SmartTouch.LandmarkIT.snk = SmartTouch.LandmarkIT.snk
+		VersionInfo.cs = VersionInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{E08BDE83-D2C4-4D72-A344-28D14CF26276}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{3CEC2DBD-6D63-4145-AF2E-5616FBD7DE81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Entities", "crm-infrastructure\SmartTouch.CRM.Entities\SmartTouch.CRM.Entities.csproj", "{2C8EAB14-9691-4396-86FB-B5BFDEE8AE94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.WebService.Tests", "crm-web-services\Tests\SmartTouch.CRM.WebService.Tests\SmartTouch.CRM.WebService.Tests.csproj", "{F165F88D-958B-44F1-9FAC-B009DD4B210E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Enterprise", "Enterprise", "{F6500686-477D-4C3C-96B0-6B26556DEE57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandmarkIT.Enterprise.Utilities", "Enterprise\LandMarkIT.Enterprise.Utilities\LandmarkIT.Enterprise.Utilities.csproj", "{0563EAD0-F211-48BC-A919-428DA9325725}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandmarkIT.Enterprise.Extensions", "Enterprise\LandMarkIT.Enterprise.Extensions\LandmarkIT.Enterprise.Extensions.csproj", "{1C044987-8995-4044-A6B7-0FB28F7F914C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandmarkIT.Enterprise.CommunicationManager", "Enterprise\LandMarkIT.Enterprise.CommunicationManager\LandmarkIT.Enterprise.CommunicationManager.csproj", "{DC326331-F62A-4482-86FF-1A4FC9D09C51}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D20C313E-CFBB-4905-804F-5EA6D225EDBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Domain.Tests", "crm-domain\Tests\SmartTouch.CRM.Domain.Tests\SmartTouch.CRM.Domain.Tests.csproj", "{E4825AC2-358A-4B39-88F6-F0469531ECDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandmarkIT.Enterprise.Common", "Enterprise\LandMarkIT.Enterprise.Common\LandmarkIT.Enterprise.Common.csproj", "{C6E48414-87FA-4254-937C-E5552B567B00}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F132CFC1-F8E0-4DA1-8392-49D7725CB144}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.WebService", "crm-web-services\SmartTouch.CRM.WebService\SmartTouch.CRM.WebService.csproj", "{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{9285297F-5162-46D8-82BB-F32F4173DEE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Repository.Tests", "SmartTouch.CRM.Repository.Tests\SmartTouch.CRM.Repository.Tests.csproj", "{4A6A28BF-F037-4EF4-B838-FAC5A1B3B1F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Identity", "crm-infrastructure\SmartTouch.CRM.Identity\SmartTouch.CRM.Identity.csproj", "{7667B8B3-8D3D-43B0-A44D-5E2058DF063F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{882CEFB0-A39B-4050-AE70-A372AF1848C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Web.Tests", "SmartTouch.CRM.Web.Tests\SmartTouch.CRM.Web.Tests.csproj", "{7431F93E-080A-4D59-9426-C33DFCB74432}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{0D982A9F-4D62-4C63-8713-A662167C143E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LandmarkIT.Enterprise.CommunicationManager.UnitTests", "Enterprise\UnitTests\LandmarkIT.Enterprise.CommunicationManager.UnitTests\LandmarkIT.Enterprise.CommunicationManager.UnitTests.csproj", "{053D692A-0A9D-4A9D-8E5C-AE2C2315F5E7}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SmartTouch.CRM.SqlClrDb", "crm-database\SmartTouch.CRM.SqlClrDb\SmartTouch.CRM.SqlClrDb.sqlproj", "{72E9973F-7988-455E-8668-793716D33D8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Scheduler", "crm-schedulers\SmartTouch.CRM.Scheduler\SmartTouch.CRM.Scheduler.csproj", "{3168636C-147B-4118-9F4D-DCEF89702792}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.LeadAdapters", "crm-schedulers\SmartTouch.CRM.LeadAdapters\SmartTouch.CRM.LeadAdapters.csproj", "{1B5A7CFE-3154-4E47-B485-E8641B1B4FDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.MessageQueues", "crm-infrastructure\SmartTouch.CRM.MessageQueues\SmartTouch.CRM.MessageQueues.csproj", "{0748A6D3-6C9D-49F9-A0B7-4569511BAD2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Internationalization", "crm-infrastructure\SmartTouch.CRM.Internationalization\SmartTouch.CRM.Internationalization.csproj", "{B5C1BF06-A611-41D1-A8EE-3DA36039889F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engines", "Engines", "{2108C871-015E-4D3F-905D-5A77A100E15B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.SearchEngine", "crm-engines\SmartTouch.CRM.SearchEngine\SmartTouch.CRM.SearchEngine.csproj", "{71DF1C5F-9936-45C7-B182-E6DEE1A28CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.SearchEngine.Client", "crm-engines\SmartTouch.CRM.SearchEngine.Client\SmartTouch.CRM.SearchEngine.Client.csproj", "{BC9535F3-31D5-4BE3-B226-AE96ECF36133}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.Automation.Core", "crm-engines\SmartTouch.CRM.Automation.Core\SmartTouch.CRM.Automation.Core.csproj", "{98273946-7485-4E95-9A3A-4B4EABE35D65}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{121F8A0A-212D-4E42-92CD-3448F844E92A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.ImplicitSync", "crm-plugins\SmartTouch.CRM.Plugins\SmartTouch.CRM.ImplicitSync.csproj", "{F4481E77-3F62-4885-8DA0-8E07CD0E7F0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.JobProcessor", "crm-schedulers\SmartTouch.CRM.JobProcessor\SmartTouch.CRM.JobProcessor.csproj", "{E9CF77DB-139A-4F9E-9D31-8650F8EFB036}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.CampaignProcessor", "crm-schedulers\SmartTouch.CRM.CampaignProcessor\SmartTouch.CRM.CampaignProcessor.csproj", "{6A2C3338-4131-47B1-BCF9-46A589B1361E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.IndexProcessor", "SmartTouch.CRM.IndexProcessor\SmartTouch.CRM.IndexProcessor.csproj", "{2CFC3B26-49B2-499B-873F-1EF784535E53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.ActionProcessor", "crm-schedulers\SmartTouch.CRM.ActionProcessor\SmartTouch.CRM.ActionProcessor.csproj", "{63130C1E-6756-48B2-A6B0-4ADDB890847D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.BulkOperationProcessor", "crm-schedulers\SmartTouch.CRM.BulkOperationProcessor\SmartTouch.CRM.BulkOperationProcessor.csproj", "{2A4428FF-E091-49BE-A488-BEDB0DA99DC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.LeadProcessor", "crm-schedulers\SmartTouch.CRM.LeadProcessor\SmartTouch.CRM.LeadProcessor.csproj", "{057DF7C9-9014-41A6-AF70-EEB0867442AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.ImportLeadProcessor", "crm-schedulers\SmartTouch.CRM.ImportLeadProcessor\SmartTouch.CRM.ImportLeadProcessor.csproj", "{4F68BECC-4D52-4691-A7C2-6957D4A1EE26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.FormSubmissionProcessor", "crm-schedulers\SmartTouch.CRM.FormSubmissionProcessor\SmartTouch.CRM.FormSubmissionProcessor.csproj", "{EA31948A-FB1D-48CE-9AAD-A60575DEEC31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.SignalR", "SmartTouch.CRM.SignalR\SmartTouch.CRM.SignalR.csproj", "{3DF48BB0-E181-45AA-8716-05A653D94139}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items (2)", "Solution Items (2)", "{3C70EEF7-30E6-46C8-AD5F-119A5A3475E8}"
+	ProjectSection(SolutionItems) = preProject
+		SmartTouch.LandmarkIT.snk = SmartTouch.LandmarkIT.snk
+		VersionInfo.cs = VersionInfo.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.FullContactSyncEngine", "crm-engines\SmartTouch.CRM.FullContactSyncEngine\SmartTouch.CRM.FullContactSyncEngine.csproj", "{C54A67E4-5791-443D-A47A-B97253FBFB88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.WebAnalyticsProcessor", "crm-engines\SmartTouch.CRM.WebAnalyticsEngine\SmartTouch.CRM.WebAnalyticsProcessor.csproj", "{F99E69D4-2DAF-4DF0-A8B8-30C6B997D396}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SmartTouch.CRM.Database", "crm-database\SmartTouch.CRM.Database\SmartTouch.CRM.Database.sqlproj", "{2394A7E5-3401-4A63-BB84-93F05EBFE1B4}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SmartTouch.CRM.EnterpriseCommunication.Database", "crm-database\SmartTouch.CRM.EnterpriseCommunication.Database\SmartTouch.CRM.EnterpriseCommunication.Database.sqlproj", "{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.SmartSearchProcessor", "SmartTouch.CRM.SmartSearchProcessor\SmartTouch.CRM.SmartSearchProcessor.csproj", "{598384C5-ECC6-456C-967A-58D6B6041498}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTouch.CRM.JobService", "SmartTouch.CRM.JobService\SmartTouch.CRM.JobService.csproj", "{35974CE7-1A07-4BC2-A613-A72B188771F5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34A8702B-08E7-4857-B5F4-D00643730E86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BD898B5-94A7-412E-9377-38416D7980F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20903552-E720-4C75-8185-3B4D38946DCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C8EAB14-9691-4396-86FB-B5BFDEE8AE94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C8EAB14-9691-4396-86FB-B5BFDEE8AE94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C8EAB14-9691-4396-86FB-B5BFDEE8AE94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C8EAB14-9691-4396-86FB-B5BFDEE8AE94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0563EAD0-F211-48BC-A919-428DA9325725}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0563EAD0-F211-48BC-A919-428DA9325725}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0563EAD0-F211-48BC-A919-428DA9325725}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0563EAD0-F211-48BC-A919-428DA9325725}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C044987-8995-4044-A6B7-0FB28F7F914C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C044987-8995-4044-A6B7-0FB28F7F914C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C044987-8995-4044-A6B7-0FB28F7F914C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C044987-8995-4044-A6B7-0FB28F7F914C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC326331-F62A-4482-86FF-1A4FC9D09C51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC326331-F62A-4482-86FF-1A4FC9D09C51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC326331-F62A-4482-86FF-1A4FC9D09C51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC326331-F62A-4482-86FF-1A4FC9D09C51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4825AC2-358A-4B39-88F6-F0469531ECDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4825AC2-358A-4B39-88F6-F0469531ECDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4825AC2-358A-4B39-88F6-F0469531ECDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4825AC2-358A-4B39-88F6-F0469531ECDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6E48414-87FA-4254-937C-E5552B567B00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6E48414-87FA-4254-937C-E5552B567B00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6E48414-87FA-4254-937C-E5552B567B00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6E48414-87FA-4254-937C-E5552B567B00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6A28BF-F037-4EF4-B838-FAC5A1B3B1F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6A28BF-F037-4EF4-B838-FAC5A1B3B1F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6A28BF-F037-4EF4-B838-FAC5A1B3B1F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6A28BF-F037-4EF4-B838-FAC5A1B3B1F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7667B8B3-8D3D-43B0-A44D-5E2058DF063F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7667B8B3-8D3D-43B0-A44D-5E2058DF063F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7667B8B3-8D3D-43B0-A44D-5E2058DF063F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7667B8B3-8D3D-43B0-A44D-5E2058DF063F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7431F93E-080A-4D59-9426-C33DFCB74432}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7431F93E-080A-4D59-9426-C33DFCB74432}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7431F93E-080A-4D59-9426-C33DFCB74432}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7431F93E-080A-4D59-9426-C33DFCB74432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{053D692A-0A9D-4A9D-8E5C-AE2C2315F5E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053D692A-0A9D-4A9D-8E5C-AE2C2315F5E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053D692A-0A9D-4A9D-8E5C-AE2C2315F5E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053D692A-0A9D-4A9D-8E5C-AE2C2315F5E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72E9973F-7988-455E-8668-793716D33D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72E9973F-7988-455E-8668-793716D33D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72E9973F-7988-455E-8668-793716D33D8B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{72E9973F-7988-455E-8668-793716D33D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72E9973F-7988-455E-8668-793716D33D8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72E9973F-7988-455E-8668-793716D33D8B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3168636C-147B-4118-9F4D-DCEF89702792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3168636C-147B-4118-9F4D-DCEF89702792}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3168636C-147B-4118-9F4D-DCEF89702792}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3168636C-147B-4118-9F4D-DCEF89702792}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B5A7CFE-3154-4E47-B485-E8641B1B4FDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B5A7CFE-3154-4E47-B485-E8641B1B4FDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B5A7CFE-3154-4E47-B485-E8641B1B4FDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B5A7CFE-3154-4E47-B485-E8641B1B4FDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0748A6D3-6C9D-49F9-A0B7-4569511BAD2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0748A6D3-6C9D-49F9-A0B7-4569511BAD2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0748A6D3-6C9D-49F9-A0B7-4569511BAD2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0748A6D3-6C9D-49F9-A0B7-4569511BAD2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5C1BF06-A611-41D1-A8EE-3DA36039889F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5C1BF06-A611-41D1-A8EE-3DA36039889F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5C1BF06-A611-41D1-A8EE-3DA36039889F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5C1BF06-A611-41D1-A8EE-3DA36039889F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71DF1C5F-9936-45C7-B182-E6DEE1A28CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71DF1C5F-9936-45C7-B182-E6DEE1A28CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71DF1C5F-9936-45C7-B182-E6DEE1A28CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71DF1C5F-9936-45C7-B182-E6DEE1A28CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC9535F3-31D5-4BE3-B226-AE96ECF36133}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC9535F3-31D5-4BE3-B226-AE96ECF36133}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC9535F3-31D5-4BE3-B226-AE96ECF36133}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC9535F3-31D5-4BE3-B226-AE96ECF36133}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98273946-7485-4E95-9A3A-4B4EABE35D65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98273946-7485-4E95-9A3A-4B4EABE35D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98273946-7485-4E95-9A3A-4B4EABE35D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98273946-7485-4E95-9A3A-4B4EABE35D65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4481E77-3F62-4885-8DA0-8E07CD0E7F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4481E77-3F62-4885-8DA0-8E07CD0E7F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4481E77-3F62-4885-8DA0-8E07CD0E7F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4481E77-3F62-4885-8DA0-8E07CD0E7F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9CF77DB-139A-4F9E-9D31-8650F8EFB036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9CF77DB-139A-4F9E-9D31-8650F8EFB036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9CF77DB-139A-4F9E-9D31-8650F8EFB036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9CF77DB-139A-4F9E-9D31-8650F8EFB036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A2C3338-4131-47B1-BCF9-46A589B1361E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A2C3338-4131-47B1-BCF9-46A589B1361E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A2C3338-4131-47B1-BCF9-46A589B1361E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A2C3338-4131-47B1-BCF9-46A589B1361E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CFC3B26-49B2-499B-873F-1EF784535E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CFC3B26-49B2-499B-873F-1EF784535E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CFC3B26-49B2-499B-873F-1EF784535E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CFC3B26-49B2-499B-873F-1EF784535E53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63130C1E-6756-48B2-A6B0-4ADDB890847D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63130C1E-6756-48B2-A6B0-4ADDB890847D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63130C1E-6756-48B2-A6B0-4ADDB890847D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63130C1E-6756-48B2-A6B0-4ADDB890847D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A4428FF-E091-49BE-A488-BEDB0DA99DC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A4428FF-E091-49BE-A488-BEDB0DA99DC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A4428FF-E091-49BE-A488-BEDB0DA99DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A4428FF-E091-49BE-A488-BEDB0DA99DC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{057DF7C9-9014-41A6-AF70-EEB0867442AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{057DF7C9-9014-41A6-AF70-EEB0867442AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{057DF7C9-9014-41A6-AF70-EEB0867442AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{057DF7C9-9014-41A6-AF70-EEB0867442AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F68BECC-4D52-4691-A7C2-6957D4A1EE26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F68BECC-4D52-4691-A7C2-6957D4A1EE26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F68BECC-4D52-4691-A7C2-6957D4A1EE26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F68BECC-4D52-4691-A7C2-6957D4A1EE26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA31948A-FB1D-48CE-9AAD-A60575DEEC31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA31948A-FB1D-48CE-9AAD-A60575DEEC31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA31948A-FB1D-48CE-9AAD-A60575DEEC31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA31948A-FB1D-48CE-9AAD-A60575DEEC31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DF48BB0-E181-45AA-8716-05A653D94139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF48BB0-E181-45AA-8716-05A653D94139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF48BB0-E181-45AA-8716-05A653D94139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF48BB0-E181-45AA-8716-05A653D94139}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C54A67E4-5791-443D-A47A-B97253FBFB88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C54A67E4-5791-443D-A47A-B97253FBFB88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C54A67E4-5791-443D-A47A-B97253FBFB88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C54A67E4-5791-443D-A47A-B97253FBFB88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F99E69D4-2DAF-4DF0-A8B8-30C6B997D396}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F99E69D4-2DAF-4DF0-A8B8-30C6B997D396}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F99E69D4-2DAF-4DF0-A8B8-30C6B997D396}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F99E69D4-2DAF-4DF0-A8B8-30C6B997D396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2394A7E5-3401-4A63-BB84-93F05EBFE1B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2394A7E5-3401-4A63-BB84-93F05EBFE1B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2394A7E5-3401-4A63-BB84-93F05EBFE1B4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2394A7E5-3401-4A63-BB84-93F05EBFE1B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2394A7E5-3401-4A63-BB84-93F05EBFE1B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2394A7E5-3401-4A63-BB84-93F05EBFE1B4}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{598384C5-ECC6-456C-967A-58D6B6041498}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{598384C5-ECC6-456C-967A-58D6B6041498}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{598384C5-ECC6-456C-967A-58D6B6041498}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{598384C5-ECC6-456C-967A-58D6B6041498}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35974CE7-1A07-4BC2-A613-A72B188771F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35974CE7-1A07-4BC2-A613-A72B188771F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35974CE7-1A07-4BC2-A613-A72B188771F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35974CE7-1A07-4BC2-A613-A72B188771F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34A8702B-08E7-4857-B5F4-D00643730E86} = {0EFA6BAB-1FC1-4125-855A-C860471E7162}
+		{02F0054A-4091-4B5E-AD5A-40B04728C6F5} = {97673E60-1E23-4352-B371-88F79CA633AD}
+		{4C4D83A2-A1D7-431A-9AE4-57071C0F1053} = {2D5A0DCE-1445-4195-9E27-22ADA7DE010D}
+		{4BD898B5-94A7-412E-9377-38416D7980F5} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{20903552-E720-4C75-8185-3B4D38946DCA} = {EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B}
+		{177DE13F-1412-4FB3-B18E-4F81C7CDBED4} = {1555F80F-6392-4A0E-AEA9-05BA6C3B03F2}
+		{C50374E4-24E4-4CD8-8EE2-3287282CF912} = {0540F68D-FC13-4B44-B072-5059A0864606}
+		{2C8EAB14-9691-4396-86FB-B5BFDEE8AE94} = {3CEC2DBD-6D63-4145-AF2E-5616FBD7DE81}
+		{F165F88D-958B-44F1-9FAC-B009DD4B210E} = {EFE9B3CF-003E-48FC-B7EB-7EA1C2CF524B}
+		{0563EAD0-F211-48BC-A919-428DA9325725} = {F6500686-477D-4C3C-96B0-6B26556DEE57}
+		{1C044987-8995-4044-A6B7-0FB28F7F914C} = {F6500686-477D-4C3C-96B0-6B26556DEE57}
+		{DC326331-F62A-4482-86FF-1A4FC9D09C51} = {F6500686-477D-4C3C-96B0-6B26556DEE57}
+		{D20C313E-CFBB-4905-804F-5EA6D225EDBB} = {97673E60-1E23-4352-B371-88F79CA633AD}
+		{E4825AC2-358A-4B39-88F6-F0469531ECDB} = {D20C313E-CFBB-4905-804F-5EA6D225EDBB}
+		{C6E48414-87FA-4254-937C-E5552B567B00} = {F6500686-477D-4C3C-96B0-6B26556DEE57}
+		{D2482896-BE8B-4DA8-B818-BCFDB0DFAB7D} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{9285297F-5162-46D8-82BB-F32F4173DEE0} = {2D5A0DCE-1445-4195-9E27-22ADA7DE010D}
+		{4A6A28BF-F037-4EF4-B838-FAC5A1B3B1F9} = {9285297F-5162-46D8-82BB-F32F4173DEE0}
+		{7667B8B3-8D3D-43B0-A44D-5E2058DF063F} = {0EFA6BAB-1FC1-4125-855A-C860471E7162}
+		{882CEFB0-A39B-4050-AE70-A372AF1848C9} = {0540F68D-FC13-4B44-B072-5059A0864606}
+		{7431F93E-080A-4D59-9426-C33DFCB74432} = {882CEFB0-A39B-4050-AE70-A372AF1848C9}
+		{0D982A9F-4D62-4C63-8713-A662167C143E} = {F6500686-477D-4C3C-96B0-6B26556DEE57}
+		{053D692A-0A9D-4A9D-8E5C-AE2C2315F5E7} = {0D982A9F-4D62-4C63-8713-A662167C143E}
+		{72E9973F-7988-455E-8668-793716D33D8B} = {E08BDE83-D2C4-4D72-A344-28D14CF26276}
+		{3168636C-147B-4118-9F4D-DCEF89702792} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{1B5A7CFE-3154-4E47-B485-E8641B1B4FDA} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{0748A6D3-6C9D-49F9-A0B7-4569511BAD2A} = {0EFA6BAB-1FC1-4125-855A-C860471E7162}
+		{B5C1BF06-A611-41D1-A8EE-3DA36039889F} = {0EFA6BAB-1FC1-4125-855A-C860471E7162}
+		{2108C871-015E-4D3F-905D-5A77A100E15B} = {97673E60-1E23-4352-B371-88F79CA633AD}
+		{71DF1C5F-9936-45C7-B182-E6DEE1A28CAB} = {2108C871-015E-4D3F-905D-5A77A100E15B}
+		{BC9535F3-31D5-4BE3-B226-AE96ECF36133} = {2108C871-015E-4D3F-905D-5A77A100E15B}
+		{98273946-7485-4E95-9A3A-4B4EABE35D65} = {2108C871-015E-4D3F-905D-5A77A100E15B}
+		{F4481E77-3F62-4885-8DA0-8E07CD0E7F0E} = {121F8A0A-212D-4E42-92CD-3448F844E92A}
+		{E9CF77DB-139A-4F9E-9D31-8650F8EFB036} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{6A2C3338-4131-47B1-BCF9-46A589B1361E} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{2CFC3B26-49B2-499B-873F-1EF784535E53} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{63130C1E-6756-48B2-A6B0-4ADDB890847D} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{2A4428FF-E091-49BE-A488-BEDB0DA99DC0} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{057DF7C9-9014-41A6-AF70-EEB0867442AC} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{4F68BECC-4D52-4691-A7C2-6957D4A1EE26} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{EA31948A-FB1D-48CE-9AAD-A60575DEEC31} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{3DF48BB0-E181-45AA-8716-05A653D94139} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{C54A67E4-5791-443D-A47A-B97253FBFB88} = {2108C871-015E-4D3F-905D-5A77A100E15B}
+		{F99E69D4-2DAF-4DF0-A8B8-30C6B997D396} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{2394A7E5-3401-4A63-BB84-93F05EBFE1B4} = {E08BDE83-D2C4-4D72-A344-28D14CF26276}
+		{3A9C28AE-87BB-4547-B6BA-5F7B4AE3CA43} = {E08BDE83-D2C4-4D72-A344-28D14CF26276}
+		{598384C5-ECC6-456C-967A-58D6B6041498} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+		{35974CE7-1A07-4BC2-A613-A72B188771F5} = {961A83FB-5560-4DBE-BB79-BB85FDD34927}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F6BC83EA-6B87-4825-9C1E-5B8205B7DB5C}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45;packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 44
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://sttfsnextgen.visualstudio.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = crm-database\\SmartTouch.CRM.SqlClrDb\\SmartTouch.CRM.SqlClrDb.sqlproj
+		SccProjectTopLevelParentUniqueName1 = SmartTouch.CRM.Solution.sln
+		SccProjectName1 = crm-database/SmartTouch.CRM.SqlClrDb
+		SccLocalPath1 = crm-database\\SmartTouch.CRM.SqlClrDb
+		SccProjectUniqueName2 = crm-infrastructure\\SmartTouch.CRM.Entities\\SmartTouch.CRM.Entities.csproj
+		SccProjectTopLevelParentUniqueName2 = SmartTouch.CRM.Solution.sln
+		SccProjectName2 = crm-infrastructure/SmartTouch.CRM.Entities
+		SccLocalPath2 = crm-infrastructure\\SmartTouch.CRM.Entities
+		SccProjectUniqueName3 = crm-infrastructure\\SmartTouch.CRM.Infrastructure\\SmartTouch.CRM.Infrastructure.csproj
+		SccProjectTopLevelParentUniqueName3 = SmartTouch.CRM.Solution.sln
+		SccProjectName3 = crm-infrastructure/SmartTouch.CRM.Infrastructure
+		SccLocalPath3 = crm-infrastructure\\SmartTouch.CRM.Infrastructure
+		SccProjectUniqueName4 = Enterprise\\LandMarkIT.Enterprise.Utilities\\LandmarkIT.Enterprise.Utilities.csproj
+		SccProjectTopLevelParentUniqueName4 = SmartTouch.CRM.Solution.sln
+		SccProjectName4 = Enterprise/LandMarkIT.Enterprise.Utilities
+		SccLocalPath4 = Enterprise\\LandMarkIT.Enterprise.Utilities
+		SccProjectUniqueName5 = crm-infrastructure\\SmartTouch.CRM.MessageQueues\\SmartTouch.CRM.MessageQueues.csproj
+		SccProjectTopLevelParentUniqueName5 = SmartTouch.CRM.Solution.sln
+		SccProjectName5 = crm-infrastructure/SmartTouch.CRM.MessageQueues
+		SccLocalPath5 = crm-infrastructure\\SmartTouch.CRM.MessageQueues
+		SccProjectUniqueName6 = crm-domain\\SmartTouch.CRM.Domain\\SmartTouch.CRM.Domain.csproj
+		SccProjectTopLevelParentUniqueName6 = SmartTouch.CRM.Solution.sln
+		SccProjectName6 = crm-domain/SmartTouch.CRM.Domain
+		SccLocalPath6 = crm-domain\\SmartTouch.CRM.Domain
+		SccProjectUniqueName7 = Enterprise\\LandMarkIT.Enterprise.Extensions\\LandmarkIT.Enterprise.Extensions.csproj
+		SccProjectTopLevelParentUniqueName7 = SmartTouch.CRM.Solution.sln
+		SccProjectName7 = Enterprise/LandMarkIT.Enterprise.Extensions
+		SccLocalPath7 = Enterprise\\LandMarkIT.Enterprise.Extensions
+		SccProjectUniqueName8 = crm-persistence\\SmartTouch.CRM.Repository\\SmartTouch.CRM.Repository.csproj
+		SccProjectTopLevelParentUniqueName8 = SmartTouch.CRM.Solution.sln
+		SccProjectName8 = crm-persistence/SmartTouch.CRM.Repository
+		SccLocalPath8 = crm-persistence\\SmartTouch.CRM.Repository
+		SccProjectUniqueName9 = crm-engines\\SmartTouch.CRM.SearchEngine\\SmartTouch.CRM.SearchEngine.csproj
+		SccProjectTopLevelParentUniqueName9 = SmartTouch.CRM.Solution.sln
+		SccProjectName9 = crm-engines/SmartTouch.CRM.SearchEngine
+		SccLocalPath9 = crm-engines\\SmartTouch.CRM.SearchEngine
+		SccProjectUniqueName10 = Enterprise\\LandMarkIT.Enterprise.Common\\LandmarkIT.Enterprise.Common.csproj
+		SccProjectTopLevelParentUniqueName10 = SmartTouch.CRM.Solution.sln
+		SccProjectName10 = Enterprise/LandMarkIT.Enterprise.Common
+		SccLocalPath10 = Enterprise\\LandMarkIT.Enterprise.Common
+		SccProjectUniqueName11 = Enterprise\\LandMarkIT.Enterprise.CommunicationManager\\LandmarkIT.Enterprise.CommunicationManager.csproj
+		SccProjectTopLevelParentUniqueName11 = SmartTouch.CRM.Solution.sln
+		SccProjectName11 = Enterprise/LandMarkIT.Enterprise.CommunicationManager
+		SccLocalPath11 = Enterprise\\LandMarkIT.Enterprise.CommunicationManager
+		SccProjectUniqueName12 = crm-web-services\\SmartTouch.CRM.ApplicationServices\\SmartTouch.CRM.ApplicationServices.csproj
+		SccProjectTopLevelParentUniqueName12 = SmartTouch.CRM.Solution.sln
+		SccProjectName12 = crm-web-services/SmartTouch.CRM.ApplicationServices
+		SccLocalPath12 = crm-web-services\\SmartTouch.CRM.ApplicationServices
+		SccProjectUniqueName13 = crm-domain\\Tests\\SmartTouch.CRM.Domain.Tests\\SmartTouch.CRM.Domain.Tests.csproj
+		SccProjectTopLevelParentUniqueName13 = SmartTouch.CRM.Solution.sln
+		SccProjectName13 = crm-domain/Tests/SmartTouch.CRM.Domain.Tests
+		SccLocalPath13 = crm-domain\\Tests\\SmartTouch.CRM.Domain.Tests
+		SccProjectUniqueName14 = crm-tests\\SmartTouch.CRM.Tests\\SmartTouch.CRM.Tests.csproj
+		SccProjectTopLevelParentUniqueName14 = SmartTouch.CRM.Solution.sln
+		SccProjectName14 = crm-tests/SmartTouch.CRM.Tests
+		SccLocalPath14 = crm-tests\\SmartTouch.CRM.Tests
+		SccProjectUniqueName15 = crm-web-services\\Tests\\SmartTouch.CRM.ApplicationServices.Tests\\SmartTouch.CRM.ApplicationServices.Tests.csproj
+		SccProjectTopLevelParentUniqueName15 = SmartTouch.CRM.Solution.sln
+		SccProjectName15 = crm-web-services/Tests/SmartTouch.CRM.ApplicationServices.Tests
+		SccLocalPath15 = crm-web-services\\Tests\\SmartTouch.CRM.ApplicationServices.Tests
+		SccProjectUniqueName16 = crm-infrastructure\\SmartTouch.CRM.Identity\\SmartTouch.CRM.Identity.csproj
+		SccProjectTopLevelParentUniqueName16 = SmartTouch.CRM.Solution.sln
+		SccProjectName16 = crm-infrastructure/SmartTouch.CRM.Identity
+		SccLocalPath16 = crm-infrastructure\\SmartTouch.CRM.Identity
+		SccProjectUniqueName17 = crm-infrastructure\\SmartTouch.CRM.Internationalization\\SmartTouch.CRM.Internationalization.csproj
+		SccProjectTopLevelParentUniqueName17 = SmartTouch.CRM.Solution.sln
+		SccProjectName17 = crm-infrastructure/SmartTouch.CRM.Internationalization
+		SccLocalPath17 = crm-infrastructure\\SmartTouch.CRM.Internationalization
+		SccProjectUniqueName18 = crm-web-application\\SmartTouch.CRM.Web\\SmartTouch.CRM.Web.csproj
+		SccProjectTopLevelParentUniqueName18 = SmartTouch.CRM.Solution.sln
+		SccProjectName18 = crm-web-application/SmartTouch.CRM.Web
+		SccLocalPath18 = crm-web-application\\SmartTouch.CRM.Web
+		SccProjectUniqueName19 = crm-web-services\\SmartTouch.CRM.WebService\\SmartTouch.CRM.WebService.csproj
+		SccProjectTopLevelParentUniqueName19 = SmartTouch.CRM.Solution.sln
+		SccProjectName19 = crm-web-services/SmartTouch.CRM.WebService
+		SccLocalPath19 = crm-web-services\\SmartTouch.CRM.WebService
+		SccProjectUniqueName20 = crm-web-services\\Tests\\SmartTouch.CRM.WebService.Tests\\SmartTouch.CRM.WebService.Tests.csproj
+		SccProjectTopLevelParentUniqueName20 = SmartTouch.CRM.Solution.sln
+		SccProjectName20 = crm-web-services/Tests/SmartTouch.CRM.WebService.Tests
+		SccLocalPath20 = crm-web-services\\Tests\\SmartTouch.CRM.WebService.Tests
+		SccProjectUniqueName21 = SmartTouch.CRM.Repository.Tests\\SmartTouch.CRM.Repository.Tests.csproj
+		SccProjectTopLevelParentUniqueName21 = SmartTouch.CRM.Solution.sln
+		SccProjectName21 = SmartTouch.CRM.Repository.Tests
+		SccLocalPath21 = SmartTouch.CRM.Repository.Tests
+		SccProjectUniqueName22 = SmartTouch.CRM.Web.Tests\\SmartTouch.CRM.Web.Tests.csproj
+		SccProjectTopLevelParentUniqueName22 = SmartTouch.CRM.Solution.sln
+		SccProjectName22 = SmartTouch.CRM.Web.Tests
+		SccLocalPath22 = SmartTouch.CRM.Web.Tests
+		SccProjectUniqueName23 = Enterprise\\UnitTests\\LandmarkIT.Enterprise.CommunicationManager.UnitTests\\LandmarkIT.Enterprise.CommunicationManager.UnitTests.csproj
+		SccProjectTopLevelParentUniqueName23 = SmartTouch.CRM.Solution.sln
+		SccProjectName23 = Enterprise/UnitTests/LandmarkIT.Enterprise.CommunicationManager.UnitTests
+		SccLocalPath23 = Enterprise\\UnitTests\\LandmarkIT.Enterprise.CommunicationManager.UnitTests
+		SccProjectUniqueName24 = crm-schedulers\\SmartTouch.CRM.LeadAdapters\\SmartTouch.CRM.LeadAdapters.csproj
+		SccProjectTopLevelParentUniqueName24 = SmartTouch.CRM.Solution.sln
+		SccProjectName24 = crm-schedulers/SmartTouch.CRM.LeadAdapters
+		SccLocalPath24 = crm-schedulers\\SmartTouch.CRM.LeadAdapters
+		SccProjectUniqueName25 = crm-schedulers\\SmartTouch.CRM.Scheduler\\SmartTouch.CRM.Scheduler.csproj
+		SccProjectTopLevelParentUniqueName25 = SmartTouch.CRM.Solution.sln
+		SccProjectName25 = crm-schedulers/SmartTouch.CRM.Scheduler
+		SccLocalPath25 = crm-schedulers\\SmartTouch.CRM.Scheduler
+		SccProjectUniqueName26 = crm-engines\\SmartTouch.CRM.SearchEngine.Client\\SmartTouch.CRM.SearchEngine.Client.csproj
+		SccProjectTopLevelParentUniqueName26 = SmartTouch.CRM.Solution.sln
+		SccProjectName26 = crm-engines/SmartTouch.CRM.SearchEngine.Client
+		SccLocalPath26 = crm-engines\\SmartTouch.CRM.SearchEngine.Client
+		SccProjectUniqueName27 = crm-engines\\SmartTouch.CRM.Automation.Core\\SmartTouch.CRM.Automation.Core.csproj
+		SccProjectTopLevelParentUniqueName27 = SmartTouch.CRM.Solution.sln
+		SccProjectName27 = crm-engines/SmartTouch.CRM.Automation.Core
+		SccLocalPath27 = crm-engines\\SmartTouch.CRM.Automation.Core
+		SccProjectUniqueName28 = crm-plugins\\SmartTouch.CRM.Plugins\\SmartTouch.CRM.ImplicitSync.csproj
+		SccProjectTopLevelParentUniqueName28 = SmartTouch.CRM.Solution.sln
+		SccProjectName28 = crm-plugins/SmartTouch.CRM.Plugins
+		SccLocalPath28 = crm-plugins\\SmartTouch.CRM.Plugins
+		SccProjectUniqueName29 = crm-schedulers\\SmartTouch.CRM.JobProcessor\\SmartTouch.CRM.JobProcessor.csproj
+		SccProjectTopLevelParentUniqueName29 = SmartTouch.CRM.Solution.sln
+		SccProjectName29 = crm-schedulers/SmartTouch.CRM.JobProcessor
+		SccLocalPath29 = crm-schedulers\\SmartTouch.CRM.JobProcessor
+		SccProjectUniqueName30 = crm-schedulers\\SmartTouch.CRM.ImportLeadProcessor\\SmartTouch.CRM.ImportLeadProcessor.csproj
+		SccProjectTopLevelParentUniqueName30 = SmartTouch.CRM.Solution.sln
+		SccProjectName30 = crm-schedulers/SmartTouch.CRM.ImportLeadProcessor
+		SccLocalPath30 = crm-schedulers\\SmartTouch.CRM.ImportLeadProcessor
+		SccProjectUniqueName31 = crm-schedulers\\SmartTouch.CRM.CampaignProcessor\\SmartTouch.CRM.CampaignProcessor.csproj
+		SccProjectTopLevelParentUniqueName31 = SmartTouch.CRM.Solution.sln
+		SccProjectName31 = crm-schedulers/SmartTouch.CRM.CampaignProcessor
+		SccLocalPath31 = crm-schedulers\\SmartTouch.CRM.CampaignProcessor
+		SccProjectUniqueName32 = SmartTouch.CRM.IndexProcessor\\SmartTouch.CRM.IndexProcessor.csproj
+		SccProjectTopLevelParentUniqueName32 = SmartTouch.CRM.Solution.sln
+		SccProjectName32 = SmartTouch.CRM.IndexProcessor
+		SccLocalPath32 = SmartTouch.CRM.IndexProcessor
+		SccProjectUniqueName33 = crm-schedulers\\SmartTouch.CRM.ActionProcessor\\SmartTouch.CRM.ActionProcessor.csproj
+		SccProjectTopLevelParentUniqueName33 = SmartTouch.CRM.Solution.sln
+		SccProjectName33 = crm-schedulers/SmartTouch.CRM.ActionProcessor
+		SccLocalPath33 = crm-schedulers\\SmartTouch.CRM.ActionProcessor
+		SccProjectUniqueName34 = crm-schedulers\\SmartTouch.CRM.BulkOperationProcessor\\SmartTouch.CRM.BulkOperationProcessor.csproj
+		SccProjectTopLevelParentUniqueName34 = SmartTouch.CRM.Solution.sln
+		SccProjectName34 = crm-schedulers/SmartTouch.CRM.BulkOperationProcessor
+		SccLocalPath34 = crm-schedulers\\SmartTouch.CRM.BulkOperationProcessor
+		SccProjectUniqueName35 = crm-schedulers\\SmartTouch.CRM.LeadProcessor\\SmartTouch.CRM.LeadProcessor.csproj
+		SccProjectTopLevelParentUniqueName35 = SmartTouch.CRM.Solution.sln
+		SccProjectName35 = crm-schedulers/SmartTouch.CRM.LeadProcessor
+		SccLocalPath35 = crm-schedulers\\SmartTouch.CRM.LeadProcessor
+		SccProjectUniqueName36 = crm-schedulers\\SmartTouch.CRM.FormSubmissionProcessor\\SmartTouch.CRM.FormSubmissionProcessor.csproj
+		SccProjectTopLevelParentUniqueName36 = SmartTouch.CRM.Solution.sln
+		SccProjectName36 = crm-schedulers/SmartTouch.CRM.FormSubmissionProcessor
+		SccLocalPath36 = crm-schedulers\\SmartTouch.CRM.FormSubmissionProcessor
+		SccProjectUniqueName37 = SmartTouch.CRM.SignalR\\SmartTouch.CRM.SignalR.csproj
+		SccProjectTopLevelParentUniqueName37 = SmartTouch.CRM.Solution.sln
+		SccProjectName37 = SmartTouch.CRM.SignalR
+		SccLocalPath37 = SmartTouch.CRM.SignalR
+		SccProjectUniqueName38 = crm-engines\\SmartTouch.CRM.FullContactSyncEngine\\SmartTouch.CRM.FullContactSyncEngine.csproj
+		SccProjectTopLevelParentUniqueName38 = SmartTouch.CRM.Solution.sln
+		SccProjectName38 = crm-engines/SmartTouch.CRM.FullContactSyncEngine
+		SccLocalPath38 = crm-engines\\SmartTouch.CRM.FullContactSyncEngine
+		SccProjectUniqueName39 = crm-engines\\SmartTouch.CRM.WebAnalyticsEngine\\SmartTouch.CRM.WebAnalyticsProcessor.csproj
+		SccProjectTopLevelParentUniqueName39 = SmartTouch.CRM.Solution.sln
+		SccProjectName39 = crm-engines/SmartTouch.CRM.WebAnalyticsEngine
+		SccLocalPath39 = crm-engines\\SmartTouch.CRM.WebAnalyticsEngine
+		SccProjectUniqueName40 = crm-database\\SmartTouch.CRM.Database\\SmartTouch.CRM.Database.sqlproj
+		SccProjectTopLevelParentUniqueName40 = SmartTouch.CRM.Solution.sln
+		SccProjectName40 = crm-database/SmartTouch.CRM.Database
+		SccLocalPath40 = crm-database\\SmartTouch.CRM.Database
+		SccProjectUniqueName41 = crm-database\\SmartTouch.CRM.EnterpriseCommunication.Database\\SmartTouch.CRM.EnterpriseCommunication.Database.sqlproj
+		SccProjectTopLevelParentUniqueName41 = SmartTouch.CRM.Solution.sln
+		SccProjectName41 = crm-database/SmartTouch.CRM.EnterpriseCommunication.Database
+		SccLocalPath41 = crm-database\\SmartTouch.CRM.EnterpriseCommunication.Database
+		SccProjectUniqueName42 = SmartTouch.CRM.SmartSearchProcessor\\SmartTouch.CRM.SmartSearchProcessor.csproj
+		SccProjectTopLevelParentUniqueName42 = SmartTouch.CRM.Solution.sln
+		SccProjectName42 = SmartTouch.CRM.SmartSearchProcessor
+		SccLocalPath42 = SmartTouch.CRM.SmartSearchProcessor
+		SccProjectUniqueName43 = SmartTouch.CRM.JobService\\SmartTouch.CRM.JobService.csproj
+		SccProjectTopLevelParentUniqueName43 = SmartTouch.CRM.Solution.sln
+		SccProjectName43 = SmartTouch.CRM.JobService
+		SccLocalPath43 = SmartTouch.CRM.JobService
+	EndGlobalSection
+EndGlobal

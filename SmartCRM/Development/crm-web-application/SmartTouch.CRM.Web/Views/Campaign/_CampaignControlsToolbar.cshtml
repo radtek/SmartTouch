@@ -1,0 +1,44 @@
+﻿@using SmartTouch.CRM.Entities;
+
+<div class="btn-group merge-control-views">
+    <a href="javascript:void(0)" class="btn btn-default btn-lg active" id="Contactfields" data-target="contentContactfields" onclick="mergeControlViews(this)">[|Standard Fields|]</a>
+    <a href="javascript:void(0)" class="btn btn-default btn-lg" id="Customtabfields" data-target="contentCustomtabfields" onclick="mergeControlViews(this)">[|Custom Fields|]</a>
+</div>
+
+<div class="merge-controls-content">
+    <div class="images-search">
+        <span class="icon st-icon-search-2"></span>
+        <input type="search" placeholder="[|Search|]" class="form-control display-inline" data-bind="value:searchQuery, valueUpdate:'afterkeydown'" />
+    </div>
+    <ul data-bind="foreach:computedFieldSearch" class="merge-content-block active" id="contentContactfields">
+        <li data-bind="attr:{id:'toolbarcontrol-'+FieldId}">
+            <span data-bind="text:Title" class="field-title"></span><br />
+            Code: <span data-bind="text:FieldCode" class="field-code"></span> 
+            <a href="javascript:void(0)" data-bind="click:$parent.IncludeField,attr:{id: FieldCode}" title="Include">
+                <i data-bind="attr:{id:FieldCode}" class="icon st-icon-inbox-2"></i>
+            </a>
+        </li>
+    </ul>
+
+    <ul data-bind="foreach:computedCustomFieldSearch" class="merge-content-block" id="contentCustomtabfields">
+        <li data-bind="attr:{id:'toolbarcontrol-'+FieldId} ">
+            <span data-bind="text:Title" class="field-title"></span>
+            <div class="field-code">
+                Code: <span data-bind="text:FieldCode"></span>
+            </div>
+            <a href="javascript:void(0)" data-bind="click:$parent.IncludeField,attr:{id: FieldCode}" title="Include">
+                @*visible:$root.CampaignTypeId() == campaignType.REGULAR*@
+                <i data-bind="attr:{id:FieldCode}" class="icon st-icon-inbox-2 pull-right"></i>
+            </a>
+
+        </li>
+    </ul>
+
+    <div data-bind="visible:computedFieldSearch().length==0 && computedCustomFieldSearch()==0">
+        <span class="bolder smaller-90">[|No fields found|]</span>
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+
+

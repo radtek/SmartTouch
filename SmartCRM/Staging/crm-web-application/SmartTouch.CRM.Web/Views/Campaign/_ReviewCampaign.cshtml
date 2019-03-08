@@ -1,0 +1,392 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+<div class="form-horizontal-large campaign-rvw-sub-det">
+    <div class="clearfix">
+        <div class="campaign-sub">
+            <div class="form-group">
+                <label class="control-label campagin-rvw-campaignsub">
+                    [|Campaign Subject|]
+                    <span class="required">*</span>
+                    <span id="campaignsubjectlength" class="pull-right"></span>
+                </label>
+                <input type="text" id="campaignsubject" class="display-inline form-control tagsinput-info-round" data-bind="value:Subject">
+            </div>
+        </div>
+        <div class="campaign-tag">
+            <div class="form-group">
+                <label class="control-label campagin-rvw-campaignsub">
+                    [|Tags|]
+                </label>
+                <input id="campaignTags" class="display-inline form-control tagsinput-info-round" placeholder="[|Search or Type a tag name|]" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-horizontal-large campaign-rvw-recipients">
+    <div class="formsubheading campaign-rvw-formsubheadings" data-bind="visible:IsLinkedToWorkflows() == false">
+        [| Recipients|]
+        <span class="pull-right total-recipients">
+            <span data-bind=" text: ' [|Total Recipients : |]' "></span>
+            <!-- ko if : ToTagStatus() == "1" && SSContactsStatus() == "1" -->
+            <span class="tol-rpt-cnt" data-bind="text:TotalUniqueContacts, enable:false"></span>
+            <!-- /ko -->
+            <!-- ko if : ToTagStatus() == "2" && SSContactsStatus() == "2" -->
+            <span class="tol-rpt-cnt" data-bind="text:TotalActiveUniqueContacts, enable:false"></span>
+            <!-- /ko -->
+            <!-- ko if : ToTagStatus() == "1" && SSContactsStatus() == "2" -->
+            <span class="tol-rpt-cnt" data-bind="text:TotalAllAndActiveUniqueContacts, enable:false"></span>
+            <!-- /ko -->
+            <!-- ko if : ToTagStatus() == "2" && SSContactsStatus() == "1" -->
+            <span class="tol-rpt-cnt" data-bind="text:TotalActiveAndAllUniqueContacts, enable:false"></span>
+            <!-- /ko -->
+            @*<a href="#setup" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>*@
+        </span>
+    </div>
+    <div class="in">
+        <div class="clearfix" data-bind="visible:IsLinkedToWorkflows() == false">
+            <div class="campagin-rvw-search-by-tags">
+                <div class="form-group" id="tag-selection">
+                    <label class="control-label">
+                        [|To (Search by tags)|]
+                        <span class="count">
+                            <button type="button" value="1" data-bind="event:{click:changeToTagStatus}, attr: {class:ToTagStatus()==1?'btn btn-primary all-count':'btn btn-default active-count'}">
+                                All <span class="badge">( <span data-bind="text:To_All()"></span> )</span>
+                            </button>
+
+                            <button type="button" value="2" data-bind="event:{click:changeToTagStatus}, attr: {class:ToTagStatus()==2?'btn btn-primary all-count':'btn btn-default active-count'}">
+                                Active <span class=" badge">( <span data-bind="text:To_Active()"></span> )</span>
+                            </button>
+                        </span>
+
+                        <span class="hide tag-loader-cmp" id="add-tag-loader" />
+                    </label>
+                    <input id="campaignContactTags" class="display-inline form-control tagsinput-info-round" placeholder="[|Add contacts by tags|]" />
+                    <div>
+                        @{
+                            Html.RenderPartial("~/Views/Contact/_RecentPopularTag.cshtml");
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="campagin-rvw-saved-search">
+                <div class="form-group" id="search-selection">
+                    <label class="control-label">
+                        [|To (Search by saved searches)|]
+                        <span class="count">
+                            <button type="button" value="1" data-bind="event:{click:changeSsStatus}, attr: {class:SSContactsStatus()==1?'btn btn-primary all-count':'btn btn-default active-count'}">
+                                All <span class="badge">( <span data-bind="text:SS_All()"></span> )</span>
+                            </button>
+
+                            <button type="button" value="2" data-bind="event:{click:changeSsStatus}, attr: {class:SSContactsStatus()==2?'btn btn-primary all-count':'btn btn-default active-count'}">
+                                Active <span class="badge">( <span data-bind="text:SS_Active()"></span> )</span>
+                            </button>
+                        </span>
+
+                        <span class="hide tag-loader" id="add-definition-loader" />
+                    </label>
+                    <input id="campaign-search-definitions"
+                           class="display-inline form-control tagsinput-info-round" placeholder="[|Add contacts by saved searches|]" data-bind="valueUpdate: 'afterkeydown'" />
+                    <div class="ss-nte">
+                        <span>Note:- Active contacts for recently created saved searches will only reflect after 12 Hrs.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="form-horizontal-large campaign-rvw-senderdetails">
+    <div class="formsubheading campaign-rvw-formsubheadings">
+        [| Sender Details|]
+    </div>
+    <div class="in" id="senderdetails" data-bind="if:bindFromDropdown()==true">
+        <div class="form-group">
+            <label class="control-label">[|From|]</label>
+            <input min="1" title="fromemail" data-bind="kendoDropDownList: {dataTextField:'Email',dataValueField:'Email', data: UserEmails, valueTemplate: HeaderTemplate, value: From, template : EmailTemplate}" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">[|Sender Name|]</label>
+            <input type="text" id="sendername" class="display-inline form-control tagsinput-info-round" data-bind="value:SenderName" maxlength="150">
+        </div>
+        <div class="form-group">
+            <label class="control-label">[|Sending Agent|] </label>
+            <input min="1" data-bind="kendoDropDownList: {dataTextField:'ProviderName',dataValueField:'ServiceProviderID', data: ServiceProviders, value: ServiceProviderID,optionLabel: '[|Default|]'}" />
+        </div>
+    </div>
+</div>
+
+<div class="campaign-setup">
+    <div class="form-horizontal-large campaign-rvw-senderdetails">
+        <div id="setup">
+            <!-- ko if : IsLinkedToWorkflows() == false-->
+            <div class="clearfix" data-bind="visible: EnableSocial">
+                <div class="formsubheading">
+                    [| Social|]
+                    <div class="pull-right">
+                        <a href="#social" data-toggle="collapse" data-parent="#accordion" class="black"><i class="icon st-icon-dropdownarrow"></i></a>
+                    </div>
+                </div>
+                <div class="socialinner pbm in" id="social">
+                    <div data-bind="visible: EnableFacebook">
+                        <!--<a class="social-def facebook btn btn-lg" href="javascript:void(0)"><span class="st-facebook-white"></span><span class="mlm">Link with Facebook</span></a>-->
+
+                        <span class="mls">
+                            <input type="checkbox" data-bind="checked: EnablePostToFacebook">
+                        </span><span class="mls">[|Post to Facebook|]</span>
+
+                        <div id="postonfb" class="hide">
+                            <div class="clearfix">
+                                <div class="form-group">
+                                    <label class="control-label">[|Post|] <span class="required">*</span></label>
+                                    <textarea class="form-control" data-bind="value: FacebookPost"></textarea>
+                                </div>
+                                <div class="form-group medium">
+                                    @*<input type="file" data-bind="file: FacebookAttachmentPath" />*@
+                                    <label class="control-label">[|Preview Thumbnail|]</label>
+                                    <a data-toggle="modal" class="btn btn-primary black" data-bind="click: openImageSelect">[|Browse|]</a>
+                                    <div class="modal fade" id="imageSelect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title">[|Images|]</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="content-images" id="socialImages">
+                                                        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.ImageViewModel>()
+                                                                .Name("imageGrid")
+                                                                .Columns(columns => { columns.Template(e => "").Title("[|Review Campaign Images|]"); })
+                                                                .Scrollable(scrollable => scrollable.Virtual(true))
+                                                                .TableHtmlAttributes(new { style = "height: 250px;" })
+                                                                .AutoBind(true)
+                                                                .ToolBar(toolbar =>
+                                                                {
+                                                                    toolbar.Template(@<text>
+                                                                        <div class="images-search">
+                                                                            <span class="icon st-icon-search-2"></span>
+                                                                            <input type="search" id="reviewtxtImagessearch"  onkeydown="GetReviewImagessearch();"  class=" form-control display-inline" placeholder="[|Search|]" value="" />
+                                                                        </div>
+                                                                    </text>);
+                                                                })
+                                                                   .ClientRowTemplate(@"<tr><td>
+                                                                    <div class='st-arrowleft hide'><i class='fui-check'></i></div>
+                                                                    <div class='lib-img img-item' >
+                                                                        <img class='share-image' src='#:StorageName#' alt='#:FriendlyName#' />
+                                                                    </div><div class='control-label' title='#:FriendlyName#'>#:FriendlyName#</div></td></tr>")
+                                                                   .ClientAltRowTemplate(@"<tr class='even'><td>
+                                                                    <div class='st-arrowleft hide'><i class='fui-check'></i></div>
+                                                                    <div class='lib-img img-item' >
+                                                                        <img class='share-image' src='#:StorageName#' alt='#:FriendlyName#' />
+                                                                    </div><div class='control-label' title='#:FriendlyName#'>#:FriendlyName#</div></td></tr>")
+                                                                   .Events(c => c.DataBound("onDataBound"))
+                                                                   .DataSource(dataSource => dataSource
+                                                                   .Ajax()
+                                                                   .PageSize(10)
+                                                                   .Read(read => read.Action("ImagesListView", "Campaign").Data("additionalInfo")))
+                                                        )
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group medium">
+                                    <figure class="fb-preview-img">
+                                        <img data-bind="attr: { src: FacebookAttachmentPath() }, visible: FacebookAttachmentPath()">
+                                    </figure>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div data-bind="visible: EnableTwitter">
+                        <span class="mls">
+                            <input type="checkbox" data-bind="checked: EnablePostToTwitter">
+                        </span><span class="mls">[|Tweet on Twitter|]</span>
+                        <div id="tweetontwitter" class="hide">
+                            <div class="clearfix">
+                                <div class="form-group xlarge mtm">
+                                    <label class="control-label">[|Tweet|]<span class="required">*</span><span id="twitterMessageLength" class="pull-right"></span></label>
+
+                                    <textarea class="form-control" id="twitterMessage" data-bind="value: TwitterPost"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<div class="preview form-horizontal-large   ">
+    <div class="formsubheading campaign-pvw-formsubheadings">
+        [| Campaign Preview|]
+         <a class="btn btn-lg" href="javascript:void(0)" data-toggle="modal" data-target="#testCampaign">
+            <i class="icon st-icon-mail-2"></i>[|Test Campaign|]
+        </a>
+        <a class="btn btn-lg" href="javascript:void(0)" data-bind="visible:HasListMusTest() == 'True' , click:openLitmusModal">
+            <span class="litmus-icon"><img src="/img/litmus-test-icon.png" /></span>[|Litmus&#x00AE; Test|]
+        </a>
+        <a class="btn btn-lg" href="javascript:void(0)" data-bind="visible:MailTesterPermission() == 'True' , click:openMailTesterModal">
+            <span class="litmus-icon"><img src="~/img/leaf.png" /></span>[|Mail Tester|]
+        </a>
+        <div class="pull-right">
+
+            <div class="btn-group campaign-viewbtn">
+                <a href="javascript:void(0)" data-bind="event:{mouseup:Designer().isDesktopMode(true),click: function(){$root.SubView('desktop')}}" class="btn btn-default btn-lg active" id="desktopview">
+                    <i class="icon st-icon-desktop"></i> [|Desktop|]
+                </a>
+                <a href="javascript:void(0)" data-bind="event:{mouseup:Designer().isDesktopMode(false),click: function(){$root.SubView('tablet'); }}" class="btn btn-default btn-lg" id="tabletview">
+                    <i class="icon st-icon-tablet"></i> [|Tablet|]
+                </a>
+                <a href="javascript:void(0)" data-bind="event:{mouseup:Designer().isDesktopMode(false),click: function(){$root.SubView('mobile'); }}" class="btn btn-default btn-lg" id="mobileview">
+                    <i class="icon st-icon-mobile-1"></i> [|Mobile|]
+                </a>
+                <!-- ko if: $root.CampaignTypeId()!= campaignType.PLAINTEXT -->
+                <a href="javascript:void(0)" data-bind="event: { mouseup: Designer().isDesktopMode(false),click: function(){$root.SubView('plaintextversion')}}" class="btn btn-default btn-lg" id="plaintextcontent">
+                    <span class="plain-text-tab">T</span> [|Plain Text|]
+                </a>
+                <!--/ko-->
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_CampaignPreview")
+</div>
+<div class="form-horizontal-large cam-sd-lt">
+    <div class="form-group">
+        <!-- ko if : isSTadmin() == 'True'-->
+        <span class="form-camp-sed">Send To Seed List</span>
+        <div class="camp-sed-ls">
+            <a href="javascript:void(0)" class="btn btn-primary testemail " data-bind="css: {disabled: SeedListEmailText() == 'Sending...'},click:sendToSeedList,text:SeedListEmailText">Send Now</a>
+            <span id="seedListMsg" style="display:none">Sending campaign to Seed List Initiated....</span>
+        </div>
+        <div class=" seed-list small">
+            <small>Note: This will only send the campaign to seed list &amp; will not update campaign status.</small>
+        </div>
+        <!--/ko-->
+    </div>
+    <div class="st-campaignstat pull-right">
+        <div class="sch-camp-snd" data-bind="visible:!IsLinkedToWorkflows()">
+            <div id="camp-sc">
+                <span>
+                    <a class="btn btn-lg btn-primary" id="camp-snd"  data-bind="click:sendCampaign.bind($data,Statuses.QUEUED)">[|Send Now|]</a>
+                </span>
+                <span>
+                    <a class="btn btn-lg btn-primary" id="camp-sched">[|Schedule|]</a>
+                </span>
+                <span>
+                    <a class="btn btn-lg btn-primary" id="camp-dft"  data-bind="click:saveCampaign.bind($data,Statuses.DRAFT)">[|Draft|]</a>
+                </span>
+            </div>
+            <div class="hide" id="sch-cam-ontm">
+                <div>
+                    <div id="cmpsch-tm" class="">
+                        <label class="control-label">Schedule Time</label>
+                        <span class="k-widget k-datetimepicker k-header"><span class="k-picker-wrap k-state-default"><input id="kendodatetimepicker" data-bind="kendoDateTimePicker:{value:ScheduleTime,min:currentTime,interval:15,format:$root.GetDateFormat()}" data-role="datetimepicker" type="text" class="k-input" role="combobox" aria-expanded="false" aria-disabled="false" aria-readonly="false" style="width: 100%;"><span unselectable="on" class="k-select"><span unselectable="on" class="k-icon k-i-calendar" role="button" aria-controls="kendodatetimepicker_dateview">select</span><span unselectable="on" class="k-icon k-i-clock" role="button" aria-controls="kendodatetimepicker_timeview">select</span></span></span></span>
+                        <span class="validationMessage" data-bind="validationMessage:scheduletimeValidation" style="display: none;"></span>
+                    </div>
+                </div>
+                <div class="schcamp-sed">
+                    <span>
+                        <a class="btn btn-lg btn-primary" data-bind="click:sendCampaign.bind($data,Statuses.SCHEDULED)">[|Schedule Campaign|]</a>
+                    </span>
+                    <span>
+                        <a class="btn btn-lg btn-default" id="cancelCampaignSchedule">Cancel</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div data-bind="visible:IsLinkedToWorkflows()" class="st-automation-act">
+            <span data-bind="visible:IsWorkflowID() == 'False'">
+                <input type="button" class="btn btn-lg btn-primary" id="autcmp-snd" data-bind="click:saveCampaign.bind($data,Statuses.ACTIVE)" value="Make Active &amp; Save">
+            </span>
+            <span>
+                <a class="btn btn-lg btn-primary" id="autcmp-sv" data-bind="click:saveCampaign.bind($data,CampaignStatus() == Statuses.ACTIVE ? Statuses.ACTIVE:Statuses.DRAFT)">Save</a>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="litmus-results" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" data-bind="text:Name"></h4>
+            </div>
+            <div class="modal-body" style="min-height:500px">
+                @Html.Partial("_LitmusResultsView")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+  
+    $(document).ready(function () {
+
+        $(':checkbox').on('change', function () {
+            $(this).triggerHandler('click');
+        });
+
+        $(document).on('click', '.share-image', function (e) {
+            $('.share-image').parent().parent().find('.st-arrowleft').addClass('hide');
+            $(this).parent().parent().find('.st-arrowleft').removeClass('hide');
+            selfCampaign.FacebookAttachmentPath($(this).attr('src'));
+        });
+        $(document).on('keypress keyup keydown', '#twitterMessage', function (event) {
+            $("#twitterMessageLength").removeClass('hide');
+            if ($('#twitterMessage').val().length > 140) {
+                $("#twitterMessageLength").addClass('red').removeClass('green');
+                $("#twitterMessageLength").text((140 - $("#twitterMessage").val().length) + ' [|too many characters|]');
+            }
+            else {
+                $("#twitterMessageLength").addClass('green').removeClass('red');
+                $("#twitterMessageLength").text((140 - $("#twitterMessage").val().length) + ' [|characters remaining|]');
+            }
+
+        });
+        $("#twitterMessage").focusout(function () {
+            $("#twitterMessageLength").addClass('hide');
+        });
+    });
+    function additionalInfo() {
+        return {
+            name: $("#txtImagessearch").val()
+        }
+    }
+
+    function onDataBound(e) {
+        Reset();
+       
+    };
+
+
+    function GetReviewImagessearch() {
+        setTimeout(function () {
+            $filter = new Array();
+            var grid = $("#imageGrid").data("kendoGrid"), searchBox = $("#reviewtxtImagessearch").val();
+            localStorage.removeItem("reviewtxtImagessearch");
+            localStorage.setItem("reviewtxtImagessearch", searchBox);
+            $("#imageGrid").data("kendoGrid").dataSource.read();
+        }, 500);
+       
+    }
+</script>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SqlServer" id="Project6201314" database="SqlServer" >
+	<schema name="dbo" schemaname="dbo" defo="y" >
+		<table name="Emp" >
+			<column name="Empno" type="int" length="10" decimal="0" jt="4" />
+			<column name="Ename" type="varchar" length="20" decimal="0" jt="12" />
+		</table>
+		<table name="MSreplication_options" >
+			<column name="optname" type="sysname" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="value" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="major_version" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="minor_version" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="revision" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="install_failures" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+		</table>
+		<table name="spt_fallback_db" >
+			<column name="xserver_name" type="varchar" length="30" decimal="0" jt="12" mandatory="y" />
+			<column name="xdttm_ins" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="xdttm_last_ins_upd" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="xfallback_dbid" type="smallint" length="5" decimal="0" jt="5" />
+			<column name="name" type="varchar" length="30" decimal="0" jt="12" mandatory="y" />
+			<column name="dbid" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="status" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="version" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+		</table>
+		<table name="spt_fallback_dev" >
+			<column name="xserver_name" type="varchar" length="30" decimal="0" jt="12" mandatory="y" />
+			<column name="xdttm_ins" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="xdttm_last_ins_upd" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="xfallback_low" type="int" length="10" decimal="0" jt="4" />
+			<column name="xfallback_drive" type="char" length="2" decimal="0" jt="1" />
+			<column name="low" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="high" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="status" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="name" type="varchar" length="30" decimal="0" jt="12" mandatory="y" />
+			<column name="phyname" type="varchar" length="127" decimal="0" jt="12" mandatory="y" />
+		</table>
+		<table name="spt_fallback_usg" >
+			<column name="xserver_name" type="varchar" length="30" decimal="0" jt="12" mandatory="y" />
+			<column name="xdttm_ins" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="xdttm_last_ins_upd" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="xfallback_vstart" type="int" length="10" decimal="0" jt="4" />
+			<column name="dbid" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="segmap" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="lstart" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="sizepg" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="vstart" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+		</table>
+		<table name="spt_monitor" >
+			<column name="lastrun" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="cpu_busy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="io_busy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="idle" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="pack_received" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="pack_sent" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="connections" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="pack_errors" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="total_read" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="total_write" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="total_errors" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+		</table>
+	</schema>
+	<connector name="SqlServer" database="SqlServer" driver_class="net.sourceforge.jtds.jdbc.Driver" driver_jar="jtds-1.2.7.jar" host="192.168.1.111" port="1433" user="sa" schema_mapping="" />
+	<layout id="Layout6284009" name="dbo" show_relation_columns="y" >
+		<entity schema="dbo" name="Emp" color="b2cdf7" x="390" y="300" />
+		<entity schema="dbo" name="MSreplication_options" color="b2cdf7" x="210" y="300" />
+		<entity schema="dbo" name="spt_fallback_db" color="b2cdf7" x="525" y="300" />
+		<entity schema="dbo" name="spt_fallback_dev" color="b2cdf7" x="390" y="45" />
+		<entity schema="dbo" name="spt_fallback_usg" color="b2cdf7" x="195" y="60" />
+		<entity schema="dbo" name="spt_monitor" color="b2cdf7" x="45" y="300" />
+	</layout>
+</project>

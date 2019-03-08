@@ -1,0 +1,189 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using System.Linq;
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.MarketingMessagesViewModel
+
+@{
+    ViewBag.Title = "AddEditMarketingMessage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{ 
+    var AccountSubscriptionTypes = (IEnumerable<SmartTouch.CRM.ApplicationServices.ViewModels.SubscriptionViewModel>)ViewBag.AcccountSubscriptionTypes;
+}
+
+@Scripts.Render("~/bundles/redactor")
+@Styles.Render("~/Content/Redactor")
+@Scripts.Render("~/bundles/marketingmessages")
+
+@using (Html.BeginForm("InsertMarketingMessage", "MarketingMessages", FormMethod.Post,
+                 new { name = "form-data", id = "form" }))
+{
+    <div class="sub-container form-horizontal-large" style="display:none" data-bind="visible:true" id="MarketingMessagesPage">
+        <ul class="breadcrumb">
+            <li><a href="/MarketingMessages">Message Center</a></li>
+            <li class="active">
+                <a href="javascript:void(0)">
+                    <span data-bind="visible: MarketingMessageID() === 0" style="display:none">[|Add Notification|]</span>
+                    <span data-bind="visible: MarketingMessageID() > 0" style="display:none">[|Edit Notification|]</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sca-notification-wrapper">
+            <div class="clearfix">
+                <div class="form-group large-group">
+                    <label class="control-label">[|Notification Title|] <span class="required">*</span></label>
+                    <input type="text" placeholder="[|Notification Title|]" class="form-control" data-bind="value: MarketingMessageTitle, valueUpdate: 'afterkeydown'">
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group large-group">
+                    <label class="control-label">[|Selected By|] <span class="required">*</span></label>
+                    <div class="sta-selectedby">
+                        <input data-bind="kendoDropDownList: {dataTextField:'SubscriptionName',dataValueField:'SubscriptionID', data: AccountTypes ,value:SelectedBy }" />
+                        <div class="st-add-showlist">
+                            <input type="button" class="btn btn-primary" data-bind="click: showList" value="Show List" />
+                        </div>
+                        <div id="loader" class="st-add-loader"></div>
+                    </div>
+                   
+                     </div>
+                </div>
+            <div class="clearfix">
+                <div class="form-group large-group">
+                    <label class="control-label">[|Add Accounts|] @*<span class="required">*</span>*@</label>
+                    <select data-bind="kendoMultiSelect: {dataTextField:'Name',dataValueField:'Id', placeholder:'[|All|]', data: Accounts, value: AccountIDs}" class="multiselectwidth"> </select>
+                    @*<span class="validationMessage" data-bind="validationMessage:AccountValidation"></span>*@
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group large-group">
+                    <label class="control-label">[|Time Interval|] <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Name',dataValueField:'IntervalId', data: TimeIntervals ,value:TimeInterval }" />
+                </div>
+            </div>
+            <div class="clearfix">
+                <div class="form-group large-group">
+                    <label class="control-label">[|Shedule Time|]</label>
+                    <div class="msg-shd-tm">
+                        <label class="display-inline mfs">[|From|]</label>
+                        <div class="select-medium display-inline mfi">
+                            <input id="kendodatetimepicker" data-bind="kendoDateTimePicker: { value: ScheduleFrom,interval:15, format:$root.GetDateFormat(),change: fromDateChangeEvent }" />
+                        </div>
+                        <label class="display-inline mts">[|To|]</label>
+                        <div class="select-medium display-inline mti">
+                            <input id="kendodatetimepicker" data-bind="kendoDateTimePicker: { value: ScheduleTo,interval:15,format:$root.GetDateFormat(),change: toDateChangeEvent }" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div data-bind="template:{ name: 'MessageTemplateName',data: $data.Messages }"></div>
+            
+
+        </div>
+        <div class="hr-border"></div>
+        <div>
+              <input type="button" class="btn btn-lg btn-primary" data-bind="click: published" value="Publish" />
+              <input type="button" class="btn btn-lg btn-default" data-bind="click: saveMessage" value="Save & Exit" />
+        </div>
+    </div>
+
+    <div class="modal fade" id="messagepreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document" style="margin-left:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Message Preview</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="stm-notification">
+                        <div class="stm-slider">
+                            <div id="carousel-example-generic" class="carousel carousel-fade slide">
+                                <div data-bind="foreach:Messages" class="carousel-inner" role="listbox">
+                                    <div data-bind="attr:{class:$index() == 0 ?'item active':'item'}">
+                                        <div class="stm-items-wrapper">
+                                            <div class="stm-icon">
+                                                <a><i data-bind="attr:{class:Icon }" class="icon"></i></a>
+                                            </div>
+                                            <div class="stm-item-text">
+                                                <h4 data-bind="text:Subject"></h4>
+                                                <p data-bind="html:Content"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                                    <span class="glyphicon st-icon-leftdropdownarrow" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                                    <span class="glyphicon st-icon-rightdropdownarrow" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/html" id="MessageTemplateName">
+        <div data-bind="foreach: $data">
+            <div class="stm-repeat-wrapper" data-bind="visible: IsDeleted() == false">
+                <div class="clearfix">
+                    <div class="form-group large-group">
+                        <label class="control-label">[|Select Icon|] <span class="required">*</span></label>
+                        <div class="btn-group" role="group">
+                            <button type="button" data-bind="click:SelectIcon.bind($data),attr:{class:'btn  icon st-icon-bell-2' + (Icon()=='st-icon-bell-2' ? ' btn-primary':'')}" data-cname="st-icon-bell-2"> </button>
+                            <button type="button" data-bind="click:SelectIcon.bind($data),attr:{class:'btn  icon st-icon-bullhorn-2' + (Icon()=='st-icon-bullhorn-2' ? ' btn-primary':'')}" data-cname="st-icon-bullhorn-2"></button>
+                            <button type="button" data-bind="click:SelectIcon.bind($data),attr:{class:'btn  icon icon st-icon-bulb' + (Icon()=='icon st-icon-bulb' ? ' btn-primary':'')}" data-cname="icon st-icon-bulb"></button>
+                        </div>
+                        <span class="validationMessage" data-bind="validationMessage: iconValidation"></span>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group large-group">
+                        <label class="control-label">Message Subject<span class="required">*</span></label>
+                        <input type="text" placeholder="[|Message Subject|]" class="form-control" data-bind="value: Subject, valueUpdate: 'afterkeydown'">
+                    </div>
+                </div>
+                <div class="clearfix ">
+                    <div class="form-group large-group">
+                        <label class="control-label">[|Add Messages|]<span class="required">*</span></label>
+                        <div class="add-new-msg" data-bind="attr:{id:'new-msg-'+$index()}">
+                            <textarea contenteditable data-bind="value:Content,attr:{id:$index()},event:{load: loadRedactor($index())}"> </textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group add-rm-msg">
+                        <span><a href="javascript:void(0)" data-bind="click:RemoveMessage" class="addaction"><span class="icon st-icon-remove mrs"></span>[|Remove Message|]</a></span>
+                        <span class="ad-nw-msg"><a href="javascript:void(0)" data-bind="click:$root.AddMessage" class="addaction"><span class="icon st-icon-add mrs"></span>[|Add New Message|]</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </script>
+}
+
+<script>
+    $(document).ready(function () {
+        var viewModel;
+        var MarketingMessage = @(Html.Raw(Json.Encode(Model)));
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var userId ='@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var BASE_URL = '@Url.Content("~/MarketingMessages/")';
+        var accountSubscriptionTypes = '@Html.Raw(Json.Encode(ViewBag.AcccountSubscriptionTypes))';
+        var accountTypes= JSON.parse(accountSubscriptionTypes)
+        viewModel = new MarketingMessagesViewModel(MarketingMessage,BASE_URL,accountTypes);
+
+    });
+</script>

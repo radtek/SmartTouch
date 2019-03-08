@@ -1,0 +1,224 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+    // Layout = null;
+    int campaignId = 0;
+    string emailId = string.Empty;
+    int accountId = 0;
+    int contactId = 0;
+    string accountlogo = string.Empty;
+    string accountname = string.Empty;
+    string accountaddress = string.Empty;
+    string privacyPolicy = string.Empty;
+    bool isValidContact = ViewBag.ValidContact;
+
+    if (isValidContact == true)
+    {
+        campaignId = ViewBag.campaignId != null ? ViewBag.campaignId : 0;
+        emailId = ViewBag.emailId != null ? ViewBag.emailId : "";
+        accountId = ViewBag.accountId != null ? ViewBag.accountId : 0;
+        contactId = ViewBag.contactId != null ? ViewBag.contactId : 0;
+        accountlogo = ViewBag.accountLogo != null ? ViewBag.accountLogo : "";
+        accountname = ViewBag.accountName != null ? ViewBag.accountName : "";
+        accountaddress = ViewBag.accountAddress != null ? ViewBag.accountAddress : "";
+        privacyPolicy = ViewBag.privacyPolicy != null ? ViewBag.privacyPolicy : "";
+    }
+
+}
+
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>[|Unsubscribe|]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script src="~/Scripts/ViewModels/CampaignUnsubscribe.js"></script>
+
+    <!-- Loading SmartTouch -->
+
+</head>
+<div class="unsubscribe-page" id="campaignUnsubscribeTest">
+    <div class="container">
+        <div class="text-center logo">
+            <h3>GrabOn</h3>
+        </div>
+        <div style="" class="content-block">
+            <div class="mtl" style="border-bottom: 1px solid #e8e8e8; font-size: 18px; font-weight: 300; padding-bottom: 15px; display:none" id="invalid-contact">
+                Sorry, we couldn't recognize you.
+            </div>
+            <div id="valid-contact">
+                <div class="alert alert-success hide" id="alertmsg">
+                    <button class="close" aria-hidden="true" data-dismiss="alert" type="button"><i class="icon st-icon-delete"></i></button>
+                    <span class="bold"><i class="icon st-icon-checkmark mrm"></i>[|Your Preferences have been saved.|]</span>
+                    <p class="hide">[|We're sorry to see you go, but we understand that preferences change.|]</p>
+                </div>
+                <div data-bind="if:cID()==0">
+                    <div class="alert alert-info" id="alertmsg">
+                        <button class="close" aria-hidden="true" data-dismiss="alert" type="button"><i class="icon st-icon-delete"></i></button>
+                        <span class="bold"><i class="icon st-icon-info mrm"></i>[|This is a test campaign.|]</span>
+                        <div>[|Test campaign unsubscription will not be functional since it is not associated with any contact in your CRM.|]</div>
+                    </div>
+                </div>
+                <div style="color: #757575; border-bottom: 1px solid #e8e8e8; font-size: 18px; font-weight: 300; padding-bottom: 15px; ">
+                    [|Email preferences for|] <a href="#" style="color: #7ac142;" data-bind="text:emailId"></a>
+                </div>
+
+                <div class="mtl">
+                    <span>[|If this is not your email address, then an email was probably forwarded to you|].</span>
+                    <span>[|Please do not make any changes and just ignore this page|].</span>
+                </div>
+
+                <div class="mtl" style="border-bottom: 1px solid #e8e8e8; font-size: 18px; font-weight: 300; padding-bottom: 15px; ">
+                    [|Unsubscribe Option|]
+                </div>
+                <div class="hide">
+                    <div class="uns-bold-title mtm"><i class="icon st-icon-alarm-clock mrm"></i>[|Hit the snooze button.|]</div></br>
+                    <div>[|Don't send me any email for the next :|]</div>
+                    <div class="mvm" style="width:150px;">
+                        <input min="1" class="select-block" data-bind="kendoDropDownList: {dataTextField:'SnoozeDays',dataValueField:'SnoozeID', data: snoozeperiod, value: snoozeDays,optionLabel: '[|Select...|]'}" />
+                    </div>
+                </div>
+                @*<div class="mbm">
+                        <label class="checkbox">
+                            <input type="checkbox" data-toggle="checkbox" id="unspublicworkflow">
+                        </label>
+                        <span class="mlm">[|Public Workflow Selection.|]</span>
+                    </div>*@
+
+                <div class="hide unspublicworkflowshow" id="unspublicworkflowshow">
+                    <div class="uns-block">
+                        <label class="checkbox uns-block-chk">
+                            <input type="checkbox" data-toggle="checkbox">
+                        </label>
+                        <div class="uns-block-content">
+                            <div class="uns-block-name">[|Public name #1|]</div>
+                            <p>
+                                Public description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Etiam eu ipsum eu urna euismod pretium in id sem. Vivamus ultrices sed
+                                tellus non commodo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="uns-block">
+                        <label class="checkbox uns-block-chk">
+                            <input type="checkbox" data-toggle="checkbox">
+                        </label>
+                        <div class="uns-block-content">
+                            <div class="uns-block-name">[|Public name #2|]</div>
+                            <p>
+                                Public description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Etiam eu ipsum eu urna euismod pretium in id sem. Vivamus ultrices sed
+                                tellus non commodo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="uns-block">
+                        <label class="checkbox uns-block-chk">
+                            <input type="checkbox" data-toggle="checkbox">
+                        </label>
+                        <div class="uns-block-content">
+                            <div class="uns-block-name">[|Public name #3|]</div>
+                            <p>
+                                Public description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Etiam eu ipsum eu urna euismod pretium in id sem. Vivamus ultrices sed
+                                tellus non commodo.
+                            </p>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                @*<div class="uns-bold-title">Or, unsubscribe :(</div>*@
+
+                <div class="mtm">
+                    <label class="checkbox">
+                        <input type="checkbox" data-toggle="checkbox" data-bind="checked:CampaignEmailStatus" />
+                        <span class="mlm">[|Unsubscribe me from all future mailings.|]</span>
+                    </label>
+                </div>
+                <br />
+                <div>
+                    <a href="javascript:void(0)" class="btn btn-lg btn-primary" id="updatepreferences" data-bind="click: UpdateEmailStatus, attr:{class:cID() ==0 ? 'btn btn-lg btn-primary disabled' : 'btn btn-lg btn-primary'}">[|Update Preferences|]</a>
+                </div>
+                <div class="divider"></div>
+            </div>
+
+            <div class="signature">
+
+                <div class="si-left-details">
+                    <div class="sin">[|Sincerely|],</div>
+                    @if (accountname != "")
+                    {
+                        <div class="name cm-un-sb">@accountname <span> Team </span></div>
+                    }
+                    else
+                    {
+                        <div class="name cm-un-sb">[|SmartTouch Interactive Team|]</div>
+                    }
+                </div>
+
+                @if (accountlogo != "")
+                {
+                    <figure class="si-right-logo"><img id="AccountImage" src="@Url.Content(accountlogo)"></figure>
+                }
+            </div>
+
+        </div>
+
+        <div style="padding:20px 0;display:block;">
+            @if (accountaddress != "")
+            {
+                <div style="color: #605e5e; font-size: 10px; float: left; margin-top: 3px;"><span data-bind="text:CurrentYear"></span> @accountname ,   @accountaddress</div>
+            }
+            else
+            {
+                <div style="color: #605e5e; font-size: 10px; float: left; margin-top: 3px;">© 2016 SmartTouch Interactive. 5316 Highway 290 West, Suite 560  Austin, Texas - 78735 ,(512) 333-4008</div>
+            }
+            @if (privacyPolicy != "")
+            {
+                <div class="si-privacy"><a style="color: #605e5e; font-size: 10px; text-decoration: underline; line-height: 8px;" href="@privacyPolicy">Privacy Policy</a></div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<!-- Load JS here for greater good =============================-->
+@*<script src="../../Scripts/jquery-1.8.3.min.js"></script>
+    <script src="../../Scripts/jquery.ui.touch-punch.min.js"></script>
+    <script src="../../Scripts/bootstrap.js"></script>
+    <script src="../../Scripts/bootstrap-select.js"></script>
+    <script src="../../Scripts/flatui-checkbox.js"></script>
+    <script src="../../Scripts/flatui-radio.js"></script>
+    <script src="../../Scripts/jquery.tagsinput.js"></script>
+    <script src="../../Scripts/jquery.placeholder.js"></script>
+    <script src="../../Scripts/application.js"></script>*@
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Campaign/")';
+        if ('@isValidContact'.toLowerCase() == "true") {
+            var emailID = '@emailId';
+            var contactId = '@contactId';
+            var campaignId = '@campaignId';
+            var accountlogo = '@accountlogo';
+            var accountname = '@accountname';
+            var accountaddress = '@accountaddress';
+            var privacyPolicy = "@privacyPolicy";
+
+            $(':checkbox').on('change', function () {
+                $(this).triggerHandler('click');
+            });
+
+
+            var viewModel = new campaignUnsubscribeViewModel(BASE_URL, contactId, emailID, campaignId);
+
+            ko.applyBindings(viewModel, document.getElementById("campaignUnsubscribe"));
+        }
+        else {
+            $("#invalid-contact").show();
+            $("#valid-contact").hide();
+        }
+    });
+</script>

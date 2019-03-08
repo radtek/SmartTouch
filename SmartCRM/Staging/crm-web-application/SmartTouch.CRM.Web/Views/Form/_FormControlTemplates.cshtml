@@ -1,0 +1,142 @@
+﻿@using SmartTouch.CRM.Entities;
+
+<script type="text/html" id="control-template">
+    <li data-bind="attr:{id:'control-'+FieldId()},event: { mouseover: $root.showFieldControls, mouseout: $root.hideFieldControls}">
+        <div class="form-group">
+            <span data-bind="attr:{id:'displayname-'+FieldId()}" class="form-edit-control form-group hide">
+                <span class="input-group">
+                    <input type="text" class="form-control" id="formfieldname" data-bind="value:$root.temporaryDisplayName,event: { keyup: $root.formfieldkeyup.bind($data)}" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-bind="click:$root.saveDisplayNameChange.bind($data,$index())"><span class="fui-check"></span></button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" data-bind="click:$root.cancelDisplayNameChange.bind($data,$index())"><span class="fui-cross"></span></button>
+                    </span>
+                </span>
+            </span>
+
+            <div data-bind="template: { name: 'controltemplate-'+FieldInputTypeId() },attr:{id:'control-content-'+FieldId() }" class="clearfix"></div>
+            <span class="add-form-controls display-inline hide" data-bind="attr:{id:'fieldcontrols-'+FieldId()}">
+                <a href="javascript:void(0)" data-bind="attr: { id: 'edit' + FieldId() },click:$root.editFieldDisplayName.bind($data,$index())">
+                    <i class="icon st-icon-edit"></i>
+                </a>
+
+                <a href="javascript:void(0)" data-bind="attr:{id:'delete'+FieldId(),class:FieldId()==@((int)ContactFields.PrimaryEmail) || FieldId()==@((int)ContactFields.LeadSource)?'hide':''},click:$parent.Designer().DeleteControl" title="">
+                    <i class="icon st-icon-bin-3"></i>
+                </a>
+                <a href="javascript:void(0)" class="sort">
+                    <i class=" icon st-icon-move"></i>
+                </a>
+            </span>
+            <div class="mtx">
+                <label class="checkbox-inline">
+                    <!--ko if: FieldId() == '@((int)ContactFields.PrimaryEmail)' || FieldId() == '@((int)ContactFields.LeadSource)' -->
+                    <input type="checkbox" data-bind="enable:false, value:'true',checked:IsMandatory"> [|Required|]
+                    <!--/ko-->
+                    <!--ko ifnot: FieldId() == '@((int)ContactFields.PrimaryEmail)' || FieldId() == '@((int)ContactFields.LeadSource)' -->
+                    <input type="checkbox" data-bind="enable:IsHidden()==false, value:'true',checked:IsMandatory"> [|Required|]
+                    <!--/ko-->
+                </label>
+                <label class="checkbox-inline" data-bind="if:FieldId()== @((int)ContactFields.LeadSource) ||FieldId()== @((int)ContactFields.Community)">
+                    <input type="checkbox" data-bind="checked:IsHidden"> [|Hide|]
+                </label>
+            </div>
+        </div>
+        <input type="text" class="hide" data-bind="value:SortId=$index()">
+    </li>
+</script>
+
+<script type="text/html" id="titleAndDisplayName">
+    <span id="fieldtitle" data-bind="text:Title()"></span>
+    <span class="form-default designer">[|Display|] </span>
+    <span class="form-default" data-bind="text:DisplayName(),value:DisplayName"></span>
+    <span data-bind="visible:IsMandatory()">*</span>
+</script>
+
+<script type="text/html" id="controltemplate-1">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div data-bind="foreach:ValueOptions">
+        <div class="checkbox-inline">
+            <input type="checkbox" data-bind="attr:{id:CustomFieldValueOptionId,name:$parent.FieldId},value:CustomFieldValueOptionId,required:IsMandatory()">
+            <span data-bind="text:Value"></span>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="controltemplate-2">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div>
+        <input type="datetime" class="form-control" data-bind="text:Value,attr:{id:FieldId(),name:FieldId(),required:IsMandatory()}">
+    </div>
+</script>
+
+<script type="text/html" id="controltemplate-3">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+
+    <div><input class="form-control" type="email" data-bind="attr:{id:FieldId(),name:FieldId(),required:IsMandatory()},value:Value"></div>
+</script>
+
+<script type="text/html" id="controltemplate-5">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div><input type="number" class="form-control" data-bind="attr:{id:FieldId(),name:FieldId(),required:IsMandatory()},value:Value"></div>
+</script>
+
+<script type="text/html" id="controltemplate-6">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div data-bind="foreach:ValueOptions,value:Value">
+        <div class="radio-inline">
+            <input type="radio" data-bind="value:CustomFieldValueOptionId,attr:{id:$parent.FieldId(),name:$parent.FieldId(),required:$parent.IsMandatory()}">
+            <span data-bind="text:Value"></span>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="controltemplate-8">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div>
+        <input type="text" class="form-control" data-bind="attr:{id:FieldId(),name:FieldId(),required:IsMandatory()},value:Value">
+    </div>
+</script>
+
+<script type="text/html" id="controltemplate-9">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div><input type="time" class="form-control" data-bind="value:Value,attr:{id:FieldId(),name:FieldId(),required:IsMandatory()}"></div>
+</script>
+
+<script type="text/html" id="controltemplate-10">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div><input type="url" class="form-control" data-bind="attr:{id:FieldId(),name:FieldId(),required:IsMandatory()},value:Value"></div>
+</script>
+
+<script type="text/html" id="controltemplate-11">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div>
+        <select class="form-control" data-bind="foreach:ValueOptions, value:Value, attr:{id:FieldId(),name:FieldId(),required:IsMandatory()}, event:{change:selfForm.Designer().CaptureAllEdits()}">
+            <option data-bind="text:Value,value:CustomFieldValueOptionId, attr:{ 'selected': $parent.Value()>0 ? ( $parent.Value() == CustomFieldValueOptionId ? 'selected' : null) : ($index()==0 ? 'selected' : null)}"></option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" id="controltemplate-12">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div>
+        <select multiple class="form-control" data-bind="foreach:ValueOptions, value:Value, attr:{id:FieldId(),name:FieldId(),required:IsMandatory()}, event:{change:selfForm.Designer().CaptureAllEdits()}">
+            <option data-bind="text:Value,value:CustomFieldValueOptionId, attr:{ 'selected': $parent.Value() == CustomFieldValueOptionId ? 'selected' : null}"></option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" id="controltemplate-13">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div><input type="date" class="form-control" data-bind="value:Value,attr:{id:FieldId(),name:FieldId(),required:IsMandatory()}"></div>
+</script>
+
+<script type="text/html" id="controltemplate-14">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div><textarea class="form-control" data-bind="attr:{id:FieldId(),name:FieldId(),required:IsMandatory()},value:Value"> </textarea></div>
+</script>
+
+<script type="text/html" id="controltemplate-address">
+    <label class="control-label" data-bind='template:"titleAndDisplayName",attr:{id:"fieldlabel-"+FieldId()}'></label>
+    <div data-bind="template: { name: 'controltemplate-'+FieldInputTypeId() },attr:{id:'control-content-'+FieldId() }" class="row"></div>
+</script>

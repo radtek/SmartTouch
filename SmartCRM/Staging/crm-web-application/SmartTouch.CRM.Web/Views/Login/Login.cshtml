@@ -1,0 +1,122 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+
+@model LoginViewModel
+@{
+    Layout = null;
+    bool securityMessage = ViewBag.SecurityMessage == null ? false : true;
+    bool LoginPage = ViewBag.Page == "Login" ? true : false;
+    var actionName = "";
+    if (LoginPage) { actionName = "Login"; } else { actionName = "ForgotPassword"; }
+    var accountName = ViewBag.AccountName;
+    var accountID = ViewBag.AccountID;
+}
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="robots" content="nofollow" />
+    <title>Welcome to SmartTouch</title>
+    <script type="text/javascript">
+        history.pushState(null, null, '');
+
+        window.addEventListener('popstate', function (event) {
+            if (location.pathname == "/") {
+                history.pushState(null, null, '');
+            }
+        });
+    </script>
+    @*@Styles.Render("~/Content/smarttouchframework")
+    @Styles.Render("~/Content/smarttouchcss")*@
+    @Styles.Render("~/Content/layoutstyles")
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+</head>
+
+@using (Html.BeginForm(actionName, "Login", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <div class="login-pane">
+            <div class="login-panel">
+                <section class="login-panel-left">
+                    <div class="logo">
+                        <figure><img src="../../img/login/logo.png" alt="Smarttouch" /></figure>
+                    </div>
+
+                    @{if (LoginPage)
+                    {
+                        <div id="logincontrols">
+                            <div class="controls">
+                                @{if (securityMessage)
+                                {
+                                    <div class="alert alert-info text-left">
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                        <i class="icon st-icon-spam"></i> Your session has timed-out
+                                    </div>
+                                }}
+                                @Html.ValidationSummary(true, "")
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-hg",@id="email", @placeholder = "Email Address", @maxlength = "254", @autofocus = "autofocus" })
+                                    @Html.ValidationMessageFor(m => m.Email)
+                                </div>
+                                <div class="form-group">
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control input-hg", @placeholder = "Password" })
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>
+                                @Html.HiddenFor(m => m.AccountId)
+                                @Html.HiddenFor(m => m.AccountName)
+                                <div class="form-group">
+                                    <label class="checkbox pull-left" for="remember">
+                                        @Html.CheckBoxFor(m => m.RememberMe, new { data_toggle = "checkbox" }) Stay Logged In
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.RememberMe)
+
+                                </div>
+                                <input type="submit" value="Log in to SmartTouch&#x00AE;" class="btn btn-hg btn-primary" />
+                            </div>
+                            <div class="footer row">
+                                @*<a href="@Url.Action("ForgotPassword", "Login", new { enteredemail = "xxxx" })" id='forgotpassword'>Forgot Password?</a>*@
+                                @Html.ActionLink("Forgot Password?", "ForgotPassword", "Login", null, new { @class = "pull-right forgot-password", @id = "forgotpassword" })
+                            </div>
+                        </div>
+                    }
+                    }
+                </section>
+                @{
+                    Html.RenderPartial("~/Views/Login/_LoginFooterView.cshtml");
+                }
+            </div>
+            <div class="login-footer">Copyright &copy; 2018 smarttouchinteractive.com, inc. All rights reserved.</div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")     
+    @Scripts.Render("~/bundles/kendoui")
+    @Scripts.Render("~/bundles/kendouiaspnetmvc")
+    @Scripts.Render("~/bundles/knockoutjs")      
+
+    @Scripts.Render("~/bundles/layoutbottom")
+    <!-- /.container -->
+    <!-- Load JS here for greater good =============================-->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            if (window.history.forward(history.length) != null)
+                window.history.forward(history.length);
+            var accountname = '@(accountName)', accountid = '@(accountID)';
+            createCookie("accountName", accountname, 1); createCookie("accountID", accountid, 1);
+
+            $('#forgotpassword').click(function () {
+                var name = $('#email').val();
+                this.href = this.href + '?email=' + encodeURIComponent(name);
+            });
+           
+        });
+        function downloadPlugin64() {
+            $(".plugin-content").attr("href", window.location.origin + "/softwares/ImplicitSync%20Add-In%20Setup%20v2.6.36%20(Enterprise).rar");
+            $("#installationguide1").attr("href", window.location.origin + "/softwares/Implicit%20Sync%20Enterprise%20Edition%20User%20Guide%20Version%202.6.1%20Rev%203.pdf");
+            $("#installationguide2").attr("href", window.location.origin + "/softwares/Implicit%20Sync%20Enterprise%20Edition%20User%20Guide%20Version%202.6.1%20Rev%203.pdf");            
+        }
+        downloadPlugin64();
+    </script>
+}

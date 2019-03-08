@@ -1,0 +1,78 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+<meta charset="utf-8">
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+ }
+
+@Scripts.Render("~/bundles/customreportvm")
+
+@*<script src="http://cdn.kendostatic.com/2015.1.429/js/jszip.min.js"></script>
+<script src="http://cdn.kendostatic.com/2015.1.429/js/kendo.all.min.js"></script>*@
+
+<div id="customreport">
+    <section>
+        <div class="sub-container" id="Pipeline">
+            <ul class="breadcrumb mbl">
+                <li><a href="/reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)"><span data-bind="text:ReportName"></span></a></li>
+            </ul>
+
+
+
+            <div class="form-horizontal-large mtl">
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Date Range|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Period',dataValueField:'PeriodId', data: Periods ,value:PeriodId,change:periodChange}" />
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible:CustomDateDisplay">
+                        <label class="bold">[|Custom Range|] :</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomStartDate, max: fromMaxDate,format:DateFormat,change: fromDateChangeEvent }" />
+                        </div>
+                        <label class="display-inline mts mhl">[|To|]</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomEndDate, max: toMaxDate,format:DateFormat,change: toDateChangeEvent }" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hr-border"></div>
+            <div class="pull-left">
+                <a href="#" id="run-report" data-bind="click:Runlist" class="btn btn-lg btn-primary">[|Run Report|]</a>
+            </div>
+
+          
+            <div id="resultsgrid" class="mtl no-grid-resize" style="margin-top:90px;">
+                <table id="customgrid" data-bind="source: gridRows"></table>
+            </div>
+            <div id="noRecordsFound" style="display:none;margin-top:100px;">
+                <span>[|No records found|]</span>
+            </div>
+           
+        </div>
+     
+    </section>
+  </div>
+
+<script type="text/javascript">
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    var Model = @(Html.Raw(Json.Encode(Model)));
+    var dateformat = '@(DateFormat)';
+    var itemsPerPage = '@(ItemsPerPage)';
+ //   $(".k-i-excel").hide();
+    var viewModel = new customReportViewModel(Model ,BASE_URL, dateformat, itemsPerPage);
+    ko.applyBindings(viewModel,document.getElementById("customreport"));
+ </script>
+
+<style>
+    .k-i-excel{
+        display:none;
+    }
+</style>

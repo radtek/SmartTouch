@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<hsleads> 
+	<lead> 
+		<submit_date_time>1317687900000</submit_date_time> 
+		<zillow_propertyid>2125668880</zillow_propertyid> 
+		<firstname>Vijay</firstname> 
+		<lastname>Zillow Test 1</lastname> 
+		<email>vijay_zillow_test1@gmail.com</email> 
+		<phone/> 
+		<listingurl>http://www.google.com</listingurl> 
+		<message>This is a contact lead test.</message> 
+		<buildernumber>381</buildernumber> 
+		<builderreportingname>Builder - New York</builderreportingname> 
+		<communitynumber>2155</communitynumber> 
+		<communityplannumber>138448</communityplannumber> 
+		<communityspecnumber/> 
+	</lead> 
+	<lead> 
+		<submit_date_time>1317687900000</submit_date_time> 
+		<zillow_propertyid>2125668880</zillow_propertyid> 
+		<firstname>Vijay</firstname> 
+		<lastname>Zillow Test 2</lastname> 
+		<email>vijay_zillow_test2@gmail.com</email> 
+		<phone/> 
+		<listingurl>http://www.yahoo.com</listingurl> 
+		<message>This is a contact lead test.</message> 
+		<buildernumber>381</buildernumber> 
+		<builderreportingname>Builder - New York</builderreportingname> 
+		<communitynumber>2149</communitynumber> 
+		<communityplannumber>138448</communityplannumber> 
+		<communityspecnumber/> 
+	</lead> 
+</hsleads>

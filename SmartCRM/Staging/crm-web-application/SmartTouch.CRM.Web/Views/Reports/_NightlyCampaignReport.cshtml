@@ -1,0 +1,61 @@
+﻿
+<div class="clearfix pvl smart-report" id="nightlyStatus">
+    <div class="clearfix no-grid-resize" data-bind="visible:ReportType() == 21">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.NightlyCampaignReportViewModel>()
+    .Name("nightlyCampaignGrid")
+                    .HtmlAttributes(new { @class = "k-grid-content" })
+                    .TableHtmlAttributes(new { @class = "nightlyreport" })
+           .AutoBind(false)
+                  
+                         .Excel(e => e.AllPages(true).FileName("Nightly_Campaign_Report.xlsx"))
+                                 .Pageable(pageable => pageable
+                                                .PageSizes(new List<int>() { 10, 25, 50, 100, 250 })
+                                                .ButtonCount(10)
+                                                .Messages(m => m
+                                                .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Campaigns(s)|]")
+                                                                .Empty("[|No Campaigns(s) to display|]")
+                                                                .ItemsPerPage("[|Campaign(s) Per Page|]")
+                                                )
+                                            )
+                             .Reorderable(reorder => reorder.Columns(true))
+                             .Sortable()
+                             .Resizable(r => r.Columns(true))
+                             .Columns(columns =>
+                             {
+                                 //columns.Bound(p => p.Day).Title("[|Day|]").HeaderHtmlAttributes(new { @style = "width:50px;" });
+                                 columns.Bound(p => p.AccountName).Title("[|Account Name|]").HeaderHtmlAttributes(new { @style = "width:200px;" });
+                                 columns.Bound(p => p.CampaignId).Title("[|CampaignId|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.CampaignSubject).Title("[|Campaign Subject|]").HeaderHtmlAttributes(new { @style = "width:200px;" });
+                                 columns.Bound(p => p.Vmta).Title("[|VMTA|]").HeaderHtmlAttributes(new { @style = "width:200px;" });
+
+                                 columns.Bound(p => p.Recipients).Title("[|Recipients|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Sent).Title("[|Sent|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Delivered).Title("[|Delivered|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Bounced).Title("[|Bounced|]").HeaderHtmlAttributes(new { @style = "width:150px;" });
+                                 columns.Bound(p => p.Opened).Title("[|Opened|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Clicked).Title("[|Clicked|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.Complained).Title("[|Complained|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+
+                                 columns.Bound(p => p.TagsAll).Title("[|Tags All|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.TagsActive).Title("[|Tags Active|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.SavedSearchAll).Title("[|SS All|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                                 columns.Bound(p => p.SavedSearchActive).Title("[|SS Active|]").HeaderHtmlAttributes(new { @style = "width:100px;" });
+                             })
+                             .ClientRowTemplate(@"<tr class='odd'><td title='#:AccountName#'>#:AccountName#</td><td>#:CampaignId#</td>
+<td title='#:CampaignSubject#'>#:CampaignSubject#</td><td>#:Vmta#</td><td>#:Recipients#</td><td>#:Sent#</td>
+<td>#:Delivered#</td><td>#:Bounced#</td>
+                                        <td>#:Opened#</td><td>#:Clicked#</td><td>#:Complained#</td><td>#:TagsAll#</td><td>#:TagsActive#</td><td>#:SavedSearchAll#</td><td>#:SavedSearchActive#</td></tr>")
+                                         .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+                              .DataSource(dataSource => dataSource
+                                  .Ajax()
+
+                                              .Read(read => read.Action("GetNightlyStatusReport", "Reports"))
+                                      )
+        )
+    </div>
+    <div id="noRecordsFound" style="display:none;">
+        <span>[|No records found|]</span>
+    </div>
+
+</div>
+

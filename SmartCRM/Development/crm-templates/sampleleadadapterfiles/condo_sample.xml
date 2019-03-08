@@ -1,0 +1,10 @@
+<CondoLead>
+  <Lead Source="Condo.com" LeadType="AreaBuilder" LeadID="3380713">
+    <Contact FirstName="mark" LastName="fay" Email="mfay@aol.com" Phone="802-233-5229" StreetAddress="" City="" State="" PostalCode="" />
+    <Qualifications ReasonsForBuying="Buying" MoveInDate="" Comments="" DateCreated="2014-01-11 14:17:02" />
+    <PropertyInterest StateName="AZ" MarketName="MESA" BuilderName="" BuilderNumber="" CommunityName="" CommunityNumber="" PlanName="" PlanNumber="" />
+    <PropertyInformation Address="1331 W BASELINE RD" City="MESA" State="AZ" ZipCode="85202" Country="USA" PriceMin="110000" PriceMax="110000" Bedrooms="2" Bathrooms="2" />
+    <LeadMessage><![CDATA[Interested In: Buying<br/><br/>I was searching on Condo.com and found this listing. Please send me more information about Dobson Bay Club]]></LeadMessage>
+    <Telemetry CountElements="" LeadDetails="" />
+  </Lead>
+</CondoLead>

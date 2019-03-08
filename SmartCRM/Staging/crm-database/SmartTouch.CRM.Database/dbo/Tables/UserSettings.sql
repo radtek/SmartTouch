@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[UserSettings] (
+    [UserSettingID]         INT           IDENTITY (1, 1) NOT NULL,
+    [AccountID]             INT           NOT NULL,
+    [UserID]                INT           NOT NULL,
+    [ItemsPerPage]          SMALLINT      NOT NULL,
+    [CountryID]             NCHAR (2)     NULL,
+    [CurrencyID]            TINYINT       NULL,
+    [TimeZone]              VARCHAR (32)  NULL,
+    [EmailID]               VARCHAR (256) NULL,
+    [DailySummary]          BIT           NULL,
+    [AlertNotification]     BIT           NULL,
+    [LeadScoreNotification] BIT           NULL,
+    [LeadScoreValue]        INT           NULL,
+    [DateFormat]            TINYINT       NULL,
+    [EmailNotification]     BIT           NULL,
+    [TextNotification]      BIT           NULL,
+    [HasAcceptedTC]         BIT           DEFAULT ((0)) NOT NULL,
+    [IsIncludeSignature]    BIT           DEFAULT ((0)) NOT NULL,
+    CONSTRAINT [PK_UserSettings] PRIMARY KEY CLUSTERED ([UserSettingID] ASC) WITH (FILLFACTOR = 90),
+    CONSTRAINT [FK_UserSettings_Accounts] FOREIGN KEY ([AccountID]) REFERENCES [dbo].[Accounts] ([AccountID]),
+    CONSTRAINT [FK_UserSettings_Countries] FOREIGN KEY ([CountryID]) REFERENCES [dbo].[Countries] ([CountryID]),
+    CONSTRAINT [FK_UserSettings_Currencies] FOREIGN KEY ([CurrencyID]) REFERENCES [dbo].[Currencies] ([CurrencyID]),
+    CONSTRAINT [FK_UserSettings_Users] FOREIGN KEY ([UserID]) REFERENCES [dbo].[Users] ([UserID])
+);
+

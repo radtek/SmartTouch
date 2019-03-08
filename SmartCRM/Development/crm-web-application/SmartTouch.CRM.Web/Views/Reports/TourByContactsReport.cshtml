@@ -1,0 +1,233 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Threading
+@using System.Web.Mvc
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model ReportViewModel
+
+@{
+    ViewBag.Title = "TourByContactsReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var DateFormat = ViewBag.DateFormat;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+    bool runReportResults = ViewBag.RunReportResults;
+}
+
+@Scripts.Render("~/bundles/tourByContactsvm")
+
+<div>
+    <section>
+        <div class="sub-container">
+            <ul class="breadcrumb mbl">
+                <li><a href="/reports">[|Reports|]</a></li>
+                <li class="active"><a href="javascript:void(0)" data-bind="text:ReportName()"></a></li>
+            </ul>
+            <div class="main-header  mbl">
+                <span id="pagename" data-bind="text:ReportName()"></span>
+            </div>
+            <div class="form-horizontal-large mtl">
+                <div class="clearfix">
+                    <div class="form-group" id="databasedaterange">
+                        <label class="display-inline bold">[|Date Range|]</label>
+                        <input class="select-block" data-bind="kendoDropDownList: {dataTextField:'Period',dataValueField:'PeriodId', data: Periods ,value:PeriodId,change:periodChange}" />
+                    </div>
+                </div>
+                <div>
+                    <label class="display-inline bold">[|Group By|]</label>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group" data-bind="visible:CustomDateDisplay" id="databasecustomrange">
+                        <label class="bold">[|Custom Range|] :</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomStartDate, format:DateFormat,change: fromDateChangeEvent }" />
+                        </div>
+                        <label class="display-inline mts mhl">[|To|]</label>
+                        <div class="select-medium display-inline">
+                            <input data-bind="kendoDatePicker: { value: CustomEndDate, format:DateFormat,change: toDateChangeEvent }" />
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Tour Type|]</label>
+                        <select title="Tour Type" data-bind="kendoMultiSelect: {dataTextField:'DropdownValue',dataValueField:'DropdownValueID', data: TourTypes, value: TourType,optionLabel: '[|Select|]' ,placeholder:'[|All|]'}" class="multiselectwidth"></select>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group group-by1">
+                        <label class="display-inline bold">[|Tour Community|]</label>
+                        <select title="Community" data-bind="kendoMultiSelect: { dataTextField: 'DropdownValue', dataValueField:'DropdownValueID',data: Communities, value: Community,optionLabel: '[|Select|]' ,placeholder:'[|All|]'}" class="multiselectwidth"></select>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="form-group">
+                        <label class="display-inline bold">[|Tour Status|]</label>
+                        <select title="Tour Status" data-bind="kendoMultiSelect: { dataTextField: 'Status', dataValueField:'StatusID',data: TourStatuses, value: TourStatus ,optionLabel: '[|Select|]' ,placeholder:'[|All|]'}" class="multiselectwidth"></select>
+                    </div>
+                </div>
+
+                <div class="hr-border"></div>
+                <div>
+                    <a href="#" id="run-report" data-bind="click:Runlist" class="btn btn-lg btn-primary">[|Run Report|]</a>
+                </div>
+            </div>
+            <br /><br />
+            <div data-bind="visible: gridvisible() =='True'">
+                @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.TourByContactsViewModel>()
+            .Name("TourByContactsGrid").HtmlAttributes(new { @class = "k-grid-content" })
+                      .AutoBind(false)
+                      .Pageable(pageable => pageable
+                      .Refresh(false)
+                      .PageSizes(true)
+                      .ButtonCount(10).Messages(m => m
+                      .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Contacts|]")
+                      .Empty("[|No Contacts to display|]")
+                      .ItemsPerPage("[|Contacts per page|]")))
+            .Reorderable(reorder => reorder.Columns(true))
+            .Sortable(sortabe => sortabe.AllowUnsort(true))
+                          //.Scrollable()
+                          .ToolBar(toolbar =>
+                          {
+                          toolbar.Template(@<text>
+                    <div class="toolbar grid-ct-header">
+                        <a class="k-button k-button-icontext cu-grid-excel" id="excelexport">[|Export to Excel|]</a>
+                    </div>
+                        </text>);
+                          })
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.ContactName).Title("[|Contact Name|]").Sortable(true);
+        columns.Bound(p => p.PRimaryEmail).Title("[|Email|]").Sortable(true);
+        columns.Bound(p => p.PrimaryPhoneNumber).Title("[|Primary Phone|]").Sortable(true);
+        columns.Bound(p => p.TourType).Title("[|Tour Type|]").Sortable(true);
+        columns.Bound(p => p.TourDetails).Title("[|Tour Details|]").Sortable(true);
+        columns.Bound(p => p.TourDate).Title("[|Tour Date|]").Sortable(true);
+        columns.Bound(p => p.TourStatus).Title("[|Tour Status|]").Sortable(true);
+        columns.Bound(p => p.Commnity).Title("[|Tour Community|]").Sortable(true);
+        columns.Bound(p => p.LifeCycleStage).Title("[|Life Cycle Stage|]").Sortable(true);
+        //columns.Bound(p => p.OpportunityStage).Title("[|Opportunity Stage|]").Sortable(true);
+        columns.Bound(p => p.assignedTo).Title("[|Assigned To|]").Sortable(true);
+        columns.Bound(p => p.CreatedBy).Title("[|Created By|]").Sortable(true);
+        columns.Bound(p => p.CreatedOn).Title("[|Created Date|]").Sortable(true);
+
+    })
+    .Resizable(resize => resize.Columns(true))
+                                                            .ClientRowTemplate(@"<tr class='odd'>
+                   <td > #if(ContactType===1)
+                                        {#
+                                            <a href='/person/#:ContactId#'>#=displayName(ContactName)#</a>
+                                        #}
+                                    else
+                                        {#
+                                            <a href='/company/#:ContactId#'>#:ContactName#</a>
+                                        #}#</td>" +
+                  "<td> #:displayName(PRimaryEmail)#</td>" +
+                  "<td>#:displayName(PrimaryPhoneNumber)#</td>" +
+                  "<td>#:displayName(TourType)#</td>" +
+                  "<td>#:displayName(TourDetails)#</td>" +
+                  "<td>#:DisplaywithDateTimeFormat(TourDate)#</td>" +
+                  "<td>#:displayStatus(TourStatus)#</td>" +
+                  "<td>#:displayName(Commnity)#</td>" +
+                  "<td>#:displayName(LifeCycleStage)#</td>" +
+                  //"<td>#:displayName(OpportunityStage)#</td>" +
+                  "<td>#:displayName(assignedTo)#</td>" +
+                  "<td>#:displayName(CreatedBy)#</td>" +
+                  "<td>#:DisplaywithDateTimeFormat(CreatedOn)#</td>" +
+                  "</tr>")
+          .Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+
+    .DataSource(dataSource => dataSource
+        .Ajax()
+                 .PageSize(ItemsPerPage)
+     .Read(read => read.Action("ExcelRead_NewLeadsReport", "Reports"))
+               )
+                )
+            </div>
+        </div>
+    </section>
+</div>
+
+
+
+<script type="text/javascript">
+    var BASE_URL = '@Url.Content("~/Reports/")';
+    var reportModel = @(Html.Raw(Json.Encode(Model)));
+    var ContactUrl = '@Url.Content("~/Contact/")';
+    var dateformat = '@(DateFormat)';
+    var runReport='@(runReportResults)';
+    var itemsPerPage = '@(ItemsPerPage)';
+    var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+    var key = '@System.Configuration.ConfigurationManager.AppSettings["Excluded_Accounts"].ToString()';
+    var ids =key.split(',');
+    var enableExport = true;
+
+    $.each(ids,function(ind,val){
+        if(val == accountId)
+            enableExport=false;
+        else
+            enableExport=true;
+    });
+
+    var viewmodel;
+    function onDataBinding(arg) {
+
+    }
+
+    function displayName(name){
+        if(name == null)
+            return "";
+        else
+            return name;
+    }
+
+    function displayStatus(status)
+    {
+        if(status == 0)
+            return "Not Completed";
+        else
+            return "Completed";
+    }
+
+    function DisplaywithDateTimeFormat(date) {
+        var dateFormat = readCookie("dateformat").toUpperCase();
+        if (date == null) {
+            return "";
+        }
+        var utzDate = new Date(moment(date).toDate()).toUtzDate();
+        return moment(utzDate).format(dateFormat + " hh:mm A");
+    };
+
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+
+    $(document).ready(function () {
+        viewmodel = new tourByContactsReportViewModel(reportModel,BASE_URL,runReport,itemsPerPage,dateformat);
+        ko.applyBindings(viewmodel);
+    });
+
+    function RunReport(){
+        TourByContact.Runlist();
+    }
+
+    $("#excelexport").click(function(){
+        if(enableExport)
+        {
+           viewmodel.ExcelExport();
+        }else{
+            notifyError("[|You do not have permission to perform this operation.|]")
+        }
+    })
+
+</script>
+

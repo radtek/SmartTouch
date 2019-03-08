@@ -1,0 +1,110 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.WorkflowActionViewModel
+
+@{
+    Layout = null;
+}
+
+@{
+    var workflowId = ViewBag.WorkflowId;
+}
+
+@Scripts.Render("~/bundles/quickedituserassignmntvm")
+<div id="userassignmentAction">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">User Assignment Action</h4>
+    </div>
+    <div class="modal-body">
+            <div class="form-group st-assignuser">
+                <label class="bold">[|Users|]</label>
+                <div class="st-assignuser-options">
+                    <span><input type="radio" value="1" data-bind="checked: ScheduledID, attr:{ name : 'daysoptionP' + Order }" /> All Days</span>
+                    <span><input type="radio" value="2" data-bind="checked: ScheduledID, attr:{ name : 'daysoptionP' + Order }" /> Weekdays & Weekends</span>
+                    <span><input type="radio" value="3" data-bind="checked: ScheduledID, attr:{ name : 'daysoptionP' + Order }" /> Specific Days</span>
+                </div>
+                <div>
+                    <div data-bind="foreach: RoundRobinContactAssignments">
+                        <label class="bold" data-bind="visible: DayOfWeek() == 10">[|Daily|]</label>
+                        <!-- ko if : $parent.ScheduledID() == "1" -->
+                        <div>
+                            <div class="st-singleusr">
+                                <input type="radio" value="0" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder }" />
+                                <label>Single User Contact Assignment</label>
+                                <!-- ko if : IsRoundRobinAssignment() == "0" -->
+                                <input data-bind="kendoDropDownList: { dataTextField: 'FirstName', dataValueField:'UserID',  data: $root.Users, value: UserID,optionLabel:'[|Select User...|]' },valueUpdate: 'afterkeydown'" />
+                                <!-- /ko -->
+                            </div>
+                            <div class="st-singleusr">
+                                <input type="radio" value="1" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder}" />
+                                <label>Round Robin Contact Assignment</label>
+                                <!-- ko if : IsRoundRobinAssignment() == "1" -->
+                                <select data-bind="kendoMultiSelect: {dataTextField:'FirstName', dataValueField: 'UserID', data: $root.Users, value: UserIds, optionLabel:'[|Select User...|]',  valueUpdate: 'afterkeydown'}"></select>
+                                <!-- /ko -->
+                            </div>
+                        </div>
+                        <!-- /ko -->
+                        <!-- ko if : $parent.ScheduledID() == "2" || $parent.ScheduledID() == "3"-->
+                        <div data-bind="attr: { 'class' : 'st-weekday-options st-subaction-au'}">
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 1">[|Monday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 2">[|Tuesday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 3">[|Wednesday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 4">[|Thursday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 5">[|Friday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 6">[|Saturday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 7">[|Sunday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 8">[|Weekday|]</label>
+                            <label class="bold st-dayname" data-bind="visible: DayOfWeek() == 9">[|Weekend|]</label>
+                            <input type="radio" value="0" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder }" />
+                            <label>Single User Contact Assignment</label>
+                            <input class="st-rrc" type="radio" value="1" data-bind="checked: IsRoundRobinAssignment, attr:{ name : 'roundrobinoption' + CheckboxOrder }" />
+                            <label>Round Robin Contact Assignment</label>
+                            <!-- ko if : IsRoundRobinAssignment() == "0" -->
+                            <input data-bind="kendoDropDownList: { dataTextField: 'FirstName', dataValueField:'UserID',  data: $root.Users, value: UserID,optionLabel:'[|Select User...|]' },valueUpdate: 'afterkeydown'" />
+                            <!-- /ko -->
+                            <!-- ko if : IsRoundRobinAssignment() == "1" -->
+                            <select data-bind="kendoMultiSelect: {dataTextField:'FirstName', dataValueField: 'UserID', data: $root.Users, value: UserIds, optionLabel:'[|Select User...|]',  valueUpdate: 'afterkeydown'}"></select>
+                            <!-- /ko -->
+                        </div>
+                        <!-- /ko -->
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bind="click:saveUserAssignmentAction">[|Save|]</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">[|Cancel|]</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var Workflow_BASE_URL = '@Url.Content("~/Workflow/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var wfId= '@workflowId';
+        
+
+        $.ajax({
+            url:  WEBSERVICE_URL + '/getallusers',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            },
+            success: function (usersdata) {
+                viewModel = new WorkflowUserAssignmentActionViewModel(data.Action,Workflow_BASE_URL, WEBSERVICE_URL,wfId,usersdata);
+                ko.applyBindings(viewModel,document.getElementById("userassignmentAction"));
+
+            },
+            error: function (err) {
+                notifyError(err.responseText);
+            }
+        });
+    })
+</script>

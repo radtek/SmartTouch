@@ -1,0 +1,118 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model AddTagViewModel
+@using System.Linq;
+@{
+    bool isContactTag = ViewBag.IsContactTag;
+}
+@*<script src="~/Scripts/ViewModels/AddTagViewModel.js"></script>*@
+
+<div id="addTag">
+    <div class="drop-heading">
+        <span class="icon st-icon-tag display-inline"></span> <h4 class="panel-title display-inline plm">[|Add Tag|]</h4>
+    </div>
+    <div class="dp-topnav-inner-body">
+        <div class="row">
+            <div class="col-md-12">
+
+                @if (isContactTag)
+                {
+                    <div class="form-group" data-bind="ifnot:SelectAll">
+                        <label>[|Add Contacts|]<span class="required">*</span></label>
+                        <div>
+                            <input id="addTagContacts" class="display-inline form-control tagsinput-info-round" data-bind="valueUpdate: 'afterkeydown'" />
+                            <span class="validationMessage" data-bind="validationMessage:contactsValidation"></span>
+                        </div>
+                    </div>
+                     <div class="form-group" data-bind="if: SelectAll">
+                        <label class="control-label">[|Add Contacts|]<span class="required">  ( ALL )</span></label>
+                    </div>
+                }
+                else
+                {
+                    @*<div class="form-group">
+                         <label>Add Opportunities<span class="required">*</span></label>
+                          <div>
+                              <input id="addTagOpportunities" class="display-inline form-control tagsinput-info-round" data-bind="valueUpdate: 'afterkeydown'" />
+                               <span class="validationMessage" data-bind="validationMessage:opportunitiesValidation"></span>
+                          </div>
+                        </div>*@
+                }
+                <div class="form-group">
+                    <label>[|Add Tag(s)|]<span class="required">*</span></label>
+                    <div>
+                        <input id="addTags" class="display-inline form-control" data-bind="value:TagsComputed" />
+                        @*<span class="validationMessage" data-bind="validationMessage:TagsValidation"></span>*@
+                    </div>
+                    <div>
+                        @{
+                            Html.RenderPartial("~/Views/Contact/_RecentPopularTag.cshtml");
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-footer">
+        <div class="pull-left">
+            <a href="javascript:void(0)" class="btn btn-lg btn-primary" data-bind="click:SaveAddTag">[|Save|]</a>
+            <a href="javascript:void(0)" class="btn btn-lg" onclick="CloseTopInner(this)">[|Cancel|]</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Contact/")';
+        var AddTag = @(Html.Raw(Json.Encode(Model)));
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var tagCreatedBy = '@Thread.CurrentPrincipal.Identity.ToUserID()';
+        var isContactTag = '@ViewBag.IsContactTag';
+
+        var fromContactDetails = typeof selfDetails != "undefined" ? true :false;
+        var fromOpportunityDetails = typeof selfOpportunity != "undefined" ? true : false;
+
+        var notselectall;
+        if(fromContactDetails == true)
+            notselectall = true;
+        else if(fromOpportunityDetails == true)
+            notselectall = true;
+        else
+            notselectall = readCookie("selectallsearchstring") == "" ? true : false ;
+
+        var addTagViewModel = new AddTagViewModel(AddTag,BASE_URL,isContactTag,notselectall);
+
+
+        $.each(addTagViewModel.PopularTags(), function(index,value){
+            value.TagID = ko.observable(value.TagID);
+            value.TagName = ko.observable(value.TagName);
+            value.AccountID = ko.observable(value.AccountID);
+            value.IsSelected = ko.observable(value.IsSelected);
+        });
+
+        $.each(addTagViewModel.RecentTags(), function(index,value){
+            value.TagID = ko.observable(value.TagID);
+            value.TagName = ko.observable(value.TagName);
+            value.AccountID = ko.observable(value.AccountID);
+            value.IsSelected = ko.observable(value.IsSelected);
+        });
+
+        ko.applyBindings(addTagViewModel,document.getElementById("addTag"));
+
+        $(':checkbox').on('change', function() {
+            $(this).triggerHandler('click');
+        });
+
+        var tagify = new Tagify(WEBSERVICE_URL, addTagViewModel,accountId,tagCreatedBy);
+        tagify.Tagify("addTags");
+        tagify.TagifyContacts("addTagContacts");
+        var recentJs = new RecentPopular(addTagViewModel,"addTags");
+        //tagify.TagifyOpportunities("addTagOpportunities");
+
+    });
+</script>
+
+

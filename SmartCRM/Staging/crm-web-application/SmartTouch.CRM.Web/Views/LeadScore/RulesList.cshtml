@@ -1,0 +1,300 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.LeadScoreRuleViewModel
+
+@{
+    ViewBag.Title = "RulesList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@{
+    var Details = ViewBag.leadscoreID;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+
+@Scripts.Render("~/bundles/leadscorelistviewmodel")
+
+
+
+@using (Ajax.BeginForm("LeadScoreList", null, new AjaxOptions { UpdateTargetId = "content-area", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "file_upload" }))
+{
+    <div id="leadscoreList" style="display:none" data-bind="visible:true">
+        <div class="page-title">[|Configure Lead Score|]</div>
+        <div class="leadscore-grid">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.LeadScoreRuleViewModel>()
+    .Name("gridLeadScore")
+    .HtmlAttributes(new { @class = "k-grid-content" })
+    .Reorderable(reorder => reorder.Columns(true))
+    .Resizable(resize => resize.Columns(true))
+    .AutoBind(true)
+    .Pageable(pageable => pageable
+            .Refresh(false)
+            .PageSizes(true)
+        .ButtonCount(10).Messages(m => m
+            .Display("[|Showing|] {0}-{1} [|from|] {2:n0} [|Rule(s)|]")
+        .Empty("[|No rules to display|]").ItemsPerPage("[|Rules per page|]")))
+    .Columns(columns =>
+    {
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:60px;" });
+        columns.Template(e => "").Title("[|Category|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(c => c.ConditionDescription).Title("[|Description|]").Sortable(true).HeaderHtmlAttributes(new { @class = "col-30" });
+        columns.Template(e => "").Title("[|Condition|]").HeaderHtmlAttributes(new { @class = "col-20" });
+        columns.Bound(c => c.Score).Title("[|Points|]").Sortable(true).HeaderHtmlAttributes(new { @class = "text-center" });
+        columns.Template(e => "").Title("").HeaderHtmlAttributes(new { @style = "width:80px;" });
+    })
+ .Sortable(sortabe => sortabe.AllowUnsort(true))
+    .ToolBar(toolbar =>
+    {
+    toolbar.Template(@<text>
+                <div class="toolbar grid-ct-header">
+                    <div class="left-part">
+                        <label class="checkbox toggle-all" for="masterCheckBox">
+                            <input type='checkbox' data-toggle='checkbox' id='masterCheckBox' />
+                            [|Select All|]
+                        </label>
+                    </div>
+
+                    <div class="right-part">
+                        <div class="grid-search">
+                            <input type="search" id="txtleadscoreSearch" onkeydown="GetleadscoreBasedonsearch(this);" class=" form-control" placeholder="[|Search|]" />
+                            <i class="icon st-icon-search-2"></i>
+                        </div>
+                    </div>
+                </div>
+    </text>);
+    })
+.ClientRowTemplate(
+@"<tr class='odd'><td class='grid-checkbox'><label class='checkbox'><input type='checkbox' class='chkleadscore' data-name='#:ConditionName#' id='#: LeadScoreRuleMapID #' data-toggle='checkbox'></label></td>
+          <td>#:CategoryName#</td>
+          <td>#:ConditionDescription#</td>
+          <td>#:ConditionName#</td>
+          <td class='text-center'>#:Score#</td>
+
+           <td class='grid-row-controls'>
+<span>" + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditLeadScore", new { leadScoreRuleMapId = "lid" }, new { data_toggle = "modal", data_target = "modal", @class = "drop-lab", @title = "Edit Lead Score" }).ToHtmlString().Replace("lid", "#:LeadScoreRuleMapID#") + "<a href='javascript:void(0)'><i class='icon st-icon-bin-3' onclick='DeleteLeadScore(#:LeadScoreRuleMapID#,#:ConditionValue#, #:ConditionID#)' title='Delete Lead Score' ></i></a></span></td></tr>")
+
+
+.Events(events => events.DataBinding("onDataBinding").DataBound("onDataBound"))
+.DataSource(dataSource => dataSource
+.Ajax()
+.PageSize(ItemsPerPage)
+.Read(read => read.Action("RulesListViewRead", "LeadScore").Data("additionalInfo"))
+)
+            )
+        </div>
+    </div>
+}
+
+@section Scripts{
+    <script>
+        var searchText;
+        var ItemsPerPage = '@(ItemsPerPage)'
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+        }
+        var contactDtls = '@(Details)';
+        if (contactDtls == 0) {
+            localStorage.removeItem("leadscoresearchtext");
+            localStorage.removeItem("leadscoresearchcontent");
+            createCookie("leadscorepagesize", '@(ItemsPerPage)', 1);
+            createCookie("leadscorepagenumber", 1, 1);
+        }
+        function additionalInfo() {
+            return {
+                name: localStorage.getItem("leadscoresearchtext")
+            }
+        }
+
+    </script>
+
+    <script>
+
+
+        function leadscoreTypeChange() {
+            var value = this.value();
+            //  localStorage.removeItem("leadscoresearchtext");
+            localStorage.removeItem("leadscoresearchcontent");
+            localStorage.setItem("leadscoresearchcontent", value);
+            $("#gridLeadScore").data("kendoGrid").dataSource.read();
+            var grid = $("#grid").data("kendoGrid");
+            var psize = readCookie("leadscorepagesize");
+            grid.dataSource.query({ page: 1, pageSize: psize });
+            appendCheckbox();
+        }
+
+        function GetleadscoreBasedonsearch(e) {
+            setTimeout(function () {
+
+                var enterKeyPressCode = 13;
+                if (searchText !== $("#txtleadscoreSearch").val() || (searchText === $("#txtleadscoreSearch").val() && e.keyCode == enterKeyPressCode))
+                    searchText = $("#txtleadscoreSearch").val();
+                else
+                    return;
+
+                $filter = new Array();
+                var grid = $("#gridLeadScore").data("kendoGrid"), searchBox = $("#txtleadscoreSearch").val(), leadscoreType = $("#leadscoreTypes").val(); //$("#contactTypes").val();
+                localStorage.removeItem("leadscoresearchtext");
+                if ($.trim(searchBox).length > 2) {
+                    localStorage.removeItem("leadscoresearchtext");
+                    localStorage.setItem("leadscoresearchtext", searchBox);
+                    var psize = readCookie("leadscorepagesize");
+                    grid.dataSource.query({ page: 1, pageSize: psize });
+                    //   $("#gridLeadScore").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+                else if ($.trim(searchBox).length === 0) {
+                    localStorage.removeItem("leadscoresearchtext");
+                    $("#gridLeadScore").data("kendoGrid").dataSource.read();
+                    appendCheckbox();
+                }
+            }, 500);
+        }
+
+        $('#txtleadscoreSearch').keypress(function(event){
+            if(event.keyCode==13){
+                event.preventDefault();
+                return false;
+                window.location="/leadscorerules";
+            }
+        });
+
+        function onDataBinding(arg) {
+            setTimeout(function () {
+                appendCheckbox();
+                bindCheckboxchnage('chkleadscore');
+                //$(".st-icon-edit").parent('a').attr('data-target', '#modal');
+                $(".drop-lab").attr('data-target', '#modal');
+            }, 200)
+        }
+
+        function onDataBound(e) {
+            var colCount = $(".k-grid").find('table colgroup > col').length;
+            var dataSource = new kendo.data.DataSource({
+                data: ToPageDropdown()
+            });
+            $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+            if (e.sender.dataSource.view().length == 0) {
+                e.sender.table.find('tbody').append('<tr><td colspan="' + colCount +'"><div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2"></i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+            }
+        }
+
+        function DeleteRule(){
+            checkedvalues = fnGetChkvalGrid('chkleadscore');
+            if (checkedvalues != "") {
+                alertifyReset("Delete Rule", "Cancel");
+                alertify.confirm("[|Are you sure you want to delete this Rule(s)|]?", function (e) {
+                    if (e) {
+                        var lsid = checkedvalues;
+                        jsondata = JSON.stringify({ 'RuleID': lsid, 'Status':0 });
+                        var DeleteURL = "DeleteRule";
+                        jQuery.support.cors = true;
+                        $.ajax({
+                            url: DeleteURL,
+                            type: 'post',
+                            dataType: 'json',
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({ 'leadScoreData': jsondata })
+                        }).then(function (response) {            
+                            var filter = $.Deferred()            
+                            if (response.success) {                
+                                filter.resolve(response)            
+                            } else {                
+                                filter.reject(response.error)            
+                            }            
+                            return filter.promise()        
+                        }).done(function (data) {
+                            notifySuccess("[|Successfully delete the rule|]"); 
+                            $("#gridLeadScore").data("kendoGrid").dataSource.read();
+                            setTimeout(
+                                       function(){
+                                           window.location.href = "leadscorerules"
+                                       },setTimeOutTimer)
+                        }).fail(function (error) {                                   
+                            notifyError(error);        
+                        })
+
+                    }
+                    else {
+                        notifyError("[|You've clicked Cancel|]");
+                    }
+                });
+            }
+            else {
+                notifyError("[|Please select at least one rule|]");
+            }
+        }
+
+        function DeleteLeadScore(id,tag, conditionId)
+        {
+            alertifyReset("Delete Rule", "Cancel");
+            alertify.confirm("[|Are you sure you want to delete this Rule|]?", function (e) {
+                if (e)
+                {
+                    var lsid = [id];
+                    var tagId = parseInt(tag);
+                    jsondata = JSON.stringify({
+                        'RuleID': lsid,
+                        'Status':0 ,
+                        'tagId' : tagId,
+                        'conditionId':conditionId
+                    });
+                    var DeleteURL = "deleterule";
+                    jQuery.support.cors = true;
+                    $.ajax({
+                        url: DeleteURL,
+                        type: 'post',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify({ 'leadScoreData': jsondata })
+                    }).then(function (response) {           
+                        var filter = $.Deferred()            
+                        if (response.success) {                
+                            filter.resolve(response)            
+                        } else {                
+                            filter.reject(response.error)            
+                        }            
+                        return filter.promise()        
+                    }).done(function (data) {
+                        notifySuccess("[|Successfully deleted the leadscore|]");   
+                        $("#gridLeadScore").data("kendoGrid").dataSource.read();
+                        setTimeout(
+                                    function()
+                                    {
+                                        window.location.href = "leadscorerules";
+                                    },setTimeOutTimer);
+
+                    }).fail(function (error) {                             
+                        notifyError(error);        
+                    })
+                }
+                else
+                {
+                    notifyError("[|You've clicked Cancel|]");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $(':checkbox').on('change', function() {
+                $(this).triggerHandler('click');
+            });
+
+            removepageloader();
+            var BASE_URL = '@Url.Content("~/LeadScore/")';
+            var leadscoreview = @(Html.Raw(Json.Encode(Model)));
+            var vm = new leadScoreListViewModel(leadscoreview, BASE_URL);
+            ko.applyBindings(vm);
+
+            $("#txtleadscoreSearch").val(localStorage.getItem("leadscoresearchtext"));
+
+            tableMasterCheckBox('leadscore-grid');
+        });
+    </script>
+}
+
+

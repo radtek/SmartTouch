@@ -1,0 +1,105 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@model SmartTouch.CRM.ApplicationServices.ViewModels.WorkflowNotifyUserActionViewModel
+
+@{
+    Layout = null;
+}
+
+@{ 
+    var workflowId = ViewBag.WorkflowId;
+}
+<script src="~/Scripts/ViewModels/WorkflowNotifyUserViewModel.js"></script>
+<!-- Modal -->
+<div id="notifyuseraction">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Notify User Action</h4>
+    </div>
+    <div class="modal-body">
+            <div class="form-group">
+                <label class="bold">[|Users|]</label>
+                <select data-bind="kendoMultiSelect: { dataTextField: 'FirstName',dataValueField:'UserID',  data: $root.Users, value: UserIds,optionLabel:'[|Select User...|]' },valueUpdate: 'afterkeydown'"></select>
+                <span class="validationMessage" data-bind="validationMessage:userValidation"></span>
+            </div>
+            <div class="form-group">
+                <label class="bold">[|Notify By|] <span class="required">*</span></label>
+                <div class="mbm">
+                    <span data-bind="text:charactersremaining,attr:{class: classname}"></span>
+                    <label class="radio-inline">
+                        <input type="radio" value="1" data-bind="checked:NotifyType,attr:{name:'enrolled' + Order }" /> [|Email|]
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="2" data-bind="checked:NotifyType,attr:{name:'enrolled' + Order }" /> [|Text Message|]
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="3" data-bind="checked:NotifyType,attr:{name:'enrolled' + Order }" /> [|Both Email & Text|]
+                    </label>
+                    <span class="validationMessage" data-bind="validationMessage:NotifyTypeValidation"></span>
+                </div>
+
+                <textarea class="form-control" rows="2" data-bind="value:MessageBody,valueUpdate:'afterkeydown'"></textarea>
+
+            </div>
+            <div class="form-group">
+                <label class="bold">[|Selected Fields|]<span class="required">*</span></label>
+                <select data-bind="kendoMultiSelect :{ data: NotificationFields,dataValueField:'FieldId',dataTextField:'Title', value: NotificationFieldIds }" class="col-100"></select>
+                <span class="validationMessage" data-bind="validationMessage:fieldValidation"></span>
+            </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bind="click:saveNotifyUserAction">[|Save|]</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">[|Cancel|]</button>
+    </div>
+</div>
+<!-- Modal end -->
+
+<script>
+    $(document).ready(function () {
+        var Workflow_BASE_URL = '@Url.Content("~/Workflow/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var data = @(Html.Raw(Json.Encode(Model)));
+        var wfId= '@workflowId';
+        viewModel = new WorkflowNotifyUserViewModel(data,Workflow_BASE_URL, WEBSERVICE_URL,wfId);
+
+        $.ajax({
+            url:  WEBSERVICE_URL + '/getallusers',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            },
+            success: function (usersdata) {
+                viewModel.Users(usersdata);
+                viewModel.UserIds.valueHasMutated();
+            },
+            error: function (err) {
+                notifyError(err.responseText);
+            }
+        });
+
+        $.ajax({
+            url:  WEBSERVICE_URL + '/getnotificationfields',
+            type: 'get',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + readCookie("accessToken"));
+            },
+            success: function (notificationFieldsData) {
+                viewModel.NotificationFields(notificationFieldsData);
+                ko.applyBindings(viewModel,document.getElementById("notifyuseraction"));
+
+            },
+            error: function (err) {
+                notifyError(err.responseText);
+            }
+        });
+
+       
+    });
+</script>

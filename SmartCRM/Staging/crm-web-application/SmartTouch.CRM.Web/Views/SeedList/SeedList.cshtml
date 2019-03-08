@@ -1,0 +1,34 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@using System.Threading
+@using System.Linq;
+@using SmartTouch.CRM.Web.Utilities
+@model IEnumerable<SeedEmailViewModel>
+@{
+    ViewBag.Title = "SeedList";
+}
+<div class="page-title">Seed List</div>
+<div class="form-horizontal-large">
+    <div class="form-group">
+        <textarea rows="20" cols="30" placeholder="[|Emails|]" class="form-control Emails" data-bind="value:Email, valueUpdate: 'afterkeydown'"></textarea>
+    </div>
+</div>
+<div>
+    <a class="btn btn-lg btn-primary" data-bind="click:saveSeedList">
+   <span>[|Save|]</span></a>
+    <a class="btn btn-lg btn-default" data-bind="click:Cancel">
+  <span>[|Cancel|]</span></a>
+    
+</div>
+<script src="~/Scripts/ViewModels/SeedListViewModel.js"></script>
+<script>
+
+    $(document).ready(function () {
+        var viewModel;
+        var SeedList = @(Html.Raw(Json.Encode(Model)));
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var BASE_URL = '@Url.Content("~/SeedList/")';
+        viewModel = new  seedListViewModel(SeedList,BASE_URL,accountId);
+        ko.applyBindings(viewModel);
+    });
+</script>
+

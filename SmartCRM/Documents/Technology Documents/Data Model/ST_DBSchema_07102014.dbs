@@ -1,0 +1,2421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="SqlServer" id="Project7021422" database="SqlServer" >
+	<schema name="dbo" catalogname="SmartCRM" schemaname="dbo" defo="y" >
+		<table name="AccountAddressMap" >
+			<column name="AccountAddressMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AddressID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_AccountAddressMap" unique="PRIMARY_KEY" >
+				<column name="AccountAddressMapID" />
+			</index>
+			<fk name="FK_AccountAddressMap_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_AccountAddressMap_Addresses" to_schema="dbo" to_table="Addresses" >
+				<fk_column name="AddressID" pk="AddressID" />
+			</fk>
+		</table>
+		<table name="AccountDataAccessPermissions" >
+			<column name="AccountDataAccessPermissionID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" />
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="IsPrivate" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_AccountDataAccessPermissions" unique="PRIMARY_KEY" >
+				<column name="AccountDataAccessPermissionID" />
+			</index>
+			<fk name="FK_AccountDataAccessPermissions_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_AccountDataAccessPermissions_Modules" to_schema="dbo" to_table="Modules" >
+				<fk_column name="ModuleID" pk="ModuleID" />
+			</fk>
+		</table>
+		<table name="Accounts" >
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="AccountName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="FirstName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="LastName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Company" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="DomainURL" type="varchar" length="100" decimal="0" jt="12" />
+			<column name="PrimaryEmail" type="varchar" length="256" decimal="0" jt="12" mandatory="y" />
+			<column name="HomePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="WorkPhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="MobilePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="PrivacyPolicy" type="varchar(max)" decimal="0" jt="12" />
+			<column name="CommunicationID" type="int" length="10" decimal="0" jt="4" />
+			<column name="SubscriptionID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="DateFormatID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="CurrencyID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="CountryID" type="nchar" length="2" decimal="0" jt="1" mandatory="y" />
+			<column name="TimeZone" type="varchar" length="32" decimal="0" jt="12" mandatory="y" />
+			<column name="Status" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="ModifiedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="ModifiedOn" type="datetime" length="23" decimal="3" jt="93" />
+			<index name="PK_Accounts" unique="PRIMARY_KEY" >
+				<column name="AccountID" />
+			</index>
+			<fk name="FK_Accounts_Communications" to_schema="dbo" to_table="Communications" >
+				<fk_column name="CommunicationID" pk="CommunicationID" />
+			</fk>
+			<fk name="FK_Accounts_Subscriptions" to_schema="dbo" to_table="Subscriptions" >
+				<fk_column name="SubscriptionID" pk="SubscriptionID" />
+			</fk>
+		</table>
+		<table name="ActionTagMap" >
+			<column name="ActionTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ActionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_ActionTagMap" unique="PRIMARY_KEY" >
+				<column name="ActionTagMapID" />
+			</index>
+			<fk name="FK_ActionTags_Actions" to_schema="dbo" to_table="Actions" >
+				<fk_column name="ActionID" pk="ActionID" />
+			</fk>
+			<fk name="FK_ActionTags_Tags" to_schema="dbo" to_table="Tags" delete_action="cascade" >
+				<fk_column name="TagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="Actions" >
+			<column name="ActionID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ActionDetails" type="nvarchar" length="1000" decimal="0" jt="12" mandatory="y" />
+			<column name="RemindOn" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="NotificationStatus" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="RemindbyText" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyEmail" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyPopup" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_Actions" unique="PRIMARY_KEY" >
+				<column name="ActionID" />
+			</index>
+			<fk name="FK_Actions_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="Actions_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="ActionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ActionDetails" type="nvarchar" length="1000" decimal="0" jt="12" mandatory="y" />
+			<column name="RemindOn" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="NotificationStatus" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="RemindbyText" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyEmail" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyPopup" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_Actions_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="AddressTypes" >
+			<column name="AddressTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AddressType" type="nvarchar" length="10" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_AddressTypes" unique="PRIMARY_KEY" >
+				<column name="AddressTypeID" />
+			</index>
+		</table>
+		<table name="Addresses" >
+			<column name="AddressID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="AddressTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AddressLine1" type="varchar" length="95" decimal="0" jt="12" />
+			<column name="AddressLine2" type="varchar" length="95" decimal="0" jt="12" />
+			<column name="City" type="varchar" length="35" decimal="0" jt="12" />
+			<column name="StateID" type="varchar" length="6" decimal="0" jt="12" mandatory="y" />
+			<column name="CountryID" type="nchar" length="2" decimal="0" jt="1" mandatory="y" />
+			<column name="ZipCode" type="varchar" length="11" decimal="0" jt="12" />
+			<column name="IsDefault" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_Addresses" unique="PRIMARY_KEY" >
+				<column name="AddressID" />
+			</index>
+			<fk name="FK_Addresses_AddressTypes" to_schema="dbo" to_table="AddressTypes" >
+				<fk_column name="AddressTypeID" pk="AddressTypeID" />
+			</fk>
+			<fk name="FK_Addresses_Countries" to_schema="dbo" to_table="Countries" >
+				<fk_column name="CountryID" pk="CountryID" />
+			</fk>
+			<fk name="FK_Addresses_States" to_schema="dbo" to_table="States" >
+				<fk_column name="StateID" pk="StateID" />
+			</fk>
+		</table>
+		<table name="CampaignContactTagMap" >
+			<column name="CampaignContactTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CampaignID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_CampaignContactTagMap" unique="PRIMARY_KEY" >
+				<column name="CampaignContactTagMapID" />
+			</index>
+			<fk name="FK_CampaignContactTagMap_Campaigns" to_schema="dbo" to_table="Campaigns" >
+				<fk_column name="CampaignID" pk="CampaignID" />
+			</fk>
+			<fk name="FK_CampaignContactTagMap_Tags" to_schema="dbo" to_table="Tags" delete_action="cascade" >
+				<fk_column name="TagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="CampaignRecipients" >
+			<column name="CampaignRecipientID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CampaignID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="To" type="nvarchar" length="256" decimal="0" jt="12" mandatory="y" />
+			<column name="ScheduleTime" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="SentOn" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="GUID" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<index name="PK_CampaignRecipients" unique="PRIMARY_KEY" >
+				<column name="CampaignRecipientID" />
+			</index>
+			<fk name="FK_CampaignRecipients_Campaigns" to_schema="dbo" to_table="Campaigns" >
+				<fk_column name="CampaignID" pk="CampaignID" />
+			</fk>
+		</table>
+		<table name="CampaignTagMap" >
+			<column name="CampaignTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CampaignID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_CampaignTagMap" unique="PRIMARY_KEY" >
+				<column name="CampaignTagMapID" />
+			</index>
+			<fk name="FK_CampaignTagMap_Campaigns" to_schema="dbo" to_table="Campaigns" >
+				<fk_column name="CampaignID" pk="CampaignID" />
+			</fk>
+			<fk name="FK_CampaignTagMap_Tags" to_schema="dbo" to_table="Tags" delete_action="cascade" >
+				<fk_column name="TagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="CampaignTemplates" >
+			<column name="CampaignTemplateID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="HTMLContent" type="nvarchar(max)" decimal="0" jt="12" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Type" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ThumbnailImage" type="int" length="10" decimal="0" jt="4" />
+			<column name="Description" type="nvarchar" length="200" decimal="0" jt="12" />
+			<column name="Status" type="tinyint" length="3" decimal="0" jt="-6" />
+			<index name="PK_CampaignTemplates" unique="PRIMARY_KEY" >
+				<column name="CampaignTemplateID" />
+			</index>
+			<fk name="FK_CampaignTemplates_Images" to_schema="dbo" to_table="Images" >
+				<fk_column name="ThumbnailImage" pk="ImageID" />
+			</fk>
+			<fk name="FK_CampaignTemplates_Statuses" to_schema="dbo" to_table="Statuses" >
+				<fk_column name="Status" pk="StatusID" />
+			</fk>
+		</table>
+		<table name="Campaigns" >
+			<column name="CampaignID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CampaignStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="CampaignTemplateID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Subject" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="HTMLContent" type="nvarchar(max)" decimal="0" jt="12" />
+			<column name="ScheduleTime" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="From" type="nvarchar" length="256" decimal="0" jt="12" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="EmailProviderID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_Campaigns" unique="PRIMARY_KEY" >
+				<column name="CampaignID" />
+			</index>
+			<fk name="FK_Campaigns_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_Campaigns_CampaignTemplates" to_schema="dbo" to_table="CampaignTemplates" >
+				<fk_column name="CampaignTemplateID" pk="CampaignTemplateID" />
+			</fk>
+			<fk name="FK_Campaigns_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="CommunicationLogInDetails" >
+			<column name="CommunicationLogID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CommunicationTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="LoginToken" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ProviderName" type="nvarchar" length="50" decimal="0" jt="12" />
+			<index name="PK_CommunicationLogInDetails" unique="PRIMARY_KEY" >
+				<column name="CommunicationLogID" />
+			</index>
+			<fk name="FK_CommunicationLogInDetails_Contacts" to_schema="dbo" to_table="Users" >
+				<fk_column name="AccountID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="CommunicationStatus" >
+			<column name="CommunicationStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="StatusName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_CommunicationStatus" unique="PRIMARY_KEY" >
+				<column name="CommunicationStatusID" />
+			</index>
+		</table>
+		<table name="CommunicationTracker" >
+			<column name="CommunicationTrackerID" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="CommunicationTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Address" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TrackerGuid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="CommunicationStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_CommunicationInformation" unique="PRIMARY_KEY" >
+				<column name="CommunicationTrackerID" />
+			</index>
+			<fk name="FK_CommunicationInformation_CommunicationInformation" to_schema="dbo" to_table="CommunicationStatus" >
+				<fk_column name="CommunicationStatusID" pk="CommunicationStatusID" />
+			</fk>
+			<fk name="FK_CommunicationTracker_CommunicationTypes" to_schema="dbo" to_table="CommunicationTypes" >
+				<fk_column name="CommunicationTypeID" pk="CommunicationTypeID" />
+			</fk>
+			<fk name="FK_CommunicationTracker_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+		</table>
+		<table name="CommunicationTypes" >
+			<column name="CommunicationTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="CommunicationTypeName" type="nvarchar" length="75" decimal="0" jt="12" />
+			<index name="PK_CommunicationTypes" unique="PRIMARY_KEY" >
+				<column name="CommunicationTypeID" />
+			</index>
+		</table>
+		<table name="Communications" >
+			<column name="CommunicationID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="SecondaryEmails" type="nvarchar" length="2100" decimal="0" jt="12" />
+			<column name="FacebookUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="TwitterUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="GooglePlusUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="LinkedInUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="BlogUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="WebSiteUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<index name="PK_Communications" unique="PRIMARY_KEY" >
+				<column name="CommunicationID" />
+			</index>
+		</table>
+		<table name="Communities" >
+			<column name="CommunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CommunityName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Street" type="nvarchar" length="60" decimal="0" jt="12" />
+			<column name="City" type="varchar" length="35" decimal="0" jt="12" mandatory="y" />
+			<column name="State" type="varchar" length="6" decimal="0" jt="12" mandatory="y" />
+			<column name="Country" type="nchar" length="2" decimal="0" jt="1" mandatory="y" />
+			<index name="PK_Communities" unique="PRIMARY_KEY" >
+				<column name="CommunityID" />
+			</index>
+			<fk name="FK_Communities_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_Communities_Countries" to_schema="dbo" to_table="Countries" >
+				<fk_column name="Country" pk="CountryID" />
+			</fk>
+			<fk name="FK_Communities_States" to_schema="dbo" to_table="States" >
+				<fk_column name="State" pk="StateID" />
+			</fk>
+		</table>
+		<table name="Conditions" >
+			<column name="ConditionID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Name" type="varchar" length="250" decimal="0" jt="12" />
+			<column name="ScoreCategoryID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<index name="PK_Conditions" unique="PRIMARY_KEY" >
+				<column name="ConditionID" />
+			</index>
+			<fk name="FK_Conditions_ScoreCategories" to_schema="dbo" to_table="ScoreCategories" >
+				<fk_column name="ScoreCategoryID" pk="ScoreCategoryID" />
+			</fk>
+		</table>
+		<table name="ContactActionMap" >
+			<column name="ContactActionMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ActionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="IsCompleted" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_ContactActionMap" unique="PRIMARY_KEY" >
+				<column name="ContactActionMapID" />
+			</index>
+			<fk name="FK_ActionContacts_Actions" to_schema="dbo" to_table="Actions" >
+				<fk_column name="ActionID" pk="ActionID" />
+			</fk>
+			<fk name="FK_ActionContacts_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+		</table>
+		<table name="ContactActionMap_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="ContactActionMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ActionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="IsCompleted" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_ContactActionMap_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="ContactAddressMap" >
+			<column name="ContactAddressMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" />
+			<column name="AddressID" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_ContactAddressMap" unique="PRIMARY_KEY" >
+				<column name="ContactAddressMapID" />
+			</index>
+			<fk name="FK_ContactAddressMap_Addresses" to_schema="dbo" to_table="Addresses" >
+				<fk_column name="AddressID" pk="AddressID" />
+			</fk>
+			<fk name="FK_ContactAddressMap_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+		</table>
+		<table name="ContactCustomFieldMap" >
+			<column name="ContactCustomFieldMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CustomFieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Value" type="nvarchar" length="75" decimal="0" jt="12" />
+			<index name="PK_ContactCustomFieldMap" unique="PRIMARY_KEY" >
+				<column name="ContactCustomFieldMapID" />
+			</index>
+			<fk name="FK_ContactCustomFieldMap_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactCustomFieldMap_CustomFields" to_schema="dbo" to_table="CustomFields" >
+				<fk_column name="CustomFieldID" pk="CustomFieldID" />
+			</fk>
+		</table>
+		<table name="ContactEmails" >
+			<column name="ContactEmailID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Email" type="varchar" length="256" decimal="0" jt="12" mandatory="y" />
+			<column name="EmailStatus" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="IsPrimary" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_ContactEmails" unique="PRIMARY_KEY" >
+				<column name="ContactEmailID" />
+			</index>
+			<fk name="FK_ContactEmails_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_ContactEmails_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactEmails_Statuses" to_schema="dbo" to_table="Statuses" >
+				<fk_column name="EmailStatus" pk="StatusID" />
+			</fk>
+		</table>
+		<table name="ContactImages" >
+			<column name="ContactImageID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="OriginalName" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="ImageContent" type="nvarchar(max)" decimal="0" jt="12" />
+			<column name="ImageType" type="nvarchar" length="15" decimal="0" jt="12" />
+			<column name="StorageName" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<index name="PK_ContactImages" unique="PRIMARY_KEY" >
+				<column name="ContactImageID" />
+			</index>
+		</table>
+		<table name="ContactLeadAdapterMap" >
+			<column name="ContactLeadAdapterMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LeadAdapterID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_ContactLeadAdapterMap" unique="PRIMARY_KEY" >
+				<column name="ContactLeadAdapterMapID" />
+			</index>
+			<fk name="FK_ContactLeadAdapterMap_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactLeadAdapterMap_LeadAdapterTypes" to_schema="dbo" to_table="LeadAdapterTypes" >
+				<fk_column name="LeadAdapterID" pk="LeadAdapterTypeID" />
+			</fk>
+		</table>
+		<table name="ContactLeadSourceMap" >
+			<column name="ContactLeadSourceMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LeadSouceID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<index name="PK_ContactLeadSourceMap" unique="PRIMARY_KEY" >
+				<column name="ContactLeadSourceMapID" />
+			</index>
+			<fk name="FK_ContactLeadSourceMap_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactLeadSourceMap_DropdownValues" to_schema="dbo" to_table="DropdownValues" >
+				<fk_column name="LeadSouceID" pk="DropdownValueID" />
+			</fk>
+		</table>
+		<table name="ContactNoteMap" >
+			<column name="ContactNoteMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="NoteID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_ContactNoteMap" unique="PRIMARY_KEY" >
+				<column name="ContactNoteMapID" />
+			</index>
+			<fk name="FK_ContactNotes_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactNotes_Notes" to_schema="dbo" to_table="Notes" >
+				<fk_column name="NoteID" pk="NoteID" />
+			</fk>
+		</table>
+		<table name="ContactNoteMap_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="ContactNoteMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="NoteID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_ContactNoteMap_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="ContactPhoneNumbers" >
+			<column name="ContactPhoneNumberID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="PhoneNumber" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<column name="PhoneType" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="IsPrimary" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_ContactPhoneNumbers" unique="PRIMARY_KEY" >
+				<column name="ContactPhoneNumberID" />
+			</index>
+			<fk name="FK_ContactPhoneNumbers_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_ContactPhoneNumbers_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactPhoneNumbers_DropdownValues" to_schema="dbo" to_table="DropdownValues" >
+				<fk_column name="PhoneType" pk="DropdownValueID" />
+			</fk>
+		</table>
+		<table name="ContactRelationshipMap" >
+			<column name="ContactRelationshipMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="RelationshipType" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="RelatedUserID" type="int" length="10" decimal="0" jt="4" />
+			<column name="RelatedContactID" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_ContactsRelationship" unique="PRIMARY_KEY" >
+				<column name="ContactRelationshipMapID" />
+			</index>
+			<fk name="FK_ContactRelationshipMap_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactRelationshipMap_Contacts1" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="RelatedContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactsRelationship_RelationshipTypes" to_schema="dbo" to_table="RelationshipTypes" >
+				<fk_column name="RelationshipType" pk="RelationshipTypeID" />
+			</fk>
+			<fk name="FK_ContactRelationshipMap_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="RelatedUserID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="ContactRelationshipMap_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="ContactRelationshipMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="RelationshipType" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="RelatedUserID" type="int" length="10" decimal="0" jt="4" />
+			<column name="RelatedContactID" type="int" length="10" decimal="0" jt="4" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_ContactRelationshipMap_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="ContactTagMap" >
+			<column name="ContactTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_ContactTagMap" unique="PRIMARY_KEY" >
+				<column name="ContactTagMapID" />
+			</index>
+			<fk name="FK_ContactTags_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactTags_Tags" to_schema="dbo" to_table="Tags" delete_action="cascade" >
+				<fk_column name="TagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="ContactTourMap" >
+			<column name="ContactTourMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="TourID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_ContactTourMap" unique="PRIMARY_KEY" >
+				<column name="ContactTourMapID" />
+			</index>
+			<fk name="FK_ContactTours_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_ContactTours_Tours" to_schema="dbo" to_table="Tours" >
+				<fk_column name="TourID" pk="TourID" />
+			</fk>
+		</table>
+		<table name="ContactTourMap_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="ContactTourMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TourID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_ContactTourMap_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="ContactTypes" >
+			<column name="ContactTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Type" type="varchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_ContactTypes" unique="PRIMARY_KEY" >
+				<column name="ContactTypeID" />
+			</index>
+		</table>
+		<table name="Contacts" >
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="FirstName" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="LastName" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Company" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="CommunicationID" type="int" length="10" decimal="0" jt="4" />
+			<column name="Title" type="nvarchar" length="100" decimal="0" jt="12" />
+			<column name="ContactImageUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LeadScore" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LeadSource" type="nvarchar" length="100" decimal="0" jt="12" />
+			<column name="HomePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="WorkPhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="MobilePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="PrimaryEmail" type="varchar" length="256" decimal="0" jt="12" />
+			<column name="ContactType" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="SSN" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="LifecycleStage" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="PartnerType" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="DoNotEmail" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="LastContacted" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="ProfileImageKey" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<column name="ImageID" type="int" length="10" decimal="0" jt="4" />
+			<column name="ReferenceID" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<column name="LastUpdatedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="LastUpdatedOn" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="OwnerID" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_Contacts" unique="PRIMARY_KEY" >
+				<column name="ContactID" />
+			</index>
+			<index name="IX_Contacts_AccountID" unique="NORMAL" >
+				<column name="AccountID" />
+			</index>
+			<index name="IX_Contacts_Company_AccountID_ContactType_ContactID" unique="NORMAL" >
+				<column name="Company" />
+				<column name="AccountID" />
+				<column name="ContactType" />
+				<column name="ContactID" />
+			</index>
+			<index name="IX_Contacts_FirstName" unique="NORMAL" >
+				<column name="FirstName" />
+			</index>
+			<index name="IX_Contacts_FirstName_LastName_AccountID_ContactType_ContactID" unique="NORMAL" >
+				<column name="FirstName" />
+				<column name="LastName" />
+				<column name="AccountID" />
+				<column name="ContactType" />
+				<column name="ContactID" />
+			</index>
+			<index name="IX_Contacts_FirstName_LastName_Company_AccountID_ContactType_ContactID" unique="NORMAL" >
+				<column name="FirstName" />
+				<column name="LastName" />
+				<column name="Company" />
+				<column name="AccountID" />
+				<column name="ContactType" />
+				<column name="ContactID" />
+			</index>
+			<index name="IX_Contacts_IsDeleted" unique="NORMAL" >
+				<column name="IsDeleted" />
+			</index>
+			<index name="IX_Contacts_ReferenceID" unique="NORMAL" >
+				<column name="ReferenceID" />
+			</index>
+			<fk name="FK_Contacts_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_Contacts_Communications" to_schema="dbo" to_table="Communications" >
+				<fk_column name="CommunicationID" pk="CommunicationID" />
+			</fk>
+			<fk name="FK_Contacts_LifecycleStages" to_schema="dbo" to_table="LifecycleStages" >
+				<fk_column name="LifecycleStage" pk="LifecycleStageID" />
+			</fk>
+			<fk name="FK_Contacts_PartnerTypes" to_schema="dbo" to_table="PartnerTypes" >
+				<fk_column name="PartnerType" pk="PartnerTypeID" />
+			</fk>
+			<fk name="FK_Contacts_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="OwnerID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="Contacts_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="FirstName" type="nvarchar" length="150" decimal="0" jt="12" />
+			<column name="LastName" type="nvarchar" length="150" decimal="0" jt="12" />
+			<column name="Company" type="nvarchar" length="150" decimal="0" jt="12" />
+			<column name="CommunicationID" type="int" length="10" decimal="0" jt="4" />
+			<column name="Title" type="nvarchar" length="200" decimal="0" jt="12" />
+			<column name="ContactImageUrl" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LeadScore" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LeadSource" type="nvarchar" length="200" decimal="0" jt="12" />
+			<column name="HomePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="WorkPhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="MobilePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="PrimaryEmail" type="varchar" length="256" decimal="0" jt="12" />
+			<column name="ContactType" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="SSN" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="LifecycleStage" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="PartnerType" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="DoNotEmail" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="LastContacted" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="ProfileImageKey" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<column name="ImageID" type="int" length="10" decimal="0" jt="4" />
+			<column name="ReferenceID" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<column name="LastUpdatedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="LastUpdatedOn" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_Contacts_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+			<index name="IX_Contacts_Audit_ContactID" unique="NORMAL" >
+				<column name="ContactID" />
+			</index>
+		</table>
+		<table name="Countries" >
+			<column name="CountryID" type="nchar" length="2" decimal="0" jt="1" mandatory="y" />
+			<column name="CountryName" type="nvarchar" length="64" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_Countries" unique="PRIMARY_KEY" >
+				<column name="CountryID" />
+			</index>
+		</table>
+		<table name="Cultures" >
+			<column name="CultureID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="CultureName" type="nvarchar" length="255" decimal="0" jt="12" />
+			<index name="PK_Cultures" unique="PRIMARY_KEY" >
+				<column name="CultureID" />
+			</index>
+		</table>
+		<table name="Currencies" >
+			<column name="CurrencyID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Symbol" type="nvarchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<column name="Format" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_Currencies" unique="PRIMARY_KEY" >
+				<column name="CurrencyID" />
+			</index>
+		</table>
+		<table name="CustomFieldSectionCustomFieldMap" >
+			<column name="SectionFieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CustomFieldSectionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CustomFieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_CustomFieldSectionCustomFieldMap" unique="PRIMARY_KEY" >
+				<column name="SectionFieldID" />
+			</index>
+			<fk name="FK_CustomFieldSectionCustomFieldMap_CustomFieldSections" to_schema="dbo" to_table="CustomFieldSections" >
+				<fk_column name="CustomFieldSectionID" pk="CustomFieldSectionID" />
+			</fk>
+			<fk name="FK_CustomFieldSectionCustomFieldMap_CustomFields" to_schema="dbo" to_table="CustomFields" >
+				<fk_column name="CustomFieldID" pk="CustomFieldID" />
+			</fk>
+		</table>
+		<table name="CustomFieldSections" >
+			<column name="CustomFieldSectionID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="StatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="SortID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="TabID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_CustomFieldSections" unique="PRIMARY_KEY" >
+				<column name="CustomFieldSectionID" />
+			</index>
+			<fk name="FK_CustomFieldSections_CustomFieldTabs" to_schema="dbo" to_table="CustomFieldTabs" >
+				<fk_column name="TabID" pk="CustomFieldTabID" />
+			</fk>
+			<fk name="FK_CustomFieldSections_Statuses" to_schema="dbo" to_table="Statuses" >
+				<fk_column name="StatusID" pk="StatusID" />
+			</fk>
+		</table>
+		<table name="CustomFieldTabCustomFieldSectionMap" >
+			<column name="TabSectionMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CustomFieldTabID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CustomFieldSectionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_CustomFieldTabCustomFieldSectionMap" unique="PRIMARY_KEY" >
+				<column name="TabSectionMapID" />
+			</index>
+			<fk name="FK_CustomFieldTabCustomFieldSectionMap_CustomFieldSections" to_schema="dbo" to_table="CustomFieldSections" >
+				<fk_column name="CustomFieldSectionID" pk="CustomFieldSectionID" />
+			</fk>
+			<fk name="FK_CustomFieldTabCustomFieldSectionMap_CustomFieldTabs" to_schema="dbo" to_table="CustomFieldTabs" >
+				<fk_column name="CustomFieldTabID" pk="CustomFieldTabID" />
+			</fk>
+		</table>
+		<table name="CustomFieldTabs" >
+			<column name="CustomFieldTabID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="StatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="SortID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_CustomFieldTabs" unique="PRIMARY_KEY" >
+				<column name="CustomFieldTabID" />
+			</index>
+			<fk name="FK_CustomFieldTabs_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_CustomFieldTabs_Statuses" to_schema="dbo" to_table="Statuses" >
+				<fk_column name="StatusID" pk="StatusID" />
+			</fk>
+		</table>
+		<table name="CustomFieldValueOptions" >
+			<column name="CustomFieldValueOptionID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="CustomFieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Value" type="nvarchar" length="100" decimal="0" jt="12" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_CustomFieldValueOptions" unique="PRIMARY_KEY" >
+				<column name="CustomFieldValueOptionID" />
+			</index>
+			<fk name="FK_CustomFieldValueOptions_CustomFields" to_schema="dbo" to_table="CustomFields" >
+				<fk_column name="CustomFieldID" pk="CustomFieldID" />
+			</fk>
+		</table>
+		<table name="CustomFields" >
+			<column name="CustomFieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Description" type="varchar" length="300" decimal="0" jt="12" />
+			<column name="FieldInputTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="SortID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="CustomFieldSectionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="StatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_CustomFields" unique="PRIMARY_KEY" >
+				<column name="CustomFieldID" />
+			</index>
+			<fk name="FK_CustomFields_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_CustomFields_CustomFieldSections" to_schema="dbo" to_table="CustomFieldSections" >
+				<fk_column name="CustomFieldSectionID" pk="CustomFieldSectionID" />
+			</fk>
+			<fk name="FK_CustomFields_FieldInputTypes" to_schema="dbo" to_table="FieldInputTypes" >
+				<fk_column name="FieldInputTypeID" pk="FieldInputTypeID" />
+			</fk>
+			<fk name="FK_CustomFields_Statuses" to_schema="dbo" to_table="Statuses" >
+				<fk_column name="StatusID" pk="StatusID" />
+			</fk>
+		</table>
+		<table name="DateFormats" >
+			<column name="DateFormatID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="FormatName" type="varchar" length="200" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_DateFormats" unique="PRIMARY_KEY" >
+				<column name="DateFormatID" />
+			</index>
+		</table>
+		<table name="DocumentTypes" >
+			<column name="DocumentTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="DocumentTypeName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_DocumentTypes" unique="PRIMARY_KEY" >
+				<column name="DocumentTypeID" />
+			</index>
+		</table>
+		<table name="Documents" >
+			<column name="DocumentID" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" />
+			<column name="OriginalFileName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="StorageFileName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="DocumentTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="FileTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="ModifiedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="ModifiedDate" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="FilePath" type="nvarchar" length="1000" decimal="0" jt="12" mandatory="y" />
+			<column name="OpportunityID" type="int" length="10" decimal="0" jt="4" />
+			<column name="StorageSource" type="char" length="1" decimal="0" jt="1" />
+			<index name="PK_Documents" unique="PRIMARY_KEY" >
+				<column name="DocumentID" />
+			</index>
+			<fk name="FK_Documents_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_Documents_DocumentTypes" to_schema="dbo" to_table="DocumentTypes" >
+				<fk_column name="DocumentTypeID" pk="DocumentTypeID" />
+			</fk>
+			<fk name="FK_Documents_FileTypes" to_schema="dbo" to_table="FileTypes" >
+				<fk_column name="FileTypeID" pk="FileTypeID" />
+			</fk>
+			<fk name="FK_Documents_Opportunities" to_schema="dbo" to_table="Opportunities" >
+				<fk_column name="OpportunityID" pk="OpportunityID" />
+			</fk>
+			<fk name="FK_Documents_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+			<fk name="FK_Documents_Users1" to_schema="dbo" to_table="Users" >
+				<fk_column name="ModifiedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="DropdownValues" >
+			<column name="DropdownValueID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="DropdownID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" />
+			<column name="DropdownValue" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="IsDefault" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="SortID" type="smallint" length="5" decimal="0" jt="5" />
+			<index name="PK_DropdownValues" unique="PRIMARY_KEY" >
+				<column name="DropdownValueID" />
+			</index>
+			<fk name="FK_DropdownValues_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_DropdownValues_Dropdowns" to_schema="dbo" to_table="Dropdowns" >
+				<fk_column name="DropdownID" pk="DropdownID" />
+			</fk>
+		</table>
+		<table name="Dropdowns" >
+			<column name="DropdownID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="DropdownName" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_Dropdowns" unique="PRIMARY_KEY" >
+				<column name="DropdownID" />
+			</index>
+		</table>
+		<table name="EmailTemplates" >
+			<column name="EmailTemplateID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="TemplateName" type="varchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_EmailTemplates" unique="PRIMARY_KEY" >
+				<column name="EmailTemplateID" />
+			</index>
+		</table>
+		<table name="Emails" >
+			<column name="EmailID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Email" type="varchar" length="256" decimal="0" jt="12" mandatory="y" />
+			<column name="UserID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="IsPrimary" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="EmailSignature" type="varchar" length="256" decimal="0" jt="12" />
+			<index name="PK_Emails" unique="PRIMARY_KEY" >
+				<column name="EmailID" />
+			</index>
+		</table>
+		<table name="FieldInputTypes" >
+			<column name="FieldInputTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Type" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_FieldInputTypes" unique="PRIMARY_KEY" >
+				<column name="FieldInputTypeID" />
+			</index>
+		</table>
+		<table name="Fields" >
+			<column name="FieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Title" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="FieldInputTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ValidationMessage" type="nvarchar" length="200" decimal="0" jt="12" mandatory="y" />
+			<column name="ParentID" type="int" length="10" decimal="0" jt="4" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" />
+			<column name="FieldCode" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_Fields" unique="PRIMARY_KEY" >
+				<column name="FieldID" />
+			</index>
+			<fk name="FK_Fields_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_Fields_FieldInputTypes" to_schema="dbo" to_table="FieldInputTypes" >
+				<fk_column name="FieldInputTypeID" pk="FieldInputTypeID" />
+			</fk>
+		</table>
+		<table name="FileProcessStatus" >
+			<column name="FileProcessStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Title" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_FileProcessStatus" unique="PRIMARY_KEY" >
+				<column name="FileProcessStatusID" />
+			</index>
+		</table>
+		<table name="FileTypes" >
+			<column name="FileTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="FileTypeName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_FileTypes" unique="PRIMARY_KEY" >
+				<column name="FileTypeID" />
+			</index>
+		</table>
+		<table name="FormFields" >
+			<column name="FormFieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="FormID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="FieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="DisplayName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="IsMandatory" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="SortID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_FormFields" unique="PRIMARY_KEY" >
+				<column name="FormFieldID" />
+			</index>
+			<fk name="FK_FormFields_Fields" to_schema="dbo" to_table="Fields" >
+				<fk_column name="FieldID" pk="FieldID" />
+			</fk>
+			<fk name="FK_FormFields_Forms" to_schema="dbo" to_table="Forms" >
+				<fk_column name="FormID" pk="FormID" />
+			</fk>
+		</table>
+		<table name="FormTags" >
+			<column name="FormTagID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="FormID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_FormTags" unique="PRIMARY_KEY" >
+				<column name="FormTagID" />
+			</index>
+			<fk name="FK_FormTags_Forms" to_schema="dbo" to_table="Forms" >
+				<fk_column name="FormID" pk="FormID" />
+			</fk>
+			<fk name="FK_FormTags_Tags" to_schema="dbo" to_table="Tags" >
+				<fk_column name="TagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="Forms" >
+			<column name="FormID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Acknowledgement" type="nvarchar" length="200" decimal="0" jt="12" mandatory="y" />
+			<column name="AcknowledgementType" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="HTMLContent" type="nvarchar(max)" decimal="0" jt="12" mandatory="y" />
+			<column name="Status" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="LastModifiedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LastModifiedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_Forms" unique="PRIMARY_KEY" >
+				<column name="FormID" />
+			</index>
+			<fk name="FK_Forms_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_Forms_Statuses" to_schema="dbo" to_table="Statuses" >
+				<fk_column name="Status" pk="StatusID" />
+			</fk>
+			<fk name="FK_Forms_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+			<fk name="FK_Forms_Users1" to_schema="dbo" to_table="Users" >
+				<fk_column name="LastModifiedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="ImageCategories " >
+			<column name="ImageCategoryID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_ImageCategory" unique="PRIMARY_KEY" >
+				<column name="ImageCategoryID" />
+			</index>
+		</table>
+		<table name="Images" >
+			<column name="ImageID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="FriendlyName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="StorageName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="OriginalName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="ImageCategoryID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_Images" unique="PRIMARY_KEY" >
+				<column name="ImageID" />
+			</index>
+		</table>
+		<table name="LeadAdapterAndAccountMap" >
+			<column name="LeadAdapterAndAccountMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="LeadAdapterTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="BuilderNumber" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="ArchivePath" type="nvarchar" length="200" decimal="0" jt="12" />
+			<column name="LocalFilePath" type="nvarchar" length="200" decimal="0" jt="12" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDateTime" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="ModifiedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="ModifiedDateTime" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="RequestGuid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="IsDelete" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_LeadAdapterAndAccountMap" unique="PRIMARY_KEY" >
+				<column name="LeadAdapterAndAccountMapID" />
+			</index>
+			<fk name="FK_LeadAdapterAndAccountMap_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_LeadAdapterAndAccountMap_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+			<fk name="FK_LeadAdapterAndAccountMap_Users1" to_schema="dbo" to_table="Users" >
+				<fk_column name="ModifiedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="LeadAdapterCommunicationTypes" >
+			<column name="LeadAdapterCommunicationTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Title" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_LeadAdapterCommunicationTypes" unique="PRIMARY_KEY" >
+				<column name="LeadAdapterCommunicationTypeID" />
+			</index>
+		</table>
+		<table name="LeadAdapterJobLogDetails" >
+			<column name="LeadAdapterJobLogDetailID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="LeadAdapterJobLogID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="LeadAdapterRecordStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Remarks" type="nvarchar" length="100" decimal="0" jt="12" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDateTime" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="RowData" type="nvarchar" length="2000" decimal="0" jt="12" />
+			<column name="ReferenceID" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<index name="PK_LeadAdapterJobLogDetails" unique="PRIMARY_KEY" >
+				<column name="LeadAdapterJobLogDetailID" />
+			</index>
+			<index name="IX_LeadAdapterJobLogDetails_LeadAdapterJobLogID" unique="NORMAL" >
+				<column name="LeadAdapterJobLogID" />
+			</index>
+			<index name="IX_LeadAdapterJobLogDetails_LeadAdapterRecordStatusID" unique="NORMAL" >
+				<column name="LeadAdapterRecordStatusID" />
+			</index>
+			<index name="IX_LeadAdapterJobLogDetails_ReferenceID" unique="NORMAL" >
+				<column name="ReferenceID" />
+			</index>
+			<fk name="FK_LeadAdapterJobLogDetails_LeadAdapterJobLogs" to_schema="dbo" to_table="LeadAdapterJobLogs" >
+				<fk_column name="LeadAdapterJobLogID" pk="LeadAdapterJobLogID" />
+			</fk>
+			<fk name="FK_LeadAdapterJobLogDetails_LeadAdapterRecordStatus" to_schema="dbo" to_table="LeadAdapterRecordStatus" >
+				<fk_column name="LeadAdapterRecordStatusID" pk="LeadAdapterRecordStatusID" />
+			</fk>
+		</table>
+		<table name="LeadAdapterJobLogs" >
+			<column name="LeadAdapterJobLogID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="LeadAdapterAndAccountMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="StartDate" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="EndDate" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="LeadAdapterJobStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Remarks" type="nvarchar" length="500" decimal="0" jt="12" />
+			<column name="FileName" type="nvarchar" length="200" decimal="0" jt="12" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedDateTime" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="StorageName" type="nvarchar" length="300" decimal="0" jt="12" />
+			<index name="PK_LeadAdapterJobLogs" unique="PRIMARY_KEY" >
+				<column name="LeadAdapterJobLogID" />
+			</index>
+			<fk name="FK_LeadAdapterJobLogs_LeadAdapterAndAccountMap" to_schema="dbo" to_table="LeadAdapterAndAccountMap" >
+				<fk_column name="LeadAdapterAndAccountMapID" pk="LeadAdapterAndAccountMapID" />
+			</fk>
+			<fk name="FK_LeadAdapterJobLogs_LeadAdapterJobStatus" to_schema="dbo" to_table="LeadAdapterJobStatus" >
+				<fk_column name="LeadAdapterJobStatusID" pk="LeadAdapterJobStatusID" />
+			</fk>
+		</table>
+		<table name="LeadAdapterJobStatus" >
+			<column name="LeadAdapterJobStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Title" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_LeadAdapterJobStatus" unique="PRIMARY_KEY" >
+				<column name="LeadAdapterJobStatusID" />
+			</index>
+		</table>
+		<table name="LeadAdapterRecordStatus" >
+			<column name="LeadAdapterRecordStatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Title" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_LeadAdapterRecordStatus" unique="PRIMARY_KEY" >
+				<column name="LeadAdapterRecordStatusID" />
+			</index>
+		</table>
+		<table name="LeadAdapterTypes" >
+			<column name="LeadAdapterTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="LeadAdapterCommunicationTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_LeadAdapterTypes" unique="PRIMARY_KEY" >
+				<column name="LeadAdapterTypeID" />
+			</index>
+			<fk name="FK_LeadAdapterTypes_LeadAdapterCommunicationTypes" to_schema="dbo" to_table="LeadAdapterCommunicationTypes" >
+				<fk_column name="LeadAdapterCommunicationTypeID" pk="LeadAdapterCommunicationTypeID" />
+			</fk>
+		</table>
+		<table name="LeadScoreRules" >
+			<column name="LeadScoreRuleID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ConditionDescription" type="nvarchar" length="500" decimal="0" jt="12" />
+			<column name="ConditionID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Points" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ConditionValue" type="nvarchar" length="200" decimal="0" jt="12" />
+			<column name="AppliedToPreviousActions" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="IsActive" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="ModifiedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ModifiedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<index name="PK_LeadScoreRules" unique="PRIMARY_KEY" >
+				<column name="LeadScoreRuleID" />
+			</index>
+			<fk name="FK_LeadScoreRules_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_LeadScoreRules_Conditions" to_schema="dbo" to_table="Conditions" >
+				<fk_column name="ConditionID" pk="ConditionID" />
+			</fk>
+			<fk name="FK_LeadScoreRules_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+			<fk name="FK_LeadScoreRules_Users1" to_schema="dbo" to_table="Users" >
+				<fk_column name="ModifiedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="LeadSources" >
+			<column name="LeadSourceID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="Name" type="varchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_LeadSources" unique="PRIMARY_KEY" >
+				<column name="LeadSourceID" />
+			</index>
+		</table>
+		<table name="LifecycleStages" >
+			<column name="LifecycleStageID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="LifecycleStageName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_LifecycleStages" unique="PRIMARY_KEY" >
+				<column name="LifecycleStageID" />
+			</index>
+		</table>
+		<table name="MailRegistration" >
+			<column name="MailRegistrationId" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Guid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Address" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="UserName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Password" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Port" type="int" length="10" decimal="0" jt="4" />
+			<column name="IsSSLEnabled" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="MailProviderId" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_MailRegistration" unique="PRIMARY_KEY" >
+				<column name="MailRegistrationId" />
+			</index>
+		</table>
+		<table name="MailResponse" >
+			<column name="MailResponseID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Token" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<column name="RequestGuid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<index name="PK_MailResponse" unique="PRIMARY_KEY" >
+				<column name="MailResponseID" />
+			</index>
+		</table>
+		<table name="MailResponseDetails" >
+			<column name="MailResponseDetailsID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="MailResponseID" type="int" length="10" decimal="0" jt="4" />
+			<column name="MailGuid" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<column name="To" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="From" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="CC" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="BCC" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Status" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="ServiceResponse" type="nvarchar" length="50" decimal="0" jt="12" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" />
+			<index name="PK_MailResponseDetails" unique="PRIMARY_KEY" >
+				<column name="MailResponseDetailsID" />
+			</index>
+			<fk name="FK_MailResponseDetails_CommunicationStatus" to_schema="dbo" to_table="CommunicationStatus" >
+				<fk_column name="Status" pk="CommunicationStatusID" />
+			</fk>
+			<fk name="FK_MailResponseDetails_MailResponse" to_schema="dbo" to_table="MailResponse" >
+				<fk_column name="MailResponseID" pk="MailResponseID" />
+			</fk>
+		</table>
+		<table name="MenuCategories" >
+			<column name="MenuCategoryID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_MenuCategories" unique="PRIMARY_KEY" >
+				<column name="MenuCategoryID" />
+			</index>
+		</table>
+		<table name="MenuItems" >
+			<column name="MenuID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="MenuCategoryID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="ToolTip" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Area" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Controller" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Action" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="ContentPartialView" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="CssClass" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="ParentMenuID" type="smallint" length="5" decimal="0" jt="5" />
+			<column name="SortingID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="OpenAsMenuView" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="ModuleOperationsMapID" type="int" length="10" decimal="0" jt="4" />
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_MenuItems" unique="PRIMARY_KEY" >
+				<column name="MenuID" />
+			</index>
+			<fk name="FK_Menu_MenuCategory" to_schema="dbo" to_table="MenuCategories" >
+				<fk_column name="MenuCategoryID" pk="MenuCategoryID" />
+			</fk>
+			<fk name="FK_MenuItems_ModuleOperationsMap" to_schema="dbo" to_table="ModuleOperationsMap" >
+				<fk_column name="ModuleOperationsMapID" pk="ModuleOperationsMapID" />
+			</fk>
+			<fk name="FK_MenuItems_Modules" to_schema="dbo" to_table="Modules" >
+				<fk_column name="ModuleID" pk="ModuleID" />
+			</fk>
+		</table>
+		<table name="ModuleOperationsMap" >
+			<column name="ModuleOperationsMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="OperationID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<index name="PK_ModuleOperationsMap" unique="PRIMARY_KEY" >
+				<column name="ModuleOperationsMapID" />
+			</index>
+			<fk name="FK_ModuleOperationsMap_Modules" to_schema="dbo" to_table="Modules" >
+				<fk_column name="ModuleID" pk="ModuleID" />
+			</fk>
+			<fk name="FK_ModuleOperationsMap_Operations" to_schema="dbo" to_table="Operations" >
+				<fk_column name="OperationID" pk="OperationID" />
+			</fk>
+		</table>
+		<table name="Modules" >
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="ModuleName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="IsInternal" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="ParentID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_Modules" unique="PRIMARY_KEY" >
+				<column name="ModuleID" />
+			</index>
+		</table>
+		<table name="NoteTagMap" >
+			<column name="NoteTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="NoteID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_NoteTagMap" unique="PRIMARY_KEY" >
+				<column name="NoteTagMapID" />
+			</index>
+			<fk name="FK_NoteTags_Notes" to_schema="dbo" to_table="Notes" >
+				<fk_column name="NoteID" pk="NoteID" />
+			</fk>
+			<fk name="FK_NoteTags_Tags" to_schema="dbo" to_table="Tags" delete_action="cascade" >
+				<fk_column name="TagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="NoteTagMap_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="NoteTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="NoteID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_NoteTagMap_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="Notes" >
+			<column name="NoteID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="NoteDetails" type="nvarchar" length="1000" decimal="0" jt="12" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<index name="PK_Notes" unique="PRIMARY_KEY" >
+				<column name="NoteID" />
+			</index>
+			<fk name="FK_Notes_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="Notes_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="NoteID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="NoteDetails" type="nvarchar" length="1000" decimal="0" jt="12" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_Notes_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="NotificationStatuses" >
+			<column name="NotificationStatusID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="Name" type="varchar" length="50" decimal="0" jt="12" />
+			<index name="PK_NotificationStatuses" unique="PRIMARY_KEY" >
+				<column name="NotificationStatusID" />
+			</index>
+		</table>
+		<table name="Notifications" >
+			<column name="NotificationID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="EntityID" type="int" length="10" decimal="0" jt="4" />
+			<column name="Subject" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="Details" type="varchar" length="4000" decimal="0" jt="12" />
+			<column name="NotificationTime" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="Status" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="UserID" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_Notifications" unique="PRIMARY_KEY" >
+				<column name="NotificationID" />
+			</index>
+			<fk name="FK_Notifications_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="UserID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="Operations" >
+			<column name="OperationID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="OperationName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_Operations" unique="PRIMARY_KEY" >
+				<column name="OperationID" />
+			</index>
+		</table>
+		<table name="Opportunities" >
+			<column name="OpportunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="OpportunityName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Potential" type="money" length="19" decimal="4" jt="3" mandatory="y" />
+			<column name="StageID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ExpectedClosingDate" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="Description" type="nvarchar" length="1000" decimal="0" jt="12" />
+			<column name="Owner" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="LastModifiedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="LastModifiedOn" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_Opportunities" unique="PRIMARY_KEY" >
+				<column name="OpportunityID" />
+			</index>
+			<fk name="FK_Opportunities_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_Opportunities_Statuses" to_schema="dbo" to_table="Statuses" >
+				<fk_column name="StageID" pk="StatusID" />
+			</fk>
+			<fk name="FK_Opportunities_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="Owner" pk="UserID" />
+			</fk>
+			<fk name="FK_Opportunities_Users1" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+			<fk name="FK_Opportunities_Users2" to_schema="dbo" to_table="Users" >
+				<fk_column name="LastModifiedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="OpportunitiesRelationshipMap" >
+			<column name="OpportunityRelationshipMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="RelationshipTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="OpportunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_OpportunitiesRelationshipMap" unique="PRIMARY_KEY" >
+				<column name="OpportunityRelationshipMapID" />
+			</index>
+			<fk name="FK_OpportunitiesRelationshipMap_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_OpportunitiesRelationshipMap_Opportunities" to_schema="dbo" to_table="Opportunities" >
+				<fk_column name="OpportunityID" pk="OpportunityID" />
+			</fk>
+			<fk name="FK_OpportunitiesRelationshipMap_RelationshipTypes" to_schema="dbo" to_table="RelationshipTypes" >
+				<fk_column name="RelationshipTypeID" pk="RelationshipTypeID" />
+			</fk>
+		</table>
+		<table name="OpportunityActionMap" >
+			<column name="OpportunityActionMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="OpportunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ActionID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="IsCompleted" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_OpportunityActionMap" unique="PRIMARY_KEY" >
+				<column name="OpportunityActionMapID" />
+			</index>
+			<fk name="FK_OpportunityActionMap_Actions" to_schema="dbo" to_table="Actions" >
+				<fk_column name="ActionID" pk="ActionID" />
+			</fk>
+			<fk name="FK_OpportunityActionMap_Opportunities" to_schema="dbo" to_table="Opportunities" >
+				<fk_column name="OpportunityID" pk="OpportunityID" />
+			</fk>
+		</table>
+		<table name="OpportunityContactMap" >
+			<column name="OpportunityContactMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="OpportunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ContactID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_OpportunityContactMap" unique="PRIMARY_KEY" >
+				<column name="OpportunityContactMapID" />
+			</index>
+			<fk name="FK_OpportunityContactMap_Contacts" to_schema="dbo" to_table="Contacts" >
+				<fk_column name="ContactID" pk="ContactID" />
+			</fk>
+			<fk name="FK_OpportunityContactMap_Opportunities" to_schema="dbo" to_table="Opportunities" >
+				<fk_column name="OpportunityID" pk="OpportunityID" />
+			</fk>
+		</table>
+		<table name="OpportunityNoteMap" >
+			<column name="OpportunityNoteMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="OpportunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="NoteID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_OpportunityNoteMap" unique="PRIMARY_KEY" >
+				<column name="OpportunityNoteMapID" />
+			</index>
+			<fk name="FK_OpportunityNoteMap_Notes" to_schema="dbo" to_table="Notes" >
+				<fk_column name="NoteID" pk="NoteID" />
+			</fk>
+			<fk name="FK_OpportunityNoteMap_Opportunities" to_schema="dbo" to_table="Opportunities" >
+				<fk_column name="OpportunityID" pk="OpportunityID" />
+			</fk>
+		</table>
+		<table name="OpportunityTagMap" >
+			<column name="OpportunityTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="OpportunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_OpportunityTagMap" unique="PRIMARY_KEY" >
+				<column name="OpportunityTagMapID" />
+			</index>
+			<fk name="FK_OpportunityTagMap_Opportunities" to_schema="dbo" to_table="Opportunities" >
+				<fk_column name="OpportunityID" pk="OpportunityID" />
+			</fk>
+			<fk name="FK_OpportunityTagMap_Tags" to_schema="dbo" to_table="Tags" >
+				<fk_column name="TagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="PartnerTypes" >
+			<column name="PartnerTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Type" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_PartnerTypes" unique="PRIMARY_KEY" >
+				<column name="PartnerTypeID" />
+			</index>
+		</table>
+		<table name="RelationshipTypes" >
+			<column name="RelationshipTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Type" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_RelationshipTypes" unique="PRIMARY_KEY" >
+				<column name="RelationshipTypeID" />
+			</index>
+		</table>
+		<table name="RoleModuleMap" >
+			<column name="RoleModuleMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="RoleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_RoleModuleMap" unique="PRIMARY_KEY" >
+				<column name="RoleModuleMapID" />
+			</index>
+			<fk name="FK_RoleModuleMap_Modules" to_schema="dbo" to_table="Modules" >
+				<fk_column name="ModuleID" pk="ModuleID" />
+			</fk>
+			<fk name="FK_RoleModuleMap_Roles" to_schema="dbo" to_table="Roles" >
+				<fk_column name="RoleID" pk="RoleID" />
+			</fk>
+		</table>
+		<table name="RolePermissionsMap" >
+			<column name="RolePermissionsMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="RoleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ModuleOperationsMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_RolePermissionsMap" unique="PRIMARY_KEY" >
+				<column name="RolePermissionsMapID" />
+			</index>
+			<fk name="FK_RolePermissionsMap_ModuleOperationsMap" to_schema="dbo" to_table="ModuleOperationsMap" >
+				<fk_column name="ModuleOperationsMapID" pk="ModuleOperationsMapID" />
+			</fk>
+			<fk name="FK_RolePermissionsMap_Roles" to_schema="dbo" to_table="Roles" >
+				<fk_column name="RoleID" pk="RoleID" />
+			</fk>
+		</table>
+		<table name="Roles" >
+			<column name="RoleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="RoleName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_Roles" unique="PRIMARY_KEY" >
+				<column name="RoleID" />
+			</index>
+			<fk name="FK_Roles_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+		</table>
+		<table name="ScoreCategories" >
+			<column name="ScoreCategoryID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="Name" type="varchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_Categories" unique="PRIMARY_KEY" >
+				<column name="ScoreCategoryID" />
+			</index>
+		</table>
+		<table name="SearchDefinitionTagMap" >
+			<column name="SearchDefinitionTagMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="SearchDefinitionID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="SearchDefinitionTagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_SearchDefinitionTagMap" unique="PRIMARY_KEY" >
+				<column name="SearchDefinitionTagMapID" />
+			</index>
+			<fk name="FK_SearchDefinitionTagMap_SearchDefinitions" to_schema="dbo" to_table="SearchDefinitions" >
+				<fk_column name="SearchDefinitionID" pk="SearchDefinitionID" />
+			</fk>
+			<fk name="FK_SearchDefinitionTagMap_Tags1" to_schema="dbo" to_table="Tags" >
+				<fk_column name="SearchDefinitionTagID" pk="TagID" />
+			</fk>
+		</table>
+		<table name="SearchDefinitions" >
+			<column name="SearchDefinitionID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="SearchDefinitionName" type="nvarchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="ElasticQuery" type="varchar" length="500" decimal="0" jt="12" />
+			<column name="SearchPredicateTypeID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="CustomPredicateScript" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="LastRunDate" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_SearchDefinitions" unique="PRIMARY_KEY" >
+				<column name="SearchDefinitionID" />
+			</index>
+			<fk name="FK_SearchDefinitions_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_SearchDefinitions_SearchPredicateTypes" to_schema="dbo" to_table="SearchPredicateTypes" >
+				<fk_column name="SearchPredicateTypeID" pk="SearchPredicateTypeID" />
+			</fk>
+			<fk name="FK_SearchDefinitions_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="SearchFilters" >
+			<column name="SearchFilterID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="FieldID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="SearchQualifierTypeID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="SearchText" type="nvarchar" length="100" decimal="0" jt="12" />
+			<column name="SearchDefinitionID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<index name="PK_SearchFilters" unique="PRIMARY_KEY" >
+				<column name="SearchFilterID" />
+			</index>
+			<fk name="FK_SearchFilters_Fields" to_schema="dbo" to_table="Fields" >
+				<fk_column name="FieldID" pk="FieldID" />
+			</fk>
+			<fk name="FK_SearchFilters_SearchDefinitions" to_schema="dbo" to_table="SearchDefinitions" >
+				<fk_column name="SearchDefinitionID" pk="SearchDefinitionID" />
+			</fk>
+			<fk name="FK_SearchFilters_SearchQualifierTypes" to_schema="dbo" to_table="SearchQualifierTypes" >
+				<fk_column name="SearchQualifierTypeID" pk="SearchQualifierTypeID" />
+			</fk>
+		</table>
+		<table name="SearchPredicateTypes" >
+			<column name="SearchPredicateTypeID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="PredicateType" type="varchar" length="10" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_SearchPredicateTypes" unique="PRIMARY_KEY" >
+				<column name="SearchPredicateTypeID" />
+			</index>
+		</table>
+		<table name="SearchQualifierTypes" >
+			<column name="SearchQualifierTypeID" type="smallint" length="5" decimal="0" jt="5" mandatory="y" autoincrement="y" />
+			<column name="QualifierName" type="varchar" length="60" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_SearchQualifierTypes" unique="PRIMARY_KEY" >
+				<column name="SearchQualifierTypeID" />
+			</index>
+		</table>
+		<table name="SocialRegistration" >
+			<column name="SocialRegistrationId" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Guid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Address" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Key" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Token" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="SocialProviderId" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_SocialRegistration" unique="PRIMARY_KEY" >
+				<column name="SocialRegistrationId" />
+			</index>
+		</table>
+		<table name="States" >
+			<column name="StateID" type="varchar" length="6" decimal="0" jt="12" mandatory="y" />
+			<column name="StateName" type="nvarchar" length="64" decimal="0" jt="12" mandatory="y" />
+			<column name="CountryID" type="nchar" length="2" decimal="0" jt="1" mandatory="y" />
+			<index name="PK_States" unique="PRIMARY_KEY" >
+				<column name="StateID" />
+			</index>
+			<fk name="FK_States_Countries" to_schema="dbo" to_table="Countries" >
+				<fk_column name="CountryID" pk="CountryID" />
+			</fk>
+		</table>
+		<table name="Statuses" >
+			<column name="StatusID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Description" type="nvarchar" length="200" decimal="0" jt="12" />
+			<index name="PK_Statuses" unique="PRIMARY_KEY" >
+				<column name="StatusID" />
+			</index>
+			<fk name="FK_Statuses_Modules" to_schema="dbo" to_table="Modules" >
+				<fk_column name="ModuleID" pk="ModuleID" />
+			</fk>
+		</table>
+		<table name="StorageRegistration" >
+			<column name="StorageRegistrationId" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Guid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Address" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Key" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Token" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="UserName" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Password" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Port" type="int" length="10" decimal="0" jt="4" />
+			<column name="StorageProviderId" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_StorageRegistration" unique="PRIMARY_KEY" >
+				<column name="StorageRegistrationId" />
+			</index>
+		</table>
+		<table name="SubscriptionModuleMap" >
+			<column name="SubscriptionModuleMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="SubscriptionID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_SubscriptionModuleMap" unique="PRIMARY_KEY" >
+				<column name="SubscriptionModuleMapID" />
+			</index>
+			<fk name="FK_SubscriptionModuleMap_Modules" to_schema="dbo" to_table="Modules" >
+				<fk_column name="ModuleID" pk="ModuleID" />
+			</fk>
+			<fk name="FK_SubscriptionModuleMap_Subscriptions" to_schema="dbo" to_table="Subscriptions" >
+				<fk_column name="SubscriptionID" pk="SubscriptionID" />
+			</fk>
+		</table>
+		<table name="SubscriptionPermissionsMap" >
+			<column name="SubscriptionPermissionsMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="SubscriptionID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ModuleOperationsMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_SubscriptionPermissionsMap" unique="PRIMARY_KEY" >
+				<column name="SubscriptionPermissionsMapID" />
+			</index>
+			<fk name="FK_SubscriptionPermissionsMap_ModuleOperationsMap" to_schema="dbo" to_table="ModuleOperationsMap" >
+				<fk_column name="ModuleOperationsMapID" pk="ModuleOperationsMapID" />
+			</fk>
+			<fk name="FK_SubscriptionPermissionsMap_Subscriptions" to_schema="dbo" to_table="Subscriptions" >
+				<fk_column name="SubscriptionID" pk="SubscriptionID" />
+			</fk>
+		</table>
+		<table name="Subscriptions" >
+			<column name="SubscriptionID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="SubscriptionName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_Subscriptions" unique="PRIMARY_KEY" >
+				<column name="SubscriptionID" />
+			</index>
+		</table>
+		<table name="TagTypes" >
+			<column name="TagTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="TagTypeName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_TagTypes" unique="PRIMARY_KEY" >
+				<column name="TagTypeID" />
+			</index>
+		</table>
+		<table name="Tags" >
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="TagName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="Description" type="nvarchar" length="100" decimal="0" jt="12" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Count" type="int" length="10" decimal="0" jt="4" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" />
+			<index name="PK_Tags" unique="PRIMARY_KEY" >
+				<column name="TagID" />
+			</index>
+		</table>
+		<table name="Tags_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="TagID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TagName" type="nvarchar" length="150" decimal="0" jt="12" mandatory="y" />
+			<column name="Description" type="nvarchar" length="200" decimal="0" jt="12" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" />
+			<column name="Count" type="int" length="10" decimal="0" jt="4" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_Tags_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="TextRegistration" >
+			<column name="TextRegistrationID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Guid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="Name" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Address" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Key" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Token" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="UserName" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="Password" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="TextProviderID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<index name="PK_TextRegistration" unique="PRIMARY_KEY" >
+				<column name="TextRegistrationID" />
+			</index>
+		</table>
+		<table name="TextResponse" >
+			<column name="TextResponseID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="Token" type="uniqueidentifier" length="36" decimal="0" jt="1" />
+			<column name="RequestGuid" type="uniqueidentifier" length="36" decimal="0" jt="1" mandatory="y" />
+			<column name="CreatedDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<index name="PK_TextResponse" unique="PRIMARY_KEY" >
+				<column name="TextResponseID" />
+			</index>
+		</table>
+		<table name="TextResponseDetails" >
+			<column name="TextResponseDetailsID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="TextResponseID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="From" type="varchar" length="75" decimal="0" jt="12" />
+			<column name="To" type="varchar" length="75" decimal="0" jt="12" />
+			<column name="SenderID" type="varchar" length="75" decimal="0" jt="12" />
+			<column name="Message" type="varchar" length="200" decimal="0" jt="12" />
+			<column name="Status" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="ServiceResponse" type="nchar" length="10" decimal="0" jt="1" />
+			<index name="PK_TextResponseDetails" unique="PRIMARY_KEY" >
+				<column name="TextResponseDetailsID" />
+			</index>
+			<fk name="FK_TextResponseDetails_CommunicationStatus" to_schema="dbo" to_table="CommunicationStatus" >
+				<fk_column name="Status" pk="CommunicationStatusID" />
+			</fk>
+			<fk name="FK_TextResponseDetails_TextResponse" to_schema="dbo" to_table="TextResponse" >
+				<fk_column name="TextResponseID" pk="TextResponseID" />
+			</fk>
+			<fk name="FK_TextResponseDetails_TextResponseDetails" to_schema="dbo" to_table="TextResponseDetails" >
+				<fk_column name="TextResponseDetailsID" pk="TextResponseDetailsID" />
+			</fk>
+		</table>
+		<table name="TourTypes" >
+			<column name="TourTypeID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="Type" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<index name="PK_TourTypes" unique="PRIMARY_KEY" >
+				<column name="TourTypeID" />
+			</index>
+		</table>
+		<table name="Tours" >
+			<column name="TourID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="TourDetails" type="nvarchar" length="1000" decimal="0" jt="12" />
+			<column name="CommunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TourDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="TourType" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ReminderDate" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="NotificationStatus" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="RemindbyText" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyEmail" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyPopup" type="bit" length="1" decimal="0" jt="-7" />
+			<index name="PK_Tours" unique="PRIMARY_KEY" >
+				<column name="TourID" />
+			</index>
+			<fk name="FK_Tours_Communities" to_schema="dbo" to_table="Communities" >
+				<fk_column name="CommunityID" pk="CommunityID" />
+			</fk>
+			<fk name="FK_Tours_TourTypes" to_schema="dbo" to_table="TourTypes" >
+				<fk_column name="TourType" pk="TourTypeID" />
+			</fk>
+			<fk name="FK_Tours_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="CreatedBy" pk="UserID" />
+			</fk>
+		</table>
+		<table name="Tours_Audit" >
+			<column name="AuditId" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="TourID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TourDetails" type="nvarchar" length="1000" decimal="0" jt="12" />
+			<column name="CommunityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TourDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="TourType" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="ReminderDate" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="NotificationStatus" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="RemindbyText" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyEmail" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="RemindbyPopup" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="AuditAction" type="char" length="1" decimal="0" jt="1" mandatory="y" />
+			<column name="AuditDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" >
+				<defo>getdate()</defo>
+			</column>
+			<column name="AuditUser" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
+				<defo>suser_sname()</defo>
+			</column>
+			<column name="AuditApp" type="varchar" length="128" decimal="0" jt="12" >
+				<defo>(&#039;App=(&#039;+rtrim(isnull(app_name(),&#039;&#039;)))+&#039;) &#039;</defo>
+			</column>
+			<column name="AuditStatus" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="PK_Tours_Audit" unique="PRIMARY_KEY" >
+				<column name="AuditId" />
+			</index>
+		</table>
+		<table name="UserActivities" >
+			<column name="UserActivityID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" autoincrement="y" />
+			<column name="ActivityName" type="varchar" length="15" decimal="0" jt="12" />
+			<index name="PK_UserActivities" unique="PRIMARY_KEY" >
+				<column name="UserActivityID" />
+			</index>
+		</table>
+		<table name="UserActivityLogs" >
+			<column name="UserActivityLogID" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" autoincrement="y" />
+			<column name="EntityID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="UserID" type="int" length="10" decimal="0" jt="4" />
+			<column name="ModuleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="UserActivityID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="LogDate" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<index name="PK_UserActivityLogs" unique="PRIMARY_KEY" >
+				<column name="UserActivityLogID" />
+			</index>
+			<index name="IX_UserActivityLogs_UserID" unique="NORMAL" >
+				<column name="UserID" />
+			</index>
+			<index name="IX_UserActivityLogs_UserID_ModuleID_UserActivityID" unique="NORMAL" >
+				<column name="UserID" />
+				<column name="ModuleID" />
+				<column name="UserActivityID" />
+			</index>
+			<fk name="FK_UserActivityLogs_Modules" to_schema="dbo" to_table="Modules" >
+				<fk_column name="ModuleID" pk="ModuleID" />
+			</fk>
+			<fk name="FK_UserActivityLogs_UserActivities" to_schema="dbo" to_table="UserActivities" >
+				<fk_column name="UserActivityID" pk="UserActivityID" />
+			</fk>
+			<fk name="FK_UserActivityLogs_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="UserID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="UserAddressMap" >
+			<column name="UserAddressMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="UserID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="AddressID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_UserAddressMap" unique="PRIMARY_KEY" >
+				<column name="UserAddressMapID" />
+			</index>
+			<fk name="FK_UserAddressMap_Addresses" to_schema="dbo" to_table="Addresses" >
+				<fk_column name="AddressID" pk="AddressID" />
+			</fk>
+			<fk name="FK_UserAddressMap_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="UserID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="UserEmailsMap" >
+			<column name="UserEmailsMapID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="UserID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="EmailID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="PK_UserEmailsMap" unique="PRIMARY_KEY" >
+				<column name="UserEmailsMapID" />
+			</index>
+			<fk name="FK_UserEmailsMap_Emails" to_schema="dbo" to_table="Emails" >
+				<fk_column name="EmailID" pk="EmailID" />
+			</fk>
+			<fk name="FK_UserEmailsMap_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="UserID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="UserSettings" >
+			<column name="UserSettingID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="UserID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ItemsPerPage" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="CountryID" type="nchar" length="2" decimal="0" jt="1" />
+			<column name="CurrencyID" type="tinyint" length="3" decimal="0" jt="-6" />
+			<column name="TimeZone" type="varchar" length="32" decimal="0" jt="12" />
+			<column name="EmailID" type="varchar" length="256" decimal="0" jt="12" />
+			<column name="DailySummary" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="AlertNotifications" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="LeadScoreNotifications" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="LeadScoreValue" type="int" length="10" decimal="0" jt="4" />
+			<column name="DateFormat" type="tinyint" length="3" decimal="0" jt="-6" />
+			<index name="PK_UserSettings" unique="PRIMARY_KEY" >
+				<column name="UserSettingID" />
+			</index>
+			<fk name="FK_UserSettings_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_UserSettings_Countries" to_schema="dbo" to_table="Countries" >
+				<fk_column name="CountryID" pk="CountryID" />
+			</fk>
+			<fk name="FK_UserSettings_Currencies" to_schema="dbo" to_table="Currencies" >
+				<fk_column name="CurrencyID" pk="CurrencyID" />
+			</fk>
+			<fk name="FK_UserSettings_Users" to_schema="dbo" to_table="Users" >
+				<fk_column name="UserID" pk="UserID" />
+			</fk>
+		</table>
+		<table name="Users" >
+			<column name="UserID" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="AccountID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="FirstName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="LastName" type="nvarchar" length="75" decimal="0" jt="12" mandatory="y" />
+			<column name="PrimaryEmail" type="varchar" length="256" decimal="0" jt="12" mandatory="y" />
+			<column name="Password" type="nvarchar" length="75" decimal="0" jt="12" />
+			<column name="RoleID" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="Title" type="varchar" length="30" decimal="0" jt="12" />
+			<column name="Company" type="varchar" length="75" decimal="0" jt="12" />
+			<column name="HomePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="WorkPhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="MobilePhone" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="CommunicationID" type="int" length="10" decimal="0" jt="4" />
+			<column name="Status" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" />
+			<column name="IsDeleted" type="bit" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="CreatedBy" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="CreatedOn" type="datetime" length="23" decimal="3" jt="93" mandatory="y" />
+			<column name="ModifiedBy" type="int" length="10" decimal="0" jt="4" />
+			<column name="ModifiedOn" type="datetime" length="23" decimal="3" jt="93" />
+			<column name="PasswordResetFlag" type="bit" length="1" decimal="0" jt="-7" />
+			<column name="PasswordResetOn" type="datetime" length="23" decimal="3" jt="93" />
+			<index name="PK_Users" unique="PRIMARY_KEY" >
+				<column name="UserID" />
+			</index>
+			<fk name="FK_Users_Accounts" to_schema="dbo" to_table="Accounts" >
+				<fk_column name="AccountID" pk="AccountID" />
+			</fk>
+			<fk name="FK_Users_Roles" to_schema="dbo" to_table="Roles" >
+				<fk_column name="RoleID" pk="RoleID" />
+			</fk>
+		</table>
+		<table name="sysdiagrams" >
+			<column name="diagram_id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="name" type="sysname" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="principal_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="version" type="int" length="10" decimal="0" jt="4" />
+			<column name="definition" type="varbinary(max)" decimal="0" jt="-3" />
+			<index name="PK__sysdiagr__C2B05B6116D9159D" unique="PRIMARY_KEY" >
+				<column name="diagram_id" />
+			</index>
+			<index name="UK_principal_name" unique="UNIQUE" >
+				<column name="principal_id" />
+				<column name="name" />
+			</index>
+		</table>
+	</schema>
+	<connector name="SqlServer" database="SqlServer" driver_class="net.sourceforge.jtds.jdbc.Driver" driver_jar="jtds-1.2.7.jar" host="LMITDEV" port="1433" instance="SmartCRM" user="sa" schema_mapping="" />
+	<layout id="Layout7107497" name="dbo" show_relation_columns="y" >
+		<entity schema="dbo" name="AccountAddressMap" color="b5b5f5" x="960" y="510" />
+		<entity schema="dbo" name="AccountDataAccessPermissions" color="b5cef5" x="3075" y="1560" />
+		<entity schema="dbo" name="Accounts" color="b5cef5" x="2970" y="1725" />
+		<entity schema="dbo" name="ActionTagMap" color="b5cef5" x="945" y="3090" />
+		<entity schema="dbo" name="Actions" color="b5cef5" x="765" y="3240" />
+		<entity schema="dbo" name="Actions_Audit" color="c0f5b5" x="1950" y="1500" />
+		<entity schema="dbo" name="AddressTypes" color="b5b5f5" x="1110" y="810" />
+		<entity schema="dbo" name="Addresses" color="b5b5f5" x="795" y="420" />
+		<entity schema="dbo" name="CampaignContactTagMap" color="f5d9b5" x="3915" y="1575" />
+		<entity schema="dbo" name="CampaignRecipients" color="f5d9b5" x="4140" y="1500" />
+		<entity schema="dbo" name="CampaignTagMap" color="f5d9b5" x="4140" y="1725" />
+		<entity schema="dbo" name="CampaignTemplates" color="b5cef5" x="750" y="1005" />
+		<entity schema="dbo" name="Campaigns" color="f5d9b5" x="4140" y="2010" />
+		<entity schema="dbo" name="CommunicationLogInDetails" color="c0f5b5" x="2370" y="2250" />
+		<entity schema="dbo" name="CommunicationStatus" color="f5d9b5" x="2445" y="1500" />
+		<entity schema="dbo" name="CommunicationTracker" color="f5d9b5" x="2670" y="1785" />
+		<entity schema="dbo" name="CommunicationTypes" color="f5d9b5" x="2670" y="1500" />
+		<entity schema="dbo" name="Communications" color="b5cef5" x="3330" y="1500" />
+		<entity schema="dbo" name="Communities" color="b5cef5" x="3150" y="1725" />
+		<entity schema="dbo" name="Conditions" color="f5d9b5" x="3735" y="1725" />
+		<entity schema="dbo" name="ContactActionMap" color="b5cef5" x="1125" y="3075" />
+		<entity schema="dbo" name="ContactActionMap_Audit" color="c0f5b5" x="1755" y="1575" />
+		<entity schema="dbo" name="ContactAddressMap" color="b5b5f5" x="1110" y="660" />
+		<entity schema="dbo" name="ContactCustomFieldMap" color="b5cef5" x="1065" y="1500" />
+		<entity schema="dbo" name="ContactEmails" color="cbb5f5" x="2970" y="675" />
+		<entity schema="dbo" name="ContactImages" color="cbb5f5" x="3300" y="690" />
+		<entity schema="dbo" name="ContactLeadAdapterMap" color="f5d9b5" x="2445" y="1635" />
+		<entity schema="dbo" name="ContactLeadSourceMap" color="b5b5f5" x="2580" y="105" />
+		<entity schema="dbo" name="ContactNoteMap" color="b5b5f5" x="2355" y="105" />
+		<entity schema="dbo" name="ContactNoteMap_Audit" color="c0f5b5" x="1950" y="1830" />
+		<entity schema="dbo" name="ContactPhoneNumbers" color="b5cef5" x="3495" y="1725" />
+		<entity schema="dbo" name="ContactRelationshipMap" color="f5d9b5" x="2970" y="435" />
+		<entity schema="dbo" name="ContactRelationshipMap_Audit" color="c0f5b5" x="1530" y="1830" />
+		<entity schema="dbo" name="ContactTagMap" color="b5b5f5" x="2580" y="255" />
+		<entity schema="dbo" name="ContactTourMap" color="b5b5f5" x="2175" y="255" />
+		<entity schema="dbo" name="ContactTourMap_Audit" color="c0f5b5" x="1755" y="1830" />
+		<entity schema="dbo" name="ContactTypes" color="cbb5f5" x="3135" y="735" />
+		<entity schema="dbo" name="Contacts" color="b5b5f5" x="2580" y="405" />
+		<entity schema="dbo" name="Contacts_Audit" color="cbb5f5" x="3300" y="870" />
+		<entity schema="dbo" name="Countries" color="b5cef5" x="3330" y="1725" />
+		<entity schema="dbo" name="Cultures" color="cbb5f5" x="2985" y="870" />
+		<entity schema="dbo" name="Currencies" color="b5b5f5" x="2385" y="1155" />
+		<entity schema="dbo" name="CustomFieldSectionCustomFieldMap" color="b5cef5" x="1245" y="1665" />
+		<entity schema="dbo" name="CustomFieldSections" color="b5b5f5" x="2190" y="975" />
+		<entity schema="dbo" name="CustomFieldTabCustomFieldSectionMap" color="b5cef5" x="795" y="1665" />
+		<entity schema="dbo" name="CustomFieldTabs" color="b5b5f5" x="2385" y="975" />
+		<entity schema="dbo" name="CustomFieldValueOptions" color="b5cef5" x="840" y="1500" />
+		<entity schema="dbo" name="CustomFields" color="b5cef5" x="600" y="1665" />
+		<entity schema="dbo" name="DateFormats" color="cbb5f5" x="3135" y="870" />
+		<entity schema="dbo" name="DocumentTypes" color="cbb5f5" x="1950" y="555" />
+		<entity schema="dbo" name="Documents" color="cbb5f5" x="1605" y="390" />
+		<entity schema="dbo" name="DropdownValues" color="f5d9b5" x="1545" y="1155" />
+		<entity schema="dbo" name="Dropdowns" color="f5d9b5" x="1725" y="1155" />
+		<entity schema="dbo" name="EmailTemplates" color="b5cef5" x="1140" y="1080" />
+		<entity schema="dbo" name="Emails" color="c0f5b5" x="2370" y="2460" />
+		<entity schema="dbo" name="FieldInputTypes" color="b5cef5" x="1065" y="1665" />
+		<entity schema="dbo" name="Fields" color="b5b5f5" x="1560" y="2655" />
+		<entity schema="dbo" name="FileProcessStatus" color="b5cef5" x="945" y="1080" />
+		<entity schema="dbo" name="FileTypes" color="cbb5f5" x="1785" y="555" />
+		<entity schema="dbo" name="FormFields" color="b5b5f5" x="1740" y="2655" />
+		<entity schema="dbo" name="FormTags" color="b5b5f5" x="1905" y="2865" />
+		<entity schema="dbo" name="Forms" color="b5b5f5" x="1530" y="2370" />
+		<entity schema="dbo" name="ImageCategories " color="c0f5b5" x="375" y="1320" />
+		<entity schema="dbo" name="Images" color="cbb5f5" x="1950" y="690" />
+		<entity schema="dbo" name="LeadAdapterAndAccountMap" color="cbb5f5" x="1245" y="2625" />
+		<entity schema="dbo" name="LeadAdapterCommunicationTypes" color="f5d9b5" x="2175" y="1635" />
+		<entity schema="dbo" name="LeadAdapterJobLogDetails" color="cbb5f5" x="765" y="2625" />
+		<entity schema="dbo" name="LeadAdapterJobLogs" color="cbb5f5" x="1245" y="2370" />
+		<entity schema="dbo" name="LeadAdapterJobStatus" color="cbb5f5" x="1005" y="2490" />
+		<entity schema="dbo" name="LeadAdapterRecordStatus" color="cbb5f5" x="1005" y="2625" />
+		<entity schema="dbo" name="LeadAdapterTypes" color="f5d9b5" x="2670" y="1635" />
+		<entity schema="dbo" name="LeadScoreRules" color="f5d9b5" x="3915" y="1725" />
+		<entity schema="dbo" name="LeadSources" color="c0f5b5" x="225" y="900" />
+		<entity schema="dbo" name="LifecycleStages" color="cbb5f5" x="1590" y="690" />
+		<entity schema="dbo" name="MailRegistration" color="b5cef5" x="1140" y="1215" />
+		<entity schema="dbo" name="MailResponse" color="c0f5b5" x="3945" y="1065" />
+		<entity schema="dbo" name="MailResponseDetails" color="c0f5b5" x="3735" y="1065" />
+		<entity schema="dbo" name="MenuCategories" color="b5cef5" x="3180" y="2370" />
+		<entity schema="dbo" name="MenuItems" color="b5cef5" x="2970" y="2370" />
+		<entity schema="dbo" name="ModuleOperationsMap" color="cbb5f5" x="2595" y="2730" />
+		<entity schema="dbo" name="Modules" color="b5cef5" x="3180" y="2505" />
+		<entity schema="dbo" name="NoteTagMap" color="f5d9b5" x="90" y="1725" />
+		<entity schema="dbo" name="NoteTagMap_Audit" color="f5d9b5" x="405" y="2070" />
+		<entity schema="dbo" name="Notes" color="f5d9b5" x="105" y="1875" />
+		<entity schema="dbo" name="Notes_Audit" color="c0f5b5" x="1950" y="2070" />
+		<entity schema="dbo" name="NotificationStatuses" color="b5cef5" x="750" y="1215" />
+		<entity schema="dbo" name="Notifications" color="c0f5b5" x="2535" y="2460" />
+		<entity schema="dbo" name="Operations" color="cbb5f5" x="2415" y="2745" />
+		<entity schema="dbo" name="Opportunities" color="f5d9b5" x="1350" y="1155" />
+		<entity schema="dbo" name="OpportunitiesRelationshipMap" color="f5d9b5" x="1905" y="1155" />
+		<entity schema="dbo" name="OpportunityActionMap" color="b5cef5" x="1290" y="3240" />
+		<entity schema="dbo" name="OpportunityContactMap" color="b5b5f5" x="2355" y="255" />
+		<entity schema="dbo" name="OpportunityNoteMap" color="f5d9b5" x="1515" y="1005" />
+		<entity schema="dbo" name="OpportunityTagMap" color="f5d9b5" x="1725" y="1005" />
+		<entity schema="dbo" name="PartnerTypes" color="cbb5f5" x="1785" y="690" />
+		<entity schema="dbo" name="RelationshipTypes" color="f5d9b5" x="3195" y="435" />
+		<entity schema="dbo" name="RoleModuleMap" color="b5cef5" x="3000" y="2220" />
+		<entity schema="dbo" name="RolePermissionsMap" color="cbb5f5" x="2595" y="2880" />
+		<entity schema="dbo" name="Roles" color="b5cef5" x="3360" y="2370" />
+		<entity schema="dbo" name="ScoreCategories" color="c0f5b5" x="45" y="900" />
+		<entity schema="dbo" name="SearchDefinitionTagMap" color="c0f5b5" x="3930" y="435" />
+		<entity schema="dbo" name="SearchDefinitions" color="c0f5b5" x="3930" y="195" />
+		<entity schema="dbo" name="SearchFilters" color="c0f5b5" x="3510" y="435" />
+		<entity schema="dbo" name="SearchPredicateTypes" color="c0f5b5" x="3720" y="300" />
+		<entity schema="dbo" name="SearchQualifierTypes" color="c0f5b5" x="3720" y="435" />
+		<entity schema="dbo" name="SocialRegistration" color="b5cef5" x="945" y="1215" />
+		<entity schema="dbo" name="States" color="b5b5f5" x="960" y="660" />
+		<entity schema="dbo" name="Statuses" color="b5b5f5" x="2535" y="1155" />
+		<entity schema="dbo" name="StorageRegistration" color="c0f5b5" x="375" y="1035" />
+		<entity schema="dbo" name="SubscriptionModuleMap" color="b5cef5" x="3180" y="2220" />
+		<entity schema="dbo" name="SubscriptionPermissionsMap" color="cbb5f5" x="2175" y="2880" />
+		<entity schema="dbo" name="Subscriptions" color="cbb5f5" x="2415" y="2880" />
+		<entity schema="dbo" name="TagTypes" color="c0f5b5" x="60" y="1035" />
+		<entity schema="dbo" name="Tags" color="f5d9b5" x="255" y="1875" />
+		<entity schema="dbo" name="Tags_Audit" color="c0f5b5" x="225" y="1035" />
+		<entity schema="dbo" name="TextRegistration" color="c0f5b5" x="3945" y="825" />
+		<entity schema="dbo" name="TextResponse" color="c0f5b5" x="4110" y="1065" />
+		<entity schema="dbo" name="TextResponseDetails" color="c0f5b5" x="4110" y="1230" />
+		<entity schema="dbo" name="TourTypes" color="b5b5f5" x="1905" y="2655" />
+		<entity schema="dbo" name="Tours" color="b5b5f5" x="1740" y="2370" />
+		<entity schema="dbo" name="Tours_Audit" color="f5d9b5" x="255" y="1500" />
+		<entity schema="dbo" name="UserActivities" color="b5cef5" x="1125" y="3240" />
+		<entity schema="dbo" name="UserActivityLogs" color="b5cef5" x="945" y="3240" />
+		<entity schema="dbo" name="UserAddressMap" color="b5b5f5" x="765" y="660" />
+		<entity schema="dbo" name="UserEmailsMap" color="c0f5b5" x="2190" y="2460" />
+		<entity schema="dbo" name="UserSettings" color="b5b5f5" x="2175" y="1155" />
+		<entity schema="dbo" name="Users" color="c0f5b5" x="2175" y="2040" />
+		<entity schema="dbo" name="sysdiagrams" color="f5d9b5" x="405" y="1875" />
+		<group name="ContactLeadAdapterMap" color="f7f0e6" >
+			<comment>Used by : 
+   mailresponse</comment>
+			<entity schema="dbo" name="ContactLeadAdapterMap" />
+			<entity schema="dbo" name="LeadAdapterCommunicationTypes" />
+			<entity schema="dbo" name="LeadAdapterTypes" />
+			<entity schema="dbo" name="CommunicationStatus" />
+			<entity schema="dbo" name="CommunicationTypes" />
+			<entity schema="dbo" name="CommunicationTracker" />
+			<callout x="2190" y="1440" pointer="SV" />
+		</group>
+		<group name="ContactTourMap_Audit" color="e9f7e6" >
+			<entity schema="dbo" name="ContactTourMap_Audit" />
+			<entity schema="dbo" name="ContactRelationshipMap_Audit" />
+			<entity schema="dbo" name="ContactNoteMap_Audit" />
+			<entity schema="dbo" name="ContactActionMap_Audit" />
+			<entity schema="dbo" name="Actions_Audit" />
+			<entity schema="dbo" name="Notes_Audit" />
+		</group>
+		<group name="Countries" color="e6edf7" >
+			<comment>Used by : 
+   currencies
+   dateformats
+   dropdowns
+   emails
+   fieldinputtypes
+   ...</comment>
+			<entity schema="dbo" name="Countries" />
+			<entity schema="dbo" name="Communities" />
+			<entity schema="dbo" name="ContactPhoneNumbers" />
+			<entity schema="dbo" name="Communications" />
+			<entity schema="dbo" name="AccountDataAccessPermissions" />
+			<entity schema="dbo" name="Accounts" />
+			<callout x="2985" y="1440" pointer="SV" />
+		</group>
+		<group name="Currencies" color="e6e6f7" >
+			<comment>Used by : 
+   dateformats
+   dropdowns
+   fieldinputtypes
+   formfields
+   socialregistration</comment>
+			<entity schema="dbo" name="Currencies" />
+			<entity schema="dbo" name="UserSettings" />
+			<entity schema="dbo" name="Statuses" />
+			<entity schema="dbo" name="CustomFieldTabs" />
+			<entity schema="dbo" name="CustomFieldSections" />
+			<callout x="2190" y="915" pointer="SV" />
+		</group>
+		<group name="DateFormats" color="ece6f7" >
+			<entity schema="dbo" name="DateFormats" />
+			<entity schema="dbo" name="Cultures" />
+			<entity schema="dbo" name="Contacts_Audit" />
+			<entity schema="dbo" name="ContactTypes" />
+			<entity schema="dbo" name="ContactImages" />
+			<entity schema="dbo" name="ContactEmails" />
+		</group>
+		<group name="Dropdowns" color="f7f0e6" >
+			<comment>Used by : 
+   countries
+   opportunitycontactmap
+   partnertypes
+   useractivities</comment>
+			<entity schema="dbo" name="Dropdowns" />
+			<entity schema="dbo" name="DropdownValues" />
+			<entity schema="dbo" name="OpportunitiesRelationshipMap" />
+			<entity schema="dbo" name="OpportunityTagMap" />
+			<entity schema="dbo" name="OpportunityNoteMap" />
+			<entity schema="dbo" name="Opportunities" />
+			<callout x="1740" y="900" pointer="SV" />
+		</group>
+		<group name="Emails" color="e9f7e6" >
+			<comment>Used by : 
+   currencies
+   dropdowns
+   formfields
+   leadadapterrecordstatus
+   leadscorerules
+   ...</comment>
+			<entity schema="dbo" name="Emails" />
+			<entity schema="dbo" name="UserEmailsMap" />
+			<entity schema="dbo" name="Notifications" />
+			<entity schema="dbo" name="CommunicationLogInDetails" />
+			<entity schema="dbo" name="Users" />
+			<callout x="2190" y="1980" pointer="SV" />
+		</group>
+		<group name="FieldInputTypes" color="e6edf7" >
+			<comment>Used by : 
+   formfields</comment>
+			<entity schema="dbo" name="FieldInputTypes" />
+			<entity schema="dbo" name="CustomFieldTabCustomFieldSectionMap" />
+			<entity schema="dbo" name="CustomFieldSectionCustomFieldMap" />
+			<entity schema="dbo" name="ContactCustomFieldMap" />
+			<entity schema="dbo" name="CustomFieldValueOptions" />
+			<entity schema="dbo" name="CustomFields" />
+			<callout x="615" y="1440" pointer="SV" />
+		</group>
+		<group name="FormFields" color="e6e6f7" >
+			<comment>Used by : 
+   opportunitycontactmap
+   searchqualifiertypes</comment>
+			<entity schema="dbo" name="FormFields" />
+			<entity schema="dbo" name="Fields" />
+			<entity schema="dbo" name="TourTypes" />
+			<entity schema="dbo" name="Tours" />
+			<entity schema="dbo" name="FormTags" />
+			<entity schema="dbo" name="Forms" />
+			<callout x="1545" y="2310" pointer="SV" />
+		</group>
+		<group name="LeadAdapterRecordStatus" color="ece6f7" >
+			<entity schema="dbo" name="LeadAdapterRecordStatus" />
+			<entity schema="dbo" name="LeadAdapterJobLogDetails" />
+			<entity schema="dbo" name="LeadAdapterAndAccountMap" />
+			<entity schema="dbo" name="LeadAdapterJobStatus" />
+			<entity schema="dbo" name="LeadAdapterJobLogs" />
+		</group>
+		<group name="LeadScoreRules" color="f7f0e6" >
+			<entity schema="dbo" name="LeadScoreRules" />
+			<entity schema="dbo" name="Conditions" />
+			<entity schema="dbo" name="CampaignTagMap" />
+			<entity schema="dbo" name="CampaignContactTagMap" />
+			<entity schema="dbo" name="CampaignRecipients" />
+			<entity schema="dbo" name="Campaigns" />
+		</group>
+		<group name="MailResponse" color="e9f7e6" >
+			<entity schema="dbo" name="MailResponse" />
+			<entity schema="dbo" name="MailResponseDetails" />
+			<entity schema="dbo" name="TextResponse" />
+			<entity schema="dbo" name="TextRegistration" />
+			<entity schema="dbo" name="TextResponseDetails" />
+		</group>
+		<group name="MenuCategories" color="e6edf7" >
+			<comment>Used by : 
+   countries
+   currencies
+   emails
+   subscriptions
+   useractivities</comment>
+			<entity schema="dbo" name="MenuCategories" />
+			<entity schema="dbo" name="MenuItems" />
+			<entity schema="dbo" name="Roles" />
+			<entity schema="dbo" name="SubscriptionModuleMap" />
+			<entity schema="dbo" name="RoleModuleMap" />
+			<entity schema="dbo" name="Modules" />
+			<callout x="2985" y="2160" pointer="SV" />
+		</group>
+		<group name="OpportunityContactMap" color="e6e6f7" >
+			<comment>Used by : 
+   contactleadadaptermap
+   countries
+   dateformats
+   dropdowns
+   fieldinputtypes
+   ...</comment>
+			<entity schema="dbo" name="OpportunityContactMap" />
+			<entity schema="dbo" name="ContactTourMap" />
+			<entity schema="dbo" name="ContactTagMap" />
+			<entity schema="dbo" name="ContactNoteMap" />
+			<entity schema="dbo" name="ContactLeadSourceMap" />
+			<entity schema="dbo" name="Contacts" />
+			<callout x="2190" y="45" pointer="SV" />
+		</group>
+		<group name="PartnerTypes" color="ece6f7" >
+			<comment>Used by : 
+   opportunitycontactmap
+   socialregistration</comment>
+			<entity schema="dbo" name="PartnerTypes" />
+			<entity schema="dbo" name="LifecycleStages" />
+			<entity schema="dbo" name="Images" />
+			<entity schema="dbo" name="FileTypes" />
+			<entity schema="dbo" name="DocumentTypes" />
+			<entity schema="dbo" name="Documents" />
+			<callout x="1605" y="330" pointer="SV" />
+		</group>
+		<group name="RelationshipTypes" color="f7f0e6" >
+			<comment>Used by : 
+   dropdowns</comment>
+			<entity schema="dbo" name="RelationshipTypes" />
+			<entity schema="dbo" name="ContactRelationshipMap" />
+			<callout x="2985" y="375" pointer="SV" />
+		</group>
+		<group name="SearchQualifierTypes" color="e9f7e6" >
+			<entity schema="dbo" name="SearchQualifierTypes" />
+			<entity schema="dbo" name="SearchFilters" />
+			<entity schema="dbo" name="SearchDefinitionTagMap" />
+			<entity schema="dbo" name="SearchPredicateTypes" />
+			<entity schema="dbo" name="SearchDefinitions" />
+		</group>
+		<group name="SocialRegistration" color="e6edf7" >
+			<comment>Used by : 
+   leadscorerules</comment>
+			<entity schema="dbo" name="SocialRegistration" />
+			<entity schema="dbo" name="NotificationStatuses" />
+			<entity schema="dbo" name="MailRegistration" />
+			<entity schema="dbo" name="FileProcessStatus" />
+			<entity schema="dbo" name="EmailTemplates" />
+			<entity schema="dbo" name="CampaignTemplates" />
+			<callout x="945" y="930" pointer="SV" />
+		</group>
+		<group name="States" color="e6e6f7" >
+			<comment>Used by : 
+   countries</comment>
+			<entity schema="dbo" name="States" />
+			<entity schema="dbo" name="UserAddressMap" />
+			<entity schema="dbo" name="ContactAddressMap" />
+			<entity schema="dbo" name="AccountAddressMap" />
+			<entity schema="dbo" name="AddressTypes" />
+			<entity schema="dbo" name="Addresses" />
+			<callout x="1215" y="345" pointer="SV" />
+		</group>
+		<group name="Subscriptions" color="ece6f7" >
+			<comment>Used by : 
+   countries
+   menucategories</comment>
+			<entity schema="dbo" name="Subscriptions" />
+			<entity schema="dbo" name="SubscriptionPermissionsMap" />
+			<entity schema="dbo" name="RolePermissionsMap" />
+			<entity schema="dbo" name="Operations" />
+			<entity schema="dbo" name="ModuleOperationsMap" />
+			<callout x="2190" y="2670" pointer="SV" />
+		</group>
+		<group name="Tags" color="f7f0e6" >
+			<comment>Used by : 
+   dropdowns
+   formfields
+   leadscorerules
+   opportunitycontactmap
+   searchqualifiertypes
+   ...</comment>
+			<entity schema="dbo" name="Tags" />
+			<entity schema="dbo" name="Notes" />
+			<entity schema="dbo" name="sysdiagrams" />
+			<entity schema="dbo" name="Tours_Audit" />
+			<entity schema="dbo" name="NoteTagMap_Audit" />
+			<entity schema="dbo" name="NoteTagMap" />
+			<callout x="105" y="1440" pointer="SV" />
+		</group>
+		<group name="Tags_Audit" color="e9f7e6" >
+			<comment>Used by : 
+   leadscorerules</comment>
+			<entity schema="dbo" name="Tags_Audit" />
+			<entity schema="dbo" name="TagTypes" />
+			<entity schema="dbo" name="StorageRegistration" />
+			<entity schema="dbo" name="LeadSources" />
+			<entity schema="dbo" name="ImageCategories " />
+			<entity schema="dbo" name="ScoreCategories" />
+			<callout x="405" y="840" pointer="SV" />
+		</group>
+		<group name="UserActivities" color="e6edf7" >
+			<entity schema="dbo" name="UserActivities" />
+			<entity schema="dbo" name="UserActivityLogs" />
+			<entity schema="dbo" name="OpportunityActionMap" />
+			<entity schema="dbo" name="ContactActionMap" />
+			<entity schema="dbo" name="ActionTagMap" />
+			<entity schema="dbo" name="Actions" />
+		</group>
+	</layout>
+</project>

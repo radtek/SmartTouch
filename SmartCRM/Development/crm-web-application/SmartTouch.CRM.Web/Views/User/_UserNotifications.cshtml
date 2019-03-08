@@ -1,0 +1,86 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model UserSettingsViewModel
+
+<div>
+    <div class="formsubheading">[|Daily Summary|]</div>
+
+    <div class="clearfix">
+        <div class="form-group">
+            <div>
+               [|Receive a summary of your daily activities along with engagement opportunities and action reminders. Learn more about the Daily Summary.|]
+                <div class="tooltiptoggle" data-tooltip-style="light" title="[|Receive a summary of your daily activities along with engagement opportunities|]"
+                      data-placement="top">
+                </div>
+            </div>
+            <div class="pull-left mtm">
+                <input type="checkbox" checked data-toggle="switch" data-bind="checked:DailySummary" />
+            </div>
+        </div>
+    </div>
+    @*<div class="formsubheading">Alert Notifications </div>
+    <div class="row">
+        <div class="form-group">
+            <div class="mtm" id="alertnotifications">
+                Receive an alert whenever a Contact engages with your email by clicking a link.
+                <a href="#" class="tooltiptoggle" data-tooltip-style="light" title="Receive an alert whenever a Contact engages with your email by clicking a link." data-placement="top">
+                    Learn more about Alert Notifications.
+                </a>
+            </div>
+            <div class="mtm"><input type="checkbox" checked data-toggle="switch" data-bind="checked:AlertNotification" /></div>
+            <!-- ko if:AlertNotification() == true -->
+            <div id="alertnotificationsdata">
+                <div class="mtm">Alert method</div>
+                <span data-bind="validationMessage: AlertNotificationsComputed"></span>
+                <div class="mtm">
+                    <div>
+                        <label class=" mts display-inline" for="text">
+                            <input type="checkbox" value="" id="text" data-bind="checked:EmailNotification">
+                        </label>
+                        <span class="mlm display-inline">Email</span>
+                    </div>
+                    <div>
+                        <label class=" mts display-inline" for="textmessage">
+                            <input type="checkbox" value="" id="textmessage" data-bind="checked:TextNotification">
+                        </label>
+                        <span class="mlm display-inline">Text Message</span>
+                    </div>
+                </div>
+            </div>
+            <!--/ko-->
+
+        </div>
+    </div>
+    <!--ko if:AlertNotification() == true-->
+    <div class="formsubheading">Additional Settings</div>
+
+    <div class="row">
+        <div class="leadscore-acct">
+            <label class="check-man">
+                <input type="checkbox" data-bind="checked:LeadScoreNotification" id="notifymechecked" />
+            </label>
+            <span class="display-inline">Only notify me when Contacts have a minimum lead score of </span>
+            <!-- ko if : LeadScoreNotification() == true   -->
+            <span class="display-inline mlm lead-score" id="notifyme">
+                <input type="text" data-bind="value:LeadScoreValue" class="form-control mini" />
+
+            </span>
+            <span data-bind="validationMessage: LeadScoreValue"></span>
+            <!--/ko-->
+        </div>
+    </div>
+    <!--/ko-->*@
+    <div class="hr-border"></div>
+    <div class="pull-left">
+        <a href="#" data-bind="click:SaveSettings" class="save-message btn btn-lg btn-primary">[|Save|]</a>
+        @*<a href="javascript:void(0)" class="btn btn-lg">Cancel</a>*@
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input[type="checkbox"]').click(function () {
+        });
+    });
+    $(':checkbox').on('change', function () {
+        $(this).triggerHandler('click');
+    });
+</script>

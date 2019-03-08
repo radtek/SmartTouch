@@ -1,0 +1,465 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.CampaignStatisticsViewModel
+@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@{
+    ViewBag.Title = "CampaignDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool IsParentCampaign = ViewBag.IsParentCampaign;
+    int CampaignID = ViewBag.CampaignID;
+    var urlReferrer = ViewBag.UrlRLeferrer;
+    var litmusGuid = ViewBag.EmailGuid;
+    var mailTesterGuid = ViewBag.MailTesterGuid;
+}
+
+@Scripts.Render("~/bundles/campaignstatsvm")
+<div class="sub-container">
+
+    <ul class="breadcrumb">
+        <li>@Html.ActionLink("[|Campaigns|]", "Campaigns", "Campaign", null, null)</li>
+        <li class="active"><a href="javascript:void(0)">[|Campaign Dashboard|]</a></li>
+        <li class="pull-right back active" style="cursor:pointer">
+            <a data-bind="attr:{'href':window.name}">
+                <i class="icon st-icon-leftdropdownarrow"></i> [|Back|]
+            </a>
+        </li>
+    </ul>
+
+
+    <div class="pull-right">
+        <br />
+        <a id="mt-rslt" href="javascript:void(0)" data-toggle="modal" data-target="#mailTesterResult" data-bind="visible:(MailTesterGuid() != null && MailTesterGuid() !='') ">
+            <span class="litmus-icon"><img src="~/img/leaf.png" /></span>[|Mail Tester Results|]
+        </a>
+        <a id="ltm-rslt"  href="javascript:void(0)" data-toggle="modal" data-target="#litmus-results" data-bind="visible:(LitmusGuid() != null && LitmusGuid() !='') ">
+            <span class="litmus-icon"><img src="/img/litmus-test-icon.png" /></span>[|Litmus&#x00AE; Results|]
+        </a>
+        <a id="NewBrowserBtn" class="btn btn-lg btn-primary">[|View Campaign|]</a>
+    </div>
+
+    <div class="modal fade" id="litmus-results" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <h4 class="modal-title" data-bind="text: CampaignName"></h4>
+                </div>
+                <div class="modal-body" style="min-height:500px">
+                    @Html.Partial("_LitmusResultsView")
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mailTesterResult" class="modal fade">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">[|Mail Tester|]</h4>
+                </div>
+                <div class="modal-body">
+                    <a data-bind="visible: MailTesterGuid(), attr:{'href': 'https://www.mail-tester.com/smarttouch-' + MailTesterGuid() }" target="_blank" class="pull-left">Cick here for previous result</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-header">
+        
+            <span data-bind="text:CampaignViewModel.Name()"></span>
+      
+    </div>
+
+
+    <div class="row">
+        <div class="form-group col-lg-6 static-field-group">
+            <label class="control-label col-sm-4">[|Sending Agent|]</label>
+            <div class="col-sm-8">
+                <p class="form-control-static" data-bind="text:MailProvider()"></p>
+            </div>
+        </div>
+        <div class="form-group col-lg-6 static-field-group">
+            <label class="control-label col-sm-4">[|JobId|]</label>
+            <div class="col-sm-8">
+                <p class="form-control-static" data-bind="text:CampaignViewModel.ServiceProviderCampaignID()"></p>
+            </div>
+        </div>
+        <div class="form-group col-lg-6 static-field-group">
+            <label class="control-label col-sm-4">[|Campaign Email Subject|]</label>
+            <div class="col-sm-8">
+                <p class="form-control-static" data-bind="text:CampaignViewModel.Subject()"></p>
+            </div>
+        </div>
+        <div class="form-group col-lg-6 static-field-group">
+            <label class="control-label col-sm-4">[|Sent From Email|]</label>
+            <div class="col-sm-8">
+                <p class="form-control-static" data-bind="text:CampaignViewModel.From()"></p>
+            </div>
+        </div>
+        <div class="form-group col-lg-6 static-field-group">
+            <label class="control-label col-sm-4">[|Sent Date|]</label>
+            <div class="col-sm-8">
+                <p class="form-control-static" data-bind="visible:CampaignViewModel.CampaignStatus()==105,text:SentOn()"></p>
+            </div>
+        </div>
+        <div class="form-group col-lg-6 static-field-group">
+            <label class="control-label col-sm-4">[|Sender Name|]</label>
+            <div class="col-sm-8">
+                <p class="form-control-static" data-bind="text:CampaignViewModel.SenderName()"></p>
+            </div>
+        </div>
+        <div class="form-group col-lg-12 static-field-group" data-bind="visible:ContactTags().length > 0">
+                <label class="control-label col-sm-2 st-sent-tags">[|Sent To Tags|]</label>
+                <div class="col-sm-10">
+                   <p class="form-control-static" data-bind="foreach:ContactTags">
+                            <a data-bind="text: TagName,attr:{ 'href': '/taggedcontacts?TagID=' + TagID +'&Type=' + $parent.CampaignViewModel.ToTagStatus()}"></a>
+                            <span data-bind="visible:$parent.CampaignViewModel.ToTagStatus() == '1'">( [|All|] )</span> 
+                            <span data-bind="visible:$parent.CampaignViewModel.ToTagStatus() == '2'">( [|Active|] )</span>
+                            <span data-bind="visible:$index() != ($parent.ContactTags().length - 1)">,</span>
+                   </p>
+                 </div>
+         </div>
+          <div class="form-group col-lg-12 static-field-group" data-bind="visible:SearchDefinitions().length > 0">
+                  <label class="control-label col-sm-2 st-sent-tags">[|Sent To Searches|]</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static" data-bind="foreach:SearchDefinitions">
+                            <a data-bind="text: SearchDefinitionName,attr:{ 'href': '/searchDefinitioncontacts?DefinitiationId=' + SearchDefinitionID +'&Type=' + $parent.CampaignViewModel.SSContactsStatus()}"></a>
+                            <span data-bind="visible:$parent.CampaignViewModel.SSContactsStatus() == '1'">( [|All|] )</span>
+                            <span data-bind="visible:$parent.CampaignViewModel.SSContactsStatus() == '2'">( [|Active|] )</span>
+                            <span data-bind="visible:$index() != ($parent.SearchDefinitions().length - 1)">,</span>
+                        </p>
+                  </div>
+           </div>
+    </div>
+
+    <div class="workflow-report">
+        <div class="row">
+            <div class="col-lg-4 col-md-4" data-bind="visible:CampaignViewModel.CampaignTypeId() !=132">
+                <div class=" main-widget">
+                    <div class="heading-camp"><span class="icon st-icon-envelope prm"></span>[|Engagement|]</div>
+                    <ul class="campaign-dashboard deliverability pln">
+                        <li class="open-rate">
+                            <div class="text">[|Open Rate|]</div>
+
+                            <!--ko if:CampaignViewModel.CampaignStatus() == 104 || CampaignViewModel.CampaignStatus() == 105  || CampaignViewModel.CampaignStatus() == 107 || CampaignViewModel.CampaignStatus() == 117 -->
+                            <!--ko if:OpenRate == '0.00'-->
+                            <span data-bind="text:OpenRate+'%'+' ( '+Opened()+' )'"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:OpenRate == '0.00'-->
+                            <a data-bind="text:OpenRate+'%'+' ( '+Opened()+' )',attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Opened }"></a>
+                            <!--/ko-->
+                            <!--/ko-->
+                        </li>
+                        <li class="click-rate">
+                            <div class="text">[|Click Rate|]</div>
+
+                            <!--ko if:CampaignViewModel.CampaignStatus() == 104 || CampaignViewModel.CampaignStatus() == 105 || CampaignViewModel.CampaignStatus() == 107 || CampaignViewModel.CampaignStatus() == 117-->
+                            <!--ko if:ClickRate == '0.00'-->
+                            <span data-bind="text:ClickRate + '%'+' ( '+Clicked()+' )'"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:ClickRate == '0.00'-->
+                            <a data-bind="text:ClickRate+'%'+' ( '+Clicked()+' )',attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Clicked }"></a>
+                            <!--/ko-->
+                            <!--/ko-->
+                        </li>
+                        <li class="notviewed">
+                            <div class="text">[|Not Viewed|]</div>
+                            <!--ko if:NotViewed() == 0-->
+                            <span data-bind="text:NotViewed"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:NotViewed() == 0-->
+                            <a data-bind="text:NotViewed,attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.NotViewed }"></a>
+                            <!--/ko-->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <div class=" main-widget">
+                    <div class="heading-camp"><span class="icon st-icon-mail-incoming prm"></span>Deliverability</div>
+                    <ul class="campaign-dashboard deliverability pln">
+                        <li class="sent">
+                            <div class="text">[|Sent|]</div>
+                            <!--ko if:Sent() == 0-->
+                            <span data-bind="text:Sent"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:Sent() == 0-->
+                            <a data-bind="text:Sent,attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Sent }"></a>
+                            <!--/ko-->
+                        </li>
+                        <li class="bounced">
+                            <div class="text">[|Bounced|]</div>
+                            <!--ko if:Bounced() == 0-->
+                            <span data-bind="text:Bounced"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:Bounced() == 0-->
+                            <a data-bind="text:Bounced,attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Bounced }"></a>
+                            <!--/ko-->
+                        </li>
+                        <li class="delivered">
+                            <div class="text">[|Delivered|]</div>
+                            <!--ko if:Delivered() == 0-->
+                            <span data-bind="text:Delivered"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:Delivered() == 0-->
+                            <a data-bind="text:Delivered,attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Delivered }"></a>
+                            <!--/ko-->
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <div class=" main-widget">
+                    <div class="heading-camp"><span class="icon st-icon-layout-content-left prm"></span>[|Churn|]</div>
+                    <ul class="campaign-dashboard deliverability pln">
+                        <li class="bounced">
+                            <div class="text">[|Blocked|]</div>
+                            <!--ko if:Blocked() == 0-->
+                            <span data-bind="text:Blocked"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:Blocked() == 0-->
+                            <a data-bind="text:Blocked,attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Blocked }"></a>
+                            <!--/ko-->
+                        </li>
+                        <li class="unsubscribe">
+                            <div class="text">[|Unsubscribed|]</div>
+                            <!--ko if:UnSubscribed() == 0-->
+                            <span data-bind="text:UnSubscribed"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:UnSubscribed() == 0-->
+                            <a data-bind="text:UnSubscribed,attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Unsubscribed }"></a>
+                            <!--/ko-->
+                        </li>
+                        <li class="complaint">
+                            <div class="text">[|Complaints|]</div>
+                            <!--ko if:Complained() == 0-->
+                            <span data-bind="text:Complained"></span>
+                            <!--/ko-->
+                            <!--ko ifnot:Complained() == 0-->
+                            <a data-bind="text:Complained,attr:{href:'campaigncontacts?CampaignID=' + CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.Complained }"></a>
+                            <!--/ko-->
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12" data-bind="visible:CampaignViewModel.CampaignTypeId() !=132">
+                <div class=" main-widget">
+                    <div class="heading-camp"><span class="icon st-icon-link prm"></span>[|Most Popular Links|]</div>
+                    <div class="mostpopular-subheading">
+                        <ul>
+                            <li>[|Link|]</li>
+                            <li>[|Link Summary|]</li>
+                            <li>[|Number of Clicks|]</li>
+                        </ul>
+                    </div>
+                    <div class="most-popular-main">
+                        <!--ko if:UniqueClicks().length == 0-->
+                                <span class="cmp-ds-links"><i class="icon st-icon-browser-windows-2"></i></span>
+                                <ul class="most-fullwidth" data-bind="visible: UniqueClicks().length==0">
+                                    <li>
+                                        [|No popular links found|]
+                                    </li>
+                                </ul>
+                        <!--/ko-->
+                        <!--ko if:UniqueClicks().length > 0-->
+                        <div class="most-popular-wrapper" data-bind="foreach:UniqueClicks">
+                            <ul>
+                                <li class="most-link">
+                                    <div class="link"><a data-bind="attr:{href:Link.URL()}, text:Link.URL()"></a></div>
+                                </li>
+                                <!-- ko if : $parent.isURL(LinkText()) && $parent.isImage(LinkText()) -->
+                                <li class="most-link">
+                                    <div style="height: 100px"><img data-bind="attr: {src : LinkText }" style="border: 0px; display: block; max-width: 250px; height: auto; max-height: 100px; width:auto; cursor:pointer" alt="" onclick="openImage(this)"></div>
+                                </li>
+                                <!-- /ko -->
+                                <!-- ko if : !$parent.isImage(LinkText())-->
+                                <li>
+                                    <div class="dash-image" data-bind="html:LinkText, attr:{'title': LinkText}" style="border: 0px; display: block; max-width: 400px; height: 100px;"></div>
+                                </li>
+                                <!-- /ko-->
+                                <li class="most-clicks">
+                                    <div class="number">
+                                        <a data-bind="text:UniqueClickCount(),attr:{href:'campaigncontacts?CampaignID=' + $parent.CampaignId() + '&CampaignDrillDownActivity=' + CampaignDrillDownActivity.LinkClicked + '&amp;CampaignLinkID=' + CampaignLinkID()  }"></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!--/ko-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal campaign-select fade " id="addNewCampaign" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content campaign-type-pop">
+            <div class="modal-header campaign-type-pop-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h6 class="modal-title" id="myModalLabel">Choose your Campaign Type</h6>
+            </div>
+            <div class="modal-body campaign-type-pop-body">
+                <div class="campaigns">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label>Campaign Name <span class="required">*</span></label>
+                            <div class="form-group validation-form-control">
+                                <input type="text" class="form-control" placeholder="Campaign Name" data-bind="value:NewCampaign.Name"><span class="validationMessage" style="display: none;"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <span class="st-custag">[|Tags|]</span>
+                            <input id="campaignTags" class="display-inline form-control tagsinput-info-round" placeholder="[|Search or Type a tag name|]" />
+
+                        </div>
+                    </div>
+
+                </div>
+                <div>
+                    <div class="campaign-type">
+                        <div class="campaign-type-select" id="131">
+                            <div data-bind="attr:{class: NewCampaign.CampaignTypeId()=='131' ? 'row active':'row'}">
+                                <div class="box">
+                                    <div class="campaign_img">
+                                        <img src="~/img/regular-campaign-img.png" />
+                                    </div>
+                                    <div class="campaign_text">
+                                        <h6>Regular Campaign</h6>
+                                        <span>Send HTML content using pre-designed Layouts and Templates</span>
+                                    </div>
+                                    <div class="campaign_select">
+                                        <i class="icon st-icon-checkmark" data-bind="visible: NewCampaign.CampaignTypeId()=='131'"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="campaign-type-select" id="132">
+                            <div data-bind="attr:{class: NewCampaign.CampaignTypeId()=='132' ? 'row active':'row'}">
+                                <div class="box">
+                                    <div class="campaign_img">
+                                        <img src="~/img/plain-text-campaign-img.png" />
+                                    </div>
+                                    <div class="campaign_text">
+                                        <h6>Plain-Text Campaign</h6>
+                                        <span>Send a simple plain-text email with no pictures or formatting</span>
+                                    </div>
+                                    <div class="campaign_select">
+                                        <i class="icon st-icon-checkmark" data-bind="visible: NewCampaign.CampaignTypeId()=='132'"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="campaign-type-select" id="133">
+                            <div data-bind="attr:{class: NewCampaign.CampaignTypeId()=='133' ? 'row active':'row'}">
+                                <div class="box">
+                                    <div class="campaign_img">
+                                        <img src="~/img/code-own-campaign-icon.png" />
+                                    </div>
+                                    <div class="campaign_text">
+                                        <h6>Code your own</h6>
+                                        <span>Paste your own HTML code from another source</span>
+                                    </div>
+                                    <div class="campaign_select">
+                                        <i class="icon st-icon-checkmark" data-bind="visible: NewCampaign.CampaignTypeId()=='133'"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer campaign-select-pop-footer">
+                <span data-bind="value:'Save'">
+                    <a class="btn btn-lg btn-primary" data-posturl="campaingslist" href="#" data-bind="click:NewCampaign.Proceed.bind($data)">[|Proceed|]</a>
+                </span>
+
+                <span>
+                    <button type="button" class="btn btn-lg" data-dismiss="modal" data-bind="click:ResetNewCampaign">[|Cancel|]</button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+ @section Scripts{
+<script>
+    var IsParentCampaign = '@(IsParentCampaign)';
+    var LitmusEmailGuid= '@(litmusGuid)';
+    var mailTesterGuid = '@(mailTesterGuid)';
+        $(document).ready(function () {
+        $('#re-run-tst').hide();
+        $('[data-openid=241]').parent().attr({'data-target':'#addNewCampaign','data-toggle':'modal'})
+
+        openImage = function(image){
+            window.open(image.src);
+        };
+
+        $('#NewBrowserBtn').on('click', function () {
+            window.open('/campaignview?campaignId=' + '@CampaignID' , '_blank','left=500,top=100,width=920,height=720,toolbar=1,resizable=0');
+        });
+
+        CampaignDrillDownActivity = {
+            Opened : 1,
+            Clicked : 2,
+            Delivered : 3,
+            Unsubscribed : 4,
+            Complained : 5,
+            Sent : 6,
+            Bounced : 7,
+            NotViewed : 8,
+            LinkClicked : 9,
+            Blocked : 11
+
+        }
+
+        var BASE_URL = '@Url.Content("~/Campaign/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var accountId = '@Thread.CurrentPrincipal.Identity.ToAccountID()';
+        var data = @(Html.Raw(Json.Encode(Model)));
+
+        function displayDate(date) {
+            if (date == null) {
+                return "";
+            }
+            return kendo.toString(kendo.parseDate(date, 'yyyy/MM/dd'));
+        }
+
+        if(IsParentCampaign == 'False' || data.IsLinkedToWorkflows == true)
+            $("#menuItem303").hide();
+
+        var viewModel = new campaigStatisticsViewModel(data,BASE_URL, WEBSERVICE_URL,null,LitmusEmailGuid, mailTesterGuid);
+
+        ko.applyBindings(viewModel);
+        var privacy;
+        if ($('#privacyPolicy').find('a')[0]){
+            privacy = $('#privacyPolicy').find('a')[0].href;
+        }
+        $('#previewcamp').find('a').attr('href','javascript:void(0)');
+        $('#privacyPolicy').find('a').attr('href','javascript:void(0)');
+        var newViewModel = new newCampaignViewModel();
+        var tagCreatedBy = readCookie("userId");
+        var tagify = new Tagify(WEBSERVICE_URL, newViewModel , accountId, tagCreatedBy);
+        tagify.Tagify("campaignTags");
+        var linkColumnWidth = $('.mostpopular-subheading li').first().width();
+        $('.most-popular-wrapper li').first().css({'padding':'10px'});
+        $('.most-popular-wrapper li').first().width(linkColumnWidth);
+    });
+</script>
+
+ }   

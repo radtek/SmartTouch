@@ -1,0 +1,69 @@
+﻿@using System.Threading
+@using SmartTouch.CRM.Web.Utilities
+@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model UserViewModel
+
+@Scripts.Render("~/bundles/uservm")
+
+<div id="changerole">
+    <div class="drop-heading">
+        <span class="icon st-icon-role display-inline"></span> <h4 class="panel-title display-inline plm">[|Change Role|]</h4>
+    </div>
+    <div class="dp-topnav-inner-body">
+        <div class="row">
+            <div class="form-group col-lg-6">
+                <label class="control-label">[|Role|]</label>
+                <select data-bind="kendoDropDownList: {dataTextField:'RoleName',dataValueField:'Id', data: Roles, value: RoleID, optionLabel: '[|select|]..'}"></select>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="panel-footer">
+        <div>
+            <a class="btn btn-lg btn-primary" data-bind="click:updateRole"><span>[|Update Role|]</span></a>
+            @*<a href="javascript:void(0)" class="btn btn-lg btn-primary" onclick="CloseTopInner(this)">Update Role</a>*@
+            <a href="javascript:void(0)" class="btn btn-lg" onclick="CloseTopInner(this)">[|Cancel|]</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var BASE_URL = '@Url.Content("~/User/")';
+        var user = @(Html.Raw(Json.Encode(Model)));
+
+        var selectedUsers = fnGetSelectedUsers('chkuser');
+        if(selectedUsers.length == 1){
+            //viewModel2.RoleID(selectedUsers[0].Role);
+        }
+        var AccountID='@Thread.CurrentPrincipal.Identity.ToAccountID()';
+
+        var loadUsers = (function () {
+            $.ajax({
+                url: BASE_URL + 'GetRoles',
+                type: 'get',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: { 'accountID':AccountID },
+            }).then(function (response) {            
+                var filter = $.Deferred();
+                if (response.success) {
+                    filter.resolve(response);
+                } 
+                else {     
+                    filter.reject(response.error);
+                }
+                return filter.promise();
+            }).done(function (data) {
+                user.Roles = data.response;
+                var viewModel2 = new userViewModel(user,data.response,BASE_URL);
+                ko.applyBindings(viewModel2,document.getElementById("changerole"));
+            }).fail(function (error) {
+                notifyError(error);
+            });
+        });
+        loadUsers();
+    });
+    checkedvalues = fnGetChkvalGrid('chkuser');
+</script>

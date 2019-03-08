@@ -1,0 +1,250 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+
+@model LoginViewModel
+@{
+    Layout = null;
+    bool securityMessage = ViewBag.SecurityMessage == null ? false : true;
+    bool LoginPage = ViewBag.Page == "Login" ? true : false;
+    var actionName = "";
+    if (LoginPage) { actionName = "Login"; } else { actionName = "ForgotPassword"; }
+    var accountName = ViewBag.AccountName;
+    var accountID = ViewBag.AccountID;
+    var loginpage = ViewBag.LoginPage;
+    var loginurl = ViewBag.LoginUrl;
+}
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="robots" content="nofollow" />
+    <title>Welcome to SmartTouch</title>
+    <script type="text/javascript">
+        history.pushState(null, null, '');
+
+        window.addEventListener('popstate', function (event) {
+            if (location.pathname == "/") {
+                history.pushState(null, null, '');
+            }
+        });
+    </script>
+    @Styles.Render("~/Content/layoutstyles")
+    <link rel="shortcut icon" href="../../img/favicon.ico">
+</head>
+
+@using (Html.BeginForm(actionName, "Login", new { ReturnUrl = ViewBag.ReturnUrl, loginedUrl = ViewBag.LoginPage }, FormMethod.Post, new { id = "loginForm", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="container">
+        <div class="login-pane">
+            <div class="login-panel">
+                <section class="login-panel-left">
+                    <div class="logo-bdx">
+                        <figure><img src="~/img/bdx/bdx_logo.png" alt="BDX Lead Management" /></figure>
+                        <span>Powered by <label>SmartTouch<sup>&reg;</sup></label></span>
+                    </div>
+
+                    @{if (LoginPage)
+                    {
+                        <div id="logincontrols">
+                            <div class="controls">
+                                @{if (securityMessage)
+                                {
+                                    <div class="alert alert-info text-left">
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                        <i class="icon st-icon-spam"></i> Your session has timed-out
+                                    </div>
+                                }}
+                                @Html.ValidationSummary(true, "")
+
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.AccountName, new { @class = "form-control input-hg", @id = "accountname", @placeholder = "Account Name" })
+                                    @Html.ValidationMessageFor(m => m.AccountName)
+                                </div>
+                                <div class="form-group">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-hg", @id = "email", @placeholder = "Email Address", @maxlength = "254" })
+                                    @Html.ValidationMessageFor(m => m.Email)
+                                </div>
+                                <div class="form-group">
+                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control input-hg", @placeholder = "Password" })
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>
+                                @Html.HiddenFor(m => m.AccountId, new { @id = "accountid" })
+                                @Html.HiddenFor(m => m.AccountName)
+                                <div class="form-group">
+                                    <label class="checkbox pull-left" for="remember">
+                                        @Html.CheckBoxFor(m => m.RememberMe, new { data_toggle = "checkbox" }) Stay Logged In
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.RememberMe)
+
+                                </div>
+                                <input type="button" id="login" value="Log in to SmartTouch&#x00AE;" class="btn btn-hg btn-primary" />
+                            </div>
+                            <div class="footer footer-bdx row">
+                                @*<a href="@Url.Action("ForgotPassword", "Login", new { enteredemail = "xxxx" })" id='forgotpassword'>Forgot Password?</a>*@
+                                @Html.ActionLink("Forgot Password?", "ForgotPassword", "Login", null, new { @class = "pull-right forgot-password", @id = "forgotpassword" })
+                            </div>
+                        </div>
+                    }
+                    }
+                </section>
+                <section class="login-panel-right">
+                    <div class="bdxpromo">
+                      
+                        <div class="footertext">
+                            If you are having troubles with your login or any BDX Lead Management function, email us at: <a href="mailto:support@thebdx.com" class="email">support@thebdx.com</a>               
+                            
+                        </div>
+                    </div>
+                    <div class="installations box_panel">
+
+                        <div class="boxes">
+                            <a href="http://www.thebdx.com/uploadedcontents/Leads%20Followup%20Whitepaper-updated.pdf" target="_blank"><img src="~/img/bdx/bdx_tablet.png" /></a>
+                            <a class="bottom-text" href="http://www.thebdx.com/uploadedcontents/Leads%20Followup%20Whitepaper-updated.pdf" target="_blank"><span>Whitepaper: Leads &amp; What to Do With Them</span></a>
+                        </div>
+                        <div class="boxes">
+                            <a href="http://www.thebdx.com/uploadedcontents/Leads,%20Leads,%20Leads.png" target="_blank">
+                                <img src="~/img/bdx/bdx_whitepaper.png" />
+                            </a>
+                            <a class="bottom-text" href="http://www.thebdx.com/uploadedcontents/Leads,%20Leads,%20Leads.png" target="_blank"><span>Infographic: The ABC's of Leads</span></a>
+                        </div>
+                        <div class="boxes">
+                            <a href="http://www.thebdx.com/blog/nhs-pro-real-estate-agent-leads-how-are-you-following-up/" target="_blank">
+                                <img src="~/img/bdx/bdx_lightbulb.png" />
+                            </a>
+                            <a class="bottom-text" href="http://www.thebdx.com/blog/nhs-pro-real-estate-agent-leads-how-are-you-following-up/" target="_blank"><span>Blog: How to Manage Real Estate Agent Leads </span></a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="login-footer">Copyright &copy; 2016 smarttouchinteractive.com, inc. All rights reserved.</div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")     
+    @Scripts.Render("~/bundles/kendoui")
+    @Scripts.Render("~/bundles/kendouiaspnetmvc")
+    @Scripts.Render("~/bundles/knockoutjs")      
+
+    @Scripts.Render("~/bundles/layoutbottom")
+    <!-- /.container -->
+    <!-- Load JS here for greater good =============================-->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var ContactsSuggestions;
+
+            if (window.history.forward(history.length) != null)
+                window.history.forward(history.length);
+            var accountname = '@(accountName)', accountid = '@(accountID)'; var loginpage = '@(loginpage)'; var loginurl = '@loginurl';
+            //createCookie("accountName", accountname, 1); createCookie("accountID", accountid, 1);
+
+            $('#forgotpassword').click(function () {
+                var name = $('#email').val();
+                this.href = this.href + '?email=' + encodeURIComponent(name);
+            });
+            var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+
+            var typewatch = (function () {
+                var timer = 0;
+                return function (callback, ms) {
+                    clearTimeout(timer);
+                    timer = setTimeout(callback, ms);
+                };
+            })();
+
+            var txtTagId = "#accountname";
+            var acc_name = document.getElementById("accountname");
+            acc_name.value = "";
+      
+            $(txtTagId).kendoAutoComplete({
+                minLength: 1,
+                placeholder: "[|Account Name|]",
+                height: 500,
+                filter: "contains",
+                serverFiltering: true,
+                dataTextField: "AccountName",
+                template: '<span>#: AccountName # ( #: DomainUrl # )</span>',
+                select: autocomplete_select,
+              
+                open: function (e) {
+                },
+                close: function (e) {
+                }
+            });
+
+            $(document).on('keydown keypress', txtTagId, function () {
+                typewatch(function () {
+                  
+                    $.ajax({
+                        url: WEBSERVICE_URL + "/getbdxaccounts",
+                        type: 'get',
+                        dataType: 'json',
+                        data: { 'accountName': $(txtTagId).val() },
+                        contentType: "application/json; charset=utf-8",
+                      
+                        success: function (contactsData) {                           
+                            
+                            ContactsSuggestions = contactsData.BdxAccounts;
+                            var autocomplete = $(txtTagId).data("kendoAutoComplete");
+                            autocomplete.dataSource.data(ContactsSuggestions);
+                            autocomplete.search("");
+                        },
+                        error: function (response) {
+                            notifyError(response.responseText);
+                        }
+                    });
+                }, 500);
+            });
+
+            function autocomplete_select(e) {
+                var item = e.item;
+                var dataItem = this.dataItem(e.item);
+                var text = item.text();
+                var d = document.getElementById("accountid");
+                d.value = dataItem.AccountId;
+                console.log(text);
+                createCookie("accountName", text, 1);
+                createCookie("accountID", dataItem.AccountId, 1);
+                createCookie("accountUrl", dataItem.DomainUrl, 1);
+            }
+
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                    console.log("in enter click");
+                    $('#login').click();
+                }
+            });
+
+            $('#login').click(function (e) {
+                var d = document.getElementById("accountname");
+                var ss = $(ContactsSuggestions).filter(function () {
+
+                    return this.AccountName.toString().toLowerCase() == d.value.toString().toLowerCase();
+                })[0];
+
+                if (ss == undefined)
+                    d.value = "";
+
+                console.log("in submit");
+                console.log(ss);
+
+                var form = $('#loginForm');
+                console.log(loginpage);
+                console.log(loginurl);
+                $(form).attr('action', 'https://' + readCookie('accountUrl') + '/login');
+                $(form).submit();
+            });
+
+        });
+
+
+        function downloadPlugin64() {
+            $(".plugin-content").attr("href", window.location.origin + "/softwares/ImplicitSync%20Add-In%20Setup%20v2.6.36%20(Enterprise).rar");
+            $("#installationguide1").attr("href", window.location.origin + "/softwares/Implicit%20Sync%20Enterprise%20Edition%20User%20Guide%20Version%202.6.1%20Rev%203.pdf");
+            $("#installationguide2").attr("href", window.location.origin + "/softwares/Implicit%20Sync%20Enterprise%20Edition%20User%20Guide%20Version%202.6.1%20Rev%203.pdf");
+        }
+        downloadPlugin64();
+    </script>
+}
+

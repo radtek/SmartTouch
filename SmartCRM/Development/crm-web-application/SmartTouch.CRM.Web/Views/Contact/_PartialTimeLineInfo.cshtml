@@ -1,0 +1,361 @@
+﻿<div class="row">
+    <div class="pull-left ctd-topcontrols">
+        <span class="display-inline">Showing all</span>
+        <span class="select display-inline">
+            @(Html.Kendo().DropDownList()
+                .Name("module")
+                .DataTextField("Text")
+                .DataValueField("Value")
+                .Events(e => e.Change("moduleChange"))
+                .BindTo(new List<SelectListItem>() {
+                         new SelectListItem() {
+                             Text = "All",
+                             Value = ""
+                         },
+                         new SelectListItem() {
+                             Text = "Actions",
+                             Value = "Action"
+                         },
+                         new SelectListItem() {
+                             Text = "Notes",
+                             Value = "Note"
+                         },
+                         new SelectListItem() {
+                             Text = "Tours",
+                             Value = "Tour"
+                         }
+                 })
+            )
+        </span>
+        <span class="display-inline mlm">Period</span>
+        <span id="daterangecustom" class="select display-inline">
+            @(Html.Kendo().DropDownList()
+                                    .Name("period")
+                                    .DataTextField("Text")
+                                    .DataValueField("Value")
+                            .Events(e => e.Change("periodChange"))
+                                    .BindTo(new List<SelectListItem>() {
+                                        new SelectListItem() {
+                                            Text = "All",
+                                            Value = ""
+                                        },
+                                        new SelectListItem() {
+                                            Text = "Last 30 Days",
+                                            Value = "1"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "Last 60 Days",
+                                            Value = "2"
+                                        },
+                                        new SelectListItem() {
+                                            Text = "Last 90 Days",
+                                            Value = "3"
+                                        }
+                                })
+            )
+
+        </span>
+        <div id="daterange5" class="display-inline hide">
+            <span class="display-inline">From</span>
+            <div class="display-inline">
+                <span class="input-group">
+                    <input type="text" id="datepicker-04" value="21/12/13" class="form-control hasDatepicker">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default"><span class="fui-calendar"></span></button>
+                    </span>
+                </span>
+            </div>
+            <span class="display-inline">To</span>
+            <div class="display-inline">
+                <span class="input-group">
+                    <input type="text" id="datepicker-05" value="21/12/13" class="form-control hasDatepicker">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default"><span class="fui-calendar"></span></button>
+                    </span>
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="timeline">
+    <div class="spine"></div>
+    <div id="clientsDb" class="">
+        @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.TimeLineViewModel>()
+    .Name("grid")
+       .Columns(columns =>
+        {
+            columns.Template(e => { }).ClientTemplate(" ").Title("Details");
+        })
+
+        .Scrollable(scrollable => scrollable.Virtual(true))
+        .HtmlAttributes(new { style = "height:600px;" })
+        .ClientRowTemplate(
+            @"<tr class='odd'>
+              <td class='details'>
+                <div class='element'>
+                    <span class='activity'> <figure><span class='grid-noimage'><i class='icon st-icon-user-2'></i></span> </figure> </span>
+                    <div class='tl-recordupdates'>
+                    <div class='pi-header'>#: Module# <span>#: AuditAction #</span><span> #if(TimeLineDate!=='Today' && TimeLineDate!=='Yesterday'){# on #}#  #:TimeLineDate# </span> by #: UserName #</div>
+                     <div class='pi-subheader'>#: TimeLineTime # #if (AuditStatus) {# <span class='editanddel'>
+                            
+                            #if (Module === 'Note') {#" 
+            
+                            + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditNote", new { noteId = "nid", contactId = "cid" },
+                                new { data_toggle = "modal", data_target = "modal" }).ToHtmlString().Replace("cid", "#:ContactID#").Replace("nid", "#:ModuleId#")
+                                                + " <a href='javascript:void(0)' ><i class='icon st-icon-bin-3' onclick='DeleteNote(#: ModuleId #)' ></i></a>  #}else if(Module === 'Tour'){#"
+
+                            + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditTour", new { tourId = "tid" },
+                                new { data_toggle = "modal", data_target = "modal" }).ToHtmlString().Replace("tid", "#:ModuleId#")
+                                                + " <a href='javascript:void(0)' ><i class='icon st-icon-bin-3' onclick='DeleteTour(#: ModuleId #)'></i></a> #}else if(Module === 'Action'){#"
+
+                                   + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditAction", new { actionId = "aid", contactId = "cid" },
+                                            new { data_toggle = "modal", data_target = "modal" }).ToHtmlString().Replace("aid", "#:ModuleId#").Replace("cid", "#:ContactID#") +
+                                                    " <a href='javascript:void(0)' onclick='DeleteAction(#: ModuleId #)'><i class='icon st-icon-bin-3'></i></a> #}#</span> #}#</div>" +
+                            @"<div class='rd-container'>
+                        <div class='rd-image'><span class='icon st-icon-clipboard-2'></span></div>
+                        <div class='rd-details'><div class='rd-heading'>#: Module#</div><div class='rd-description'><p> #: Value # </p></div></div>
+                    </div>
+                </div>
+                </div>
+                </td></tr>")
+
+         .ClientAltRowTemplate(
+            @"<tr class='even'>
+              <td class='details'>
+                <div class='element'>
+                    <span class='activity'><figure><span class='grid-noimage'><i class='icon st-icon-user-2'></i></span> </figure></span>
+                    <div class='tl-recordupdates'>
+                    <div class='pi-header'>#: Module# <span>#: AuditAction #</span><span> #if(TimeLineDate!=='Today' && TimeLineDate!=='Yesterday'){# on #}# #:TimeLineDate# </span> by #: UserName #</div>
+                        <div class='pi-subheader'>#: TimeLineTime # #if (AuditStatus) {#<span class='editanddel'> #if (Module === 'Note') {#"
+                                + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditNote", new { noteId = "nid", contactId = "cid" },
+                                    new { data_toggle = "modal", data_target = "modal" }).ToHtmlString().Replace("cid", "#:ContactID#").Replace("nid", "#:ModuleId#") 
+                                    + " <a href='javascript:void(0)'  onclick='DeleteNote(#: ModuleId #)'><i class='icon st-icon-bin-3'></i></a> #}else if(Module === 'Tour'){#"
+                                
+                                + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditTour", new { tourId = "tid" },
+                                    new { data_toggle = "modal", data_target = "modal" }).ToHtmlString().Replace("tid", "#:ModuleId#")
+                                            + " <a href='javascript:void(0)'onclick='DeleteTour(#: ModuleId #)'><i class='icon st-icon-bin-3'></i></a> #}else if(Module === 'Action'){#"
+                                
+                                + Html.ActionLink("<i class='icon st-icon-edit'></i>", "EditAction", new { actionId = "aid", contactId = "cid" },
+                                    new { data_toggle = "modal", data_target = "modal" }).ToHtmlString().Replace("aid", "#:ModuleId#").Replace("cid", "#:ContactID#") +
+                                            " <a href='javascript:void(0)'onclick='DeleteAction(#: ModuleId #)'><i class='icon st-icon-bin-3'></i></a> #}#</span> #}#</div>" +
+                    @"<div class='rd-container'>
+                        <div class='rd-image'><span class='icon st-icon-clipboard-2'></span></div>
+                        <div class='rd-details'><div class='rd-heading'>#: Module#</div><div class='rd-description'><p> #: Value # </p></div></div>
+                    </div>
+                </div>
+                </div>
+                </td></tr>")
+                                   .Events(events => events.DataBinding("onDataBinding"))
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .PageSize(20)
+        .Read(read => read.Action("TimeLine_Read", "Contact"))
+     )
+        )
+    </div>
+</div>
+<script>
+    window.onunload = function () { eraseCookie("module"); eraseCookie("period"); };
+
+    function onDataBinding(arg) {
+        setTimeout(function () {
+            $(".st-icon-edit").parent('a').attr('data-target', '#modal');
+        }, 200)
+    }
+
+    function moduleChange() {
+        var value = this.value();
+        var period = $("#period").val();
+        eraseCookie("module"); eraseCookie("period"); createCookie("module", value, 1); createCookie("period", period, 1);
+        $("#grid").data("kendoGrid").dataSource.read();
+    }
+
+    function periodChange() {
+        var value = this.value();
+        var module = $("#module").val();
+        eraseCookie("module"); eraseCookie("period"); createCookie("period", value, 1); createCookie("module", module, 1);
+        $("#grid").data("kendoGrid").dataSource.read();
+    }
+
+    //function DeleteNote(id) {
+    //    alertifyReset();
+
+    //    alertify.confirm("More than one contact mapped for this Note, are you sure you want to delete.?", function (e) {
+    //        if (e) {
+    //            varDeleteURL = "DeleteNote?Id=" + id;
+    //            jQuery.support.cors = true;
+    //            $.ajax({
+    //                url: varDeleteURL,
+    //                type: 'post',
+    //                dataType: 'json',
+    //                contentType: 'application/json; charset=utf-8',
+    //                success: function (data) {
+    //                    if (data.success === true) {
+    //                        $("#grid").data("kendoGrid").dataSource.read();
+    //                    }
+    //                },
+    //                error: function (x, y, z) {
+    //                }
+    //            });
+    //            notifySuccess("Note is Deleted successfully");
+    //        } else {
+    //            notifyError("You've clicked Cancel");
+    //        }
+    //    });
+    //    return false;
+    //
+    DeleteNote = function (noteId) {
+        var note = "GetNoteContactsCount";
+        var url = '@Url.Content("~/Contact/")';
+        $.ajax({
+            url: url + note,
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ 'noteId': noteId }),
+            success: function (data) {
+                if (data.response == 1) {
+                    DeleteNoteConfirmation("Delete Note", "Cancel", "Are you sure you want to delete this Note?", noteId);
+                }
+                else {
+                    DeleteNoteConfirmation("Delete Note", "Cancel", "More than one contact tagged for this Note, are you sure you want to delete this Note?", noteId);
+                }
+            }
+        });
+    };
+
+    function DeleteNoteConfirmation(okText, cancelText, confirmMessage, noteId) {
+        alertifyReset(okText, cancelText);
+        alertify.confirm(confirmMessage, function (e) {
+            if (e) {
+                var action = "DeleteNote";
+                $.ajax({
+                    url: url + action,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'noteId': noteId }),
+                    success: function (data) {
+                        $('.success-msg').remove();
+                        if (data.success === true) {
+                            notifySuccess('Note deleted Successfully');
+                            window.location.href = document.URL;
+                        }
+                        if (data.success === false) {
+                            notifyError(data.response);
+                        }
+                    },
+                    error: function (data) {
+                    }
+                });
+            }
+            else {
+                notifyError("You've clicked Cancel");
+            }
+        });
+    }
+
+    var url = '@Url.Content("~/Contact/")';
+    DeleteAction = function (ActionId) {
+        var action = "GetActionContactsCount";
+        $.ajax({
+            url: url + action,
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ 'actionId': ActionId }),
+            success: function (data) {
+                if (data.response == 1) {
+                    DeleteConfirmation("Delete Action", "Cancel", "Are you sure you want to delete this Action?", ActionId);
+                }
+                else {
+                    DeleteConfirmation("Delete Action", "Cancel", "More than one contact tagged for this Action, are you sure you want to delete this Action?", ActionId);
+                }
+            }
+        });
+    };
+
+    function DeleteConfirmation(okText, cancelText, confirmMessage, ActionId) {
+        alertifyReset(okText, cancelText);
+        alertify.confirm(confirmMessage, function (e) {
+            if (e) {
+                var action = "DeleteAction";
+                $.ajax({
+                    url: url + action,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'actionId': ActionId }),
+                    success: function (data) {
+                        $('.success-msg').remove();
+                        if (data.success === true) {
+                            notifySuccess('Action deleted Successfully');
+                            window.location.href = document.URL;
+                        }
+                        if (data.success === false) {
+                            notifyError(data.response);
+                        }
+                    },
+                    error: function (data) {
+                    }
+                });
+            }
+            else {
+                notifyError("You've clicked Cancel");
+            }
+        });
+    }
+
+    DeleteTour = function (TourId) {
+        var tour = "GetTourContactsCount";
+        $.ajax({
+            url: url + tour,
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ 'tourId': TourId }),
+            success: function (data) {
+                if (data.response == 1) {
+                    DeleteTourConfirmation("Delete Tour", "Cancel", "Are you sure you want to delete this Tour?", TourId);
+                }
+                else {
+                    DeleteTourConfirmation("Delete Tour", "Cancel", "More than one contact tagged for this Tour, are you sure you want to delete this Tour?", TourId);
+                }
+            }
+        });
+    };
+
+    function DeleteTourConfirmation(okText, cancelText, confirmMessage, TourId) {
+        alertifyReset(okText, cancelText);
+        alertify.confirm(confirmMessage, function (e) {
+            if (e) {
+                var tour = "DeleteTour";
+                $.ajax({
+                    url: url + tour,
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ 'tourId': TourId }),
+                    success: function (data) {
+                        $('.success-msg').remove();
+                        if (data.success === true) {
+                            notifySuccess('Tour deleted Successfully');
+                            window.location.href = document.URL;
+                        }
+                        if (data.success === false) {
+                            notifyError(data.response);
+                        }
+                    },
+                    error: function (data) {
+                    }
+                });
+            }
+            else {
+                notifyError("You've clicked Cancel");
+            }
+        });
+    }
+</script>

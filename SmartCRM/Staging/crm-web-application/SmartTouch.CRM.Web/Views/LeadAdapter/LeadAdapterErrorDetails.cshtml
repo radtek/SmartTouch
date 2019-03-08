@@ -1,0 +1,93 @@
+﻿@model SmartTouch.CRM.ApplicationServices.ViewModels.LeadAdapterJobLogDeailsViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var DateFormat = ViewBag.DateFormat;
+    var LeadAdapterJobLogID = ViewBag.LeadAdapterJobLogID;
+    var LeadAdapterID = ViewBag.LeadAdapterID;
+    var LeadAdapterName = ViewBag.LeadAdapterName;
+    short ItemsPerPage = ViewBag.ItemsPerPage;
+}
+
+
+<div class="sub-container">
+    <ul class="breadcrumb">
+        @if (LeadAdapterName == "Import") { 
+        <li>@Html.ActionLink("[|Imports|]", "ImportDataList", "ImportData")</li>
+        }
+        else { 
+        <li>@Html.ActionLink("[|Lead Adapter|]", "LeadAdapterList", "LeadAdapter")</li>
+        }        
+        <li><a href="/viewleadadapter?leadAdapterID=@LeadAdapterID&leadAdapterName=@LeadAdapterName">@LeadAdapterName</a></li>
+        <li class="active"><a href="javascript:void(0)" data-original-title="" title="">[|Error List|]</a></li>
+    </ul>
+    <div class="form-horizontal-large">
+        <div class="leadadapter-grid k-grid-content">
+            @(Html.Kendo().Grid<SmartTouch.CRM.ApplicationServices.ViewModels.LeadAdapterJobLogDeailsViewModel>()
+               .Name("gridErrorViewLead")
+               .Pageable(pageable => pageable
+               .Refresh(false)
+              .PageSizes(true)
+               .ButtonCount(10))
+               .Columns(columns =>
+               {
+                   columns.Template(e => "").Title("[|Status|]").HeaderHtmlAttributes(new { @class = "col-15" });
+                   columns.Template(e => "").Title("[|Details|]").HeaderHtmlAttributes(new { @class = "col-75" });
+                   columns.Template(e => "").Title("[|Date|]").HeaderHtmlAttributes(new { @class = "col-10" });
+               })
+                .ClientRowTemplate(
+                        @"<tr class='odd'>
+                        <td>#: LeadAdapterRecordStatus#</td>
+                          <td>#: RowData#</td>
+                        <td>#=displayDate_n(CreatedDateTime)#</td>
+                     </tr>")
+                .ClientAltRowTemplate(
+                    @"<tr class='even'>
+                        <td>#: LeadAdapterRecordStatus#</td>
+                        <td>#: RowData#</td>
+                        <td>#=displayDate_n(CreatedDateTime)#</td>
+                     </tr>")
+                .Events(events => events.DataBound("onDataBound"))
+                .DataSource(dataSource => dataSource
+                .Ajax()
+                .PageSize(ItemsPerPage)
+                .Read(read => read.Action("ErrorLeadAdaptersViewRead", "LeadAdapter").Data("additionalInfo"))
+            ))
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function additionalInfo() {
+        return {
+            leadAdapterJobLogID: '@(LeadAdapterJobLogID)'
+        }
+    }
+
+    function onDataBound(e) {
+        var colCount = $(".k-grid").find('table colgroup > col').length;
+        var dataSource = new kendo.data.DataSource({
+            data: ToPageDropdown()
+        });
+        $("select[data-role='dropdownlist']").data('kendoDropDownList').setDataSource(dataSource);
+        if (e.sender.dataSource.view().length == 0) {
+            e.sender.table.find('tbody').append('<tr><td colspan="' + colCount + '">' +
+                                                '<div class="notecordsfound"><div><i class="icon st-icon-browser-windows-2">' +
+                                                '</i></div><span class="bolder smaller-90">[|No records found|]</span></div></td></tr>')
+        }
+    }
+
+    /*This function is for displaying the date in the format that user requested*/
+    function displayDate_n(date) {
+        if (date == null) {
+            return "";
+        }
+        var value = date.ToUtcUtzDate();
+        return kendo.toString(kendo.parseDate(value, 'yyyy/MM/dd'), '@(DateFormat)' + " hh:mm:ss");
+    }
+
+</script>
+<style>    
+    .k-grid td {
+        white-space: initial;
+        text-overflow: ellipsis;
+    }
+</style>

@@ -1,0 +1,438 @@
+﻿@using SmartTouch.CRM.Entities;
+
+<script type="text/html" id="providertype-transactional">
+    <div id="transactionalprovidermail1" data-bind="if:MailProviderType==@((byte)MailType.TransactionalEmail) && MailProviderID >
+        0 ,visible:MailProviderID == parseInt($parent.EmailProviderType())">
+        <div class="clearfix formsubheading">
+            <span data-bind="visible:MailProviderID==2" id="SendGridID">
+                [|SendGrid Configuration|]
+            </span>
+            <span data-bind="visible:MailProviderID==3" id="MailChimpID">
+                [|Mailchimp Configuration|]
+            </span>
+            <span data-bind="visible:MailProviderID==4" id="VmtaID">
+                [|VMTA Configuration|]
+            </span>
+            <span class="mlm">
+                <input type="radio" name="emailprovider" data-bind="checked: IsDefault+'',value:'true',click:$parent.DefaultProvider.bind($data)" />
+                [|Make this default|]
+            </span>
+        </div>
+        <div class="clearfix" data-bind="visible:MailProviderID==3||MailProviderID==4||MailProviderID==2" id="APIS">
+            <div class="form-group" id="Host" data-bind="visible:MailProviderID==4||MailProviderID==2">
+                <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                <label class="control-label">[|Host|] <span class="required">*</span></label>
+                <!--/ko-->
+                <!--ko if: (MailProviderID == 2 || MailProviderID == 3)-->
+                <input type="text" class="form-control" placeholder="[|Host|]" data-bind="value:Host,valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+                <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                <input type="text" class="form-control" placeholder="[|Host|]" data-bind="value:Host,valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+
+            </div>
+            <div class="form-group" id="PortNumber" data-bind="visible:MailProviderID==4||MailProviderID==2">
+                <!--ko ifnot:MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True'-->
+                <label class="control-label">[|Port|] <span class="required">*</span></label>
+                <!--/ko-->
+                <!--ko if: MailProviderID == 2-->
+                <input type="text" class="form-control" placeholder="[|Port|]" onkeypress="return OnPort(event)" data-bind="    value: Port, valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+                <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                <input type="text" class="form-control" placeholder="[|Port|]" onkeypress="return OnPort(event)" data-bind="    value: Port, valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+                @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|Port|]" readonly="readonly" data-bind="value:Port,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+            </div>
+            <div class="form-group" id="TransactionalApiKey" data-bind="visible:MailProviderID==3">
+                <label class="control-label">[|API|] <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="[|API|]" data-bind="value:ApiKey,valueUpdate: 'afterkeydown'" />
+            </div>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                <label class="control-label">
+                    User Name
+                    <span data-bind="visible:MailProviderID==4||MailProviderID==2" class=" required">*</span>
+                </label>
+                <!--/ko-->
+                <!--ko if: (MailProviderID == 2)-->
+                <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+                <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+                @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|User Name|]" readonly="readonly" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+            </div>
+            <div class="form-group">
+                <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                <label class="control-label">[|Password|] <span class="required" data-bind="visible:MailProviderID==4||MailProviderID==2">*</span></label>
+                <!--/ko-->
+                <!--ko if: (MailProviderID == 2)-->
+                <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+                <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                <!--/ko-->
+                @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="password" class="form-control" placeholder="[|Password|]" readonly="readonly" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+            </div>
+
+        </div>
+        <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Sender Email|] <span class="required" data-bind="visible:MailProviderID!==2">*</span></label>
+                <input type="email" class="form-control" placeholder="[|Sender Email|]" data-bind="value:Email,valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Sender Friendly Name|]</label>
+                <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" data-bind="value:SenderFriendlyName" />
+            </div>
+
+        </div>
+        <!--/ko-->
+
+        <div class="clearfix" id="VMTAConfiguration" data-bind="visible:MailProviderID==4">
+            <div data-bind="if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')">
+                <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                <div class="form-group" id="SenderDomain" data-bind="visible:MailProviderID==4">
+                    <!--ko if: (MailProviderID == 4) -->
+                    <label class="control-label">[|Sender's Domain|] </label>
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|Sender Domain|]" data-bind="value:SenderDomain" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+            <input type="text" class="form-control" placeholder="[|Sender Domain|]" readonly="readonly" data-bind="value:SenderDomain" />
+            <!--/ko-->*@
+                </div>
+                <!--/ko-->
+
+                <div class="form-group" id="ImageDomain" data-bind="visible:MailProviderID==4">
+                    <!--ko if: (MailProviderID == 4) -->
+                    <label class="control-label">Image Domain <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Domain',dataValueField:'ImageDomainId', data: $root.ImageDomains, value: ImageDomainId,optionLabel:'Select...'}" />
+                    <span class="validationMessage" data-bind="validationMessage:ImageDomainId"></span>
+                    <!--/ko-->
+
+                </div>
+            </div>
+            <div data-bind="if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')">
+                <div class="form-group">
+                    <div class="alert alert-warning">
+                        <i class="icon st-icon-spam"></i>
+                        [|Contact SmartTouch administrator to change.|]
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="clearfix">
+            <div data-bind="if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')">
+                <div class="form-group" id="VMTA" data-bind="visible:MailProviderID==4">
+                    <!--ko if: (MailProviderID == 4) -->
+                    <label class="control-label">[|SmartTouch|]<span class="required">*</span></label>
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|SmartTouch|]" data-bind="value:VMTA" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+            <input type="text" class="form-control" placeholder="[|VMTA|]" readonly="readonly" data-bind="value:VMTA" />
+            <!--/ko-->*@
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/html" id="providertype-campaign">
+    <div id="Campaignprovidermail" data-bind="if:MailProviderType==3 && MailProviderID > 0 ,visible:ServiceProviderID.toString() ==$parent.SelectedServiceProviderID().toString()">
+        <div class="clearfix formsubheading">
+            <span data-bind="visible:MailProviderID==2" id="SendGridID">
+                [|SendGrid Configuration|]
+            </span>
+            <span data-bind="visible:MailProviderID==3" id="MailChimpID">
+                [|MailChimp Configuration|]
+            </span>
+            <span data-bind="visible:MailProviderID==4" id="VmtaID">
+                [|SmartTouch Configuration|]
+            </span>
+            <span data-bind="visible:MailProviderID==1" id="SmtpId">
+                [|SMTP Configuration|]
+            </span>
+            <span class="mlm">
+                <input type="radio" name="Campaignprovider" data-bind="checked: ko.utils.unwrapObservable(IsDefault).toString(),value:'true',click:$parent.DefaultProvider.bind($data)" />
+                [|Make this default|]
+            </span>
+
+            <span data-bind="visible:MailProviderID==4 && $parent.IsAccountStAdmin === 'True'" class="icon st-icon-add mia">
+                <a data-toggle='modal' data-target='#modal' href='/Account/AddNewServiceProvider?providerId=4'>Add</a>
+            </span>
+            <span data-bind="visible:MailProviderID==3" class="icon st-icon-add mia">
+                <a data-toggle='modal' data-target='#modal' href='/Account/AddNewServiceProvider?providerId=3'>Add</a>
+            </span>
+        </div>
+        <div class="clearfix" data-bind="visible:MailProviderID==3||MailProviderID==4">
+            <div class="form-group">
+                <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                <label class="control-label">[|Provider Name|] <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="[|provider Name|]" data-bind="value:ProviderName, valueUpdate: 'afterkeydown' " maxlength="50" />
+                <!--/ko-->
+            </div>
+        </div>
+            <div class="clearfix" data-bind="visible:MailProviderID==3||MailProviderID==4||MailProviderID==1" id="APIS">
+                <div class="form-group" id="Host" data-bind="visible:MailProviderID==4||MailProviderID==1">
+                    <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                    <label class="control-label">[|Host|] <span class="required">*</span></label>
+                    <!--/ko-->
+                    <!--ko if:(MailProviderID == 1)-->
+                    <input type="text" class="form-control" placeholder="[|Host|]" data-bind="value:Host, valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|Host|]" data-bind="value:Host, valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin === 'False')-->
+                    <div class="alert alert-warning">
+                        <i class="icon st-icon-spam"></i>
+                        [|Contact SmartTouch administrator to change.|]
+                    </div>
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|Host|]" readonly="readonly" data-bind="value:Host, valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+                <div class="form-group" id="PortNumber" data-bind="visible:MailProviderID==4||MailProviderID==1">
+                    <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                    <label class="control-label">[|Port|] <span class="required">*</span></label>
+                    <!--/ko-->
+                    <!--ko if:(MailProviderID == 1)-->
+                    <input type="text" class="form-control" placeholder="[|Port|]" onkeypress="return OnPort(event)" data-bind="value: Port, valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|Port|]" onkeypress="return  OnPort(event)" data-bind="value: Port, valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|Port|]" readonly="readonly" data-bind="value:Port,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+                <div class="form-group" id="MailchimpConfigure" data-bind="visible:MailProviderID==3">
+                    <label class="control-label">[|API|] <span class="required">*</span></label>
+                    <input type="text" class="form-control" placeholder="[|API|]" data-bind="value:ApiKey,valueUpdate: 'afterkeydown'" />
+                </div>
+                <div class="form-group" id="MailchimpListIdConfig" data-bind="visible:MailProviderID==3">
+                    <label class="control-label">[|MailChimp List ID|]</label>
+                    <input type="text" class="form-control" placeholder="[|MailChimpListID|]" data-bind="value:MailChimpListID" />
+                </div>
+
+            </div>
+
+            <div class="clearfix">
+                <div class="form-group">
+                    <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                    <label class="control-label">[|User Name|] <span class="required" data-bind="visible:MailProviderID==4||MailProviderID==2||MailProviderID==1">*</span></label>
+                    <!--/ko-->
+                    <!--ko if:(MailProviderID == 2 || MailProviderID == 1 || MailProviderID == 3)-->
+                    <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|User Name|]" readonly="readonly" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+                <div class="form-group">
+                    <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                    <label class="control-label">[|Password|] <span class="required" data-bind="visible:MailProviderID==4||MailProviderID==2||MailProviderID==1">*</span></label>
+                    <!--/ko-->
+                    <!--ko if:(MailProviderID == 2 || MailProviderID == 1 || MailProviderID == 3)-->
+                    <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="password" class="form-control" placeholder="[|Password|]" readonly="readonly" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+
+            </div>
+
+            <div class="clearfix" data-bind="visible:MailProviderID!=1">
+
+                <div class="form-group">
+                    <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                    <label class="control-label">[|Sender Email|] <span class="required" data-bind="visible:MailProviderID!==2">*</span></label>
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 3) -->
+                    <input type="email" class="form-control" placeholder="[|Sender Email|]" data-bind="value:Email,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="email" class="form-control" placeholder="[|Sender Email|]" data-bind="value:Email,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="email" class="form-control" placeholder="[|Sender Email|]" readonly="readonly" data-bind="value:Email,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+                <div class="form-group">
+                    <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+                    <label class="control-label">[|Sender Friendly Name|]</label>
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 3) -->
+                    <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" data-bind="value:SenderFriendlyName,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" data-bind="value:SenderFriendlyName,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" readonly="readonly" data-bind="value:SenderFriendlyName,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+
+            </div>
+            <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+            <div class="clearfix" id="CampaignVMTAConfiguration" data-bind="visible:MailProviderID==4">
+                <div class="form-group" id="SenderDomain" data-bind="visible:MailProviderID==4">
+                    <label class="control-label">[|Sender's Domain|] </label>
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|Sender Domain|]" data-bind="value:SenderDomain, valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|Sender Domain|]" readonly="readonly" data-bind="value:SenderDomain, valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+                <div class="form-group" id="VMTA" data-bind="if:MailProviderID==4">
+                    <label class="control-label">Image Domain <span class="required">*</span></label>
+                    <input data-bind="kendoDropDownList: {dataTextField:'Domain',dataValueField:'ImageDomainId', data: $root.ImageDomains, value: ImageDomainId,optionLabel:'Select...'}" />
+                    <span class="validationMessage" data-bind="validationMessage:ImageDomainId"></span>
+                </div>
+            </div>
+            <!--/ko-->
+            <!--ko ifnot: (MailProviderID == 4 && $parent.IsAccountStAdmin !== 'True')-->
+            <div class="clearfix">
+                <div class="form-group" id="VMTA" data-bind="visible:MailProviderID==4">
+                    <label class="control-label">[|SmartTouch|] <span class="required">*</span></label>
+                    <!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'True')-->
+                    <input type="text" class="form-control" placeholder="[|SmartTouch|]" data-bind="value:VMTA,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->
+                    @*<!--ko if: (MailProviderID == 4 && $parent.IsAccountStAdmin == 'False')-->
+                    <input type="text" class="form-control" placeholder="[|VMTA|]" readonly="readonly" data-bind="value:VMTA,valueUpdate: 'afterkeydown'" />
+                    <!--/ko-->*@
+                </div>
+            </div>
+            <!--/ko-->
+        </div>
+</script>
+
+
+
+
+
+<script type="text/html" id="Textprovidertype">
+    <div id="transactionalprovidertext1" data-bind="if:MailProviderType==2&&TextProviderID>0,visible:TextProviderID==parseInt($parent.TextProviderType())&&MailProviderType==2">
+        <div class="clearfix formsubheading">
+            <span>
+                [|Twilio Configuration|]
+            </span><span class="mlm">
+                <input type="radio" name="Textemailprovider" data-bind="checked: IsDefault+'',value:'true',click:$parent.DefaultTextProvider.bind($data)" />
+                [|Make this default|]
+            </span>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|User Name|] <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Password|] <span class="required">*</span></label>
+                <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+            </div>
+
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|API|] <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="[|API|]" data-bind="value:ApiKey,valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Token|] <span class="required">*</span> </label>
+                <input type="text" class="form-control" placeholder="[|LoginToken|]" data-bind="value:LoginToken,valueUpdate: 'afterkeydown'" />
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Sender PhoneNumber|]</label>
+                <input type="text" class="form-control" placeholder="[|Sender PhoneNumber|]" data-bind="value:SenderPhoneNumber,valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Sender Friendly Name|]</label>
+                <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" data-bind="value:SenderFriendlyName" />
+            </div>
+
+        </div>
+
+    </div>
+</script>
+
+<script type="text/javascript">
+    function OnPort(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode != 46 && charCode > 31
+          && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+</script>
+@*<script type="text/html" id="CampainTextprovidertype">
+    <div id="transactionalprovidertext2" data-bind="if:MailProviderType==3&&TextProviderID>0,visible:TextProviderID ==parseInt($parent.CampaignTextProviderType())">
+        <div class="clearfix formsubheading">
+            <span>
+                [|Twilio Configuration|]
+            </span><span class="mlm">
+                <input type="radio" name="Textemailprovider" data-bind="checked: IsDefault+'',value:'true',click:$parent.DefaultTextProvider.bind($data)" />
+                [|Make this default|]
+            </span>
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|User Name|] <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="[|User Name|]" data-bind="value:UserName,valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Password|] <span class="required">*</span></label>
+                <input type="password" class="form-control" placeholder="[|Password|]" data-bind="value:Password,valueUpdate: 'afterkeydown'" />
+            </div>
+
+        </div>
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|API|] <span class="required">*</span></label>
+                <input type="text" class="form-control" placeholder="[|API|]" data-bind="value:ApiKey,valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Token|] </label>
+                <input type="text" class="form-control" placeholder="[|LoginToken|]" data-bind="value:LoginToken" />
+            </div>
+        </div>
+
+        <div class="clearfix">
+            <div class="form-group">
+                <label class="control-label">[|Sender Email|] </label>
+                <input type="email" class="form-control" placeholder="[|Sender Email|]" data-bind="value:Email" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">[|Sender Friendly Name|]</label>
+                <input type="text" class="form-control" placeholder="[|Sender Friendly Name|]" data-bind="value:SenderFriendlyName" />
+            </div>
+
+        </div>
+
+    </div>
+</script>*@

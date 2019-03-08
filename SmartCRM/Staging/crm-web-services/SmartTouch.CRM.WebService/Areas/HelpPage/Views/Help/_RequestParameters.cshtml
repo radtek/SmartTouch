@@ -1,0 +1,38 @@
+﻿
+
+<h2>Request Information</h2>
+<h3>Body Parameters</h3>
+
+
+<table class="help-page-table">
+    <thead>
+        <tr><th>Name</th><th>Description</th><th>Type</th></tr>
+    </thead>
+    <tbody data-bind="foreach:MethodDescription().ParameterDescriptions">
+        <tr>
+            <td data-bind="text:Name"></td>
+            <td data-bind="text:Documentation"></td>
+            <td data-bind="text:ParameterType"></td>
+        </tr>
+    </tbody>
+</table>
+<!-- ko if:Parameters().length > 0-->
+<div class="sample-content">
+    <h2>Type Definitions</h2>
+
+    <a data-bind="attr:{href: '/Help/ResourceModel?modelName='+MethodDescription().ParameterDescriptions[0].ParameterType},text:MethodDescription().ParameterDescriptions[0].ParameterType"></a>
+    <table class="help-page-table">
+        <thead>
+            <tr><th>Name</th><th>Description</th><th>Type</th></tr>
+        </thead>
+        <tbody data-bind="foreach:Parameters">
+            <tr>
+                <td data-bind="text:Name"></td>
+                <td data-bind="text:Documentation"></td>
+                <td data-bind="text:ParameterType"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--/ko-->

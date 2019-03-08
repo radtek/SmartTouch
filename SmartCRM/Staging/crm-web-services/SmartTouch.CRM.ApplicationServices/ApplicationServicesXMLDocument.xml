@@ -1,0 +1,1095 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SmartTouch.CRM.ApplicationServices</name>
+    </assembly>
+    <members>
+        <member name="T:SmartTouch.CRM.ApplicationServices.Messaging.Campaigns.UpdateCampaignTriggerStatusRequest">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.Messaging.Contacts.FindContactsByEmailRequest">
+            <summary>
+            Request to find contacts by primary or secondary email
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.Messaging.Contacts.FindContactsByEmailResponse">
+            <summary>
+            Returns contacts by primary or secondary email
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.Messaging.Search.AdvancedSearchRequest`1.Fields">
+            <summary>
+            List of fields that should be included in the results. If empty all fields are included.
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.AccountService.GetReputationCount(SmartTouch.CRM.ApplicationServices.Messaging.Accounts.GetSenderReputationCountRequest)">
+            <summary>
+            Gets the reputation count.
+            </summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.AccountService.GetAllAccounts(SmartTouch.CRM.ApplicationServices.Messaging.Accounts.GetAccountsRequest)">
+            <summary>
+            Gets all accounts.
+            </summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.AccountService.AddImageDomainBindingss(System.String[],System.String)">
+            <summary>
+            This method is used to add campaign link, 
+            all links are loaded with the {accountcode}.{imagedomain}.com
+            </summary>
+            <param name="domainNames"></param>
+            <param name="accountCode"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.AccountService.AccountHasDisclaimer(System.Int32)">
+            <summary>
+            Getting Account has Disclaimer
+            </summary>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.ActionService.GetNewActionsToSync(SmartTouch.CRM.ApplicationServices.Messaging.ImplicitSync.GetTasksToSyncRequest)">
+            <summary>
+            Get new tasks/actions from SmartCRM to sync with Outlook
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.CampaignService.GetContactsSharingPermission(System.Int32)">
+            <summary>
+            Returns false when Contacts module is Shared
+            </summary>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.CampaignService.CheckIfNull(System.Object)">
+            <summary>
+            Checks given object is null.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.CampaignService.InsertCampaignOpenEntry(SmartTouch.CRM.ApplicationServices.Messaging.Campaigns.InsertCampaignOpenOrClickEntryRequest)">
+            <summary>
+            Insert an entry whenever a campaign is opened or whenever a link in a campaign is clicked for which action is applied
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.CampaignService.GetWorkflowCampaignActionLinks(SmartTouch.CRM.ApplicationServices.Messaging.Campaigns.GetWorkflowLinkActionsRequest)">
+            <summary>
+            Get campaign links associated with workflow link actions
+            </summary>
+            <param name="request"></param>
+            <returns>List of Campaign links</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.CampaignService.GetReEngagementInfo(SmartTouch.CRM.ApplicationServices.Messaging.Campaigns.GetReEngagementInfoRequest)">
+            <summary>
+            Get campaign re-engaged contacts summary
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.CampaignService.GetCampaignUTMInformation(System.Int32)">
+            <summary>
+            Get Campaign UTM Information.
+            </summary>
+            <param name="campignId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.EnterpriseService.GetAllCoupons(SmartTouch.CRM.ApplicationServices.Messaging.Enterprices.GetAllReportedCouponsRequest)">
+            <summary>
+            Get All Invalid Coupons 
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.EnterpriseService.SendEmail(SmartTouch.CRM.ApplicationServices.Messaging.Enterprices.SendEmailRequest)">
+            <summary>
+            Sending Email
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.SpamCheck(System.Collections.Generic.IDictionary{System.String,System.String},System.Int32,System.String,System.Int32,System.Boolean,System.String@)">
+            <summary>
+            Spam Check
+            </summary>
+            <param name="fields"></param>
+            <param name="accountId"></param>
+            <param name="ipAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.GetSpamValidators(System.Int32)">
+            <summary>
+            Get All Spam Validators
+            </summary>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.InternalSpamIPCheck(System.String,System.Int32,System.String@)">
+            <summary>
+            Internal Ip Address Checking
+            </summary>
+            <param name="ipAddress"></param>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.SpamIPApiCheck(System.String,System.Int32,System.String@)">
+            <summary>
+            API Spam Checking
+            </summary>
+            <param name="ipAddress"></param>
+            <param name="accountId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.IPSubmissionLimitCheck(System.Int32,System.String,System.String,System.Boolean,System.String@)">
+            <summary>
+            IP Submission Limit Checking
+            </summary>
+            <param name="accountId"></param>
+            <param name="SubmissionLimit"></param>
+            <param name="ipAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.ValidateEmail(System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.String@)">
+            <summary>
+            Email Validation with firstname and lastname
+            </summary>
+            <param name="fields"></param>
+            <param name="formatter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.CheckForSpamKeywords(System.Collections.Generic.IDictionary{System.String,System.String},System.String@)">
+            <summary>
+            Spam KeyWords Checking
+            </summary>
+            <param name="fields"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.RepeatedValuesCheck(System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.String@)">
+            <summary>
+            Checking Duplicate Values Check
+            </summary>
+            <param name="fields"></param>
+            <param name="maxLimit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FindSpamService.ValidateDataTypes(System.Collections.Generic.IDictionary{System.String,System.String},System.Int32,System.String@)">
+            <summary>
+            Validating Data types
+            </summary>
+            <param name="fields"></param>
+            <param name="accountId"></param>
+            <param name="remarks"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.ContactService.#ctor(SmartTouch.CRM.Domain.Contacts.IContactRepository,SmartTouch.CRM.Domain.Tags.ITagRepository,SmartTouch.CRM.Infrastructure.UnitOfWork.IUnitOfWork,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IUrlService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICustomFieldService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICachingService,SmartTouch.CRM.Domain.Dropdowns.IDropdownRepository,SmartTouch.CRM.SearchEngine.Indexing.IIndexingService,SmartTouch.CRM.SearchEngine.Search.ISearchService{SmartTouch.CRM.Domain.Contacts.Contact},SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IAccountService,SmartTouch.CRM.Domain.Users.IUserRepository,SmartTouch.CRM.ApplicationServices.ServiceImplementations.IMessageService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IImageService,SmartTouch.CRM.Domain.Forms.IFormRepository,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IMailGunService,SmartTouch.CRM.Domain.Search.IAdvancedSearchRepository,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.ICommunicationService,SmartTouch.CRM.ApplicationServices.ServiceInterfaces.IUserService,SmartTouch.CRM.Domain.Communication.IServiceProviderRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SmartTouch.CRM.ApplicationServices.ServiceImplementations.ContactService"/> class.
+            </summary>
+            <param name="contactRepository">The contact repository.</param>
+            <param name="tagRepository">The tag repository.</param>
+            <param name="unitOfWork">The unit of work.</param>
+            <param name="urlService">The URL service.</param>
+            <param name="customFieldService">The custom field service.</param>
+            <param name="cachingService">The caching service.</param>
+            <param name="dropdownRepository">The dropdown repository.</param>
+            <param name="queuingService">The queuing service.</param>
+            <param name="indexingService">The indexing service.</param>
+            <param name="searchService">The search service.</param>
+            <param name="accountService">The account service.</param>
+            <param name="userRepository">The user repository.</param>
+            <param name="imageService">The image service.</param>
+            <param name="formRepository">The form repository.</param>
+            <param name="mailGunService">The mail gun service.</param>
+            <exception cref="T:System.ArgumentNullException">
+            contactRepository
+            or
+            unitOfWork
+            </exception>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FormService.GetAllContactFields(SmartTouch.CRM.ApplicationServices.Messaging.Forms.GetAllContactFieldsRequest)">
+            <summary>
+            Get all contact fields
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FormService.SubmitForm(SmartTouch.CRM.ApplicationServices.Messaging.Forms.SubmitFormRequest)">
+            <summary>
+            Add a new person from the form submission
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FormService.InsertFormSubmissionEntry(System.Int32,SmartTouch.CRM.ApplicationServices.ViewModels.SubmittedFormViewModel,System.Int16)">
+            <summary>
+            Insert a form submission record into 'FormSubmissions' table that links to the new contact inserted
+            </summary>
+            <param name="contactId"></param>
+            <param name="viewModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.FormService.GetFormName(System.Int32)">
+            <summary>
+            Getting Form Name
+            </summary>
+            <param name="formSubmissionId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.LeadAdapterService.GetLeadAdapterName(System.Nullable{System.Int32})">
+            <summary>
+            Getting LeadAdpter Name
+            </summary>
+            <param name="leadadaptermapId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MailGunService">
+            <summary>
+            Mail Validation Service (MailGun)
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MailGunService.EmailValidate(SmartTouch.CRM.ApplicationServices.Messaging.MailGun.GetRestRequest)">
+            <summary>
+            Emails the validate.
+            </summary>
+            <param name="request">The request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MarketingMessageService.GetAllMarketingMessages(SmartTouch.CRM.ApplicationServices.Messaging.MarketingMessages.GetAllMarketingMessagesRequest)">
+            <summary>
+            Get All Marketing Messages
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MarketingMessageService.MapDomainToVM(System.Collections.Generic.IEnumerable{SmartTouch.CRM.Domain.MarketingMessageCenter.MarketingMessage})">
+            <summary>
+            Mapping Domain to ViewModel
+            </summary>
+            <param name="marketingmessagesDomain"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MarketingMessageService.GetAllMarketingMessageContents(SmartTouch.CRM.ApplicationServices.Messaging.MarketingMessages.GetAllMarketingMessageContentRequest)">
+            <summary>
+            Get All Marketing Message Contents
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MarketingMessageService.insertMarketingMessage(SmartTouch.CRM.ApplicationServices.Messaging.MarketingMessages.InsertMarketingMessageRequest)">
+            <summary>
+            Inserting Marketing Message
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MarketingMessageService.updateMarketingMessage(SmartTouch.CRM.ApplicationServices.Messaging.MarketingMessages.UpdateMarketingMessageRequest)">
+            <summary>
+            Updating Marketing Message
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MarketingMessageService.GetMarketingMessageById(SmartTouch.CRM.ApplicationServices.Messaging.MarketingMessages.GetMarketingMessageRequestById)">
+            <summary>
+            Getting Marketing Message By Id
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MarketingMessageService.deleteMarketingMessage(SmartTouch.CRM.ApplicationServices.Messaging.MarketingMessages.DeleteMarketingMessageRequest)">
+            <summary>
+            Deleting the marketing Messages
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MenuService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MenuService.GetMenu(System.String,System.String,System.Collections.Generic.List{System.Byte})">
+            <summary>
+            Gets the menu.
+            </summary>
+            <param name="topMenuCategory">The top menu category.</param>
+            <param name="leftMenucategory">The left menucategory.</param>
+            <param name="moduleOperations">The module operations.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.MenuService.GetLeftMenu(System.Int32[])">
+            <summary>
+            Gets the left menu.
+            </summary>
+            <param name="moduleOperations">The module operations.</param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.OpportunityService.InsertOpportunity(SmartTouch.CRM.ApplicationServices.Messaging.Opportunity.InsertOpportunityRequest)">
+            <summary>
+            Insert Opportunity.
+            </summary>
+            <param name="request"></param>
+            <returns>HttpResponseMessage</returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.SocialIntegrationService.PostToFacebook(System.Int32,System.String,System.String)">
+            <summary>
+            Post to facebook
+            </summary>
+            <param name="uid"></param>
+            <param name="message"></param>
+            <param name="image"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.SocialIntegrationService.GetExtendedFacebookAccessToken(System.String,System.String,System.String)">
+            <summary>
+            Get extended access token for facebook
+            </summary>
+            <param name="accessToken"></param>
+            <param name="clientId"></param>
+            <param name="clientSecret"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.SocialIntegrationService.GetFacebookLoginUri(System.Uri,System.String,System.Int32)">
+            <summary>
+            Get Facebook Login Url
+            </summary>
+            <param name="uri"></param>
+            <param name="guid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.SocialIntegrationService.GetFacebookAccessTokenByCode(System.Uri,System.String,System.String,System.Int32)">
+            <summary>
+            Get facebook access token by code
+            </summary>
+            <param name="rediretUri"></param>
+            <param name="code"></param>
+            <param name="guid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.SocialIntegrationService.RevokeFacebookConnection(System.Int32)">
+            <summary>
+            Revoke facebook connection
+            </summary>
+            <param name="uid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.SocialIntegrationService.GetTwitterTokens(System.Uri)">
+            <summary>
+            Get twitter oauth tokens
+            </summary>
+            <param name="uri"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.SocialIntegrationService.Tweet(System.Int32,System.String)">
+            <summary>
+            Tweet to twitter
+            </summary>
+            <param name="uid"></param>
+            <param name="message"></param>
+            <param name="twitterKey"></param>
+            <param name="twitterSecret"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceImplementations.WebAnalyticsProviderService.addToTopic(System.Int32,System.Int32,System.Int32,System.Int32,SmartTouch.CRM.Entities.LeadScoreConditionType,System.String)">
+            <summary>
+            Add to topic(web page view)
+            </summary>
+            <param name="trackingDomain"></param>
+            <param name="webVisitId"></param>
+            <param name="contactId"></param>
+            <param name="accountId"></param>
+            <param name="visitType"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceInterfaces.MessageService.SendMessages(SmartTouch.CRM.ApplicationServices.Messaging.Messages.SendMessagesRequest)">
+            <summary>
+            Send messages related to automation/leadscore
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceInterfaces.MessageService.GetLeadScoreMessages">
+            <summary>
+            Gets leadscore messages
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ServiceInterfaces.MessageService.UpdateLeadScoreMessage(SmartTouch.CRM.ApplicationServices.Messaging.Messages.UpdateLeadScoreMessage)">
+            <summary>
+            Update lead score message
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.AccountSettingsViewModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AccountSettingsViewModel.AccountSettingsID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AccountSettingsViewModel.AccountID">
+            <summary>
+            
+            </summary> 
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AccountSettingsViewModel.StatusID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AccountSettingsViewModel.ViewName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.APILeadSubmissionViewModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:SmartTouch.CRM.ApplicationServices.ViewModels.BaseWorkflowActionConverter.GetSuitableAction(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Need to do in more sophisticated way, by applying custom attribute on each action class.
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.ContactDataViewModel">
+            <summary>
+            Contact Data VM
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactDataViewModel.Contacts">
+            <summary>
+            List of Contact IDs
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactDataViewModel.FormSubmissionIds">
+            <summary>
+            List of Form Submission IDs
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactDataViewModel.EmailBody">
+            <summary>
+            Email Body
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.ContactGroup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactGroup.Data">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactGroup.Module">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactGroup.AccountName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactGroup.AccountID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactGroup.ContactsCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ContactGroup.ElasticCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.SearchDefinitionID">
+            <summary>
+            Search Definition ID
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.SearchDefinitionName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.TagsList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.SearchPredicateTypeID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.CustomPredicateScript">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.SearchFilters">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.CreatedBy">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.CreatedOn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.AccountID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.ElasticQuery">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.LastRunDate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.PageNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.IsFavoriteSearch">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.IsPreConfiguredSearch">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.SelectedColumns">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.SearchResult">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.SearchFields">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.TagName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.AdvancedSearchViewModel.TotalSearchsCount">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.SearchFilterID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.FieldId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.SearchQualifierTypeID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.SearchText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.IsCustomField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.IsDropdownField">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.DropdownId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.SelectedValueOption">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.ValueOptions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.FilterViewModel.InputTypeId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.SearchDefinitionEntry">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.SearchDefinitionEntry.SearchDefinitionID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.SearchDefinitionEntry.SearchDefinitionName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.SearchDefinitionListViewModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.SearchDefinitionListViewModel.SearchDefinitions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.DropdownValueViewModel">
+            <summary>
+            Dropdown value
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.IAccountViewModel">
+            <summary>
+            AccountViewModel properties, interface is for unit testing using mock objects.
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.IContactViewModel">
+            <summary>
+            ContactViewModel for contact.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.FirstName">
+            <summary>
+            First Name of the Contact
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastName">
+            <summary>
+            Last Name of the Contact
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.CompanyName">
+            <summary>
+            Company Name
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.FullName">
+            <summary>
+            Computed Full Name
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Title">
+            <summary>
+            Title [Mr, Mrs, etc.,]
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.SelectedLeadSource">
+            <summary>
+            Selected Lead Source
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.SSN">
+            <summary>
+            Social Security Number
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LifecycleStage">
+            <summary>
+            Lifecycle Stage
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.PreviousLifecycleStage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.PartnerType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.DoNotEmail">
+            <summary>
+            Do not email this contact
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.OwnerName">
+            <summary>
+            Contact Owner name
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.OwnerId">
+            <summary>
+            Owner ID
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.CompanyID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.PreviousOwnerId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.ContactID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.ContactImageUrl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.ProfileImageKey">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.AccountID">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LeadScore">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.RelationshipViewModel">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Communication">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Actions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Opportunities">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Tours">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Addresses">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.AddressList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Address">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.PartnerTypes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LifecycleStages">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.AddressTypes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.PhoneTypes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Phones">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.PhoneList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Emails">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.EmailList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.SocialMediaUrls">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.TagsList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LeadSources">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Communities">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.SecondaryEmails">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Name">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LifeCycle">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.DropdownValueTypeId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastContacted">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastContactedThrough">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.ContactType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.CreatedBy">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.CreatedOn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastUpdatedBy">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastUpdatedOn">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastTouchedDate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastTouchedType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Notes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastContactedString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.Image">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.CustomFields">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.CustomFieldTabs">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.ReferenceId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.DateFormat">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.ContactSource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.FirstContactSource">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.SourceType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.FirstSourceType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.IsLifecycleChanged">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.OutlookSync">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.PopularTags">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.RecentTags">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastNote">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.LastNoteDate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.ContactSummary">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.FormId">
+            <summary>
+            
+            </summary>
+            
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.PersonViewModel.IncludeInReports">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.RelationshipViewModel">
+            <summary>
+            Contact relationship
+            </summary>
+        </member>
+        <member name="T:SmartTouch.CRM.ApplicationServices.ViewModels.ITagViewModel">
+            <summary>
+            TagViewModel properties, interface is for unit testing using mock objects.
+            </summary>
+        </member>
+        <member name="P:SmartTouch.CRM.ApplicationServices.ViewModels.ThirdPartyClientViewModel.RefreshTokenLifeTime">
+            <summary>
+            In minutes
+            </summary>
+        </member>
+    </members>
+</doc>

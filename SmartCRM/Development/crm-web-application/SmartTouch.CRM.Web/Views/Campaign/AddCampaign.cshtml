@@ -1,0 +1,30 @@
+﻿@using SmartTouch.CRM.ApplicationServices.ViewModels
+@model CampaignViewModel
+
+
+<script src="~/Scripts/ViewModels/CampaignViewModel.js"></script>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="addEditCampaign">
+    <div id="test">
+        <div>
+            <input data-bind="value:Name" />
+        </div>
+        hi
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var BASE_URL = '@Url.Content("~/Campaign/")';
+        var WEBSERVICE_URL = '@HttpContext.Current.Application["webservice_url"]';
+        var Campaign = '@(Html.Raw(Json.Encode(Model)))';
+        console.log(Campaign);
+        var viewModel = new CampaignViewModel(Campaign,BASE_URL);
+        ko.applyBindings(viewModel,document.getElementById("addEditCampaign"));
+
+        var tagify = new Tagify(WEBSERVICE_URL, viewModel);
+        tagify.TagifyContacts("campaignContacts");
+    });
+</script>
